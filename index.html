@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script>window.GUEST_PREVIEW = true;/*PREVIEW_FLAG -- build step flips this to true for the public unicorn-preview deploy. false = Ivy's real build, untouched.*/</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
@@ -351,13 +352,9 @@
   }
   .panel--quest .q-exps { flex: 1; min-height: 0; overflow-y: auto; }
   .panel--commits { bottom: 48px; left: 40px; width: 336px; }
-  /* Today's Term is stowed by default -- summoned via Vocab in the menubar. */
-  .panel--term    { top: 330px; right: 460px; width: 280px; display: none; }
-  .panel--term.shown { display: block; animation: termIn 0.45s ease; }
-
   /* Appearance is also stowed by default -- summoned via Appearance in menubar */
   .panel--appearance {
-    top: 64px; right: 460px; width: 300px;
+    top: 64px; right: 460px; width: 336px;
     display: none;
   }
   .panel--appearance.shown {
@@ -367,7 +364,7 @@
   /* Keep -- stowed by default. Paste-from-Claude-Code panel. The tidbits
      that scroll away in a fast chat go here to stay. */
   .panel--keep {
-    top: 64px; right: 460px; width: 360px;
+    top: 64px; right: 460px; width: 336px;
     display: none;
   }
   .panel--keep.shown { display: block; animation: termIn 0.45s ease; }
@@ -539,14 +536,6 @@
     from { opacity: 0; transform: translateY(8px) scale(0.98); }
     to   { opacity: 1; transform: translateY(0) scale(1); }
   }
-  .panel--term .p-close {
-    position: absolute; top: 14px; right: 16px;
-    font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em;
-    color: var(--text-whisper); cursor: pointer;
-    padding: 2px 6px; border-radius: 4px;
-    transition: color 0.15s, background 0.15s;
-  }
-  .panel--term .p-close:hover { color: var(--text); background: rgba(255,255,255,0.06); }
 
   /* ── Commits panel ── heatmap + sound */
   .p-head-right {
@@ -590,10 +579,16 @@
      the button or shifts the dot. Sized for the longer string, left-set. */
   #c-sound-label {
     display: inline-block;
-    width: 76px;
+    min-width: 62px;
     text-align: left;
     white-space: nowrap;
-    overflow: hidden;
+  }
+  /* Sound toggle lives bottom-right of the Commits panel -- keeps the
+     header clean. */
+  .c-sound-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 12px;
   }
 
   /* Calendar layout -- month view, day numbers visible, intensity colors */
@@ -1088,6 +1083,15 @@
     transition: color 0.15s, border-color 0.15s;
   }
   .q-add-stages:hover { color: var(--peach); border-color: rgba(232,149,106,0.3); }
+  /* Forces "+ stages" onto its own line for EVERY experiment (the flex
+     row wraps it full-width); the inner pill stays content-sized + left.
+     Fixes the inconsistency where long names bumped it down but short
+     ones kept it inline. */
+  .q-substage-row {
+    flex-basis: 100%;
+    display: flex;
+    margin-top: -2px;
+  }
   .q-tpl-pick {
     display: inline-flex; gap: 4px; align-items: center;
   }
@@ -1366,7 +1370,7 @@
     inset: 0;
     border-radius: inherit;
     padding: 1px;
-    background: linear-gradient(135deg, rgba(232,149,106,0.34), rgba(167,139,223,0.34));
+    background: linear-gradient(135deg, rgba(232,149,106,0.16), rgba(167,139,223,0.16));
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
             mask-composite: exclude;
@@ -1375,7 +1379,7 @@
   }
   .q-complete-btn:hover { color: var(--cream); }
   .q-complete-btn:hover::before {
-    background: linear-gradient(135deg, rgba(232,149,106,0.55), rgba(167,139,223,0.55));
+    background: linear-gradient(135deg, rgba(232,149,106,0.28), rgba(167,139,223,0.28));
   }
   .q-complete-btn:focus-visible {
     outline: 2px solid rgba(167,139,223,0.5);
@@ -1419,7 +1423,7 @@
   .q-finish-btn.armed { color: var(--peach); background: rgba(232,149,106,0.14); }
   .q-complete-btn.armed { color: var(--cream); }
   .q-complete-btn.armed::before {
-    background: linear-gradient(135deg, rgba(232,149,106,0.7), rgba(167,139,223,0.7));
+    background: linear-gradient(135deg, rgba(232,149,106,0.42), rgba(167,139,223,0.42));
   }
 
   /* Archived-quest recovery in the switcher. Completed quests are hidden
@@ -2392,7 +2396,7 @@
     inset: 0;
     border-radius: inherit;
     padding: 1px;
-    background: linear-gradient(135deg, rgba(232,149,106,0.32), rgba(167,139,223,0.32));
+    background: linear-gradient(135deg, rgba(232,149,106,0.16), rgba(167,139,223,0.16));
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
             mask-composite: exclude;
@@ -2404,7 +2408,7 @@
     color: var(--cream);
   }
   .a-btn-primary:hover::before {
-    background: linear-gradient(135deg, rgba(232,149,106,0.5), rgba(167,139,223,0.5));
+    background: linear-gradient(135deg, rgba(232,149,106,0.28), rgba(167,139,223,0.28));
   }
   .a-btn.done {
     border-color: rgba(167,139,223,0.55);
@@ -2451,8 +2455,8 @@
       <rect x="15" y="8" width="2" height="7" fill="rgba(26,22,18,.2)"/>
     </svg>
     <div class="pl-title"><span id="pl-type"></span><span class="caret"></span></div>
-    <div class="pl-hello" id="pl-hello">Good evening, Ivy.</div>
-    <div class="pl-meta" id="pl-meta">Mill Valley <span class="dot">·</span> 9:38pm PDT <span class="dot">·</span> Waning Crescent</div>
+    <div class="pl-hello" id="pl-hello">Welcome.</div>
+    <div class="pl-meta" id="pl-meta"></div>
   </div>
   <div class="pl-skip">press any key to skip</div>
 </div>
@@ -2464,7 +2468,7 @@
   <div id="menubar">
     <span class="mb-mark">✺ Unicorn</span>
     <span class="mb-toggle on" data-panel="quest"      title="⌘1">Quest</span>
-    <span class="mb-toggle on" data-panel="claude"     title="⌘2">Taste &amp; Proof</span>
+    <span class="mb-toggle on" data-panel="claude"     title="⌘2">Taste</span>
     <span class="mb-toggle" data-panel="keep"          title="⌘3">Keep</span>
     <span class="mb-toggle on" data-panel="activity"   title="⌘4">Activity</span>
     <span class="mb-toggle on" data-panel="commits"    title="⌘5">Commits</span>
@@ -2549,9 +2553,6 @@
   <section class="panel panel--commits">
     <div class="p-head">
       <span><span class="p-dot"></span>Commits</span>
-      <button class="c-sound" id="c-sound" aria-label="Toggle sound" title="Toggle ambient music">
-        <span class="c-dot"></span><span id="c-sound-label">sound off</span>
-      </button>
     </div>
     <div class="p-hair"></div>
     <div class="c-month-head">
@@ -2563,6 +2564,11 @@
     </div>
     <div class="c-calendar" id="c-calendar"></div>
     <div class="c-meta" id="c-meta">hover a day to listen</div>
+    <div class="c-sound-row">
+      <button class="c-sound" id="c-sound" aria-label="Toggle sound" title="Toggle ambient music">
+        <span class="c-dot"></span><span id="c-sound-label">sound off</span>
+      </button>
+    </div>
   </section>
 
   <!-- KEEP -- the tomato-red feature. Paste a paragraph from your
@@ -2663,7 +2669,7 @@
        Save unicorn.md (persistent profile on disk). -->
   <aside id="agent">
     <div class="p-head p-head-agent">
-      <span><span class="p-dot p-dot-gradient"></span>Taste &amp; Proof</span>
+      <span><span class="p-dot p-dot-gradient"></span>Taste</span>
     </div>
     <div class="p-hair"></div>
 
@@ -2760,12 +2766,14 @@
   const hour = parseInt(fmtHour.format(new Date()), 10);
   const timeStr = fmtTime.format(new Date()).toLowerCase().replace(' ', '');
 
-  let greeting = 'Good evening, Ivy.';
+  // Guest preview drops the name; Ivy's build keeps ", Ivy".
+  const GN = window.GUEST_PREVIEW ? '' : ', Ivy';
+  let greeting = `Good evening${GN}.`;
   let ambient = 'rgba(90,60,90,0.18)'; // dusk purple-wash
-  if (hour >= 5 && hour < 11) { greeting = 'Good morning, Ivy.'; ambient = 'rgba(232,180,130,0.16)'; }
-  else if (hour >= 11 && hour < 17) { greeting = 'Good afternoon, Ivy.'; ambient = 'rgba(255,220,180,0.10)'; }
-  else if (hour >= 17 && hour < 21) { greeting = 'Good evening, Ivy.'; ambient = 'rgba(232,149,106,0.16)'; }
-  else { greeting = 'Good evening, Ivy.'; ambient = 'rgba(70,60,110,0.18)'; }
+  if (hour >= 5 && hour < 11) { greeting = `Good morning${GN}.`; ambient = 'rgba(232,180,130,0.16)'; }
+  else if (hour >= 11 && hour < 17) { greeting = `Good afternoon${GN}.`; ambient = 'rgba(255,220,180,0.10)'; }
+  else if (hour >= 17 && hour < 21) { greeting = `Good evening${GN}.`; ambient = 'rgba(232,149,106,0.16)'; }
+  else { greeting = `Good evening${GN}.`; ambient = 'rgba(70,60,110,0.18)'; }
 
   document.getElementById('pl-hello').textContent = greeting;
   document.getElementById('mb-time').textContent = timeStr;
@@ -2788,7 +2796,9 @@
   else phase = 'New Moon';
 
   document.getElementById('pl-meta').innerHTML =
-    `Mill Valley <span class="dot">·</span> ${timeStr} PDT <span class="dot">·</span> ${phase}`;
+    (window.GUEST_PREVIEW
+      ? `${timeStr} <span class="dot">·</span> ${phase}`
+      : `Mill Valley <span class="dot">·</span> ${timeStr} PDT <span class="dot">·</span> ${phase}`);
 
   // Expose pieces other modules need (greeting, moon phase) on window
   // so the desktop greeting band + streak chip can pick them up after
@@ -3083,8 +3093,9 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   });
   if (migrated) saveApp(data);
 
-  // Seed if empty so the preview feels lived-in
-  if (data.quests.length === 0) {
+  // Seed if empty so the preview feels lived-in. Guests start on a
+  // true blank slate -- no demo quest, no "Build Unicorn".
+  if (!window.GUEST_PREVIEW && data.quests.length === 0) {
     const now = isoNow();
     data.quests = [{
       id: 'q-build-unicorn',
@@ -3398,7 +3409,12 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         addStages.textContent = '+ stages';
         addStages.title = 'Add a 3- or 5-stage path to a shareable artifact';
         addStages.setAttribute('onclick', `event.stopPropagation(); window.__unicornPromptTemplate('${exp.id}');`);
-        row.appendChild(addStages);
+        // Always on its own line below the experiment, regardless of name
+        // length, so every row is structurally identical.
+        const addStagesRow = document.createElement('div');
+        addStagesRow.className = 'q-substage-row';
+        addStagesRow.appendChild(addStages);
+        row.appendChild(addStagesRow);
       }
       // Artifact preview if Ship stage captured one
       if (exp.artifact && exp.artifact.value) {
@@ -3423,8 +3439,14 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
 
     // Show the "Complete this quest" CTA only when there are experiments
     // and they are ALL finished. Quest completion archives the whole quest.
+    // When the big CTA is up, hide the small "complete quest" text link so
+    // there aren't two complete-quest affordances at once.
+    const finishLink = document.getElementById('q-finish-btn');
     if (completeRow && total > 0 && active === 0) {
       completeRow.style.display = '';
+      if (finishLink) finishLink.style.display = 'none';
+    } else if (finishLink) {
+      finishLink.style.display = '';
     }
 
     // Archive toggle whenever there ARE older-than-7-day completed
@@ -5631,37 +5653,44 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
       return;
     }
     const exps = q.experiments || [];
-    const active = exps.find(e => e.status === 'active');
-    const recentClosed = exps
+    const closed = exps
       .filter(e => e.status === 'complete' && e.completedAt)
-      .sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt))[0];
+      .sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt));
+    const latestClose = closed[0];
 
-    // Pull a Keep entry for this quest if there is one
-    let keepLine = '';
+    // The Thread is woven from what you KEPT + what you CLOSED -- not a
+    // status readout of the Quest panel. Keep is the source material;
+    // this is where the kept pennies become a running narrative.
+    let keeps = [];
     try {
-      const keeps = JSON.parse(localStorage.getItem('unicorn.keeps') || '[]');
-      const questKeep = keeps
+      keeps = JSON.parse(localStorage.getItem('unicorn.keeps') || '[]')
         .filter(k => k.questId === q.id && (k.text || k.image))
-        .sort((a, b) => b.ts - a.ts)[0];
-      if (questKeep && questKeep.text) {
-        const snippet = questKeep.text.length > 80 ? questKeep.text.slice(0, 80) + '…' : questKeep.text;
-        keepLine = ` You kept this recently: <em>"${escapeHtml(snippet)}"</em>`;
-      } else if (questKeep && questKeep.image) {
-        keepLine = ` A screenshot is saved in Keep for this quest.`;
-      }
+        .sort((a, b) => b.ts - a.ts);
     } catch {}
+    const latestKeep = keeps[0];
+    const plural = (n, s) => `${n} ${s}${n === 1 ? '' : 's'}`;
+    const qName = `<span class="u-thread-quest">${escapeHtml(q.name)}</span>`;
 
-    // The synthesized arc
-    const parts = [];
-    parts.push(`<span class="u-thread-quest">${escapeHtml(q.name)}</span> is in motion.`);
-    if (active) parts.push(`The active experiment is <em>${escapeHtml(active.name)}</em>.`);
-    if (recentClosed) parts.push(`Your most recent close was <em>${escapeHtml(recentClosed.name)}</em>.`);
-    if (keepLine) parts.push(keepLine);
-    if (!active && !recentClosed) {
-      parts.push('No experiments running yet -- add one to start the arc.');
+    let html;
+    if (keeps.length) {
+      let snippet = '';
+      if (latestKeep.text) {
+        const t = latestKeep.text.length > 90 ? latestKeep.text.slice(0, 90) + '…' : latestKeep.text;
+        snippet = ` The latest you held onto: <em>"${escapeHtml(t)}"</em>`;
+      } else if (latestKeep.image) {
+        snippet = ` The latest you held onto is a screenshot.`;
+      }
+      const loopBit = closed.length
+        ? ` Set against ${plural(closed.length, 'closed loop')}, most recently <em>${escapeHtml(latestClose.name)}</em>.`
+        : '';
+      html = `On ${qName} you've kept ${plural(keeps.length, 'moment')} worth keeping.${snippet}${loopBit}`;
+    } else if (closed.length) {
+      html = `On ${qName} you've closed ${plural(closed.length, 'loop')}, most recently <em>${escapeHtml(latestClose.name)}</em>. Nothing kept here yet -- when a moment in a Claude Code chat is worth holding onto, it lands in Keep and the thread grows from it.`;
+    } else {
+      html = `${qName} is just beginning. As you keep moments from your Claude Code chats and close loops, this becomes the running thread of the build -- written as it happens, not after.`;
     }
 
-    el.innerHTML = parts.join(' ');
+    el.innerHTML = html;
   };
 
   // Vocabulary now shows only the Code card (rendered by the Code
@@ -6177,7 +6206,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   const textEl = document.getElementById('gb-text');
   if (!band || !textEl) return;
 
-  const greeting = window.__unicornGreeting || 'Hello, Ivy.';
+  const greeting = window.__unicornGreeting || (window.GUEST_PREVIEW ? 'Hello.' : 'Hello, Ivy.');
   const moon     = window.__unicornMoonPhase || '';
 
   // Day count of the attached / active quest
@@ -6290,9 +6319,15 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
       });
       head.appendChild(btn);
 
-      // Restore state
+      // Restore state. In the guest preview, first run starts with
+      // everything minimized except the Quest panel (clean blank slate
+      // to click through); the user's own toggles still persist after.
       const k = panelKey(panel);
-      if (minSet.has(k)) panel.classList.add('minimized');
+      if (window.GUEST_PREVIEW && minSet.size === 0 && k !== 'quest') {
+        panel.classList.add('minimized');
+      } else if (minSet.has(k)) {
+        panel.classList.add('minimized');
+      }
     });
   };
   wireMinimize();
