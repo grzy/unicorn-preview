@@ -3,6 +3,52 @@
 <head>
 <meta charset="UTF-8">
 <script>window.GUEST_PREVIEW = true;/*PREVIEW_FLAG -- build step flips this to true for the public unicorn-preview deploy. false = Ivy's real build, untouched.*/</script>
+<script>
+/* Persistence safety net. localStorage is ~5MB/origin; a big pasted
+   screenshot can blow it and every silent try/catch then drops saves
+   without telling you (this is what wiped a real quest). __unicornSafeStore
+   surfaces the failure loudly + points at the backup. Real fix = the
+   desktop app writing real files; this is the interim guardrail. */
+(function(){
+  var warnedAt = 0;
+  window.__unicornStorageWarn = function(){
+    var now = Date.now();
+    if (now - warnedAt < 10000) return; /* debounce -- don't stack */
+    warnedAt = now;
+    try {
+      var t = document.createElement('div');
+      t.setAttribute('role','status');
+      t.style.cssText = 'position:fixed;left:50%;bottom:30px;'
+        + 'transform:translateX(-50%) translateY(8px);z-index:99999;'
+        + 'max-width:430px;padding:12px 16px;border-radius:12px;'
+        + 'background:rgba(28,22,22,0.95);-webkit-backdrop-filter:blur(18px);'
+        + 'backdrop-filter:blur(18px);border:1px solid rgba(232,149,106,0.4);'
+        + 'color:rgba(241,236,232,0.94);font-family:ui-monospace,Menlo,monospace;'
+        + 'font-size:12px;line-height:1.5;box-shadow:0 8px 24px rgba(0,0,0,0.45);'
+        + 'opacity:0;transition:opacity .3s ease,transform .3s ease;pointer-events:none;';
+      t.innerHTML = '⚠ Storage full — this change didn’t save. '
+        + 'Back it up now: <b>Settings → Save journey</b>. '
+        + 'Unicorn’s desktop app fixes this for good.';
+      document.body.appendChild(t);
+      requestAnimationFrame(function(){
+        t.style.opacity='1'; t.style.transform='translateX(-50%) translateY(0)';
+      });
+      setTimeout(function(){
+        t.style.opacity='0'; t.style.transform='translateX(-50%) translateY(8px)';
+        setTimeout(function(){ t.remove(); }, 350);
+      }, 7000);
+    } catch(e){}
+  };
+  window.__unicornSafeStore = function(key, str){
+    try { localStorage.setItem(key, str); return true; }
+    catch (e) {
+      console.error('[unicorn] save failed:', key, e && e.name);
+      window.__unicornStorageWarn();
+      return false;
+    }
+  };
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
@@ -3057,7 +3103,8 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     } catch { return { quests: [] }; }
   };
   const saveApp = (d) => {
-    try { localStorage.setItem(KEY, JSON.stringify(d)); } catch {}
+    // Loud-fail: losing quests silently is the worst case (it happened).
+    window.__unicornSafeStore(KEY, JSON.stringify(d));
     // Notify Activity panel so it refreshes in real time
     window.dispatchEvent(new CustomEvent('unicorn:quests-updated'));
   };
@@ -6469,17 +6516,8 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     catch { return []; }
   };
   const save = (arr) => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
-      return true;
-    } catch (err) {
-      // localStorage quota is ~5MB per origin. Big screenshots blow
-      // through that fast. Surface the failure visibly instead of
-      // silently dropping the save.
-      console.error('[unicorn] Keep save failed:', err.name, err.message);
-      alert('Unicorn could not save -- localStorage is full. Delete a few older Keep entries (or wait for Electron, where they save to disk as real files).');
-      return false;
-    }
+    // Shared loud-fail helper (no blocking alert, on-brand toast).
+    return window.__unicornSafeStore(STORAGE_KEY, JSON.stringify(arr));
   };
 
   const escapeHtml = (s) => String(s).replace(/[&<>"']/g, c => (
