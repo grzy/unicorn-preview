@@ -780,11 +780,13 @@
      the muddy brown), no pale pastels. Saturated peach for lighter
      days ramping to electric orchid for the heaviest. Dark ink on top
      like the ACTIVE/STARTING chips. Pulled from the neon orchid. */
+  /* Slightly softened from full-bright, but OPAQUE -- never translucent
+     over the dark panel (that's what made the muddy brown). */
   .c-cell[data-intensity] { color: var(--ink); font-weight: 600; }
-  .c-cell[data-intensity="1"] { background: #F2A55F; }  /* bright peach */
-  .c-cell[data-intensity="2"] { background: #EE8B3C; }  /* vivid orange-peach */
-  .c-cell[data-intensity="3"] { background: #B486E8; }  /* bright orchid */
-  .c-cell[data-intensity="4"] { background: #A35BEC; }  /* electric orchid */
+  .c-cell[data-intensity="1"] { background: #E69A58; }  /* soft peach */
+  .c-cell[data-intensity="2"] { background: #DF823B; }  /* warm orange-peach */
+  .c-cell[data-intensity="3"] { background: #A87BDC; }  /* orchid */
+  .c-cell[data-intensity="4"] { background: #9A55DF; }  /* deep orchid */
 
   .c-cell:hover:not(.empty) {
     box-shadow: 0 0 0 1px rgba(255,255,255,0.4);
@@ -6854,11 +6856,17 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
       '◆ refactor', '✢ copy tweaks', '❋ ship it', 'tighten spacing',
       'add a hover state', 'calm the strokes', 'rename + cleanup'];
     const base = new Date(); base.setHours(12, 0, 0, 0);
-    for (let i = 0; i < 112; i++) {
+    for (let i = 0; i < 95; i++) {
       const d = new Date(base); d.setDate(d.getDate() - i);
       const wk = d.getDay() === 0 || d.getDay() === 6;
-      if (Math.random() < (wk ? 0.7 : 0.34)) continue; // quiet day
-      const n = 1 + Math.floor(Math.random() * (Math.random() < 0.18 ? 9 : 4));
+      // Lots of quiet days -> believable monthly totals (no 273-insanity).
+      if (Math.random() < (wk ? 0.82 : 0.5)) continue;
+      // Spread that spans all four colours: mostly light, sometimes a
+      // real push (so the bright orchid genuinely appears).
+      const r = Math.random();
+      const n = r < 0.58 ? 1 + Math.floor(Math.random() * 3)   // 1-3 peach/orange
+              : r < 0.86 ? 4 + Math.floor(Math.random() * 3)   // 4-6 orchid
+              :            7 + Math.floor(Math.random() * 5);  // 7-11 electric
       for (let j = 0; j < n; j++) {
         const t = new Date(d);
         t.setHours(9 + Math.floor(Math.random() * 13), Math.floor(Math.random() * 60));
@@ -6927,7 +6935,10 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
       const dayCommits = buckets.get(keyOf(d)) || [];
       const n = dayCommits.length;
       monthTotal += n;
-      const intensity = n === 0 ? 0 : n <= 2 ? 1 : n <= 5 ? 2 : n <= 10 ? 3 : 4;
+      // Sane per-day scale so the whole range (incl. the bright orchid)
+      // shows at realistic counts, not just at absurd totals:
+      //   1 -> peach · 2-3 -> orange-peach · 4-6 -> orchid · 7+ -> electric
+      const intensity = n === 0 ? 0 : n === 1 ? 1 : n <= 3 ? 2 : n <= 6 ? 3 : 4;
 
       const cell = document.createElement('div');
       cell.className = 'c-cell';
