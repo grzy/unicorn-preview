@@ -167,12 +167,21 @@
     width: 100%;
     position: relative;
   }
+  /* The EXACT terminal hook unicorn -- same block glyphs printed by
+     bin/unicorn-banner.sh, same peach/lilac. Not a redrawn SVG. */
   .pl-uc {
-    display: block; margin-bottom: 24px;
-    animation: plBob 2.6s ease-in-out infinite;
+    display: block;
+    margin: 0 0 26px;
+    font-family: var(--mono), 'SF Mono', Menlo, monospace;
+    font-size: 26px;
+    line-height: 1.02;
+    white-space: pre;
+    letter-spacing: 0;
     opacity: 0;
     animation: plFadeIn 0.6s ease 0.1s forwards, plBob 2.6s ease-in-out 0.7s infinite;
   }
+  .pl-uc .uc-l { color: var(--lilac); }
+  .pl-uc .uc-p { color: var(--peach); }
   @keyframes plBob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
   @keyframes plFadeIn { to { opacity: 1; } }
 
@@ -289,8 +298,8 @@
     display: flex; flex-direction: column; align-items: center;
     gap: 7px;
     text-align: center;
-    max-width: 470px;
-    padding: 22px 30px;
+    max-width: 392px;
+    padding: 22px 26px;
     background: rgba(22,22,22,0.88);
     backdrop-filter: blur(22px) saturate(1.2);
     -webkit-backdrop-filter: blur(22px) saturate(1.2);
@@ -333,9 +342,8 @@
     font-family: var(--sans);
     font-size: 11.5px;
     color: var(--text-mute);
-    line-height: 1.5;
+    line-height: 1.55;
     text-wrap: balance;
-    max-width: 40ch;
   }
   .ir-close {
     font-size: 16px;
@@ -859,7 +867,7 @@
     opacity: 1;
     pointer-events: auto;
   }
-  .p-mini:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+  .p-mini:hover { color: var(--text); }
   .p-mini::before { content: "−"; font-size: 14px; line-height: 1; }
   .panel.minimized .p-mini::before,
   #agent.minimized .p-mini::before,
@@ -2522,11 +2530,12 @@
   }
 
   /* ── RESPONSIVE ──────────────────────────────────────────────
-     The spatial canvas only holds up on very wide screens (>=1600px).
-     Anything smaller -- every normal laptop a judge would use -- drops
-     into one centered, scrollable column so NO panel is ever missed.
-     Wallpaper + menubar stay fixed behind. */
-  @media (max-width: 1600px) {
+     The floating spatial canvas is the DESKTOP-APP (Electron) vision.
+     In a browser it can't stay intentional at arbitrary sizes, so the
+     web build is always one centered, scrollable column -- responsive
+     and deliberate at every width a judge could open it at. Wallpaper
+     + menubar stay fixed behind. (Canvas only on a >3000px display.) */
+  @media (max-width: 3000px) {
     html, body { overflow-x: hidden; }
     body { padding: 48px 0 40px; }
     .panel, #agent, #activity-panel {
@@ -2561,29 +2570,12 @@
 <!-- ═════ PRELOADER ═════ -->
 <div id="preloader">
   <div class="pl-stage">
-    <!-- The terminal hook unicorn -- the Claude Code branding mark.
-         Chunky peach body + lilac spark/tail. Same identity printed by
-         bin/unicorn-banner.sh at every session start. -->
-    <svg class="pl-uc" width="80" height="74" viewBox="0 0 24 22" fill="none" style="image-rendering:pixelated">
-      <!-- lilac spark / horn, rising from the brow -->
-      <rect x="3"  y="7" width="4" height="4" fill="rgba(167,139,223,.92)"/>
-      <rect x="6"  y="4" width="4" height="4" fill="rgba(167,139,223,.80)"/>
-      <rect x="9"  y="1" width="4" height="4" fill="rgba(167,139,223,.62)"/>
-      <!-- peach body -->
-      <rect x="4"  y="10" width="16" height="7" fill="rgba(232,149,106,.94)"/>
-      <rect x="6"  y="9"  width="12" height="1" fill="rgba(232,149,106,.94)"/>
-      <!-- head + muzzle -->
-      <rect x="16" y="7"  width="5"  height="4" fill="rgba(232,149,106,.94)"/>
-      <rect x="20" y="9"  width="2"  height="2" fill="rgba(232,149,106,.74)"/>
-      <rect x="19" y="9"  width="1"  height="1" fill="rgba(26,22,18,.85)"/>
-      <!-- lilac tail, mirrors the spark -->
-      <rect x="2"  y="12" width="3" height="3" fill="rgba(167,139,223,.78)"/>
-      <rect x="0"  y="15" width="3" height="3" fill="rgba(167,139,223,.5)"/>
-      <!-- legs -->
-      <rect x="6"  y="17" width="3" height="5" fill="rgba(232,149,106,.82)"/>
-      <rect x="11" y="17" width="3" height="5" fill="rgba(232,149,106,.82)"/>
-      <rect x="16" y="17" width="3" height="5" fill="rgba(232,149,106,.82)"/>
-    </svg>
+    <!-- The terminal hook unicorn, verbatim -- the exact block glyphs
+         bin/unicorn-banner.sh prints at every Claude Code session. -->
+    <pre class="pl-uc" aria-hidden="true"><span class="uc-l">▟▘</span>
+<span class="uc-p">▟█▙</span>
+<span class="uc-p">▗████▖</span>
+<span class="uc-p">▝█  █</span></pre>
     <div class="pl-title"><span id="pl-type"></span><span class="caret"></span></div>
     <div class="pl-hello" id="pl-hello">Welcome.</div>
     <div class="pl-meta" id="pl-meta"></div>
