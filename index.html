@@ -768,9 +768,28 @@
     transition: none;
   }
   .p-head .p-dot {
+    position: relative;
     width: 6px; height: 6px; border-radius: 50%;
     background: var(--peach);
     display: inline-block; margin-right: 7px; vertical-align: 0;
+    cursor: pointer;
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+  }
+  /* Slightly bigger invisible hit area so the tiny dot is easy to click. */
+  .p-head .p-dot::after {
+    content: ""; position: absolute;
+    width: 18px; height: 18px; margin: -6px;
+  }
+
+  /* FOCUS STATES -- click the dot to cycle. Crisp 1px stroke + a SUBTLE
+     glow (low alpha). No backdrop effects. */
+  .focus-peach .p-head .p-dot { background: var(--peach) !important; box-shadow: 0 0 6px rgba(232,149,106,0.75); }
+  .focus-lilac .p-head .p-dot { background: var(--lilac) !important; box-shadow: 0 0 6px rgba(167,139,223,0.75); }
+  .panel.focus-peach, #agent.focus-peach, #activity-panel.focus-peach {
+    box-shadow: 0 0 0 1px rgba(232,149,106,0.55), 0 0 18px rgba(232,149,106,0.13);
+  }
+  .panel.focus-lilac, #agent.focus-lilac, #activity-panel.focus-lilac {
+    box-shadow: 0 0 0 1px rgba(167,139,223,0.55), 0 0 18px rgba(167,139,223,0.13);
   }
   /* Gradient dot for the Taste & Proof panel -- peach → lilac so the eye
      lands on it as the "you" panel. Same size + spacing as peach dots. */
@@ -6393,44 +6412,42 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   // time this script ran.
   setTimeout(wireMinimize, 0);
 
-  // ── Focus mode ──
-  const setFocus = (panel) => {
-    document.querySelectorAll('.focused').forEach(el => el.classList.remove('focused'));
-    if (panel) {
-      panel.classList.add('focused');
-      document.body.classList.add('focus-mode');
-    } else {
-      document.body.classList.remove('focus-mode');
-    }
+  // ── Focus dot ── click the panel's leading dot to cycle its focus:
+  //   off -> peach (stroke + subtle glow) -> lilac -> off.
+  // No backdrop blur/grain/tint, no tray. body.focus-mode is never set,
+  // so all that heavy CSS stays dormant. Just the panel, accented.
+  const cycleFocus = (panel) => {
+    const cur = panel.classList.contains('focus-lilac') ? 2
+              : panel.classList.contains('focus-peach') ? 1 : 0;
+    const next = (cur + 1) % 3;
+    panel.classList.remove('focus-peach', 'focus-lilac');
+    if (next === 1) panel.classList.add('focus-peach');
+    else if (next === 2) panel.classList.add('focus-lilac');
+    if (typeof uiClick === 'function') uiClick(next === 0 ? 'C5' : next === 1 ? 'E5' : 'G5');
   };
-  const toggleFocus = (panel) => {
-    if (!panel) return;
-    if (panel.classList.contains('focused')) {
-      setFocus(null);
-      if (typeof uiClick === 'function') uiClick('C5');
-    } else {
-      setFocus(panel);
-      if (typeof uiChord === 'function') uiChord(['E5','G5']);
-    }
+  const wireFocusDots = () => {
+    document.querySelectorAll('.panel, #agent, #activity-panel').forEach(panel => {
+      const head = panel.querySelector('.p-head, .a-head');
+      if (!head) return;
+      const dot = head.querySelector('.p-dot');
+      if (!dot || dot.dataset.focusWired) return;
+      dot.dataset.focusWired = '1';
+      dot.title = 'Focus this panel (peach → lilac → off)';
+      // Don't let the dot start a header drag.
+      dot.addEventListener('pointerdown', (e) => e.stopPropagation());
+      dot.addEventListener('click', (e) => { e.stopPropagation(); cycleFocus(panel); });
+    });
   };
+  wireFocusDots();
+  setTimeout(wireFocusDots, 0);
 
-  // Double-click on panel header → toggle focus on its panel
-  document.addEventListener('dblclick', (e) => {
-    const head = e.target.closest('.p-head, .a-head');
-    if (!head) return;
-    // Avoid hitting the mini button (it has its own click handler).
-    if (e.target.closest('.p-mini')) return;
-    const panel = head.closest('.panel, #agent, #activity-panel');
-    if (panel) toggleFocus(panel);
-  });
-
-  // ESC exits focus mode
+  // ESC clears focus on every panel
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
-    if (document.body.classList.contains('focus-mode')) {
-      setFocus(null);
-      if (typeof uiClick === 'function') uiClick('C5');
-    }
+    const lit = document.querySelectorAll('.focus-peach, .focus-lilac');
+    if (!lit.length) return;
+    lit.forEach(p => p.classList.remove('focus-peach', 'focus-lilac'));
+    if (typeof uiClick === 'function') uiClick('C5');
   });
 
   // ── Focus tray sliders -- Blur / Grain / Tint ──
