@@ -508,7 +508,7 @@
     font-family: var(--sans); font-size: 11px;
     color: var(--text-whisper);
     line-height: 1.5;
-    font-style: italic;
+    font-style: normal;
     padding: 6px 0;
   }
   .keep-item {
@@ -2157,7 +2157,7 @@
     font-family: var(--sans); font-size: 12px;
     color: var(--text-whisper);
     line-height: 1.5;
-    font-style: italic;
+    font-style: normal;
     padding: 8px 10px;
   }
   .a-gloss-more {
@@ -2219,7 +2219,7 @@
     font-family: var(--sans); font-size: 12px;
     color: var(--text-whisper);
     line-height: 1.5;
-    font-style: italic;
+    font-style: normal;
   }
 
   /* BREAKTHROUGHS -- voice-forward signals. Small date label up top,
@@ -2241,7 +2241,7 @@
     color: var(--text-whisper);
     margin-bottom: 3px;
   }
-  .u-bt-text { font-style: italic; color: var(--text-mute); }
+  .u-bt-text { font-style: normal; color: var(--text-mute); }
   .u-bt-text::before { content: "\201C"; color: var(--peach); margin-right: 1px; }
   .u-bt-text::after  { content: "\201D"; color: var(--peach); margin-left: 1px; }
 
@@ -2294,7 +2294,7 @@
     font-style: normal;
   }
   .u-thread-empty {
-    font-style: italic;
+    font-style: normal;
     color: var(--text-whisper);
   }
 
@@ -2366,7 +2366,7 @@
     background: transparent; border: none; padding: 4px 0;
     grid-template-columns: 1fr;
     font-family: var(--sans); font-size: 12px;
-    color: var(--text-whisper); font-style: italic;
+    color: var(--text-whisper); font-style: normal;
     line-height: 1.5;
   }
   .u-proof-mark {
@@ -2387,7 +2387,7 @@
     font-style: normal; font-weight: 500; color: var(--cream);
   }
   .u-proof-headline .quote {
-    font-style: italic; color: var(--text-mute);
+    font-style: normal; color: var(--text-mute);
   }
   .u-proof-meta {
     font-family: var(--mono); font-size: 9px;
@@ -2662,7 +2662,7 @@
     <textarea
       class="keep-input"
       id="keep-input"
-      placeholder="Paste a tidbit from your Claude Code chat &mdash; a paragraph, a quote, a moment worth keeping. Cmd+V also accepts screenshots."
+      placeholder="Paste a moment from a Claude Code chat. Text or a screenshot (Cmd+V)."
       rows="4"></textarea>
 
     <div class="keep-actions">
@@ -2677,9 +2677,7 @@
   <section class="panel panel--appearance" id="panel-appearance">
     <div class="p-head">
       <span><span class="p-dot"></span>Settings</span>
-      <span>⌘,</span>
     </div>
-    <span class="p-close" data-close="appearance" title="Stow (Settings)">×</span>
     <div class="p-hair"></div>
     <div class="ap-row">
       <div>
@@ -5498,9 +5496,9 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         : top[0];
       const moreCount = completedRecent.length - top.length;
       const more = moreCount > 0 ? ` (plus ${moreCount} more)` : '';
-      sentence1 = `In the last 30 days, Ivy completed ${namedList}${more}.`;
+      sentence1 = `In the last 30 days, ${window.GUEST_PREVIEW ? 'you' : 'Ivy'} completed ${namedList}${more}.`;
     } else {
-      sentence1 = `In the last 30 days, Ivy has been deep in build mode -- experiments in flight, no closures yet.`;
+      sentence1 = `In the last 30 days, ${window.GUEST_PREVIEW ? "you've" : 'Ivy has'} been deep in build mode -- experiments in flight, no closures yet.`;
     }
 
     // Build sentence 2: commit cadence
@@ -5790,7 +5788,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     const today = PT_YMD(Date.now());
     const lines = [];
 
-    lines.push(`# Ivy's unicorn`);
+    lines.push(`# ${window.GUEST_PREVIEW ? 'Your' : "Ivy's"} unicorn`);
     lines.push('');
     lines.push(`_A living taste profile written by Unicorn alongside the work. The agent talks; Unicorn distills what it heard into evidence you can carry. Paste this into a new chat for full context, share it as proof of how you work, or just look at it to remember who you're becoming._`);
     lines.push('');
@@ -5902,7 +5900,9 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     lines.push('1. Read the files in **Where to look** before doing anything else.');
     lines.push('2. Confirm you understand the active quest + active experiment.');
     lines.push('3. Continue from where the most recent breakthrough left off. Do not restart, do not re-explore.');
-    lines.push('4. Match the tone Ivy uses -- direct, short, no walls of text, no em dashes (use `--`).');
+    lines.push(window.GUEST_PREVIEW
+      ? '4. Keep a direct, short tone -- no walls of text, no em dashes (use `--`).'
+      : '4. Match the tone Ivy uses -- direct, short, no walls of text, no em dashes (use `--`).');
     lines.push('');
 
     return lines.join('\n');
@@ -6193,7 +6193,9 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     // ── Signals (Ivy's voice) ──
     if (signals.length) {
       lines.push(`## ${target === todayStr() ? "Today's signals" : 'Signals that day'}`);
-      lines.push('_Captured by Ivy in her own words -- breakthroughs, learnings, feedback, shares, ships._');
+      lines.push(window.GUEST_PREVIEW
+        ? '_Captured in your own words -- breakthroughs, learnings, feedback, shares, ships._'
+        : '_Captured by Ivy in her own words -- breakthroughs, learnings, feedback, shares, ships._');
       lines.push('');
       signals.forEach(s => {
         lines.push(`- **${s.type}** -- ${s.text}`);
@@ -6213,7 +6215,9 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     lines.push('1. Read the files in **Where to look** above before doing anything else.');
     lines.push('2. Confirm you understand the active quest + experiment.');
     lines.push("3. Continue from where the moves above left off. Don't restart, don't re-explore -- pick up.");
-    lines.push('4. Match the tone Ivy uses: short, concrete, no walls of text, no em dashes (use `--`).');
+    lines.push(window.GUEST_PREVIEW
+      ? '4. Keep a short, concrete tone: no walls of text, no em dashes (use `--`).'
+      : '4. Match the tone Ivy uses: short, concrete, no walls of text, no em dashes (use `--`).');
     lines.push('');
 
     return {
@@ -6583,7 +6587,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     if (all.length === 0) {
       const empty = document.createElement('div');
       empty.className = 'keep-empty';
-      empty.textContent = 'Nothing kept yet. Paste a paragraph or screenshot from a Claude Code chat to start.';
+      empty.textContent = 'Nothing kept yet. Paste text or a screenshot from a Claude Code chat.';
       list.appendChild(empty);
       return;
     }
