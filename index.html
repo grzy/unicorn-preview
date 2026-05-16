@@ -432,7 +432,7 @@
     backdrop-filter: blur(14px) saturate(1.1);
     -webkit-backdrop-filter: blur(14px) saturate(1.1);
     border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 999px;
+    border-radius: var(--r-panel);
     pointer-events: none;
     animation: gbIn 0.6s ease 0.35s both, gbOut 0.8s ease 6.4s both;
   }
@@ -580,6 +580,8 @@
     max-height: 280px;
     overflow-y: auto;
   }
+  /* No saved items -> no list, no gap. Panel ends right after Save. */
+  .keep-list:empty { margin-top: 0; }
   .keep-empty {
     font-family: var(--sans); font-size: 11px;
     color: var(--text-whisper);
@@ -902,7 +904,7 @@
     width: 18px; height: 18px;
     overflow: hidden;
     margin-left: 8px;
-    margin-right: -1px;
+    margin-right: -3px;
     color: var(--text-whisper);
     cursor: pointer;
     border-radius: 4px;
@@ -1474,10 +1476,16 @@
      when she's not working on Rive this week). Paused quests show up in
      the switcher with a "· paused" tag and don't count toward the
      "carries N quests in parallel" taste line. */
+  /* Left-aligned with the rest of the panel content, evenly spaced.
+     -7px offsets the first button's padding so its text lines up
+     exactly with "+ Add experiment" / the body copy. */
   .q-pause-row {
     margin-top: 10px;
     padding-top: 8px;
-    text-align: right;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-left: -7px;
   }
   .q-pause-btn {
     font-family: var(--mono); font-size: 9px;
@@ -1578,7 +1586,6 @@
     color: var(--text-whisper);
     cursor: pointer; user-select: none;
     padding: 3px 7px; border-radius: 4px;
-    margin-right: 6px;
     transition: color 0.15s, background 0.15s;
   }
   .q-finish-btn:hover { color: var(--peach); background: rgba(232,149,106,0.08); }
@@ -1590,7 +1597,6 @@
     color: var(--text-whisper);
     cursor: pointer; user-select: none;
     padding: 3px 7px; border-radius: 4px;
-    margin-left: 6px;
     transition: color 0.15s, background 0.15s;
   }
   .q-del-btn:hover { color: var(--tomato); background: rgba(255,94,113,0.08); }
@@ -3380,7 +3386,10 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     inp.className = 'q-sw-input';
     inp.placeholder = 'Name this quest';
     inp.maxLength = 40;
+    let done = false;  // Enter -> render() removes the input -> its blur
+                       // would fire commit() again -> a DUPLICATE quest.
     const commit = () => {
+      if (done) return; done = true;
       const v = inp.value.trim();
       if (!v) { render(); return; }
       const newQuest = {
@@ -3399,7 +3408,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     };
     inp.onkeydown = (e) => {
       if (e.key === 'Enter') { e.preventDefault(); commit(); }
-      if (e.key === 'Escape') render();
+      if (e.key === 'Escape') { done = true; render(); }
     };
     inp.onblur = commit;
     pill.replaceWith(inp);
@@ -6930,14 +6939,14 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     for (let i = 0; i < 95; i++) {
       const d = new Date(base); d.setDate(d.getDate() - i);
       const wk = d.getDay() === 0 || d.getDay() === 6;
-      // Lots of quiet days -> believable monthly totals (no 273-insanity).
-      if (Math.random() < (wk ? 0.82 : 0.5)) continue;
-      // Spread that spans all four colours: mostly light, sometimes a
-      // real push (so the bright orchid genuinely appears).
+      // A designer who codes pushes a LOT -- most days lit, weekends too.
+      if (Math.random() < (wk ? 0.42 : 0.14)) continue;
+      // Weighted toward real working days so orchid/electric show as
+      // much as peach -- the heatmap should sing, not be all yellow.
       const r = Math.random();
-      const n = r < 0.58 ? 1 + Math.floor(Math.random() * 3)   // 1-3 peach/orange
-              : r < 0.86 ? 4 + Math.floor(Math.random() * 3)   // 4-6 orchid
-              :            7 + Math.floor(Math.random() * 5);  // 7-11 electric
+      const n = r < 0.30 ? 1 + Math.floor(Math.random() * 3)   // 1-3  peach/orange
+              : r < 0.68 ? 4 + Math.floor(Math.random() * 3)   // 4-6  orchid
+              :            7 + Math.floor(Math.random() * 6);  // 7-12 electric
       for (let j = 0; j < n; j++) {
         const t = new Date(d);
         t.setHours(9 + Math.floor(Math.random() * 13), Math.floor(Math.random() * 60));
