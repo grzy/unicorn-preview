@@ -783,10 +783,12 @@
   /* Slightly softened from full-bright, but OPAQUE -- never translucent
      over the dark panel (that's what made the muddy brown). */
   .c-cell[data-intensity] { color: var(--ink); font-weight: 600; }
-  .c-cell[data-intensity="1"] { background: #E69A58; }  /* soft peach */
-  .c-cell[data-intensity="2"] { background: #DF823B; }  /* warm orange-peach */
-  .c-cell[data-intensity="3"] { background: #A87BDC; }  /* orchid */
-  .c-cell[data-intensity="4"] { background: #9A55DF; }  /* deep orchid */
+  /* 0.88 alpha = a hair of transparency (softer), still well clear of
+     the muddy zone (that only happened at low alpha). */
+  .c-cell[data-intensity="1"] { background: rgba(230,154,88,0.88); }  /* soft peach */
+  .c-cell[data-intensity="2"] { background: rgba(223,130,59,0.88); }  /* warm orange-peach */
+  .c-cell[data-intensity="3"] { background: rgba(168,123,220,0.88); } /* orchid */
+  .c-cell[data-intensity="4"] { background: rgba(154,85,223,0.88); }  /* deep orchid */
 
   .c-cell:hover:not(.empty) {
     box-shadow: 0 0 0 1px rgba(255,255,255,0.4);
@@ -1580,6 +1582,19 @@
     transition: color 0.15s, background 0.15s;
   }
   .q-finish-btn:hover { color: var(--peach); background: rgba(232,149,106,0.08); }
+  /* Delete quest -- destructive, so it reads quietest until armed, then
+     goes tomato. Two-step confirm + undo toast (mirrors complete). */
+  .q-del-btn {
+    font-family: var(--mono); font-size: 9px;
+    letter-spacing: 0.12em; text-transform: lowercase;
+    color: var(--text-whisper);
+    cursor: pointer; user-select: none;
+    padding: 3px 7px; border-radius: 4px;
+    margin-left: 6px;
+    transition: color 0.15s, background 0.15s;
+  }
+  .q-del-btn:hover { color: var(--tomato); background: rgba(255,94,113,0.08); }
+  .q-del-btn.armed { color: var(--tomato); background: rgba(255,94,113,0.16); }
   .q-finish-btn.armed { color: var(--peach); background: rgba(232,149,106,0.14); }
   .q-complete-btn.armed { color: var(--cream); }
   .q-complete-btn.armed::before {
@@ -2688,6 +2703,7 @@
     <div class="q-pause-row" id="q-pause-row">
       <span class="q-finish-btn" id="q-finish-btn" title="Wrap this quest -- archives it (recoverable). Click twice to confirm.">complete quest</span>
       <span class="q-pause-btn" id="q-pause-btn" title="Pause this quest -- it stays in the switcher but stops counting as active">pause quest</span>
+      <span class="q-del-btn" id="q-del-btn" title="Delete this quest -- removes it (undo available). Click twice to confirm.">delete quest</span>
     </div>
     <div class="q-complete-row" id="q-complete-row" style="display: none">
       <button class="q-complete-btn" id="q-complete-btn">
@@ -3453,7 +3469,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     // Body sub-text: full breakdown so the numbers always make sense.
     let subText;
     if (total === 0) {
-      subText = 'No experiments yet';
+      subText = '';  // the list area already says "No experiments yet"
     } else if (active > 0 && finished > 0) {
       subText = `${active} Active · ${finished} Finished`;
     } else if (active > 0) {
@@ -4144,6 +4160,61 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   if (completeBtn) completeBtn.addEventListener('click', () => requestCompleteQuest(completeBtn));
   const finishBtn = document.getElementById('q-finish-btn');
   if (finishBtn) finishBtn.addEventListener('click', () => requestCompleteQuest(finishBtn));
+
+  // ── DELETE QUEST ── two-step armed confirm (reuses the shared arm
+  // state), then removes it with an 8s undo toast that re-inserts it
+  // at its original index. For when you add one by mistake.
+  const armDelete = (el) => {
+    disarmComplete();
+    armEl = el;
+    const txt = el.querySelector('span') || el;
+    if (!armLabels.has(el)) armLabels.set(el, txt.textContent);
+    txt.textContent = 'tap again to delete';
+    el.classList.add('armed');
+    if (typeof uiClick === 'function') uiClick('A4');
+    armTimer = setTimeout(disarmComplete, 4000);
+  };
+  const doDeleteQuest = () => {
+    const idx = activeQ;
+    const removed = data.quests[idx];
+    if (!removed) return;
+    data.quests.splice(idx, 1);
+    saveApp(data);
+    const L = data.quests.length;
+    setActiveQ(L ? Math.max(0, Math.min(idx, L - 1)) : 0);
+    render();
+    window.dispatchEvent(new CustomEvent('unicorn:quests-updated'));
+    if (typeof uiClick === 'function') uiClick('D4');
+
+    if (toastEl) { toastEl.remove(); toastEl = null; }
+    if (toastTimer) { clearTimeout(toastTimer); toastTimer = null; }
+    const t = document.createElement('div');
+    t.className = 'u-toast';
+    t.innerHTML = `
+      <span class="u-toast-text">✺ deleted: <span class="u-toast-hl">${escapeHtml(removed.name)}</span></span>
+      <span class="u-toast-undo">undo</span>
+    `;
+    document.body.appendChild(t);
+    toastEl = t;
+    requestAnimationFrame(() => t.classList.add('show'));
+    t.querySelector('.u-toast-undo').addEventListener('click', () => {
+      data.quests.splice(Math.min(idx, data.quests.length), 0, removed);
+      saveApp(data);
+      setActiveQ(idx);
+      render();
+      window.dispatchEvent(new CustomEvent('unicorn:quests-updated'));
+      if (typeof uiClick === 'function') uiClick('F5');
+      dismissToast();
+    });
+    toastTimer = setTimeout(dismissToast, 8000);
+  };
+  const requestDeleteQuest = (el) => {
+    if (!data.quests.length) return;
+    if (armEl === el) { disarmComplete(); doDeleteQuest(); }
+    else armDelete(el);
+  };
+  const delBtn = document.getElementById('q-del-btn');
+  if (delBtn) delBtn.addEventListener('click', () => requestDeleteQuest(delBtn));
 
   // ── RENAME QUEST ── click the title to edit it in place. Same pattern
   // as experiment rename + new-quest input. Fixes "I can't even change
