@@ -480,7 +480,7 @@
     max-height: 80vh;
   }
   .panel--quest .q-exps { flex: 1; min-height: 0; overflow-y: auto; }
-  .panel--commits { bottom: 48px; left: 40px; width: 336px; }
+  .panel--commits { bottom: 48px; left: 40px; width: 336px; padding-bottom: 14px; }
   /* Appearance is also stowed by default -- summoned via Appearance in menubar */
   .panel--appearance {
     top: 64px; right: 460px; width: 336px;
@@ -730,7 +730,7 @@
     align-items: flex-start;
     justify-content: space-between;
     gap: 12px;
-    margin-top: 6px;
+    margin-top: 2px;
   }
   /* c-meta reserves 2 lines (min-height) but usually shows 1, so top-
      align the row and nudge the button to sit on the first line. */
@@ -761,7 +761,7 @@
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 4px;
-    margin-bottom: 14px;
+    margin-bottom: 8px;
   }
   .c-cell {
     aspect-ratio: 1 / 1;
@@ -1483,9 +1483,17 @@
     margin-top: 10px;
     padding-top: 8px;
     display: flex;
+    flex-wrap: nowrap;
     align-items: center;
-    gap: 16px;
-    margin-left: -7px;
+    gap: 12px;
+    margin-left: -6px;
+  }
+  /* Each stays on its own single line (no "complete / quest" stacking)
+     and never shrinks, so all three sit on one row, evenly spaced. */
+  .q-pause-row > span {
+    white-space: nowrap;
+    flex: 0 0 auto;
+    padding: 3px 6px;
   }
   .q-pause-btn {
     font-family: var(--mono); font-size: 9px;
