@@ -243,8 +243,29 @@
      ══════════════════════════════════════════ */
   /* Workspace is always visible; the preloader sits on top with its own fade.
      Fading workspace caused a backdrop-filter re-paint glitch on every panel. */
+  /* The web build is a real responsive layout: #workspace is a
+     centered multi-column flow that packs panels cleanly and reflows
+     at every width (3 cols wide -> 2 -> 1), scrolls, never cuts off.
+     The draggable spatial canvas is the desktop-app (Electron) story. */
   #workspace {
     position: fixed; inset: 0; z-index: 10;
+    overflow-y: auto; overflow-x: hidden;
+    column-width: 330px;
+    column-gap: 22px;
+    padding: 58px max(22px, calc((100% - 1160px) / 2)) 56px;
+    box-sizing: border-box;
+  }
+  #workspace > .panel,
+  #workspace > #agent,
+  #workspace > #activity-panel {
+    position: static !important;
+    inset: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    max-height: none !important;
+    margin: 0 0 22px !important;
+    break-inside: avoid;
+    display: block;
   }
 
   /* Menu bar -- very thin, Apple-restrained */
@@ -2555,29 +2576,18 @@
      composition that fills the space. Only small tablets / phones
      (<=1180px), where dragging is moot, fall back to a clean stacked
      scrollable column. Wallpaper + menubar stay fixed behind. */
-  @media (max-width: 1180px) {
-    html, body { overflow-x: hidden; }
-    body { padding: 48px 0 40px; }
-    .panel, #agent, #activity-panel {
-      position: static !important;
-      inset: auto !important;
-      transform: none !important;
-      width: min(480px, calc(100vw - 32px)) !important;
-      margin: 14px auto !important;
-      max-height: none !important;
+  /* Phone / small tablet: single column, tighter gutters. The multi-
+     column flow already collapses to 1 column when it can't fit two
+     330px tracks; this just trims the frame. */
+  @media (max-width: 720px) {
+    #workspace {
+      column-width: auto;
+      columns: 1;
+      padding: 54px 16px 44px;
     }
-    /* Settings stays stowed (summoned from the menubar). */
-    .panel--appearance { display: none !important; }
     #intro-ribbon {
       max-width: none !important;
-      width: min(440px, calc(100vw - 24px)) !important;
-    }
-  }
-  /* Phone-ish: tighten gutters a touch more. */
-  @media (max-width: 560px) {
-    .panel, #agent, #activity-panel {
-      width: calc(100vw - 20px) !important;
-      margin: 12px auto !important;
+      width: min(392px, calc(100vw - 28px)) !important;
     }
   }
 </style>
@@ -6398,7 +6408,10 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   const ribbon = document.getElementById('intro-ribbon');
   if (!ribbon) return;
 
+  // Guest preview always shows the intro (every reviewer should see
+  // what this is). Ivy's own build remembers the dismissal.
   const dismissed = (() => {
+    if (window.GUEST_PREVIEW) return false;
     try { return localStorage.getItem(KEY) === '1'; } catch { return false; }
   })();
   if (dismissed) return;
