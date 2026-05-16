@@ -6457,6 +6457,10 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   const band = document.getElementById('greeting-band');
   const textEl = document.getElementById('gb-text');
   if (!band || !textEl) return;
+  // Guest preview: the centre banner already explains Unicorn; the top
+  // greeting band just competes for attention. Skip it there. (Ivy's
+  // own build keeps it -- it's what stays after the intro is dismissed.)
+  if (window.GUEST_PREVIEW) { band.remove(); return; }
 
   const greeting = window.__unicornGreeting || (window.GUEST_PREVIEW ? 'Hello.' : 'Hello, Ivy.');
   const moon     = window.__unicornMoonPhase || '';
