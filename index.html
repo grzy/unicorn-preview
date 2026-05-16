@@ -455,7 +455,7 @@
     width: 100%;
     box-sizing: border-box;
     background: rgba(0,0,0,0.22);
-    border: 1px solid rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.035);
     border-radius: 8px;
     padding: 10px 12px;
     font-family: var(--sans); font-size: 12px;
@@ -479,7 +479,7 @@
     appearance: none; -webkit-appearance: none;
     padding: 7px 14px;
     background: rgba(255,94,113,0.07);
-    border: 1px solid rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.03);
     border-radius: 6px;
     font-family: var(--mono); font-size: 10px;
     letter-spacing: 0.10em; text-transform: uppercase;
@@ -575,7 +575,7 @@
     margin: 0; font: inherit;
     padding: 6px 11px; border-radius: 5px;
     background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.03);
     font-family: var(--mono); font-size: 10px;
     letter-spacing: 0.1em; text-transform: uppercase;
     color: var(--text-mute);
@@ -626,7 +626,7 @@
   .c-sound:hover { color: var(--text); }
   .c-sound.on {
     background: rgba(232,149,106,0.08);
-    border-color: rgba(232,149,106,0.10);
+    border-color: rgba(232,149,106,0.05);
     color: var(--peach);
   }
   .c-sound .c-dot {
@@ -1050,7 +1050,7 @@
   .q-sw-btn.on {
     background: rgba(232,149,106,0.10);
     color: var(--peach);
-    border-color: rgba(232,149,106,0.16);
+    border-color: rgba(255,255,255,0.05);
   }
   .q-sw-add {
     color: var(--text-whisper);
@@ -2035,7 +2035,7 @@
     display: flex; align-items: flex-start; gap: 10px;
     padding: 12px 14px;
     background: rgba(255,255,255,0.035);
-    border: 1px solid rgba(255,255,255,0.018);
+    border: 1px solid rgba(255,255,255,0.012);
     border-radius: 10px;
   }
   .a-attached-mark {
@@ -2310,7 +2310,7 @@
   .u-vocab-card {
     padding: 12px 14px;
     background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.012);
+    border: 1px solid rgba(255,255,255,0.03);
     border-radius: 10px;
   }
   .u-vocab-kind {
@@ -2779,7 +2779,7 @@
            Breakthroughs + Proof feed -- those were just an activity log
            dressed up. -->
       <div class="a-section collapsible open" data-section="thread">
-        <div class="a-label">The Thread</div>
+        <div class="a-label">So Far</div>
         <div class="a-section-body">
           <div class="u-thread" id="u-thread"></div>
         </div>
@@ -5723,7 +5723,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     const { app, signals } = loadAll();
     const q = getActiveQuest(app);
     if (!q) {
-      el.innerHTML = '<span class="u-thread-empty">Pick a quest in the Quest panel and the thread will appear here.</span>';
+      el.innerHTML = '<span class="u-thread-empty">Pick a quest and this fills in as you keep moments and close loops.</span>';
       return;
     }
     const exps = q.experiments || [];
@@ -5745,23 +5745,24 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     const plural = (n, s) => `${n} ${s}${n === 1 ? '' : 's'}`;
     const qName = `<span class="u-thread-quest">${escapeHtml(q.name)}</span>`;
 
+    // Lead with what was KEPT (the substance). Don't recite closed-loop
+    // names -- they're already visible in the Quest panel and reading
+    // them back is the "obvious" she flagged. No contradictory clauses.
     let html;
     if (keeps.length) {
       let snippet = '';
       if (latestKeep.text) {
         const t = latestKeep.text.length > 90 ? latestKeep.text.slice(0, 90) + '…' : latestKeep.text;
-        snippet = ` The latest you held onto: <em>"${escapeHtml(t)}"</em>`;
+        snippet = ` Most recent: <em>"${escapeHtml(t)}"</em>`;
       } else if (latestKeep.image) {
-        snippet = ` The latest you held onto is a screenshot.`;
+        snippet = ` Most recent is a screenshot.`;
       }
-      const loopBit = closed.length
-        ? ` Set against ${plural(closed.length, 'closed loop')}, most recently <em>${escapeHtml(latestClose.name)}</em>.`
-        : '';
-      html = `On ${qName} you've kept ${plural(keeps.length, 'moment')} worth keeping.${snippet}${loopBit}`;
+      const loopBit = closed.length ? `, ${plural(closed.length, 'loop')} closed along the way` : '';
+      html = `On ${qName}, ${plural(keeps.length, 'moment')} kept${loopBit}.${snippet}`;
     } else if (closed.length) {
-      html = `On ${qName} you've closed ${plural(closed.length, 'loop')}, most recently <em>${escapeHtml(latestClose.name)}</em>. Nothing kept here yet -- when a moment in a Claude Code chat is worth holding onto, it lands in Keep and the thread grows from it.`;
+      html = `On ${qName}, ${plural(closed.length, 'loop')} closed so far. This deepens as you start keeping the moments worth holding onto from your Claude Code chats.`;
     } else {
-      html = `${qName} is just beginning. As you keep moments from your Claude Code chats and close loops, this becomes the running thread of the build -- written as it happens, not after.`;
+      html = `${qName} is just beginning. As you keep moments and close loops, this writes itself -- as it happens, not after.`;
     }
 
     el.innerHTML = html;
