@@ -161,10 +161,12 @@
   #preloader.out .pl-stage { opacity: 0; }
 
   .pl-stage {
-    text-align: left;
-    padding: 0 32px;
-    max-width: 520px;
-    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 560px;
+    padding: 0 24px;
     position: relative;
   }
   /* The EXACT terminal hook unicorn -- same block glyphs printed by
@@ -214,8 +216,7 @@
   }
 
   .pl-meta {
-    position: absolute;
-    left: 32px; bottom: -52px;
+    margin-top: 30px;
     font-family: var(--mono);
     font-size: var(--t-meta);
     letter-spacing: 0.12em;
@@ -336,6 +337,36 @@
     pointer-events: none;
   }
   @keyframes irGlow { to { background-position: 280% 0; } }
+
+  /* One soulful pass: a bright comet rides the whole edge exactly once
+     on open, then fades -- leaving the static stroke. Draws the eye. */
+  @property --ir-trace { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+  #intro-ribbon::after {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1.6px;
+    background: conic-gradient(from var(--ir-trace),
+      transparent 0deg 312deg,
+      rgba(255,206,170,0.85) 338deg,
+      rgba(232,149,106,1) 348deg,
+      rgba(255,150,170,0.9) 353deg,
+      rgba(167,139,223,1) 358deg,
+      transparent 360deg);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    pointer-events: none;
+    filter: blur(0.4px);
+    animation: irTrace 2.7s cubic-bezier(.4,0,.2,1) 0.7s 1 both;
+  }
+  @keyframes irTrace {
+    0%   { --ir-trace: 0deg;   opacity: 0; }
+    9%   { opacity: 1; }
+    88%  { opacity: 1; }
+    100% { --ir-trace: 360deg; opacity: 0; }
+  }
   /* Subtle dim behind the banner -- focuses the eye on it. Clicking
      anywhere on it dismisses the banner (no × button). */
   /* Invisible full-screen click-catcher -- NO dim, NO blur (the banner
@@ -507,7 +538,7 @@
     min-height: 70px;
     transition: border-color 0.18s;
   }
-  .keep-input:focus { border-color: rgba(255,94,113,0.24); }
+  .keep-input:focus { border-color: rgba(232,149,106,0.34); }
   .keep-input::placeholder { color: var(--text-whisper); }
   /* Native resize grip is a bright white triangle that pops against the
      dark panel. Blend it away -- the corner still drags. */
@@ -743,20 +774,23 @@
 
   /* Brand-pair palette: peach (light days) → lilac (heavy days). No pink,
      no rose -- just the two brand colors. */
+  /* Tuned to the UI's exact brand peach (#E8956A -- same as the Save
+     button / active / Build Unicorn) ramping through a soft in-between
+     into the brand lilac (#A78BDF). No neon, harmonized with the rest. */
   .c-cell[data-intensity="1"] {
-    background: #FCB89A;       /* light vibrant peach */
+    background: #EBB492;       /* soft peach (light) */
     color: var(--ink); font-weight: 600;
   }
   .c-cell[data-intensity="2"] {
-    background: #F2A17A;       /* full vibrant peach */
+    background: #E8956A;       /* brand peach -- exact UI match */
     color: var(--ink); font-weight: 600;
   }
   .c-cell[data-intensity="3"] {
-    background: #B79ADD;       /* light lilac */
+    background: #C39AC0;       /* the in-between (peach -> lilac) */
     color: var(--ink); font-weight: 600;
   }
   .c-cell[data-intensity="4"] {
-    background: #A78BDF;       /* full lilac -- heaviest */
+    background: #A78BDF;       /* brand lilac -- heaviest */
     color: var(--ink); font-weight: 600;
   }
 
@@ -1360,7 +1394,7 @@
     transition: background 0.15s, color 0.15s;
     white-space: nowrap;
   }
-  .q-exp .q-status[data-s="starting"]  { color: var(--text-whisper); background: rgba(255,255,255,0.035); }
+  .q-exp .q-status[data-s="starting"]  { color: var(--lilac);       background: rgba(167,139,223,0.14); }
   .q-exp .q-status[data-s="active"]    { color: var(--peach);        background: rgba(232,149,106,0.14); }
   .q-exp .q-status[data-s="paused"]    { color: var(--text-mute);    background: rgba(255,255,255,0.05); }
   .q-exp .q-status[data-s="complete"] { color: var(--text-whisper); background: transparent; }
@@ -2366,7 +2400,7 @@
   .u-vocab-card {
     padding: 12px 14px;
     background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.014);
     border-radius: 10px;
   }
   .u-vocab-kind {
@@ -2495,7 +2529,7 @@
     appearance: none; -webkit-appearance: none;
     padding: 12px 10px;
     background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.016);
     border-radius: 10px;
     font-family: var(--mono); font-size: 10px; font-weight: 500;
     letter-spacing: 0.10em; text-transform: uppercase;
@@ -2508,7 +2542,7 @@
   }
   .a-btn:hover {
     color: var(--text);
-    border-color: rgba(255,255,255,0.12);
+    border-color: rgba(255,255,255,0.07);
   }
   .a-btn:focus-visible {
     outline: 2px solid rgba(232,149,106,0.55);
@@ -2527,7 +2561,7 @@
     inset: -1px;
     border-radius: inherit;
     padding: 1px;
-    background: linear-gradient(135deg, rgba(232,149,106,0.16), rgba(167,139,223,0.16));
+    background: linear-gradient(135deg, rgba(232,149,106,0.10), rgba(167,139,223,0.10));
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
             mask-composite: exclude;
@@ -2539,7 +2573,7 @@
     color: var(--cream);
   }
   .a-btn-primary:hover::before {
-    background: linear-gradient(135deg, rgba(232,149,106,0.28), rgba(167,139,223,0.28));
+    background: linear-gradient(135deg, rgba(232,149,106,0.18), rgba(167,139,223,0.18));
   }
   .a-btn.done {
     border-color: rgba(167,139,223,0.55);
@@ -3461,19 +3495,17 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         }
         return true;
       });
-    // Sort: active group on top in creation order; completed group below,
-    // ordered by most-recently-completed first so the latest closed loop
-    // sits at the top of the finished pile.
+    // Sort: STARTING on top (the thing you're about to begin), then the
+    // active/paused group in creation order, then completed (newest
+    // closure first) at the bottom.
+    const rank = (s) => s === 'starting' ? 0 : s === 'complete' ? 2 : 1;
     visible.sort((a, b) => {
-      const aDone = a.exp.status === 'complete' ? 1 : 0;
-      const bDone = b.exp.status === 'complete' ? 1 : 0;
-      if (aDone !== bDone) return aDone - bDone;
-      if (aDone === 1) {
-        const at = new Date(a.exp.completedAt || 0).getTime();
-        const bt = new Date(b.exp.completedAt || 0).getTime();
-        return bt - at; // newest completion first
+      const ra = rank(a.exp.status), rb = rank(b.exp.status);
+      if (ra !== rb) return ra - rb;
+      if (ra === 2) {
+        return new Date(b.exp.completedAt || 0) - new Date(a.exp.completedAt || 0);
       }
-      return 0; // active group keeps existing order
+      return 0; // keep existing order within a tier
     });
 
     listEl.innerHTML = '';
@@ -4349,7 +4381,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
       empty.className = 'act-empty';
       empty.textContent = currentQuery
         ? `Nothing matches "${currentQuery}"`
-        : 'Your arc will live here -- commits and loops closed.';
+        : 'Your commits and closed loops will live here.';
       listEl.appendChild(empty);
       return;
     }
@@ -6657,13 +6689,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     if (count) count.textContent = String(all.length);
 
     list.innerHTML = '';
-    if (all.length === 0) {
-      const empty = document.createElement('div');
-      empty.className = 'keep-empty';
-      empty.textContent = 'Nothing kept yet. Paste text or a screenshot from Claude Code.';
-      list.appendChild(empty);
-      return;
-    }
+    if (all.length === 0) return; // input + Save speak for themselves
     all.slice().sort((a, b) => b.ts - a.ts).forEach(k => {
       const item = document.createElement('div');
       item.className = 'keep-item';
