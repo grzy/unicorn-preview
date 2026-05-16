@@ -243,29 +243,10 @@
      ══════════════════════════════════════════ */
   /* Workspace is always visible; the preloader sits on top with its own fade.
      Fading workspace caused a backdrop-filter re-paint glitch on every panel. */
-  /* The web build is a real responsive layout: #workspace is a
-     centered multi-column flow that packs panels cleanly and reflows
-     at every width (3 cols wide -> 2 -> 1), scrolls, never cuts off.
-     The draggable spatial canvas is the desktop-app (Electron) story. */
+  /* Draggable spatial canvas -- the panels are absolutely positioned
+     inside and the user can move them. This IS the product. */
   #workspace {
     position: fixed; inset: 0; z-index: 10;
-    overflow-y: auto; overflow-x: hidden;
-    column-width: 330px;
-    column-gap: 22px;
-    padding: 58px max(22px, calc((100% - 1160px) / 2)) 56px;
-    box-sizing: border-box;
-  }
-  #workspace > .panel,
-  #workspace > #agent,
-  #workspace > #activity-panel {
-    position: static !important;
-    inset: auto !important;
-    transform: none !important;
-    width: 100% !important;
-    max-height: none !important;
-    margin: 0 0 22px !important;
-    break-inside: avoid;
-    display: block;
   }
 
   /* Menu bar -- very thin, Apple-restrained */
@@ -357,12 +338,12 @@
   @keyframes irGlow { to { background-position: 280% 0; } }
   /* Subtle dim behind the banner -- focuses the eye on it. Clicking
      anywhere on it dismisses the banner (no × button). */
+  /* Invisible full-screen click-catcher -- NO dim, NO blur (the banner
+     must stay perfectly readable). Click anywhere = dismiss. */
   #intro-backdrop {
     position: fixed; inset: 0; z-index: 48;
-    background: rgba(8,7,10,0.34);
-    -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
+    background: transparent;
     cursor: pointer;
-    animation: ibIn 0.5s ease 0.15s both;
   }
   @keyframes ibIn { from { opacity: 0; } to { opacity: 1; } }
   #intro-ribbon[hidden] { display: none; }
@@ -477,9 +458,9 @@
 
   /* Keep -- stowed by default. Paste-from-Claude-Code panel. The tidbits
      that scroll away in a fast chat go here to stay. */
-  /* Keep -- top centre, filling what used to be dead space. */
+  /* Keep -- left side, beside Quest. Draggable from here. */
   .panel--keep {
-    top: 64px; left: calc(50% - 168px); width: 336px;
+    top: 64px; left: 410px; width: 336px;
   }
   .panel--keep.shown { display: block; animation: termIn 0.45s ease; }
   .keep-count {
@@ -1669,9 +1650,9 @@
      ════════════════════════════════════════════════ */
   .panel--activity {
     position: fixed;
-    /* Bottom centre -- balances Keep above it; the centre column. */
+    /* Bottom-right, right-anchored so it can never be cut off. */
     bottom: 48px;
-    left: calc(50% - 168px);
+    right: 32px;
     width: 336px;
     max-height: 380px;
     background: var(--panel-bg);
@@ -2576,15 +2557,8 @@
      composition that fills the space. Only small tablets / phones
      (<=1180px), where dragging is moot, fall back to a clean stacked
      scrollable column. Wallpaper + menubar stay fixed behind. */
-  /* Phone / small tablet: single column, tighter gutters. The multi-
-     column flow already collapses to 1 column when it can't fit two
-     330px tracks; this just trims the frame. */
-  @media (max-width: 720px) {
-    #workspace {
-      column-width: auto;
-      columns: 1;
-      padding: 54px 16px 44px;
-    }
+  /* Small screens: just keep the intro card from overflowing. */
+  @media (max-width: 480px) {
     #intro-ribbon {
       max-width: none !important;
       width: min(392px, calc(100vw - 28px)) !important;
