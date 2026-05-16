@@ -493,9 +493,9 @@
   /* Keep -- stowed by default. Paste-from-Claude-Code panel. The tidbits
      that scroll away in a fast chat go here to stay. */
   /* Keep -- left side, beside Quest. Draggable from here. */
-  /* Right column: Keep bottom-right, aligned with Taste + Activity. */
+  /* Right column: Keep ABOVE Activity (Taste · Keep · Activity). */
   .panel--keep {
-    bottom: 48px; right: 32px; width: 336px;
+    bottom: 116px; right: 32px; width: 336px;
   }
   .panel--keep.shown { display: block; animation: termIn 0.45s ease; }
   .keep-count {
@@ -1707,8 +1707,8 @@
      ════════════════════════════════════════════════ */
   .panel--activity {
     position: fixed;
-    /* Right column, just above Keep -- aligned with Taste (right:32). */
-    bottom: 116px;
+    /* Right column, bottom -- below Keep, aligned with Taste (right:32). */
+    bottom: 48px;
     right: 32px;
     width: 336px;
     max-height: 380px;
@@ -4108,8 +4108,8 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     const txtNode = el.querySelector('span') || el;
     if (!armLabels.has(el)) armLabels.set(el, txtNode.textContent);
     txtNode.textContent = el.classList.contains('q-complete-btn')
-      ? '✺ tap again to archive'
-      : 'tap again to confirm';
+      ? '✺ confirm'
+      : 'confirm';
     el.classList.add('armed');
     if (typeof uiClick === 'function') uiClick('A4');
     armTimer = setTimeout(disarmComplete, 4000);
@@ -4186,7 +4186,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     armEl = el;
     const txt = el.querySelector('span') || el;
     if (!armLabels.has(el)) armLabels.set(el, txt.textContent);
-    txt.textContent = 'tap again to delete';
+    txt.textContent = 'confirm';
     el.classList.add('armed');
     if (typeof uiClick === 'function') uiClick('A4');
     armTimer = setTimeout(disarmComplete, 4000);
