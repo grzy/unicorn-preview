@@ -425,7 +425,6 @@
      that scroll away in a fast chat go here to stay. */
   .panel--keep {
     top: 64px; left: 410px; width: 336px;
-    display: none;
   }
   .panel--keep.shown { display: block; animation: termIn 0.45s ease; }
   .keep-count {
@@ -655,12 +654,15 @@
      bottom-right next to the meta text, not dangling below it. */
   .c-foot {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     gap: 12px;
     margin-top: 6px;
   }
+  /* c-meta reserves 2 lines (min-height) but usually shows 1, so top-
+     align the row and nudge the button to sit on the first line. */
   .c-foot .c-meta { flex: 1; min-width: 0; }
+  .c-foot .c-sound { margin-top: -3px; }
 
   /* Calendar layout -- month view, day numbers visible, intensity colors */
   .c-month-head {
@@ -723,10 +725,7 @@
   }
 
   .c-cell:hover:not(.empty) {
-    box-shadow:
-      0 0 0 1px rgba(255,255,255,0.45),
-      0 0 12px rgba(232,149,106,0.5),
-      0 0 20px rgba(167,139,223,0.35);
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.4);
   }
 
   .c-meta {
@@ -802,6 +801,13 @@
   /* FOCUS -- click the dot to toggle. Off = gradient dot, no stroke.
      On = solid lilac dot + a crisp 1px lilac stroke and SUBTLE glow.
      No backdrop effects, no tray. */
+  .focus-peach .p-head .p-dot {
+    background: var(--peach) !important;
+    box-shadow: 0 0 6px rgba(232,149,106,0.75);
+  }
+  .panel.focus-peach, #agent.focus-peach, #activity-panel.focus-peach {
+    box-shadow: 0 0 0 1px rgba(232,149,106,0.5), 0 0 18px rgba(232,149,106,0.12);
+  }
   .focus-lilac .p-head .p-dot {
     background: var(--lilac) !important;
     box-shadow: 0 0 6px rgba(167,139,223,0.75);
@@ -1604,9 +1610,9 @@
      ════════════════════════════════════════════════ */
   .panel--activity {
     position: fixed;
-    /* Right-column, just LEFT of the Claude panel. Width matches the
-       other panels (336px) so the scrollbar doesn't crowd the time labels. */
-    top: 54px;
+    /* Bottom-right (left of the far-right Taste column). Right-anchored
+       so it stays in view on window resize. */
+    bottom: 48px;
     right: 390px;
     width: 336px;
     max-height: 380px;
@@ -2555,7 +2561,7 @@
     <span class="mb-mark">✺ Unicorn</span>
     <span class="mb-toggle on" data-panel="quest"      title="⌘1">Quest</span>
     <span class="mb-toggle on" data-panel="claude"     title="⌘2">Taste</span>
-    <span class="mb-toggle" data-panel="keep"          title="⌘3">Keep</span>
+    <span class="mb-toggle on" data-panel="keep"          title="⌘3">Keep</span>
     <span class="mb-toggle on" data-panel="activity"   title="⌘4">Activity</span>
     <span class="mb-toggle on" data-panel="commits"    title="⌘5">Commits</span>
     <span class="mb-toggle" data-panel="appearance"    title="⌘,">Settings</span>
@@ -2778,7 +2784,7 @@
 
       <!-- TASTE -- patterns Unicorn has noticed about how you work.
            Open by default because it's the new hero of the panel. -->
-      <div class="a-section collapsible open" data-section="taste">
+      <div class="a-section collapsible" data-section="taste">
         <div class="a-label">Taste</div>
         <div class="a-section-body">
           <ul class="u-taste" id="u-taste"></ul>
@@ -2791,8 +2797,8 @@
            describe the arc, not the inventory. Replaces the old
            Breakthroughs + Proof feed -- those were just an activity log
            dressed up. -->
-      <div class="a-section collapsible open" data-section="thread">
-        <div class="a-label">So Far</div>
+      <div class="a-section collapsible" data-section="thread">
+        <div class="a-label">Context</div>
         <div class="a-section-body">
           <div class="u-thread" id="u-thread"></div>
         </div>
@@ -6383,6 +6389,12 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     try { localStorage.setItem(MIN_KEY, JSON.stringify(Array.from(set))); } catch {}
   };
   let minSet = loadMin();
+  // First run (no stored state): Activity, Commits, Keep start minimized
+  // -- visible but collapsed to a thin chip. Quest + Taste stay open.
+  // The user's own toggles persist after that.
+  if (localStorage.getItem(MIN_KEY) === null) {
+    minSet = new Set(['activity-panel', 'commits', 'panel-keep']);
+  }
 
   // Get a stable key for any panel so we can persist its minimized state.
   // Uses id when available; falls back to the first class.
@@ -6432,8 +6444,14 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   //   lilac stroke and subtle glow). No backdrop blur/grain/tint, no
   //   tray -- body.focus-mode is never set, all that CSS stays dormant.
   const cycleFocus = (panel) => {
-    const on = panel.classList.toggle('focus-lilac');
-    if (typeof uiClick === 'function') uiClick(on ? 'G5' : 'C5');
+    // off (gradient dot) -> peach -> lilac -> off
+    const cur = panel.classList.contains('focus-lilac') ? 2
+              : panel.classList.contains('focus-peach') ? 1 : 0;
+    const next = (cur + 1) % 3;
+    panel.classList.remove('focus-peach', 'focus-lilac');
+    if (next === 1) panel.classList.add('focus-peach');
+    else if (next === 2) panel.classList.add('focus-lilac');
+    if (typeof uiClick === 'function') uiClick(next === 0 ? 'C5' : next === 1 ? 'E5' : 'G5');
   };
   const wireFocusDots = () => {
     document.querySelectorAll('.panel, #agent, #activity-panel').forEach(panel => {
@@ -6703,7 +6721,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     appearance:  document.querySelector('.panel--appearance'),
   };
 
-  const STOWED = new Set(['appearance', 'keep']);
+  const STOWED = new Set(['appearance']);
   const setVisible = (key, visible) => {
     const panel = byPanel[key]; if (!panel) return;
     const tog = document.querySelector(`.mb-toggle[data-panel="${key}"]`);
