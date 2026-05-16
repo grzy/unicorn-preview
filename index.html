@@ -493,8 +493,9 @@
   /* Keep -- stowed by default. Paste-from-Claude-Code panel. The tidbits
      that scroll away in a fast chat go here to stay. */
   /* Keep -- left side, beside Quest. Draggable from here. */
+  /* Right column: Keep bottom-right, aligned with Taste + Activity. */
   .panel--keep {
-    top: 64px; left: 410px; width: 336px;
+    bottom: 48px; right: 32px; width: 336px;
   }
   .panel--keep.shown { display: block; animation: termIn 0.45s ease; }
   .keep-count {
@@ -775,26 +776,27 @@
   .c-cell.empty { visibility: hidden; }
   .c-cell.today { outline: 1px solid rgba(232,149,106,0.55); outline-offset: -1px; color: var(--text); }
 
-  /* Brand-pair palette: peach (light days) → lilac (heavy days). No pink,
-     no rose -- just the two brand colors. */
-  /* Tuned to the UI's exact brand peach (#E8956A -- same as the Save
-     button / active / Build Unicorn) ramping through a soft in-between
-     into the brand lilac (#A78BDF). No neon, harmonized with the rest. */
+  /* Same living peach -> coral -> lilac gradient as the banner stroke,
+     drifting slowly (irGlow) across the heatmap. Translucent so it sits
+     IN the UI instead of shouting; intensity = how present the wash is.
+     No pastel, no neon -- it's the brand, alive. */
+  .c-cell[data-intensity] {
+    background-size: 280% 100%;
+    animation: irGlow 9s linear infinite;
+    color: var(--text); font-weight: 500;
+  }
   .c-cell[data-intensity="1"] {
-    background: #EBB492;       /* soft peach (light) */
-    color: var(--ink); font-weight: 600;
+    background-image: linear-gradient(115deg, rgba(232,149,106,0.14) 0%, rgba(255,94,113,0.09) 30%, rgba(167,139,223,0.14) 62%, rgba(232,149,106,0.14) 100%);
+    color: var(--text-mute);
   }
   .c-cell[data-intensity="2"] {
-    background: #E8956A;       /* brand peach -- exact UI match */
-    color: var(--ink); font-weight: 600;
+    background-image: linear-gradient(115deg, rgba(232,149,106,0.24) 0%, rgba(255,94,113,0.15) 30%, rgba(167,139,223,0.24) 62%, rgba(232,149,106,0.24) 100%);
   }
   .c-cell[data-intensity="3"] {
-    background: #C39AC0;       /* the in-between (peach -> lilac) */
-    color: var(--ink); font-weight: 600;
+    background-image: linear-gradient(115deg, rgba(232,149,106,0.36) 0%, rgba(255,94,113,0.22) 30%, rgba(167,139,223,0.36) 62%, rgba(232,149,106,0.36) 100%);
   }
   .c-cell[data-intensity="4"] {
-    background: #A78BDF;       /* brand lilac -- heaviest */
-    color: var(--ink); font-weight: 600;
+    background-image: linear-gradient(115deg, rgba(232,149,106,0.5) 0%, rgba(255,94,113,0.32) 30%, rgba(167,139,223,0.5) 62%, rgba(232,149,106,0.5) 100%);
   }
 
   .c-cell:hover:not(.empty) {
@@ -1687,8 +1689,8 @@
      ════════════════════════════════════════════════ */
   .panel--activity {
     position: fixed;
-    /* Bottom-right, right-anchored so it can never be cut off. */
-    bottom: 48px;
+    /* Right column, just above Keep -- aligned with Taste (right:32). */
+    bottom: 116px;
     right: 32px;
     width: 336px;
     max-height: 380px;
