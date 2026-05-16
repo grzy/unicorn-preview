@@ -829,10 +829,14 @@
      margin) so it never pushes the corner content sideways. It only
      fades in on hover / minimized state. No scoot, ever. */
   .p-mini {
-    display: inline-flex; align-items: center; justify-content: center;
+    /* Glyph hugs the RIGHT edge of its box so it lines up with the
+       panel's right content edge (the count, Save, etc.) instead of
+       reading inset. The 18px box still gives a comfy click target. */
+    display: inline-flex; align-items: center; justify-content: flex-end;
     width: 18px; height: 18px;
     overflow: hidden;
     margin-left: 8px;
+    margin-right: -1px;
     color: var(--text-whisper);
     cursor: pointer;
     border-radius: 4px;
@@ -2510,6 +2514,36 @@
   /* Honor reduced-motion preference -- kill any remaining transitions */
   @media (prefers-reduced-motion: reduce) {
     .a-btn, .q-complete-btn { transition: none; }
+  }
+
+  /* ── RESPONSIVE ──────────────────────────────────────────────
+     The spatial canvas is built for a wide desktop. Below 1200px the
+     fixed panels would collide, so they drop into one centered,
+     scrollable column. Wallpaper + menubar stay fixed behind. */
+  @media (max-width: 1200px) {
+    html, body { overflow-x: hidden; }
+    body { padding: 48px 0 40px; }
+    .panel, #agent, #activity-panel {
+      position: static !important;
+      inset: auto !important;
+      transform: none !important;
+      width: min(480px, calc(100vw - 32px)) !important;
+      margin: 14px auto !important;
+      max-height: none !important;
+    }
+    /* Settings stays stowed (summoned from the menubar). */
+    .panel--appearance { display: none !important; }
+    #intro-ribbon {
+      max-width: none !important;
+      width: min(440px, calc(100vw - 24px)) !important;
+    }
+  }
+  /* Phone-ish: tighten gutters a touch more. */
+  @media (max-width: 560px) {
+    .panel, #agent, #activity-panel {
+      width: calc(100vw - 20px) !important;
+      margin: 12px auto !important;
+    }
   }
 </style>
 </head>
