@@ -437,11 +437,17 @@
   }
   /* The count is ambient -- it surfaces on hover, not a constant badge. */
   #panel-keep:hover .keep-count { opacity: 1; }
+  .keep-tag-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
   .keep-quest-tag {
     font-family: var(--mono); font-size: 9px;
     letter-spacing: 0.10em; text-transform: uppercase;
     color: var(--text-whisper);
-    margin-bottom: 10px;
   }
   .keep-quest-tag em {
     color: var(--peach);
@@ -645,11 +651,16 @@
   }
   /* Sound toggle lives bottom-right of the Commits panel -- keeps the
      header clean. */
-  .c-sound-row {
+  /* Meta line + sound toggle share one bottom row -- toggle sits
+     bottom-right next to the meta text, not dangling below it. */
+  .c-foot {
     display: flex;
-    justify-content: flex-end;
-    margin-top: 12px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 6px;
   }
+  .c-foot .c-meta { flex: 1; min-width: 0; }
 
   /* Calendar layout -- month view, day numbers visible, intensity colors */
   .c-month-head {
@@ -2638,8 +2649,8 @@
       <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
     </div>
     <div class="c-calendar" id="c-calendar"></div>
-    <div class="c-meta" id="c-meta">hover a day to listen</div>
-    <div class="c-sound-row">
+    <div class="c-foot">
+      <div class="c-meta" id="c-meta">hover a day to listen</div>
       <button class="c-sound" id="c-sound" aria-label="Toggle sound" title="Toggle ambient music">
         <span class="c-dot"></span><span id="c-sound-label">sound off</span>
       </button>
@@ -2653,11 +2664,13 @@
   <section class="panel panel--keep" id="panel-keep">
     <div class="p-head">
       <span><span class="p-dot p-dot-tomato"></span>Keep</span>
-      <span id="keep-count" class="keep-count">0</span>
     </div>
     <div class="p-hair"></div>
 
-    <div class="keep-quest-tag" id="keep-quest-tag">Saving to: <em>—</em></div>
+    <div class="keep-tag-row">
+      <div class="keep-quest-tag" id="keep-quest-tag">Saving to: <em>—</em></div>
+      <span id="keep-count" class="keep-count">0</span>
+    </div>
 
     <textarea
       class="keep-input"
