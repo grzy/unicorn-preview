@@ -173,11 +173,14 @@
      bin/unicorn-banner.sh, same peach/lilac. Not a redrawn SVG. */
   .pl-uc {
     display: block;
+    width: max-content;          /* shrink to the sprite, centered by flex */
     margin: 0 0 26px;
     font-family: var(--mono), 'SF Mono', Menlo, monospace;
     font-size: 26px;
     line-height: 1.02;
     white-space: pre;
+    text-align: left;            /* rows MUST share a left edge or the
+                                    sprite distorts (don't inherit center) */
     letter-spacing: 0;
     opacity: 0;
     animation: plFadeIn 0.6s ease 0.1s forwards, plBob 2.6s ease-in-out 0.7s infinite;
