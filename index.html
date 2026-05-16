@@ -776,22 +776,15 @@
   .c-cell.empty { visibility: hidden; }
   .c-cell.today { outline: 1px solid rgba(232,149,106,0.55); outline-offset: -1px; color: var(--text); }
 
-  /* STATIC peach -> lilac wash. No motion, no coral, no muddy mid --
-     just the two brand colours, intensity = how opaque. Calm + clean. */
-  .c-cell[data-intensity] { color: var(--text); font-weight: 500; }
-  .c-cell[data-intensity="1"] {
-    background: linear-gradient(135deg, rgba(232,149,106,0.20), rgba(167,139,223,0.16));
-    color: var(--text-mute);
-  }
-  .c-cell[data-intensity="2"] {
-    background: linear-gradient(135deg, rgba(232,149,106,0.34), rgba(167,139,223,0.30));
-  }
-  .c-cell[data-intensity="3"] {
-    background: linear-gradient(135deg, rgba(232,149,106,0.47), rgba(167,139,223,0.43));
-  }
-  .c-cell[data-intensity="4"] {
-    background: linear-gradient(135deg, rgba(232,149,106,0.62), rgba(167,139,223,0.60));
-  }
+  /* SOLID + VIBRANT -- no translucency over the dark panel (that was
+     the muddy brown), no pale pastels. Saturated peach for lighter
+     days ramping to electric orchid for the heaviest. Dark ink on top
+     like the ACTIVE/STARTING chips. Pulled from the neon orchid. */
+  .c-cell[data-intensity] { color: var(--ink); font-weight: 600; }
+  .c-cell[data-intensity="1"] { background: #F2A55F; }  /* bright peach */
+  .c-cell[data-intensity="2"] { background: #EE8B3C; }  /* vivid orange-peach */
+  .c-cell[data-intensity="3"] { background: #B486E8; }  /* bright orchid */
+  .c-cell[data-intensity="4"] { background: #A35BEC; }  /* electric orchid */
 
   .c-cell:hover:not(.empty) {
     box-shadow: 0 0 0 1px rgba(255,255,255,0.4);
