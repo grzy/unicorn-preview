@@ -2714,6 +2714,10 @@
     <div class="p-sub" id="q-sub">—</div>
     <div class="q-prog"><span id="q-fill"></span></div>
     <div class="q-exps" id="q-list"></div>
+    <div class="q-add" id="q-add-row">
+      <input id="q-add-in" class="q-add-in" placeholder="+ Add experiment" autocomplete="off" />
+    </div>
+    <div class="p-hair" id="q-tier-hair"></div>
     <div class="q-pause-row" id="q-pause-row">
       <span class="q-finish-btn" id="q-finish-btn" title="Wrap this quest -- archives it (recoverable). Click twice to confirm.">complete quest</span>
       <span class="q-pause-btn" id="q-pause-btn" title="Pause this quest -- it stays in the switcher but stops counting as active">pause quest</span>
@@ -2723,9 +2727,6 @@
       <button class="q-complete-btn" id="q-complete-btn">
         <span>✺ Complete this quest</span>
       </button>
-    </div>
-    <div class="q-add" id="q-add-row">
-      <input id="q-add-in" class="q-add-in" placeholder="+ Add experiment" autocomplete="off" />
     </div>
   </section>
 
@@ -3456,6 +3457,8 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
       if (prHide) prHide.style.display = 'none';
       const arHide = document.getElementById('q-add-row');
       if (arHide) arHide.style.display = 'none';
+      const thHide = document.getElementById('q-tier-hair');
+      if (thHide) thHide.style.display = 'none';
       window.dispatchEvent(new CustomEvent('unicorn:quest-attached', { detail: { name: '' } }));
       return;
     }
@@ -3464,6 +3467,8 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     if (prShow) prShow.style.display = '';
     const arShow = document.getElementById('q-add-row');
     if (arShow) arShow.style.display = '';
+    const thShow = document.getElementById('q-tier-hair');
+    if (thShow) thShow.style.display = '';
     titleEl.textContent = q.name + (q.paused ? ' · paused' : '');
     titleEl.classList.add('editable');
     titleEl.title = 'Click to rename';
@@ -5517,7 +5522,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
       if (hours.length >= 10) {
         const lateCount = hours.filter(h => h >= 22 || h < 3).length;
         if (lateCount / hours.length >= 0.25) {
-          lines.push({ kind: 'positive', text: 'Ships at <em>midnight Pacific</em> -- a real cadence, not a one-off.' });
+          lines.push({ kind: 'positive', text: 'Ships at <em>midnight Pacific</em> -- a signature, not a schedule.' });
         }
       }
     }
