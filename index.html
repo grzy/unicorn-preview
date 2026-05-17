@@ -145,11 +145,9 @@
      ══════════════════════════════════════════ */
   #preloader {
     position: fixed; inset: 0; z-index: 900;
-    /* Near-opaque so the wallpaper image can decode behind it unseen --
-       no "sloppy" pop. It's revealed cleanly when the preloader fades. */
-    background: rgba(16,15,17,0.985);
-    backdrop-filter: blur(40px) saturate(1.1);
-    -webkit-backdrop-filter: blur(40px) saturate(1.1);
+    /* Fully opaque -- the wallpaper decodes completely unseen behind it
+       (no orchid bleeding through a blur). Revealed cleanly on fade. */
+    background: #100F11;
     display: grid; place-items: center;
     /* Stage 2: bg starts fading 0.35s AFTER text begins fading. So the text
        and unicorn are fully gone before the workspace becomes visible. */
