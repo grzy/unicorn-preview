@@ -106,10 +106,10 @@
   .reveal .slide-number{ background:transparent!important; color:var(--t3);
        font-family:var(--f); font-size:13px; right:26px; bottom:20px; }
   .kbd{ position:fixed; left:0; right:0; bottom:24px; text-align:center; z-index:60;
-        font-family:var(--f); font-size:13px; letter-spacing:0.22em; text-transform:uppercase;
+        font-family:var(--f); font-size:11px; letter-spacing:0.2em; text-transform:uppercase;
         color:var(--t3); pointer-events:none; opacity:0; transition:opacity .45s ease; }
   .kbd .hl{ color:var(--peach); }
-  .caret{ display:inline-block; width:0.46ch; height:0.78em; background:var(--peach);
+  .caret{ display:inline-block; width:0.24ch; height:0.78em; background:var(--peach);
         margin-left:12px; vertical-align:-0.02em; border-radius:1px;
         animation:caretblink 1.06s steps(1) infinite; }
   @keyframes caretblink{ 50%{ opacity:0; } }
@@ -221,7 +221,7 @@
         <p class="wq acc">✷ a Design Engineer, anonymized</p>
         <blockquote class="pull">&ldquo;I keep a vault. I treat it as my long term memory. If you have worked with AI at all, you know <span class="grad">context is the huge thing</span>.&rdquo;</blockquote>
       </div>
-      <figure class="m img"><img src="media/keep-panel.jpg" alt="" style="object-position:50% 0%" /></figure>
+      <figure class="m img"><img src="media/keep-panel.jpg" alt="" style="object-position:50% 34%" /></figure>
     </div></div>
   </section>
 
@@ -242,7 +242,7 @@
     <div class="s">
       <p class="wq acc">✺ the response</p>
       <h2>Unicorn. A mirror, <em>not a dashboard</em>.</h2>
-      <figure class="m" style="height:392px"><video id="commits-v" src="media/commits-zoom.mp4" poster="media/commits-zoom.jpg" data-autoplay muted loop playsinline preload="metadata"></video><button class="snd" data-v="commits-v" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a9 9 0 0 1 0 14"/></svg><span>audio</span></button></figure>
+      <figure class="m" style="height:392px"><video id="commits-v" src="media/commits-zoom.mp4" poster="media/commits-zoom.jpg" data-autoplay muted loop playsinline preload="metadata" style="object-position:50% 82%"></video><button class="snd" data-v="commits-v" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a9 9 0 0 1 0 14"/></svg><span>audio</span></button></figure>
       <p class="cap"><em>commits</em>, played back as music</p>
     </div>
   </section>
@@ -330,7 +330,7 @@
     });
   });
   var kbd=document.getElementById('kbd');
-  function kbdShow(){ if(kbd) kbd.style.opacity = (Reveal.getIndices().h===0 ? '1' : '0'); }
+  function kbdShow(){ if(kbd) kbd.style.opacity = (Reveal.getIndices().h===0 ? '0.5' : '0'); }
   Reveal.on('ready', kbdShow); Reveal.on('slidechanged', kbdShow);
 </script>
 </body>
