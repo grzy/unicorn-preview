@@ -948,6 +948,10 @@
   #activity-panel.minimized .p-head {
     margin-bottom: 0;
   }
+  /* Commits runs a tighter bottom padding when expanded (heatmap foot).
+     When minimized, restore symmetric padding so its row centers in the
+     chip like every other minimized panel. */
+  .panel--commits.minimized { padding-bottom: 20px; }
 
   /* FOCUS MODE -- Monocle-inspired. The focused panel stays crisp; the
      rest of the desktop becomes a soft, deeply blurred background with
