@@ -105,10 +105,17 @@
   .reveal .progress{ color:var(--peach); height:3px; }
   .reveal .slide-number{ background:transparent!important; color:var(--t3);
        font-family:var(--f); font-size:13px; right:26px; bottom:20px; }
-  .kbd{ position:fixed; left:0; right:0; bottom:18px; text-align:center; z-index:40;
-        font-family:var(--f); font-size:12px; letter-spacing:0.22em; text-transform:uppercase;
-        color:var(--t3); pointer-events:none; }
-  .kbd span{ color:var(--peach); }
+  .kbd{ font-family:var(--f); font-size:13px; letter-spacing:0.22em; text-transform:uppercase;
+        color:var(--t3); margin:10px 0 0; }
+  .kbd .a{ color:var(--peach); }
+  .reveal .slides > section:first-child .s{ gap:26px; }
+  .reveal .slides > section:first-child .px{ margin-bottom:16px; }
+  .reveal .slides > section:nth-child(2) .s{ gap:34px; }
+  .snd{ position:absolute; right:14px; bottom:14px; z-index:4; display:inline-flex; align-items:center;
+        gap:7px; padding:9px 15px; border:0; border-radius:100px; cursor:pointer;
+        background:var(--glow); color:#140f1c; font-family:var(--f);
+        font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.16em; }
+  .snd svg{ width:13px; height:13px; display:block; }
 
   @media print{
     html,body,.reveal,.reveal .slides{ background:var(--void)!important; }
@@ -120,7 +127,7 @@
       width:100%!important; min-height:760px!important; page-break-after:always; break-after:page;
       -webkit-print-color-adjust:exact!important; print-color-adjust:exact!important; }
     .m::after{ display:none!important; }
-    .reveal .progress,.reveal .backgrounds,.reveal .slide-number,.kbd{ display:none!important; }
+    .reveal .progress,.reveal .backgrounds,.reveal .slide-number,.kbd,.snd{ display:none!important; }
   }
 </style>
 </head>
@@ -138,6 +145,7 @@
       <h1>Unicorn</h1>
       <p class="lede">A creative OS for designers experimenting with code. It runs beside Claude&nbsp;Code and holds the reasoning around your work, so it does not <em>evaporate</em>.</p>
       <p class="foot">Ivy Grzybowski &nbsp;·&nbsp; Design Technologist &nbsp;·&nbsp; capstone</p>
+      <p class="kbd"><span class="a">&larr;</span> use your arrow keys <span class="a">&rarr;</span></p>
     </div>
   </section>
 
@@ -145,8 +153,8 @@
   <section>
     <div class="s">
       <p class="wq acc">✷ the hook</p>
-      <figure class="m" style="height:440px"><video src="media/hero.mp4" poster="media/hero.jpg" data-autoplay muted loop playsinline preload="metadata"></video></figure>
-      <p class="note">A <em>hook</em> is a small script that runs the moment a Claude Code session starts. Type <em>unicorn</em> and it prints the mascot and loads your context, so the agent begins already knowing where you were.</p>
+      <figure class="m" style="height:440px"><video src="media/hero.mp4" poster="media/hero.jpg" data-autoplay muted loop playsinline preload="metadata" style="object-position:50% 0%; transform:scale(1.045); transform-origin:50% 0%"></video></figure>
+      <p class="note">A <em>hook</em> is a small script that runs the moment a Claude Code session starts. Type <em>unicorn</em> and it prints the mascot and loads your context, so <span class="grad">the agent begins already knowing where you were</span>.</p>
     </div>
   </section>
 
@@ -159,7 +167,7 @@
         <p class="by">Boris Cherny, creator of Claude Code.</p>
         <p class="lede">A sneak peek is the <em>method</em>, not an apology.</p>
       </div>
-      <figure class="m"><video src="media/boris.mp4" poster="media/boris.jpg" data-autoplay muted loop playsinline preload="metadata"></video></figure>
+      <figure class="m"><video id="boris-v" src="media/boris.mp4" poster="media/boris.jpg" data-autoplay muted loop playsinline preload="metadata"></video><button class="snd" data-v="boris-v" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a9 9 0 0 1 0 14"/></svg><span>audio</span></button></figure>
     </div></div>
   </section>
 
@@ -171,7 +179,7 @@
         <h2>Where is <em>Product Design</em> going?</h2>
         <p class="lede">I reached out on LinkedIn to Design Engineers who had been on <em>the Dive Club</em>, the best Product Design podcast out there. Four of them said yes.</p>
       </div>
-      <figure class="m img"><img src="media/dive-club.jpg" alt="" style="object-position:0% 50%" /></figure>
+      <figure class="m img"><img src="media/dive-club.jpg" alt="" style="object-position:0% 50%; transform:scale(1.05); transform-origin:0% 50%" /></figure>
     </div></div>
   </section>
 
@@ -186,7 +194,7 @@
           <li><span class="n">03</span><div><div class="t">Context evaporates. It has to live outside your head.</div><div class="s2">Everyone keeps a fragile memory of their own.</div></div></li>
         </ul>
       </div>
-      <figure class="m img"><img src="media/creative-os.jpg" alt="" /></figure>
+      <figure class="m img"><img src="media/creative-os.jpg" alt="" style="object-position:100% 0%; transform:scale(1.6); transform-origin:100% 0%" /></figure>
     </div></div>
   </section>
 
@@ -205,10 +213,10 @@
   <section>
     <div class="s"><div class="split">
       <div class="col">
+        <p class="wq acc">✷ a Design Engineer, anonymized</p>
         <blockquote class="pull">&ldquo;I keep a vault. I treat it as my long term memory. If you have worked with AI at all, you know <span class="grad">context is the huge thing</span>.&rdquo;</blockquote>
-        <p class="wq">a Design Engineer, anonymized</p>
       </div>
-      <figure class="m img"><img src="media/keep-panel.jpg" alt="" style="object-position:50% 0%" /></figure>
+      <figure class="m img"><img src="media/keep-panel.jpg" alt="" style="object-fit:contain" /></figure>
     </div></div>
   </section>
 
@@ -297,13 +305,22 @@
   </section>
 
 </div></div>
-<div class="kbd" aria-hidden="true">use your <span>arrow keys</span> &rarr;</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
 <script>
   Reveal.initialize({
     hash:true, controls:false, progress:true, slideNumber:'c/t',
     transition:'fade', transitionSpeed:'fast',
     width:1280, height:800, margin:0.07, center:true,
+  });
+  document.querySelectorAll('.snd').forEach(function(b){
+    var v=document.getElementById(b.dataset.v); if(!v) return;
+    b.addEventListener('click',function(e){
+      e.stopPropagation();
+      v.muted=!v.muted;
+      if(!v.muted){ v.play().catch(function(){}); }
+      b.setAttribute('aria-pressed', String(!v.muted));
+      b.querySelector('span').textContent = v.muted ? 'audio' : 'audio on';
+    });
   });
 </script>
 </body>
