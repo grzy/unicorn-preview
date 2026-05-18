@@ -41,7 +41,7 @@
   .lede em{ font-style:normal; color:var(--t1); }
   .by{ font-family:var(--f); font-size:13px; color:var(--t3); letter-spacing:0.04em; margin:0; }
   .note{ font-family:var(--f); font-size:14px; line-height:1.6; color:var(--t3); margin:0; max-width:60ch; }
-  .note em{ font-style:normal; color:var(--peach); }
+  .note em{ font-style:normal; color:var(--t1); }
 
   .m{ position:relative; border-radius:14px; overflow:hidden; background:#141019;
       box-shadow:0 36px 90px -42px rgba(0,0,0,0.9); }
@@ -105,9 +105,15 @@
   .reveal .progress{ color:var(--peach); height:3px; }
   .reveal .slide-number{ background:transparent!important; color:var(--t3);
        font-family:var(--f); font-size:13px; right:26px; bottom:20px; }
-  .kbd{ font-family:var(--f); font-size:13px; letter-spacing:0.22em; text-transform:uppercase;
-        color:var(--t3); margin:10px 0 0; }
-  .kbd .a{ color:var(--peach); }
+  .kbd{ position:fixed; left:0; right:0; bottom:24px; text-align:center; z-index:60;
+        font-family:var(--f); font-size:13px; letter-spacing:0.22em; text-transform:uppercase;
+        color:var(--t3); pointer-events:none; opacity:0; transition:opacity .45s ease; }
+  .kbd .hl{ color:var(--peach); }
+  .caret{ display:inline-block; width:0.46ch; height:0.78em; background:var(--peach);
+        margin-left:12px; vertical-align:-0.02em; border-radius:1px;
+        animation:caretblink 1.06s steps(1) infinite; }
+  @keyframes caretblink{ 50%{ opacity:0; } }
+  @media (prefers-reduced-motion:reduce){ .caret{ animation:none; } }
   .reveal .slides > section:first-child .s{ gap:26px; }
   .reveal .slides > section:first-child .px{ margin-bottom:16px; }
   .reveal .slides > section:nth-child(2) .s{ gap:34px; }
@@ -142,10 +148,9 @@
         <g class="p"><rect x="0.5" y="2" width="0.54" height="1.04"/><rect x="0" y="3" width="0.54" height="1.04"/><rect x="0.5" y="3" width="0.54" height="1.04"/><rect x="1" y="2" width="0.54" height="1.04"/><rect x="1.5" y="2" width="0.54" height="1.04"/><rect x="1" y="3" width="0.54" height="1.04"/><rect x="1.5" y="3" width="0.54" height="1.04"/><rect x="2" y="2" width="0.54" height="1.04"/><rect x="2" y="3" width="0.54" height="1.04"/><rect x="2.5" y="3" width="0.54" height="1.04"/><rect x="0.5" y="5" width="0.54" height="1.04"/><rect x="1" y="4" width="0.54" height="1.04"/><rect x="1.5" y="4" width="0.54" height="1.04"/><rect x="1" y="5" width="0.54" height="1.04"/><rect x="1.5" y="5" width="0.54" height="1.04"/><rect x="2" y="4" width="0.54" height="1.04"/><rect x="2.5" y="4" width="0.54" height="1.04"/><rect x="2" y="5" width="0.54" height="1.04"/><rect x="2.5" y="5" width="0.54" height="1.04"/><rect x="3" y="4" width="0.54" height="1.04"/><rect x="3.5" y="4" width="0.54" height="1.04"/><rect x="3" y="5" width="0.54" height="1.04"/><rect x="3.5" y="5" width="0.54" height="1.04"/><rect x="4" y="4" width="0.54" height="1.04"/><rect x="4.5" y="4" width="0.54" height="1.04"/><rect x="4" y="5" width="0.54" height="1.04"/><rect x="4.5" y="5" width="0.54" height="1.04"/><rect x="5" y="5" width="0.54" height="1.04"/><rect x="0.5" y="6" width="0.54" height="1.04"/><rect x="1" y="6" width="0.54" height="1.04"/><rect x="1.5" y="6" width="0.54" height="1.04"/><rect x="1" y="7" width="0.54" height="1.04"/><rect x="1.5" y="7" width="0.54" height="1.04"/><rect x="4" y="6" width="0.54" height="1.04"/><rect x="4.5" y="6" width="0.54" height="1.04"/><rect x="4" y="7" width="0.54" height="1.04"/><rect x="4.5" y="7" width="0.54" height="1.04"/></g>
       </svg>
       <p class="wq acc">✺ a creative OS &nbsp;·&nbsp; sneak peek</p>
-      <h1>Unicorn</h1>
+      <h1>Unicorn<span class="caret" aria-hidden="true"></span></h1>
       <p class="lede">A creative OS for designers experimenting with code. It runs beside Claude&nbsp;Code and holds the reasoning around your work, so it does not <em>evaporate</em>.</p>
       <p class="foot">Ivy Grzybowski &nbsp;·&nbsp; Design Technologist &nbsp;·&nbsp; capstone</p>
-      <p class="kbd"><span class="a">&larr;</span> use your arrow keys <span class="a">&rarr;</span></p>
     </div>
   </section>
 
@@ -153,7 +158,7 @@
   <section>
     <div class="s">
       <p class="wq acc">✷ the hook</p>
-      <figure class="m" style="height:440px"><video src="media/hero.mp4" poster="media/hero.jpg" data-autoplay muted loop playsinline preload="metadata" style="object-position:50% 0%; transform:scale(1.045); transform-origin:50% 0%"></video></figure>
+      <figure class="m" style="height:440px"><video src="media/hero.mp4" poster="media/hero.jpg" data-autoplay muted loop playsinline preload="metadata" style="object-position:50% 13%"></video></figure>
       <p class="note">A <em>hook</em> is a small script that runs the moment a Claude Code session starts. Type <em>unicorn</em> and it prints the mascot and loads your context, so <span class="grad">the agent begins already knowing where you were</span>.</p>
     </div>
   </section>
@@ -216,7 +221,7 @@
         <p class="wq acc">✷ a Design Engineer, anonymized</p>
         <blockquote class="pull">&ldquo;I keep a vault. I treat it as my long term memory. If you have worked with AI at all, you know <span class="grad">context is the huge thing</span>.&rdquo;</blockquote>
       </div>
-      <figure class="m img"><img src="media/keep-panel.jpg" alt="" style="object-fit:contain" /></figure>
+      <figure class="m img"><img src="media/keep-panel.jpg" alt="" style="object-position:50% 0%" /></figure>
     </div></div>
   </section>
 
@@ -237,7 +242,7 @@
     <div class="s">
       <p class="wq acc">✺ the response</p>
       <h2>Unicorn. A mirror, <em>not a dashboard</em>.</h2>
-      <figure class="m"><video id="commits-v" src="media/commits-zoom.mp4" poster="media/commits-zoom.jpg" data-autoplay muted loop playsinline preload="metadata"></video><button class="snd" data-v="commits-v" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a9 9 0 0 1 0 14"/></svg><span>audio</span></button></figure>
+      <figure class="m" style="height:392px"><video id="commits-v" src="media/commits-zoom.mp4" poster="media/commits-zoom.jpg" data-autoplay muted loop playsinline preload="metadata"></video><button class="snd" data-v="commits-v" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a9 9 0 0 1 0 14"/></svg><span>audio</span></button></figure>
       <p class="cap"><em>commits</em>, played back as music</p>
     </div>
   </section>
@@ -247,9 +252,9 @@
     <div class="s tight">
       <p class="wq acc">◆ what it is</p>
       <div class="three">
-        <figure><div class="m img"><img src="media/quest-panel.jpg" alt="" style="object-position:50% 2%" /></div><figcaption>Quest + experiments</figcaption><div class="d">The shape of the work, not a to do list.</div></figure>
+        <figure><div class="m img"><img src="media/quest-panel.jpg" alt="" style="object-position:50% 0%" /></div><figcaption>Quest + experiments</figcaption><div class="d">The shape of the work, not a to do list.</div></figure>
         <figure><div class="m img"><img src="media/keep-panel.jpg" alt="" style="object-position:50% 0%" /></div><figcaption>Keep</figcaption><div class="d">The deliberate save, tied to the quest.</div></figure>
-        <figure><div class="m img"><img src="media/hook.jpg" alt="" style="object-fit:contain" /></div><figcaption>The skill + the hook</figcaption><div class="d">The agent reads your context on open.</div></figure>
+        <figure><div class="m img"><img src="media/hook.jpg" alt="" style="object-position:0% 50%" /></div><figcaption>The skill + the hook</figcaption><div class="d">The agent reads your context on open.</div></figure>
       </div>
     </div>
   </section>
@@ -306,6 +311,7 @@
   </section>
 
 </div></div>
+<div class="kbd" id="kbd" aria-hidden="true"><span>&larr;</span> use your <span class="hl">arrow keys</span> <span>&rarr;</span></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
 <script>
   Reveal.initialize({
@@ -323,6 +329,9 @@
       b.querySelector('span').textContent = v.muted ? 'audio' : 'audio on';
     });
   });
+  var kbd=document.getElementById('kbd');
+  function kbdShow(){ if(kbd) kbd.style.opacity = (Reveal.getIndices().h===0 ? '1' : '0'); }
+  Reveal.on('ready', kbdShow); Reveal.on('slidechanged', kbdShow);
 </script>
 </body>
 </html>
