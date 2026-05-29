@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<title>Unicorn · Living Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu+Sans:wght@400;500;600;700&family=Ubuntu+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --peach: #E8956A;   --peach-dark: #D4724A;
+    --lilac: #A78BDF;   --lilac-dark: #9478D0;
+    --cream: #F1ECE8;   --ink: #1A1616;   --bg: #100F11;
+    --tomato: #FF5E71;
+    --text: rgba(241,236,232,0.94);
+    --text-mute: rgba(241,236,232,0.56);
+    --text-whisper: rgba(241,236,232,0.40);
+    --softline: rgba(255,255,255,0.07);
+    --hairline: rgba(255,255,255,0.04);
+    --panel-bg: rgba(22,22,22,0.78);
+    --sans: 'Ubuntu Sans', 'Helvetica Neue', sans-serif;
+    --mono: 'Ubuntu Sans Mono', ui-monospace, monospace;
+    --r-panel: 18px; --r-chip: 6px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--text); font-family: var(--sans);
+    -webkit-font-smoothing: antialiased; line-height: 1.55; }
+  body {
+    padding: 80px 32px 140px;
+    background:
+      radial-gradient(900px 600px at 12% -5%, rgba(232,149,106,0.10), transparent 60%),
+      radial-gradient(900px 700px at 100% 8%, rgba(167,139,223,0.10), transparent 55%),
+      var(--bg);
+    background-attachment: fixed;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; }
+
+  /* ── Header ── */
+  header.lead { margin-bottom: 76px; }
+  .eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: 0.28em;
+    text-transform: uppercase; color: var(--text-whisper); display: block; margin-bottom: 18px; }
+  .eyebrow .acc { color: var(--peach); }
+  h1 { font-family: var(--mono); font-weight: 600; font-size: clamp(36px, 6vw, 68px);
+    line-height: 1.02; letter-spacing: -0.02em; margin-bottom: 22px; }
+  h1 .grad { background: linear-gradient(115deg, var(--peach), var(--lilac));
+    -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lede { max-width: 60ch; font-size: 16px; line-height: 1.65; color: var(--text-mute); }
+  .lede strong { color: var(--text); font-weight: 600; }
+  .meta-row { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .meta-pill { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-mute);
+    padding: 6px 12px; border-radius: 999px; background: rgba(255,255,255,0.03);
+    border: 1px solid var(--hairline); }
+  .meta-pill b { color: var(--peach); font-weight: 600; }
+
+  /* ── Sections ── */
+  section { margin-bottom: 64px; }
+  .sec-label { font-family: var(--mono); font-size: 11px; font-weight: 600;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--peach);
+    padding-bottom: 12px; margin-bottom: 24px; border-bottom: 1px solid var(--softline); }
+  .sec-label .num { color: var(--text-whisper); margin-right: 10px; }
+  .sec-note { font-size: 13px; line-height: 1.7; color: var(--text-mute); max-width: 64ch; margin-bottom: 22px; }
+  .sec-note code { font-family: var(--mono); font-size: 12px; color: var(--lilac);
+    background: rgba(167,139,223,0.10); padding: 1px 6px; border-radius: 4px; }
+
+  .grid { display: grid; gap: 16px; }
+  .g2 { grid-template-columns: repeat(2, 1fr); }
+  .g3 { grid-template-columns: repeat(3, 1fr); }
+  .g4 { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 720px) { .g3, .g4 { grid-template-columns: repeat(2, 1fr); } .g2 { grid-template-columns: 1fr; } }
+
+  /* ── Pixel unicorn ── */
+  .uc-stage { display: flex; align-items: center; gap: 40px; flex-wrap: wrap;
+    padding: 40px; border-radius: var(--r-panel);
+    background: var(--panel-bg); border: 1px solid var(--hairline);
+    -webkit-backdrop-filter: blur(26px); backdrop-filter: blur(26px); }
+  /* line-height 1 so the block-glyph rows tile seamlessly -- any gap above
+     1.0 leaves thin horizontal slivers through the unicorn. */
+  .uc-glyph { font-family: var(--mono); font-size: 30px; line-height: 1; white-space: pre;
+    letter-spacing: 0; }
+  .uc-glyph .l { color: var(--lilac); }
+  .uc-glyph .p { color: var(--peach); }
+  .uc-cap { font-size: 13px; line-height: 1.7; color: var(--text-mute); max-width: 42ch; }
+  .uc-cap b { color: var(--text); font-weight: 600; }
+
+  /* ── Swatches ── */
+  .sw { border-radius: var(--r-chip); overflow: hidden; border: 1px solid var(--hairline); }
+  .sw-chip { height: 84px; }
+  .sw-meta { padding: 10px 12px; background: rgba(255,255,255,0.02); }
+  .sw-name { font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--text); }
+  .sw-hex { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-whisper); margin-top: 2px; }
+
+  /* ── Text scale ── */
+  .txt-row { display: flex; align-items: baseline; justify-content: space-between;
+    gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--hairline); }
+  .txt-row:last-child { border-bottom: 0; }
+  .txt-sample { font-family: var(--sans); }
+  .txt-tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-whisper); white-space: nowrap; }
+
+  /* ── Type specimens ── */
+  .spec { padding: 26px; border-radius: var(--r-panel); background: var(--panel-bg);
+    border: 1px solid var(--hairline); }
+  .spec-big-sans { font-family: var(--sans); font-weight: 600; font-size: 34px; letter-spacing: -0.01em; }
+  .spec-big-mono { font-family: var(--mono); font-weight: 600; font-size: 30px; }
+  .spec-scale { margin-top: 18px; display: flex; flex-direction: column; gap: 6px; }
+  .spec-scale span { color: var(--text-mute); }
+  .s-display { font-size: 22px; color: var(--text); }
+  .s-body { font-size: 14px; }
+  .s-meta { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-whisper); }
+
+  /* ── Glass panel demo ── */
+  .panel-demo { border-radius: var(--r-panel); padding: 18px;
+    background: var(--panel-bg); border: 1px solid var(--hairline);
+    -webkit-backdrop-filter: blur(26px); backdrop-filter: blur(26px); }
+  .pd-head { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-mute); display: flex; align-items: center; gap: 8px; }
+  .pd-dot { width: 7px; height: 7px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--peach), var(--lilac)); }
+  .pd-hair { height: 1px; margin: 12px 0; background: linear-gradient(90deg, var(--peach), var(--lilac)); opacity: 0.4; }
+  .pd-body { font-size: 13px; color: var(--text-mute); line-height: 1.6; }
+
+  /* ── Gradient ring (signature) ── */
+  .ring-demo { position: relative; padding: 18px 22px; border-radius: 12px;
+    background: rgba(22,22,22,0.6); color: var(--peach); font-family: var(--mono);
+    font-size: 13px; text-align: center; }
+  .ring-demo::before { content: ""; position: absolute; inset: -1px; border-radius: inherit;
+    padding: 1px; background: linear-gradient(135deg, var(--peach), var(--lilac));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+
+  /* ── Buttons ── */
+  .btn-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .btn { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+    padding: 9px 16px; border-radius: 8px; cursor: pointer; color: var(--text-mute);
+    background: rgba(255,255,255,0.04); border: 1px solid transparent;
+    transition: color 0.2s, background 0.2s; }
+  .btn:hover { color: var(--cream); background: rgba(255,255,255,0.07); }
+  .btn-primary { position: relative; color: var(--peach);
+    background: linear-gradient(135deg, rgba(232,149,106,0.15), rgba(167,139,223,0.15)); }
+  .btn-primary:hover { color: var(--cream); }
+
+  /* ── Status dots ── */
+  .status-row { display: flex; flex-wrap: wrap; gap: 22px; }
+  .status { display: flex; align-items: center; gap: 9px; font-family: var(--mono);
+    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-mute); }
+  .st-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .st-active { background: var(--peach); }
+  .st-complete { background: var(--lilac); }
+  .st-starting { background: var(--text-whisper); }
+
+  /* ── Principle list ── */
+  .principles { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .principles li { font-size: 14px; line-height: 1.6; color: var(--text-mute);
+    padding-left: 26px; position: relative; }
+  .principles li::before { content: "✺"; position: absolute; left: 0; top: 1px;
+    color: var(--peach); font-size: 12px; }
+  .principles li b { color: var(--text); font-weight: 600; }
+
+  footer.foot { margin-top: 96px; padding-top: 26px; border-top: 1px solid var(--softline);
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--text-whisper); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  footer.foot .acc { color: var(--peach); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="lead">
+    <span class="eyebrow"><span class="acc">✺</span> Unicorn · Living Design System</span>
+    <h1><span class="grad">The language Unicorn<br>is built in.</span></h1>
+    <p class="lede">A living reference for the colors, type, glass, and motion that make Unicorn feel like itself. <strong>Living</strong> because it updates as the product does, not after. It documents what is true in the build right now, so the app, the briefs, and the case story all speak the same visual language.</p>
+    <div class="meta-row">
+      <span class="meta-pill">Updated <b>2026-05-28</b></span>
+      <span class="meta-pill">Reviewed <b>weekly</b></span>
+      <span class="meta-pill">Surface <b>desktop app + briefs</b></span>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-label"><span class="num">01</span>The mark</div>
+    <div class="sec-note">The unicorn is built from terminal block glyphs, not an illustration. The same pixel form appears in the terminal banner, the app preloader, and the brief. The horn is lilac; the body is peach. It is rendered as text or solid pixels, never as a smooth vector, so it always reads as <code>made of pixels</code>.</div>
+    <div class="uc-stage">
+      <div class="uc-glyph"><span class="l">▟▘</span>
+<span class="p">▟█▙</span>
+<span class="p">▗████▖</span>
+<span class="p">▝█  █</span></div>
+      <div class="uc-cap">The pixel unicorn. <b>Lilac horn, peach body.</b> Born in the terminal banner, it carries through every surface as the one consistent character. Hand-made, never scraped, never smoothed.</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-label"><span class="num">02</span>Core palette</div>
+    <div class="sec-note">Two signature colors carry everything: <code>peach</code> and <code>lilac</code>. Cream is the text; near-black is the void. Tomato is a rare accent for destructive or urgent moments only.</div>
+    <div class="grid g4">
+      <div class="sw"><div class="sw-chip" style="background:#E8956A"></div><div class="sw-meta"><div class="sw-name">Peach</div><div class="sw-hex">#E8956A</div></div></div>
+      <div class="sw"><div class="sw-chip" style="background:#A78BDF"></div><div class="sw-meta"><div class="sw-name">Lilac</div><div class="sw-hex">#A78BDF</div></div></div>
+      <div class="sw"><div class="sw-chip" style="background:#F1ECE8"></div><div class="sw-meta"><div class="sw-name">Cream</div><div class="sw-hex">#F1ECE8</div></div></div>
+      <div class="sw"><div class="sw-chip" style="background:#100F11"></div><div class="sw-meta"><div class="sw-name">Void</div><div class="sw-hex">#100F11</div></div></div>
+      <div class="sw"><div class="sw-chip" style="background:#D4724A"></div><div class="sw-meta"><div class="sw-name">Peach dark</div><div class="sw-hex">#D4724A</div></div></div>
+      <div class="sw"><div class="sw-chip" style="background:#9478D0"></div><div class="sw-meta"><div class="sw-name">Lilac dark</div><div class="sw-hex">#9478D0</div></div></div>
+      <div class="sw"><div class="sw-chip" style="background:#1A1616"></div><div class="sw-meta"><div class="sw-name">Ink</div><div class="sw-hex">#1A1616</div></div></div>
+      <div class="sw"><div class="sw-chip" style="background:#FF5E71"></div><div class="sw-meta"><div class="sw-name">Tomato</div><div class="sw-hex">#FF5E71</div></div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-label"><span class="num">03</span>The signature move · gradient on light</div>
+    <div class="sec-note">Peach to lilac, at 135 degrees, is the one gesture that signals Unicorn. It lives on gradient text, the 1px panel hairline, primary buttons, and the closing line of every brief. The ring uses a <code>mask-composite</code> technique so the gradient sits on the edge, not the fill. Light does the work; strokes are avoided everywhere else.</div>
+    <div class="grid g2">
+      <div class="ring-demo">✺ gradient ring</div>
+      <div style="display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:22px;font-weight:600;background:linear-gradient(135deg,var(--peach),var(--lilac));-webkit-background-clip:text;background-clip:text;color:transparent;border:1px solid var(--hairline);border-radius:12px;">gradient text</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-label"><span class="num">04</span>Typography</div>
+    <div class="sec-note">Two families. <code>Ubuntu Sans</code> for body and reading; <code>Ubuntu Sans Mono</code> for display, labels, and anything that should feel like the terminal. Three sizes only: meta, body, display. Restraint over a type ramp.</div>
+    <div class="grid g2">
+      <div class="spec">
+        <div class="spec-big-sans">Ubuntu Sans</div>
+        <div class="spec-scale">
+          <span class="s-display">Display · 22px · the work compounds</span>
+          <span class="s-body">Body · 14px · capture what your agent can't, then keep what's worth keeping.</span>
+          <span class="s-meta">Meta · 10px · saved to disk</span>
+        </div>
+      </div>
+      <div class="spec">
+        <div class="spec-big-mono">Ubuntu Sans Mono</div>
+        <div class="spec-scale">
+          <span class="s-display" style="font-family:var(--mono)">Display · compose this quest's brief</span>
+          <span class="s-body" style="font-family:var(--mono)">Body · ~/unicorn/briefs/2026-W22.html</span>
+          <span class="s-meta">Meta · quest · taste · keep · activity</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-label"><span class="num">05</span>Text hierarchy</div>
+    <div class="sec-note">Three levels of cream, by opacity. Loud enough to read, quiet enough to layer over the desktop.</div>
+    <div class="spec">
+      <div class="txt-row"><span class="txt-sample" style="color:var(--text);font-size:16px">Text · primary content you read</span><span class="txt-tag">rgba .94</span></div>
+      <div class="txt-row"><span class="txt-sample" style="color:var(--text-mute);font-size:15px">Mute · supporting, secondary lines</span><span class="txt-tag">rgba .56</span></div>
+      <div class="txt-row"><span class="txt-sample" style="color:var(--text-whisper);font-size:14px">Whisper · labels, timestamps, hints</span><span class="txt-tag">rgba .40</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-label"><span class="num">06</span>Glass &amp; geometry</div>
+    <div class="sec-note">Panels are liquid glass: a translucent dark fill at <code>rgba(22,22,22,0.78)</code> with a 26px backdrop blur. No heavy strokes, no drop shadows. One 1px peach to lilac hairline under each header is the only decoration. Radii: <code>18px</code> for panels, <code>6px</code> for chips and inputs.</div>
+    <div class="grid g2">
+      <div class="panel-demo">
+        <div class="pd-head"><span class="pd-dot"></span>Panel</div>
+        <div class="pd-hair"></div>
+        <div class="pd-body">Glass fill, 26px blur, 18px radius. The hairline is the only line. On the desktop app the same panels float on a transparent window over the real desktop.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;justify-content:center">
+        <div style="background:var(--panel-bg);border:1px solid var(--hairline);border-radius:18px;padding:14px 16px;font-family:var(--mono);font-size:11px;color:var(--text-mute)">radius 18px · panel chrome</div>
+        <div style="background:var(--panel-bg);border:1px solid var(--hairline);border-radius:6px;padding:10px 14px;font-family:var(--mono);font-size:11px;color:var(--text-mute)">radius 6px · chip / input</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-label"><span class="num">07</span>Buttons</div>
+    <div class="sec-note">Calm by default: fill and color shift on hover, no outline. The primary action wears the peach to lilac wash. Strokes are deliberately absent.</div>
+    <div class="panel-demo"><div class="btn-row">
+      <span class="btn">secondary</span>
+      <span class="btn btn-primary">✺ primary action</span>
+      <span class="btn" style="color:var(--text-whisper)">quiet link</span>
+    </div></div>
+  </section>
+
+  <section>
+    <div class="sec-label"><span class="num">08</span>Experiment status</div>
+    <div class="sec-note">An experiment moves through three states. Color, not labels, carries the signal: peach is in motion, lilac is a closed loop, whisper is waiting to start.</div>
+    <div class="panel-demo"><div class="status-row">
+      <span class="status"><span class="st-dot st-active"></span>Active</span>
+      <span class="status"><span class="st-dot st-starting"></span>Starting</span>
+      <span class="status"><span class="st-dot st-complete"></span>Complete</span>
+    </div></div>
+  </section>
+
+  <section>
+    <div class="sec-label"><span class="num">09</span>The brief</div>
+    <div class="sec-note">Unicorn composes a <b>creative brief</b>, not a recap. Structured as <code>Direction</code> (where the quest is heading), <code>Signal</code> (the tools, themes, and links your work revealed), and <code>Work</code> (the kept moments, experiments, and commits). It opens with a one-line read of what you're becoming and closes on a gradient line: <em style="color:var(--peach);font-style:normal">Make something this week.</em> Self-contained HTML, shareable.</div>
+    <div class="panel-demo" style="text-align:center;padding:30px">
+      <div style="font-family:var(--mono);font-size:clamp(18px,2.6vw,26px);font-weight:600;background:linear-gradient(135deg,var(--peach),var(--lilac));-webkit-background-clip:text;background-clip:text;color:transparent">✺ Make something this week.</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-label"><span class="num">10</span>Motion principles</div>
+    <ul class="principles">
+      <li><b>No AI lift.</b> Photos and cards don't scale or brighten on hover. Static is the goal; the lift is the tell.</li>
+      <li><b>Delicate arrival, decisive exit.</b> Hover effects ease in slower than they ease out, so nothing lingers.</li>
+      <li><b>Ramp both ways.</b> Nothing pops in or cuts out. Everything fades, with generous easing.</li>
+      <li><b>Light, not strokes.</b> Depth comes from gradient, blur, and glass, not from outlines.</li>
+      <li><b>Respect reduced-motion.</b> Every animation gates behind the OS preference.</li>
+    </ul>
+  </section>
+
+  <section>
+    <div class="sec-label"><span class="num">11</span>Desktop treatment</div>
+    <div class="sec-note">In the Electron app the window is <b>transparent</b>: panels float on your real desktop, beside the terminal. <code>HUD mode</code> keeps Unicorn on top and lets clicks pass through the gaps to the terminal underneath, so Claude Code and Unicorn are usable at once. The preloader, panels, and greeting all soften so the desktop stays visible.</div>
+  </section>
+
+  <footer class="foot">
+    <span><span class="acc">✺</span> Unicorn · Living Design System</span>
+    <span>A creative OS for designers who code</span>
+  </footer>
+
+</div>
+</body>
+</html>
