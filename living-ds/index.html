@@ -115,9 +115,11 @@
         faded TR/BL corners, like the real panels. ── */
   .panel-demo { position: relative; border-radius: var(--r-panel); padding: 18px;
     background: var(--panel-bg); border: 0;
-    -webkit-backdrop-filter: blur(26px); backdrop-filter: blur(26px); }
+    -webkit-backdrop-filter: blur(26px); backdrop-filter: blur(26px);
+    -webkit-mask: radial-gradient(circle 34px at 100% 0%, transparent 0, #000 100%), radial-gradient(circle 34px at 0% 100%, transparent 0, #000 100%);
+    -webkit-mask-composite: source-in; mask-composite: intersect; }
   .panel-demo::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
-    background: linear-gradient(to top right, transparent 1%, rgba(232,149,106,0.3) 13%, rgba(167,139,223,0.3) 87%, transparent 99%);
+    background: linear-gradient(135deg, rgba(232,149,106,0.5), rgba(167,139,223,0.5));
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
   .pd-head { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
@@ -128,11 +130,16 @@
   .pd-body { font-size: 13px; color: var(--text-mute); line-height: 1.6; }
 
   /* ── Gradient ring (signature) ── */
+  /* Corner fade done with radial masks AT the two corners (not a diagonal
+     gradient) -- so it lands on the actual TR + BL corners regardless of how
+     wide/short the element is. Small radius = gentle, localized to the tip. */
   .ring-demo { position: relative; padding: 18px 22px; border-radius: 12px;
     background: rgba(22,22,22,0.6); color: var(--peach); font-family: var(--mono);
-    font-size: 13px; text-align: center; }
-  .ring-demo::before { content: ""; position: absolute; inset: -1px; border-radius: inherit;
-    padding: 1px; background: linear-gradient(to top right, transparent 1%, var(--peach) 13%, var(--lilac) 87%, transparent 99%);
+    font-size: 13px; text-align: center;
+    -webkit-mask: radial-gradient(circle 30px at 100% 0%, transparent 0, #000 100%), radial-gradient(circle 30px at 0% 100%, transparent 0, #000 100%);
+    -webkit-mask-composite: source-in; mask-composite: intersect; }
+  .ring-demo::before { content: ""; position: absolute; inset: 0; border-radius: inherit;
+    padding: 1px; background: linear-gradient(135deg, var(--peach), var(--lilac));
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
 
@@ -179,7 +186,7 @@
     font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
     color: var(--text-whisper); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
   footer.foot .acc { color: var(--peach); }
-  .app-icon-img { width: 96px; height: 96px; display: block; flex: 0 0 auto; }
+  .app-icon-img { width: 140px; height: 140px; display: block; flex: 0 0 auto; }
 </style>
 </head>
 <body>
