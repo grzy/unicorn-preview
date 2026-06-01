@@ -111,10 +111,15 @@
   .s-body { font-size: 14px; }
   .s-meta { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-whisper); }
 
-  /* ── Glass panel demo ── */
-  .panel-demo { border-radius: var(--r-panel); padding: 18px;
-    background: var(--panel-bg); border: 1px solid var(--hairline);
+  /* ── Glass panel demo ── now wears the signature gradient stroke with the
+        faded TR/BL corners, like the real panels. ── */
+  .panel-demo { position: relative; border-radius: var(--r-panel); padding: 18px;
+    background: var(--panel-bg); border: 0;
     -webkit-backdrop-filter: blur(26px); backdrop-filter: blur(26px); }
+  .panel-demo::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
+    background: linear-gradient(to top right, transparent 1%, rgba(232,149,106,0.3) 13%, rgba(167,139,223,0.3) 87%, transparent 99%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
   .pd-head { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
     text-transform: uppercase; color: var(--text-mute); display: flex; align-items: center; gap: 8px; }
   .pd-dot { width: 7px; height: 7px; border-radius: 50%;
@@ -268,12 +273,12 @@
 
   <section>
     <div class="sec-label"><span class="num">06</span>Glass &amp; geometry</div>
-    <div class="sec-note">Panels are liquid glass: a translucent dark fill at <code>rgba(22,22,22,0.78)</code> with a 26px backdrop blur. No heavy strokes, no drop shadows. One 1px peach to lilac hairline under each header is the only decoration. Radii: <code>18px</code> for panels, <code>6px</code> for chips and inputs.</div>
+    <div class="sec-note">Panels are liquid glass: a translucent dark fill with a generous backdrop blur. The edge is the signature peach→lilac gradient stroke that <b>fades at the top-right and bottom-left corners</b> -- the same edge as the icon and the window. A soft hairline still sits under each header. Radii: <code>18px</code> for panels, <code>6px</code> for chips and inputs.</div>
     <div class="grid g2">
       <div class="panel-demo">
         <div class="pd-head"><span class="pd-dot"></span>Panel</div>
         <div class="pd-hair"></div>
-        <div class="pd-body">Glass fill, 26px blur, 18px radius. The hairline is the only line. On the desktop app the same panels float on a transparent window over the real desktop.</div>
+        <div class="pd-body">Glass fill, 26px blur, 18px radius. The gradient stroke wraps the edge and fades at the top-right + bottom-left corners. On the desktop app these panels float on a transparent window over the real desktop.</div>
       </div>
       <div style="display:flex;flex-direction:column;gap:12px;justify-content:center">
         <div style="background:var(--panel-bg);border:1px solid var(--hairline);border-radius:18px;padding:14px 16px;font-family:var(--mono);font-size:11px;color:var(--text-mute)">radius 18px · panel chrome</div>
