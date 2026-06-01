@@ -71,10 +71,14 @@
   @media (max-width: 720px) { .g3, .g4 { grid-template-columns: repeat(2, 1fr); } .g2 { grid-template-columns: 1fr; } }
 
   /* ── Pixel unicorn ── */
-  .uc-stage { display: flex; align-items: center; gap: 40px; flex-wrap: wrap;
+  /* Fixed visual column so the glyph unicorn + the app icon sit in the same
+     spot and their captions line up across the two rows. */
+  .uc-stage { display: grid; grid-template-columns: 200px 1fr; align-items: center; gap: 40px;
     padding: 40px; border-radius: var(--r-panel);
     background: var(--panel-bg); border: 1px solid var(--hairline);
     -webkit-backdrop-filter: blur(26px); backdrop-filter: blur(26px); }
+  .uc-glyph, .app-icon-img { justify-self: center; }
+  @media (max-width: 560px) { .uc-stage { grid-template-columns: 1fr; } }
   /* line-height 1 so the block-glyph rows tile seamlessly -- any gap above
      1.0 leaves thin horizontal slivers through the unicorn. */
   .uc-glyph { font-family: var(--mono); font-size: 30px; line-height: 1; white-space: pre;
@@ -116,7 +120,7 @@
   .panel-demo { position: relative; border-radius: var(--r-panel); padding: 18px;
     background: var(--panel-bg); border: 0;
     -webkit-backdrop-filter: blur(26px); backdrop-filter: blur(26px);
-    -webkit-mask: radial-gradient(circle 34px at 100% 0%, transparent 0, #000 100%), radial-gradient(circle 34px at 0% 100%, transparent 0, #000 100%);
+    -webkit-mask: radial-gradient(circle 64px at 100% 0%, transparent 0, #000 100%), radial-gradient(circle 64px at 0% 100%, transparent 0, #000 100%);
     -webkit-mask-composite: source-in; mask-composite: intersect; }
   .panel-demo::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
     background: linear-gradient(135deg, rgba(232,149,106,0.5), rgba(167,139,223,0.5));
@@ -136,7 +140,7 @@
   .ring-demo { position: relative; padding: 18px 22px; border-radius: 12px;
     background: rgba(22,22,22,0.6); color: var(--peach); font-family: var(--mono);
     font-size: 13px; text-align: center;
-    -webkit-mask: radial-gradient(circle 30px at 100% 0%, transparent 0, #000 100%), radial-gradient(circle 30px at 0% 100%, transparent 0, #000 100%);
+    -webkit-mask: radial-gradient(circle 62px at 100% 0%, transparent 0, #000 100%), radial-gradient(circle 62px at 0% 100%, transparent 0, #000 100%);
     -webkit-mask-composite: source-in; mask-composite: intersect; }
   .ring-demo::before { content: ""; position: absolute; inset: 0; border-radius: inherit;
     padding: 1px; background: linear-gradient(135deg, var(--peach), var(--lilac));
@@ -239,7 +243,7 @@
     <div class="sec-note">Peach to lilac is the one gesture that signals Unicorn. As of June 2026 it runs along the bottom-left→top-right diagonal and <b>fades to transparent at the top-right and bottom-left corners</b> -- the single stroke carries both the hue shift and the corner fade. The exact same edge runs on the <b>app icon, the window's glass edge, and every panel</b>, so the whole product reads as one object. The ring uses a <code>mask-composite</code> technique so the gradient sits on the edge, not the fill. Light does the work; strokes are avoided everywhere else.</div>
     <div class="grid g2">
       <div class="ring-demo">✺ gradient ring</div>
-      <div style="display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:22px;font-weight:600;background:linear-gradient(135deg,var(--peach),var(--lilac));-webkit-background-clip:text;background-clip:text;color:transparent;border:1px solid var(--hairline);border-radius:12px;">gradient text</div>
+      <div style="display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:22px;font-weight:600;background:linear-gradient(90deg,var(--peach),var(--lilac));-webkit-background-clip:text;background-clip:text;color:transparent;border:1px solid var(--hairline);border-radius:12px;">gradient text</div>
     </div>
   </section>
 
@@ -316,7 +320,7 @@
     <div class="sec-label"><span class="num">09</span>The brief</div>
     <div class="sec-note">Unicorn composes a <b>creative brief</b>, not a recap. Structured as <code>Direction</code> (where the quest is heading), <code>Signal</code> (the tools, themes, and links your work revealed), and <code>Work</code> (the kept moments, experiments, and commits). It opens with a one-line read of what you're becoming and closes on a gradient line: <em style="color:var(--peach);font-style:normal">Make something this week.</em> Self-contained HTML, shareable.</div>
     <div class="panel-demo" style="text-align:center;padding:30px">
-      <div style="font-family:var(--mono);font-size:clamp(18px,2.6vw,26px);font-weight:600;background:linear-gradient(135deg,var(--peach),var(--lilac));-webkit-background-clip:text;background-clip:text;color:transparent">✺ Make something this week.</div>
+      <div style="font-family:var(--mono);font-size:clamp(18px,2.6vw,26px);font-weight:600;background:linear-gradient(90deg,var(--peach),var(--lilac));-webkit-background-clip:text;background-clip:text;color:transparent">✺ Make something this week.</div>
     </div>
   </section>
 
