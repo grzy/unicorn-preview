@@ -127,7 +127,18 @@
     background: rgba(22,22,22,0.6); color: var(--peach); font-family: var(--mono);
     font-size: 13px; text-align: center; }
   .ring-demo::before { content: ""; position: absolute; inset: -1px; border-radius: inherit;
-    padding: 1px; background: linear-gradient(135deg, var(--peach), var(--lilac));
+    padding: 1px; background: linear-gradient(to top right, transparent 4%, var(--peach) 22%, var(--lilac) 78%, transparent 96%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+
+  /* The desktop app icon: pixel unicorn on a transparent squircle, gradient
+     stroke faded at the top-right + bottom-left corners. */
+  .app-icon { position: relative; width: 92px; height: 92px; border-radius: 22px;
+    display: grid; place-items: center; flex: 0 0 auto;
+    font-family: var(--mono); font-size: 21px; line-height: 0.92; white-space: pre; }
+  .app-icon .l { color: var(--lilac); } .app-icon .p { color: var(--peach); }
+  .app-icon::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 2px;
+    background: linear-gradient(to top right, transparent 2%, var(--peach) 14%, var(--lilac) 86%, transparent 98%);
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
 
@@ -173,7 +184,7 @@
     <h1><span class="grad">The language Unicorn<br>is built in.</span></h1>
     <p class="lede">A living reference for the colors, type, glass, and motion that make Unicorn feel like itself. <strong>Living</strong> because it updates as the product does, not after. It documents what is true in the build right now, so the app, the briefs, and the case story all speak the same visual language.</p>
     <div class="meta-row">
-      <span class="meta-pill">Updated <b>2026-05-28</b></span>
+      <span class="meta-pill">Updated <b>2026-06-01</b></span>
       <span class="meta-pill">Reviewed <b>weekly</b></span>
       <span class="meta-pill">Surface <b>desktop app + briefs</b></span>
     </div>
@@ -188,6 +199,13 @@
 <span class="p">▗████▖</span>
 <span class="p">▝█  █</span></div>
       <div class="uc-cap">The pixel unicorn. <b>Lilac horn, peach body.</b> Born in the terminal banner, it carries through every surface as the one consistent character. Hand-made, never scraped, never smoothed.</div>
+    </div>
+    <div class="uc-stage" style="margin-top:18px">
+      <div class="app-icon"><span class="l">▟▘</span>
+<span class="p">▟█▙</span>
+<span class="p">▗████▖</span>
+<span class="p">▝█  █</span></div>
+      <div class="uc-cap">The <b>desktop app icon</b>. The same pixel unicorn on a transparent squircle, wrapped in the signature gradient stroke that fades to nothing at the top-right and bottom-left corners. The mark and the chrome speak one language.</div>
     </div>
   </section>
 
@@ -207,8 +225,8 @@
   </section>
 
   <section>
-    <div class="sec-label"><span class="num">03</span>The signature move · gradient on light</div>
-    <div class="sec-note">Peach to lilac, at 135 degrees, is the one gesture that signals Unicorn. It lives on gradient text, the 1px panel hairline, primary buttons, and the closing line of every brief. The ring uses a <code>mask-composite</code> technique so the gradient sits on the edge, not the fill. Light does the work; strokes are avoided everywhere else.</div>
+    <div class="sec-label"><span class="num">03</span>The signature move · gradient stroke, faded corners</div>
+    <div class="sec-note">Peach to lilac is the one gesture that signals Unicorn. As of June 2026 it runs along the bottom-left→top-right diagonal and <b>fades to transparent at the top-right and bottom-left corners</b> -- the single stroke carries both the hue shift and the corner fade. The exact same edge runs on the <b>app icon, the window's glass edge, and every panel</b>, so the whole product reads as one object. The ring uses a <code>mask-composite</code> technique so the gradient sits on the edge, not the fill. Light does the work; strokes are avoided everywhere else.</div>
     <div class="grid g2">
       <div class="ring-demo">✺ gradient ring</div>
       <div style="display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:22px;font-weight:600;background:linear-gradient(135deg,var(--peach),var(--lilac));-webkit-background-clip:text;background-clip:text;color:transparent;border:1px solid var(--hairline);border-radius:12px;">gradient text</div>
