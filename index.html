@@ -648,7 +648,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     position: relative;
     /* Calm, symmetric ease on both arrival and pull-off -- no flash, no snap.
        Matches .u-brief-cta so the gate button eases hover-IN and hover-OUT. */
-    transition: color 0.4s ease, background 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: color 0.35s ease, background 0.4s ease;
   }
   /* Hover: both layers become the peach->lilac gradient (edge-to-edge fill),
      label goes void-dark to read against it -- same as .u-brief-cta:hover. */
@@ -658,7 +658,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
       linear-gradient(135deg, var(--peach), var(--lilac)) padding-box,
       linear-gradient(135deg, var(--peach), var(--lilac)) border-box;
   }
-  .pl-gate-sub { color: var(--text-mute); transition: color 0.4s ease; }
+  .pl-gate-sub { color: var(--text-mute); transition: color 0.35s ease; }
   .pl-gate-btn:hover .pl-gate-sub { color: rgba(16,15,17,0.7); }
 
   /* ══════════════════════════════════════════
@@ -719,7 +719,13 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     left: 50%;
     top: 50%;
     bottom: auto;
-    transform: translate(-50%, -50%);
+    /* Centered. The grow-out keyframe scales AROUND this center so the window
+       opens up/out from the bottom-center like a macOS app launching. The
+       scale factor lives in a CSS var so the centering translate is preserved
+       through the whole animation (translate then scale). */
+    --gt-scale: 1;
+    transform: translate(-50%, -50%) scale(var(--gt-scale));
+    transform-origin: center bottom;
     width: 368px;
     z-index: 12;            /* below panels (30+) and toasts, above wallpaper */
     border-radius: 12px;
@@ -731,9 +737,32 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     pointer-events: none;
     -webkit-user-select: none; user-select: none;
     opacity: 0;
-    transition: opacity 0.9s ease;
   }
-  #guest-term.in { opacity: 1; }
+  /* Grow-out: opens from a small scaled-down state to full size, like a
+     macOS window genie-ing open. transform-origin:center bottom makes it
+     grow up/out from the bottom-center. A touch of overshoot (back ease)
+     gives it a lively pop, then it settles at scale 1 centered. The window
+     stays display:none-equivalent (hidden attr) until this class lands, so
+     nothing shows on land -- it appears mid-animation, never as a static
+     pre-frame. */
+  @keyframes gtGrowOut {
+    0%   { opacity: 0; --gt-scale: 0.25; }
+    60%  { opacity: 1; }
+    100% { opacity: 1; --gt-scale: 1; }
+  }
+  #guest-term.gt-grow {
+    animation: gtGrowOut 0.52s cubic-bezier(0.34, 1.42, 0.64, 1) forwards;
+  }
+  /* After the grow-out finishes, JS adds .in to hold the window fully open
+     (opacity 1, scale 1) independent of the one-shot animation. */
+  #guest-term.in { opacity: 1; --gt-scale: 1; }
+  /* @property lets --gt-scale animate smoothly inside the keyframe (otherwise
+     custom props jump). Registered as a number so the scale interpolates. */
+  @property --gt-scale {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 1;
+  }
   .gt-bar {
     display: flex; align-items: center; gap: 7px;
     height: 24px; padding: 0 11px;
@@ -3276,7 +3305,10 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   .u-taste-v { font-size: 12px; color: var(--text); }
   .u-taste-chips { display: flex; gap: 6px; }
   .u-chip { width: 16px; height: 16px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.06); display: inline-block; }
-  .u-taste-edge { width: 50px; height: 16px; border-radius: 6px; position: relative; background: var(--panel-bg); }
+  /* Span the SAME total width as the Palette row's chips so Edge and Palette
+     read as the same length, both left-aligned right after the row key.
+     Palette = 3 chips @16px + 2 gaps @6px = 60px. */
+  .u-taste-edge { width: 60px; height: 16px; border-radius: 6px; position: relative; background: var(--panel-bg); }
   .u-taste-edge::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
     background: linear-gradient(to top right, transparent 8%, rgba(232,149,106,0.7) 26%, rgba(167,139,223,0.7) 74%, transparent 92%);
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -8233,36 +8265,48 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     const restart = () => { cycle(); };
   };
 
-  // Reveal the window after the preloader dismisses (guest gate), but keep
-  // the terminal PAUSED -- only the static prompt + caret show. The welcome
-  // band fades in/holds/fades out at the top; the typing animation must not
-  // begin until ~1s AFTER that band is fully gone, so the eye reads them in
-  // sequence (band first, then the terminal "wakes up" and types).
+  // The terminal stays COMPLETELY HIDDEN on land -- no window, no idle prompt.
+  // The welcome band fades in/holds/fades out at the top first. Then, ~1s
+  // AFTER that band is fully gone, the window GROWS OUT (macOS-style) from a
+  // small scale at center-bottom up to full size. Only once that grow-out
+  // finishes does the typing begin. Strict order:
+  //   [land: hidden] -> [band shows + fades] -> [grow-out] -> [type] -> loop.
   //
   // Band timeline (guest, see greeting-band IIFE): revealed ~800ms after the
   // gate dismiss, then its gbOut fade (CSS: 0.8s @ 6.4s) finishes ~7.2s after
-  // reveal -> band fully gone ~8.0s after dismiss. We start typing ~1s later.
+  // reveal -> band fully gone ~8.0s after dismiss. We grow out ~1s later.
   const BAND_REVEAL_DELAY = 800;   // band un-hides this long after dismiss
   const BAND_GONE_AT = 7200;       // gbOut (0.8s @6.4s) done this long after reveal
-  const TYPE_AFTER_GONE = 1000;    // begin typing ~1s after the band is gone
-  const TYPE_DELAY = BAND_REVEAL_DELAY + BAND_GONE_AT + TYPE_AFTER_GONE; // ~9s
+  const GROW_AFTER_GONE = 1000;    // grow the window out ~1s after the band is gone
+  const GROW_DELAY = BAND_REVEAL_DELAY + BAND_GONE_AT + GROW_AFTER_GONE; // ~9s
+  const GROW_DURATION = 520;       // must match the gtGrowOut animation (0.52s)
 
   let booted = false;
   const boot = () => {
     if (booted) return; booted = true;
-    // Window appears immediately with the static, paused prompt line.
+    // Pre-seed the (static) prompt content while still hidden so it's ready
+    // the instant the window grows out -- but DON'T reveal the window yet.
     showIdle();
+    // Hold fully hidden until the band has come and gone (+1s), THEN grow out.
+    at(growOut, GROW_DELAY);
+  };
+  // Grow the window open like a macOS app launching, then start typing only
+  // after the animation completes.
+  const growOut = () => {
     term.hidden = false;
-    requestAnimationFrame(() => term.classList.add('in'));
-    // Hold paused, then start the auto-typing once the band is gone (+1s).
-    at(cycle, TYPE_DELAY);
+    // Force a reflow so the animation always plays from frame 0 (the window
+    // was display:none via [hidden] until this moment).
+    void term.offsetWidth;
+    requestAnimationFrame(() => term.classList.add('gt-grow'));
+    // Once the grow-out lands, hold it open (.in) and begin auto-typing.
+    at(() => { term.classList.add('in'); cycle(); }, GROW_DURATION + 60);
   };
   const startedAt = Date.now();
   const wait = setInterval(() => {
     if (window.__unicornPreloaderDismissedAt || Date.now() - startedAt > 9000) {
       clearInterval(wait);
-      // Reveal the (paused) window ~0.5s after the gate dismiss; typing is
-      // delayed separately inside boot() until the band has cleared.
+      // boot() arms the hidden->grow-out->type sequence; the window itself
+      // stays hidden until GROW_DELAY elapses inside boot().
       setTimeout(boot, 500);
     }
   }, 200);
@@ -8299,10 +8343,16 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     bar.addEventListener('mousedown', (e) => {
       if (e.button !== 0) return;
       // Freeze the centering transform to absolute pixels on first grab.
+      // Drop the grow-out animation + .in hold first: a finished `forwards`
+      // animation (and .in's transform) would otherwise override the inline
+      // transform below and pin the window to center. Removing them lets the
+      // plain pixel left/top + transform:none drive the drag.
+      term.classList.remove('gt-grow', 'in');
       const r = term.getBoundingClientRect();
       term.style.left = r.left + 'px';
       term.style.top  = r.top + 'px';
       term.style.transform = 'none';
+      term.style.opacity = '1';   // keep it visible after dropping .in
       startLeft = r.left; startTop = r.top;
       startX = e.clientX; startY = e.clientY;
       dragging = true;
