@@ -604,18 +604,19 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     /* A narrow peach->lilac band scans left->right via a moving clip window
        (~3 chars lit at a time, both colors visible), then fades; the muted
        base text underneath stays visible the whole time. */
-    background: linear-gradient(90deg, #E8956A, #A78BDF);
+    background: linear-gradient(90deg, #E8956A 0%, #A78BDF 45%, #A78BDF 100%);
     -webkit-background-clip: text; background-clip: text;
     color: transparent;
     -webkit-text-fill-color: transparent;
     clip-path: inset(0 90% 0 0);
     opacity: 0;
-    animation: plLeadWash 3s ease 0.6s 1 forwards;
+    /* linear so the band travels steadily (no crawl/slow at the end); ~2s. */
+    animation: plLeadWash 2s linear 0.5s 1 forwards;
   }
   @keyframes plLeadWash {
     0%   { clip-path: inset(0 90% 0 0);  opacity: 0; }
-    15%  { opacity: 1; }
-    85%  { opacity: 1; }
+    10%  { opacity: 1; }
+    92%  { opacity: 1; }
     100% { clip-path: inset(0 0 0 90%);  opacity: 0; }
   }
   .pl-gate-subline {
@@ -776,6 +777,17 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   }
   /* Terminal token colors -- match the banner: peach body, lilac horn/mane,
      peach ✺, peach→lilac gradient "Unicorn" word, muted "· gitty up". */
+  /* The command-prompt line must read as ONE row the entire time it types.
+     .gt-body is a flex column, so bare inline parts would each become a flex
+     item and stack vertically (the 4-line break). Wrapping them in .gt-line
+     and forcing nowrap + inline-block children keeps `➜ ~/unicorn unicorn▌`
+     on a single non-wrapping row as characters are appended. */
+  .gt-line   { white-space: nowrap; }
+  .gt-line > .gt-prompt,
+  .gt-line > .gt-path,
+  .gt-line > .gt-cmd,
+  .gt-line > .gt-caret { display: inline-block; vertical-align: baseline; }
+  .gt-line > .gt-caret { vertical-align: -2px; }
   .gt-prompt { color: #28c840; }            /* green prompt arrow */
   .gt-path   { color: var(--lilac); }       /* ~/unicorn path */
   .gt-cmd    { color: rgba(241,236,232,0.95); }
@@ -797,7 +809,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     /* Caption text aligns to the BOTTOM of the sprite (the unicorn's feet),
        like the real hook -- not centered/top-bumped. */
     align-items: flex-end;
-    gap: 14px;
+    gap: 8px;                    /* caption sits closer to the sprite */
     margin-top: 6px;
   }
   .gt-sprite {
@@ -814,7 +826,12 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     flex: 0 1 auto;
     white-space: nowrap;          /* caption lines don't wrap onto extra rows */
     line-height: 1.5;             /* captions keep comfortable spacing */
-    padding-bottom: 4px;          /* nudge caption down a hair toward the feet */
+    /* No bottom padding: with align-items:flex-end this lets the last caption
+       line ("reading ~/unicorn/unicorn.md") sit level with the sprite's
+       bottom row (the unicorn's feet). A hair of translate seats it on the
+       feet line rather than riding high. */
+    padding-bottom: 0;
+    transform: translateY(2px);
   }
   .gt-cap-row { display: block; }
   .gt-caret  {
@@ -8160,17 +8177,17 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   // Static, paused state: just the prompt line + blinking caret, nothing
   // typing yet. Shown the instant the window reveals, held until the welcome
   // band has come and gone.
-  const showIdle = () => { body.innerHTML = PROMPT + CARET; };
+  const showIdle = () => { body.innerHTML = `<span class="gt-line">` + PROMPT + CARET + `</span>`; };
 
   const cycle = () => {
     clearTimers();
     // 1) Empty prompt with a blinking caret.
-    body.innerHTML = PROMPT + CARET;
+    body.innerHTML = `<span class="gt-line">` + PROMPT + CARET + `</span>`;
     // 2) Type the command, char by char.
     let i = 0;
     const typeNext = () => {
       i++;
-      body.innerHTML = PROMPT + `<span class="gt-cmd">${CMD.slice(0, i)}</span>` + CARET;
+      body.innerHTML = `<span class="gt-line">` + PROMPT + `<span class="gt-cmd">${CMD.slice(0, i)}</span>` + CARET + `</span>`;
       if (i < CMD.length) at(typeNext, 120 + Math.random() * 70);
       else at(runCmd, 420);          // press Enter
     };
