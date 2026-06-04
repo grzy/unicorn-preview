@@ -604,20 +604,22 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     /* A narrow peach->lilac band scans left->right via a moving clip window
        (~3 chars lit at a time, both colors visible), then fades; the muted
        base text underneath stays visible the whole time. */
-    background: linear-gradient(90deg, #E8956A 0%, #A78BDF 45%, #A78BDF 100%);
+    /* Brighter peach->lilac, even split (peach left half, lilac right half). */
+    background: linear-gradient(90deg, #FFA873, #C4A6FF);
     -webkit-background-clip: text; background-clip: text;
     color: transparent;
     -webkit-text-fill-color: transparent;
-    clip-path: inset(0 90% 0 0);
+    clip-path: inset(0 88% 0 0);
     opacity: 0;
-    /* linear so the band travels steadily (no crawl/slow at the end); ~2s. */
-    animation: plLeadWash 2s linear 0.5s 1 forwards;
+    /* fast + linear; the band reaches the LAST letters (at 85%) still bright,
+       then holds + fades -- so it finishes through every letter to "code". */
+    animation: plLeadWash 1.3s linear 0.5s 1 forwards;
   }
   @keyframes plLeadWash {
-    0%   { clip-path: inset(0 90% 0 0);  opacity: 0; }
+    0%   { clip-path: inset(0 88% 0 0);  opacity: 0; }
     10%  { opacity: 1; }
-    92%  { opacity: 1; }
-    100% { clip-path: inset(0 0 0 90%);  opacity: 0; }
+    85%  { clip-path: inset(0 0 0 88%);  opacity: 1; }
+    100% { clip-path: inset(0 0 0 88%);  opacity: 0; }
   }
   .pl-gate-subline {
     font-size: 19px;
