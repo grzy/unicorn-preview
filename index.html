@@ -621,13 +621,17 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     color: transparent;
     -webkit-text-fill-color: transparent;
     clip-path: inset(0 100% 0 0);
-    opacity: 0;
+    opacity: 1;
     animation: plLeadWash 1.7s linear 0.5s 1 forwards;
   }
+  /* Band is FULL-OPACITY from frame one (no fade-in), so the leftmost letters
+     -- the "A" before "creative" -- light up bright peach the instant the
+     sweep starts, instead of arriving mid-fade and looking skipped. It only
+     fades out at the very tail. */
   @keyframes plLeadWash {
-    0%   { clip-path: inset(0 100% 0 0);  opacity: 0; }
-    3%   { clip-path: inset(0 84% 0 0);   opacity: 1; }
-    93%  { clip-path: inset(0 0 0 84%);   opacity: 1; }
+    0%   { clip-path: inset(0 100% 0 0);  opacity: 1; }
+    7%   { clip-path: inset(0 80% 0 0);   opacity: 1; }
+    92%  { clip-path: inset(0 0 0 86%);   opacity: 1; }
     100% { clip-path: inset(0 0 0 100%);  opacity: 0; }
   }
   .pl-gate-subline {
