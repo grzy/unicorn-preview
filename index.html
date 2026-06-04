@@ -590,37 +590,60 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   }
   /* GUEST-ONLY shimmer-wash: the base eyebrow text ALWAYS stays at its plain
      muted color (see .pl-gate-lead above -- no transparent fill, ever). The
-     shine is an ADDITIVE ::after overlay that holds a copy of the same text
-     (via data-text/content:attr) sitting exactly on top. Only the overlay is
-     gradient-clipped peach->lilac; it sweeps left-to-right ONCE then fades to
-     opacity 0, leaving the real muted text fully visible underneath the whole
-     time. Ivy's desktop build is untouched. */
-  html:not(.is-desktop) .pl-gate-lead { position: relative; }
+     shine is TWO additive overlays (::before + ::after), each holding a copy
+     of the same text (via data-text/content:attr) sitting exactly on top.
+     Each overlay is gradient-clipped and sweeps the FULL width of the phrase,
+     slightly displaced from the other in time + position so together they
+     read richer and cover the whole "A creative OS for designers who code".
+     The muted base text stays fully visible underneath the entire time.
+     Ivy's desktop build is untouched.
+
+     WHY THE OLD ONE DIED AT "who": the single ::after had no width set, so as
+     an absolutely-positioned box it shrank-to-fit and WRAPPED to two lines --
+     the horizontal clip-path then only swept the (narrower) wrapped box, never
+     reaching the visual end. Fix: pin right:0 + white-space:nowrap so each
+     overlay is exactly ONE full-width line matching the base, and the clip
+     sweep maps cleanly from "A" all the way out past "code". */
+  html:not(.is-desktop) .pl-gate-lead { position: relative; white-space: nowrap; }
+  html:not(.is-desktop) .pl-gate-lead::before,
   html:not(.is-desktop) .pl-gate-lead::after {
     content: attr(data-text);
     position: absolute;
-    left: 0; top: 0;
+    left: 0; right: 0; top: 0;        /* pin BOTH edges -> full element width */
+    width: 100%;
+    white-space: nowrap;              /* one line, never wraps -> full travel */
     pointer-events: none;
-    /* A narrow peach->lilac band scans left->right via a moving clip window
-       (~3 chars lit at a time, both colors visible), then fades; the muted
-       base text underneath stays visible the whole time. */
-    /* Brighter peach->lilac, even split (peach left half, lilac right half). */
-    background: linear-gradient(90deg, #FFA873, #C4A6FF);
     -webkit-background-clip: text; background-clip: text;
     color: transparent;
     -webkit-text-fill-color: transparent;
     clip-path: inset(0 100% 0 0);
     opacity: 0;
-    /* The band ENTERS at the first letter ("A") and EXITS after the last
-       ("code"), staying bright across the whole phrase -- it opens from a
-       0-width window at the left, travels a ~14% band fully across, then
-       closes off the right. */
-    animation: plLeadWash 1.4s linear 0.4s 1 forwards;
   }
-  @keyframes plLeadWash {
+  /* Band A -- peach-leaning, leads. */
+  html:not(.is-desktop) .pl-gate-lead::before {
+    background: linear-gradient(90deg, #FFB682, #FF9E6E, #C9ABFF);
+    animation: plLeadWashA 1.7s linear 0.35s 1 forwards;
+  }
+  /* Band B -- lilac-leaning, trails ~0.4s behind and rides a touch lower so
+     the two read as displaced, not stacked. */
+  html:not(.is-desktop) .pl-gate-lead::after {
+    background: linear-gradient(90deg, #D9B4FF, #B79BFF, #8E7BE6);
+    transform: translateY(0.5px);
+    animation: plLeadWashB 1.7s linear 0.75s 1 forwards;
+  }
+  /* Each band opens from a 0-width window at the LEFT ("A"), travels a ~16%
+     lit band fully across, then closes off the RIGHT past "code". The two
+     keyframe tracks are near-identical; the staggered delays do the offset. */
+  @keyframes plLeadWashA {
     0%   { clip-path: inset(0 100% 0 0);  opacity: 0; }
-    8%   { clip-path: inset(0 86% 0 0);   opacity: 1; }
-    92%  { clip-path: inset(0 0 0 86%);   opacity: 1; }
+    7%   { clip-path: inset(0 84% 0 0);   opacity: 1; }
+    93%  { clip-path: inset(0 0 0 84%);   opacity: 1; }
+    100% { clip-path: inset(0 0 0 100%);  opacity: 0; }
+  }
+  @keyframes plLeadWashB {
+    0%   { clip-path: inset(0 100% 0 0);  opacity: 0; }
+    7%   { clip-path: inset(0 82% 0 0);   opacity: 0.9; }
+    93%  { clip-path: inset(0 0 0 82%);   opacity: 0.9; }
     100% { clip-path: inset(0 0 0 100%);  opacity: 0; }
   }
   .pl-gate-subline {
@@ -792,9 +815,14 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     font-size: 12.5px; line-height: 1.55;
     color: rgba(241,236,232,0.9);
     white-space: pre;
-    /* Taller window: give the body real vertical room so the art + caption
-       block can sit in the lower-middle, mirroring the real hook layout. */
-    min-height: 200px;
+    /* FIXED height (not min-height): a real terminal window never resizes as
+       content prints. This height already accommodates the full printed state
+       -- prompt row + art/caption block + bottom ❯ input row -- so the window
+       is identical in size across idle, typing, and printed. Content fits
+       INSIDE; only the grow-out scales the already-fixed window in. The art
+       block sits at the bottom via .gt-art-wrap margin-top:auto, with room
+       reserved below for the input row that fades in on "enter". */
+    height: 234px;
     display: flex;
     flex-direction: column;
   }
@@ -819,15 +847,20 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   .gt-line > .gt-prompt,
   .gt-line > .gt-path,
   .gt-line > .gt-cmd,
-  .gt-line > .gt-cmd-ok,
   .gt-line > .gt-caret { display: inline-block; vertical-align: baseline; }
   .gt-line > .gt-caret { vertical-align: -2px; }
   .gt-prompt { color: #28c840; }            /* green prompt arrow ➜ */
   .gt-path   { color: #28c840; }            /* green ~ home-dir tilde */
-  /* The typed command "unicorn" reads as a valid zsh command: white +
-     underlined, with the LAST char green (zsh's "this resolves" cue). */
-  .gt-cmd    { color: rgba(241,236,232,0.95); text-decoration: underline; }
-  .gt-cmd-ok { color: #28c840; text-decoration: underline; }
+  /* The typed command "unicorn" runs through three states:
+     1) WHILE typing (incomplete): white + underlined  (.gt-cmd default)
+     2) The INSTANT it completes: whole word GREEN, still underlined
+        (.gt-cmd.is-complete) -- white underline -> green underline at once
+     3) After "enter" (art prints): GREEN, underline removed
+        (.gt-cmd.is-entered)
+     No per-character green -- the whole word changes color together. */
+  .gt-cmd            { color: rgba(241,236,232,0.95); text-decoration: underline; }
+  .gt-cmd.is-complete { color: #28c840; text-decoration: underline; }
+  .gt-cmd.is-entered  { color: #28c840; text-decoration: none; }
   .gt-uc-p   { color: var(--peach); }       /* sprite body */
   .gt-uc-l   { color: var(--lilac); }       /* sprite horn/mane/tail */
   .gt-star   { color: var(--peach); }       /* ✺ */
@@ -883,8 +916,12 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
      instant the art prints (the top caret vanishes the same moment), so the
      caret reads as moving from above the prompt to below it. State is driven
      by .gt-entered on #guest-term. */
-  .gt-input { display: none; }
-  #guest-term.gt-entered .gt-input {
+  /* The input row's SPACE is ALWAYS reserved so the window height never
+     changes when "enter" reveals it -- it occupies the same box in every
+     state, just invisible (opacity 0) until .gt-entered. This keeps the fixed
+     window size constant: idle/typing show the empty reserved row, printed
+     shows the same row filled in. */
+  .gt-input {
     margin: 10px 16px 0;
     padding-top: 10px;
     border-top: 1px solid rgba(255,255,255,0.07);
@@ -892,7 +929,10 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     font-size: 12.5px; line-height: 1.55;
     display: flex; align-items: center;
     padding-bottom: 14px;
+    opacity: 0;                       /* space reserved; content hidden */
+    transition: opacity 0.18s ease;
   }
+  #guest-term.gt-entered .gt-input { opacity: 1; }
   /* The ❯ prompt glyph: white (matching the caret block) and vertically
      centered on the caret. Sized + line-boxed so its middle lands on the
      caret's middle instead of sitting low as a tiny sliver. */
@@ -4120,7 +4160,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
         <div class="a-section-body">
           <button class="u-brief-cta" id="u-brief-cta" title="Compose an HTML brief from this quest's keeps + commits + experiments. Saves to ~/unicorn/briefs/.">
             <span class="u-brief-cta-icon">✺</span>
-            <span class="u-brief-cta-text">Compose this brief</span>
+            <span class="u-brief-cta-text">Compose a weekly brief</span>
           </button>
           <div class="u-brief-meta">Shareable HTML · <em id="u-brief-open" title="Open the briefs folder">~/unicorn/briefs/</em></div>
           <ul class="u-brief-list" id="u-brief-list"></ul>
@@ -8217,14 +8257,15 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   const CMD = 'unicorn';
   const CARET = '<span class="gt-caret"></span>';
 
-  // Render the typed command so the LAST char is green (zsh's "valid command"
-  // cue) while the rest stays white; the whole word is underlined via CSS.
-  // Holds while typing (last typed char green) and when complete (final "n").
-  const cmdHtml = (n) => {
+  // Render the typed command as ONE span (no per-character coloring). The
+  // word's color/underline is driven entirely by a state class:
+  //   ''            -> white + underline (typing, word incomplete)
+  //   'is-complete' -> whole word green + underline (the instant it completes)
+  //   'is-entered'  -> green, no underline (after "enter", art prints)
+  const cmdHtml = (n, state = '') => {
     const s = CMD.slice(0, n);
-    if (s.length === 0) return `<span class="gt-cmd"></span>`;
-    return `<span class="gt-cmd">${s.slice(0, -1)}</span>` +
-           `<span class="gt-cmd-ok">${s.slice(-1)}</span>`;
+    const cls = state ? `gt-cmd ${state}` : 'gt-cmd';
+    return `<span class="${cls}">${s}</span>`;
   };
 
   let timers = [];
@@ -8245,20 +8286,24 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     // 1) Empty prompt with the (static) top caret; bottom row still hidden.
     term.classList.remove('gt-entered');
     body.innerHTML = `<span class="gt-line">` + PROMPT + CARET + `</span>`;
-    // 2) Type the command, char by char (last char green via cmdHtml).
+    // 2) Type the command char by char. While the word is incomplete every
+    //    typed char is WHITE + underlined (default .gt-cmd). The INSTANT it
+    //    completes, the whole word flips to GREEN + underline (is-complete).
     let i = 0;
     const typeNext = () => {
       i++;
-      body.innerHTML = `<span class="gt-line">` + PROMPT + cmdHtml(i) + CARET + `</span>`;
+      const state = (i === CMD.length) ? 'is-complete' : '';
+      body.innerHTML = `<span class="gt-line">` + PROMPT + cmdHtml(i, state) + CARET + `</span>`;
       if (i < CMD.length) at(typeNext, 120 + Math.random() * 70);
       else at(runCmd, 420);          // press Enter
     };
     at(typeNext, 700);
-    // 3) "Enter": the TOP caret disappears and the art prints, while the
-    //    BOTTOM input row (❯ ▌) appears at the same instant -- the caret
-    //    visually moves from above the prompt to below it.
+    // 3) "Enter": the word stays GREEN but loses its underline (is-entered),
+    //    the TOP caret disappears and the art prints, while the BOTTOM input
+    //    row (❯ ▌) appears at the same instant -- the caret visually moves
+    //    from above the prompt to below it.
     const runCmd = () => {
-      body.innerHTML = `<span class="gt-line">` + PROMPT + cmdHtml(CMD.length) + `</span>` + ART;
+      body.innerHTML = `<span class="gt-line">` + PROMPT + cmdHtml(CMD.length, 'is-entered') + `</span>` + ART;
       term.classList.add('gt-entered');
       at(restart, 5200);             // hold the art, then loop
     };
