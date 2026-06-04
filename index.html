@@ -602,7 +602,9 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     padding: 11px 22px;
     cursor: pointer;
     position: relative;
-    transition: color 0.4s ease, background 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Calm, symmetric ease on both arrival and pull-off -- no flash, no snap.
+       Matches .u-brief-cta so the gate button eases hover-IN and hover-OUT. */
+    transition: color 0.4s ease, background 0.45s cubic-bezier(0.4, 0, 0.2, 1);
   }
   /* Hover: both layers become the peach->lilac gradient (edge-to-edge fill),
      label goes void-dark to read against it -- same as .u-brief-cta:hover. */
@@ -612,7 +614,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
       linear-gradient(135deg, var(--peach), var(--lilac)) padding-box,
       linear-gradient(135deg, var(--peach), var(--lilac)) border-box;
   }
-  .pl-gate-sub { color: var(--text-mute); }
+  .pl-gate-sub { color: var(--text-mute); transition: color 0.4s ease; }
   .pl-gate-btn:hover .pl-gate-sub { color: rgba(16,15,17,0.7); }
 
   /* ══════════════════════════════════════════
@@ -643,6 +645,98 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   #menubar .mb-mark { color: var(--cream); font-weight: 600; letter-spacing: 0; text-transform: none; }
   #menubar .mb-sep { color: rgba(255,255,255,0.18); }
   #menubar .mb-right { margin-left: auto; display: flex; gap: 16px; align-items: center; }
+
+  /* Fake macOS menubar clock -- guest preview only. The guest menubar's
+     .mb-right is hidden, so this fixed element occupies the empty top-right
+     and reads like the OS clock. System-font, small, low-contrast cream --
+     intentionally NOT branded; it's set dressing, not UI. */
+  #guest-menuclock {
+    position: fixed;
+    top: 0; right: 20px;
+    height: 30px;
+    z-index: 51;
+    display: flex; align-items: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', var(--sans);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    color: rgba(241,236,232,0.82);
+    pointer-events: none;
+    -webkit-user-select: none; user-select: none;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.45);
+  }
+  html.is-desktop #guest-menuclock { display: none !important; }
+
+  /* Fake iTerm terminal -- guest preview only. A small dark rounded window in
+     the open center-bottom space. It auto-types `unicorn` and prints the hook
+     art. Set dressing: pointer-events off, never intercepts panel drags. */
+  #guest-term {
+    position: fixed;
+    left: calc(50vw - 184px);
+    bottom: 132px;
+    width: 368px;
+    z-index: 12;            /* below panels (30+) and toasts, above wallpaper */
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(17,15,17,0.86);
+    -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.07);
+    box-shadow: 0 18px 50px rgba(0,0,0,0.5), 0 2px 0 rgba(255,255,255,0.03) inset;
+    pointer-events: none;
+    -webkit-user-select: none; user-select: none;
+    opacity: 0;
+    transition: opacity 0.9s ease;
+  }
+  #guest-term.in { opacity: 1; }
+  .gt-bar {
+    display: flex; align-items: center; gap: 7px;
+    height: 24px; padding: 0 11px;
+    background: rgba(255,255,255,0.045);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .gt-dot { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+  .gt-dot.gt-r { background: #ff5f57; }
+  .gt-dot.gt-y { background: #febc2e; }
+  .gt-dot.gt-g { background: #28c840; }
+  .gt-title {
+    margin-left: 8px;
+    font-family: -apple-system, BlinkMacSystemFont, var(--sans);
+    font-size: 10.5px; font-weight: 500;
+    color: rgba(241,236,232,0.42);
+    letter-spacing: 0.01em;
+  }
+  .gt-body {
+    margin: 0; padding: 13px 14px 15px;
+    font-family: 'Ubuntu Sans Mono', ui-monospace, Menlo, monospace;
+    font-size: 12.5px; line-height: 1.45;
+    color: rgba(241,236,232,0.9);
+    white-space: pre;
+    min-height: 132px;
+  }
+  /* Terminal token colors -- match the banner: peach body, lilac horn/mane,
+     peach ✺, peach→lilac gradient "Unicorn" word, muted "· gitty up". */
+  .gt-prompt { color: #28c840; }            /* green prompt arrow */
+  .gt-path   { color: var(--lilac); }       /* ~/unicorn path */
+  .gt-cmd    { color: rgba(241,236,232,0.95); }
+  .gt-uc-p   { color: var(--peach); }       /* sprite body */
+  .gt-uc-l   { color: var(--lilac); }       /* sprite horn/mane/tail */
+  .gt-star   { color: var(--peach); }       /* ✺ */
+  .gt-word {
+    background: linear-gradient(90deg, #E8956A, #A78BDF);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .gt-muted  { color: rgba(241,236,232,0.4); }   /* · gitty up + status */
+  .gt-caret  {
+    display: inline-block; width: 7px; height: 14px;
+    background: rgba(241,236,232,0.85); vertical-align: -2px;
+    margin-left: 1px; animation: gtBlink 1s steps(1) infinite;
+  }
+  @keyframes gtBlink { 50% { opacity: 0; } }
+  html.is-desktop #guest-term { display: none !important; }
+  /* Tuck it away on short / narrow viewports so it never collides. */
+  @media (max-height: 740px), (max-width: 1180px) {
+    #guest-term { display: none !important; }
+  }
 
   /* STREAKS chip -- three small numbers next to current quest + time.
      Soft, not gamified. Each glyph corresponds to a domain:
@@ -3537,7 +3631,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     <div class="pl-gate" id="pl-gate" hidden>
       <div class="pl-gate-blurb">
         <div class="pl-gate-lead">A creative OS for designers who code</div>
-        <div class="pl-gate-subline">turns building with AI into something you can see and share.</div>
+        <div class="pl-gate-subline">Unicorn turns building with AI into something you can see and share.</div>
       </div>
       <button class="pl-gate-btn" id="pl-gate-btn">▸ Click to begin <span class="pl-gate-sub">· sound on</span></button>
     </div>
@@ -3563,6 +3657,24 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
       <span class="mb-sep">·</span>
       <span id="mb-time">9:38pm</span>
     </span>
+  </div>
+
+  <!-- FAKE macOS MENUBAR CLOCK (guest preview only) -- sells the "this is a
+       real desktop app" feel. Sits in the top-right where the OS clock would
+       be. Hidden on Ivy's build (the real macOS menubar already shows it). -->
+  <div id="guest-menuclock" hidden aria-hidden="true">Wed Jun 3  8:23 PM</div>
+
+  <!-- FAKE iTerm TERMINAL (guest preview only) -- a tiny terminal window that
+       auto-types `unicorn` and prints the Unicorn hook art (the block-char
+       sprite + ✺ Unicorn · gitty up). Sells "Unicorn lives NEXT TO your
+       terminal." Sits in the open center-bottom space, between Commits
+       (bottom-left) and Keep (bottom-right). Hidden on Ivy's build. -->
+  <div id="guest-term" hidden aria-hidden="true">
+    <div class="gt-bar">
+      <span class="gt-dot gt-r"></span><span class="gt-dot gt-y"></span><span class="gt-dot gt-g"></span>
+      <span class="gt-title">unicorn — -zsh — 64×16</span>
+    </div>
+    <pre class="gt-body" id="gt-body"></pre>
   </div>
 
   <!-- INTRO RIBBON -- first-load welcome that explains what Unicorn is
@@ -4108,6 +4220,10 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     const ws = document.getElementById('workspace');
     pre.classList.add('out');
     if (ws) ws.classList.add('in');
+    // Mark the moment the preloader starts fading so deferred chrome (the
+    // guest greeting band) can reveal relative to the ACTUAL dismiss, not a
+    // fixed timer -- in guest the preloader waits behind the audio gate.
+    window.__unicornPreloaderDismissedAt = Date.now();
     setTimeout(() => pre.remove(), 1200);
   };
 
@@ -4331,24 +4447,39 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     ['Commits calendar + music',        'complete', 58,  47],
     ['Permanent trash safety net',      'complete', 41,  33],
     ['Per-quest Taste',                 'complete', 29,  20],
-    ['Gitty up branding',               'complete', 17,  9],
     ['Keep panel: paste a screenshot',  'complete', 50,  38],
     ['Electron wrap',                   'active',   24,  null],
     ['Commits calendar auto-refresh',   'active',   12,  null],
     ['Creative brief pipeline',         'active',   8,   null],
     ['Notch unicorn',                   'active',   2,   null]
   ];
+  // A SECOND demo quest so the switcher shows real breadth: a mix of finished
+  // + in-flight threads, no stages (flat list, like the Unicorn seed).
+  const SEED_EXPS_PORTFOLIO = [
+    ['Update the Unicorn project page',  'complete', 44, 31],
+    ['Rebuild the case-story layout',    'complete', 26, 15],
+    ['Ship the about page',              'complete', 19, 10],
+    ['New hero animation',               'active',   7,  null],
+    ['Polish the work grid hover',       'active',   3,  null]
+  ];
+  const mapExps = (rows) => rows.map(([name, status, made, done]) => ({
+    id: uid(),
+    name,
+    status,
+    createdAt: daysAgo(made),
+    completedAt: done != null ? daysAgo(done) : null
+  }));
   const buildSeedQuest = () => ({
     id: 'q-unicorn',
     name: 'Unicorn',
     startedAt: daysAgo(130),
-    experiments: SEED_EXPS.map(([name, status, made, done]) => ({
-      id: uid(),
-      name,
-      status,
-      createdAt: daysAgo(made),
-      completedAt: done != null ? daysAgo(done) : null
-    }))
+    experiments: mapExps(SEED_EXPS)
+  });
+  const buildSeedQuestPortfolio = () => ({
+    id: 'q-portfolio',
+    name: 'Portfolio',
+    startedAt: daysAgo(60),
+    experiments: mapExps(SEED_EXPS_PORTFOLIO)
   });
 
   if (window.GUEST_PREVIEW) {
@@ -4358,11 +4489,11 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     // visitor never sees the new curated set. Bumping SEED_VERSION re-applies
     // the curated quest + experiments, replacing whatever was stored.
     const SEED_KEY = 'unicorn.guest-seed-version';
-    const SEED_VERSION = '3';
+    const SEED_VERSION = '4';
     let stored = null;
     try { stored = localStorage.getItem(SEED_KEY); } catch {}
     if (stored !== SEED_VERSION) {
-      data.quests = [buildSeedQuest()];
+      data.quests = [buildSeedQuest(), buildSeedQuestPortfolio()];
       data.activeQuestIndex = 0;
       saveApp(data);
       try { localStorage.setItem(SEED_KEY, SEED_VERSION); } catch {}
@@ -7706,18 +7837,18 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   const band = document.getElementById('greeting-band');
   const textEl = document.getElementById('gb-text');
   if (!band || !textEl) return;
-  // Guest preview: the centre banner already explains Unicorn; the top
-  // greeting band just competes for attention. Skip it there. (Ivy's
-  // own build keeps it -- it's what stays after the intro is dismissed.)
-  if (window.GUEST_PREVIEW) { band.remove(); return; }
-
   // ── Welcome banner: a window to the real world ──
   // Not a mirror of the work (the panels own that) -- the one strip that
   // reconnects you to the day, the sky, and your own body while you're
   // heads-down in the build cave. Place · live temp · moon (emoji + name) ·
   // daylight remaining. The preloader already greeted you by name; this is
   // the world, not an echo.
-  const PLACE = 'Mill Valley', LAT = 37.906, LON = -122.545;
+  // Guest preview shows the SAME banner but anchored to San Francisco (no
+  // name) -- it sells the "real desktop app" feel. Ivy's build uses her own
+  // Mill Valley coords.
+  const PLACE = window.GUEST_PREVIEW ? 'San Francisco' : 'Mill Valley';
+  const LAT = window.GUEST_PREVIEW ? 37.7749 : 37.906;
+  const LON = window.GUEST_PREVIEW ? -122.4194 : -122.545;
   const moonPhase = window.__unicornMoonPhase || '';
   const MOON_EMOJI = {
     'New Moon':'🌑','Waxing Crescent':'🌒','First Quarter':'🌓','Waxing Gibbous':'🌔',
@@ -7794,10 +7925,121 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   // Hold the greeting until the preloader has fully faded (dismiss at
   // 3.4s + ~0.7s fade) so it doesn't bleed through the semi-transparent
   // desktop preloader. The gbIn/gbOut timeline starts when we un-hide.
-  const REVEAL_AT = 4200;
-  setTimeout(() => { band.hidden = false; }, REVEAL_AT);
-  // Fully hide after fade-out so it doesn't intercept anything.
-  setTimeout(() => { band.hidden = true; }, REVEAL_AT + 7600);
+  // Desktop auto-plays so a fixed timer is fine. Guest waits behind the
+  // audio gate, so the band watches for the real dismiss instead -- otherwise
+  // it would flash in before the visitor even taps "begin".
+  const HOLD = 7600;
+  const revealBand = () => {
+    band.hidden = false;
+    setTimeout(() => { band.hidden = true; }, HOLD);
+  };
+  if (window.GUEST_PREVIEW) {
+    // Poll for the gate's dismiss, then reveal ~0.8s after the fade begins.
+    const tick = setInterval(() => {
+      if (window.__unicornPreloaderDismissedAt) {
+        clearInterval(tick);
+        setTimeout(revealBand, 800);
+      }
+    }, 200);
+  } else {
+    setTimeout(revealBand, 4200);
+  }
+})();
+
+// ══════════════════════════════════════════════════════════════
+// FAKE macOS MENUBAR CLOCK -- guest preview only.
+// Top-right "Wed Jun 3  8:23 PM" like the real macOS clock, so the web
+// preview reads as a genuine desktop app. Updated every 30s. Hidden on
+// Ivy's build (the OS already draws the real clock there).
+// ══════════════════════════════════════════════════════════════
+(function() {
+  if (!window.GUEST_PREVIEW) return;
+  const el = document.getElementById('guest-menuclock');
+  if (!el) return;
+  const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const paint = () => {
+    const d = new Date();
+    let h = d.getHours();
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12; if (h === 0) h = 12;
+    const m = String(d.getMinutes()).padStart(2, '0');
+    // Two spaces between date and time, matching the macOS menubar clock.
+    el.textContent = `${DAYS[d.getDay()]} ${MONTHS[d.getMonth()]} ${d.getDate()}  ${h}:${m} ${ampm}`;
+  };
+  paint();
+  el.hidden = false;
+  setInterval(paint, 30000);
+})();
+
+// ══════════════════════════════════════════════════════════════
+// FAKE iTerm TERMINAL -- guest preview only.
+// Auto-types `unicorn`, then prints the Unicorn hook art (the same
+// block-char sprite + colors as bin/unicorn-banner.sh). Loops gently:
+// type → reveal art → hold → clear → retype. Pure set dressing -- it
+// makes the preview feel like it lives NEXT TO a real terminal.
+// ══════════════════════════════════════════════════════════════
+(function() {
+  if (!window.GUEST_PREVIEW) return;
+  const term = document.getElementById('guest-term');
+  const body = document.getElementById('gt-body');
+  if (!term || !body) return;
+
+  // The hook art, exactly as the banner draws it: peach body, lilac
+  // horn/mane/tail, peach ✺, peach→lilac "Unicorn", muted "· gitty up".
+  const ART =
+    `<span class="gt-uc-l">  ▐▖</span>\n` +
+    `<span class="gt-uc-p">  ▟█</span><span class="gt-uc-l">▙</span>\n` +
+    `<span class="gt-uc-p">  ▗███</span><span class="gt-uc-l">█</span>` +
+      `        <span class="gt-star">✺</span> <span class="gt-word">Unicorn</span><span class="gt-muted"> · gitty up</span>\n` +
+    `<span class="gt-uc-p">  ▝█ ▐▌</span>` +
+      `        <span class="gt-muted">reading ~/unicorn/unicorn.md</span>`;
+
+  const PROMPT = `<span class="gt-prompt">➜</span>  <span class="gt-path">~/unicorn</span> `;
+  const CMD = 'unicorn';
+  const CARET = '<span class="gt-caret"></span>';
+
+  let timers = [];
+  const at = (fn, ms) => { timers.push(setTimeout(fn, ms)); };
+  const clearTimers = () => { timers.forEach(clearTimeout); timers = []; };
+
+  const cycle = () => {
+    clearTimers();
+    // 1) Empty prompt with a blinking caret.
+    body.innerHTML = PROMPT + CARET;
+    // 2) Type the command, char by char.
+    let i = 0;
+    const typeNext = () => {
+      i++;
+      body.innerHTML = PROMPT + `<span class="gt-cmd">${CMD.slice(0, i)}</span>` + CARET;
+      if (i < CMD.length) at(typeNext, 120 + Math.random() * 70);
+      else at(runCmd, 420);          // press Enter
+    };
+    at(typeNext, 700);
+    // 3) "Run" it: drop the caret to a new line and print the art.
+    const runCmd = () => {
+      body.innerHTML = PROMPT + `<span class="gt-cmd">${CMD}</span>\n` + ART;
+      at(restart, 5200);             // hold the art, then loop
+    };
+    const restart = () => { cycle(); };
+  };
+
+  // Reveal the window after the preloader dismisses (guest gate), then start
+  // the typing. Falls back to a timer if the dismiss flag never appears.
+  let booted = false;
+  const boot = () => {
+    if (booted) return; booted = true;
+    term.hidden = false;
+    requestAnimationFrame(() => term.classList.add('in'));
+    at(cycle, 600);
+  };
+  const startedAt = Date.now();
+  const wait = setInterval(() => {
+    if (window.__unicornPreloaderDismissedAt || Date.now() - startedAt > 9000) {
+      clearInterval(wait);
+      setTimeout(boot, 1100);
+    }
+  }, 200);
 })();
 
 // ══════════════════════════════════════════════════════════════
@@ -8070,11 +8312,29 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   if (!panel || !input || !saveBtn || !list) return;
   const DEFAULT_PLACEHOLDER = input.placeholder;
 
+  // GUEST in-memory keep list. Pasted screenshots are too big for localStorage
+  // (quota overflow), so in the preview we hold the working list here instead
+  // of round-tripping through storage. Seeded from any small text-only keeps
+  // that DID persist, so a refresh keeps those.
+  let _guestKeeps = null;
   const load = () => {
+    if (window.GUEST_PREVIEW && _guestKeeps) return _guestKeeps;
     try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
     catch { return []; }
   };
   const save = (arr) => {
+    // GUEST: keep the working list in memory (it may hold big base64 images
+    // that overflow localStorage). Mirror only the lightweight, image-less
+    // keeps to storage so a text-only demo survives a refresh; never let a
+    // quota error surface as a "storage full" toast in the public preview.
+    if (window.GUEST_PREVIEW) {
+      _guestKeeps = arr;
+      try {
+        const light = arr.filter(k => !k.image);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(light));
+      } catch {}
+      return true;
+    }
     // Shared loud-fail helper (no blocking alert, on-brand toast).
     return window.__unicornSafeStore(STORAGE_KEY, JSON.stringify(arr));
   };
@@ -8236,6 +8496,10 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     }
     const arr = load();
     arr.push(entry);
+    // save() handles the guest case: it holds the working list (incl. big
+    // base64 screenshots) in memory and only mirrors image-less keeps to
+    // localStorage, so a pasted screenshot can't overflow quota / throw a
+    // "storage full" toast in the public preview. The thumbnail still renders.
     save(arr);
     render();
   };
