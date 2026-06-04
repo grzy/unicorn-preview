@@ -570,20 +570,20 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     max-width: 320px;
     text-wrap: balance;
   }
-  /* Two-level hierarchy, mirroring the app's own wording: a capitalized lead
-     line (bigger + heavier) over a smaller, calmer subline. */
+  /* Inverted hierarchy: the value-prop subline is the hero (big + bold),
+     with the lead kept small + calm as an eyebrow above it. */
   .pl-gate-lead {
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 13px;
+    font-weight: 500;
     line-height: 1.35;
-    color: var(--cream);
-    margin-bottom: 6px;
+    color: var(--text-mute);
+    margin-bottom: 8px;
   }
   .pl-gate-subline {
-    font-size: 12.5px;
-    font-weight: 400;
-    line-height: 1.5;
-    color: var(--text-mute);
+    font-size: 19px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--cream);
   }
   /* Matches the app's CTA buttons (.u-brief-cta): peach->lilac gradient
      stroke via two background layers -- dark fill clipped to padding-box, the
@@ -673,7 +673,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   #guest-term {
     position: fixed;
     left: calc(50vw - 184px);
-    bottom: 132px;
+    bottom: 272px;
     width: 368px;
     z-index: 12;            /* below panels (30+) and toasts, above wallpaper */
     border-radius: 12px;
@@ -706,12 +706,12 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     letter-spacing: 0.01em;
   }
   .gt-body {
-    margin: 0; padding: 13px 14px 15px;
+    margin: 0; padding: 20px 16px 22px;
     font-family: 'Ubuntu Sans Mono', ui-monospace, Menlo, monospace;
-    font-size: 12.5px; line-height: 1.45;
+    font-size: 12.5px; line-height: 1.55;
     color: rgba(241,236,232,0.9);
     white-space: pre;
-    min-height: 132px;
+    min-height: 184px;
   }
   /* Terminal token colors -- match the banner: peach body, lilac horn/mane,
      peach ✺, peach→lilac gradient "Unicorn" word, muted "· gitty up". */
@@ -3631,7 +3631,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     <div class="pl-gate" id="pl-gate" hidden>
       <div class="pl-gate-blurb">
         <div class="pl-gate-lead">A creative OS for designers who code</div>
-        <div class="pl-gate-subline">Unicorn turns building with AI into something you can see and share.</div>
+        <div class="pl-gate-subline">Unicorn turns building with AI into something you can see + share.</div>
       </div>
       <button class="pl-gate-btn" id="pl-gate-btn">▸ Click to begin <span class="pl-gate-sub">· sound on</span></button>
     </div>
@@ -4473,7 +4473,13 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     id: 'q-unicorn',
     name: 'Unicorn',
     startedAt: daysAgo(130),
-    experiments: mapExps(SEED_EXPS)
+    // Guest demo only: drop "Notch unicorn" from the seed. It still lives in
+    // Ivy's real app -- this filter only shapes the public preview seed.
+    experiments: mapExps(
+      window.GUEST_PREVIEW
+        ? SEED_EXPS.filter(([name]) => name !== 'Notch unicorn')
+        : SEED_EXPS
+    )
   });
   const buildSeedQuestPortfolio = () => ({
     id: 'q-portfolio',
@@ -4489,7 +4495,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     // visitor never sees the new curated set. Bumping SEED_VERSION re-applies
     // the curated quest + experiments, replacing whatever was stored.
     const SEED_KEY = 'unicorn.guest-seed-version';
-    const SEED_VERSION = '4';
+    const SEED_VERSION = '5';
     let stored = null;
     try { stored = localStorage.getItem(SEED_KEY); } catch {}
     if (stored !== SEED_VERSION) {
@@ -7964,12 +7970,23 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     const ampm = h >= 12 ? 'PM' : 'AM';
     h = h % 12; if (h === 0) h = 12;
     const m = String(d.getMinutes()).padStart(2, '0');
-    // Two spaces between date and time, matching the macOS menubar clock.
-    el.textContent = `${DAYS[d.getDay()]} ${MONTHS[d.getMonth()]} ${d.getDate()}  ${h}:${m} ${ampm}`;
+    // Wider gap between the date and the time, then a colon wrapped in a
+    // span so it can blink like a real clock. The em-space + margin push
+    // the date and time further apart than the macOS default.
+    el.innerHTML =
+      `${DAYS[d.getDay()]} ${MONTHS[d.getMonth()]} ${d.getDate()}` +
+      `<span style="display:inline-block;width:0.9em;"></span>` +
+      `${h}<span id="guest-clock-colon">:</span>${m} ${ampm}`;
   };
   paint();
   el.hidden = false;
   setInterval(paint, 30000);
+  // Blink only the colon every second, like a real clock.
+  setInterval(() => {
+    const colon = document.getElementById('guest-clock-colon');
+    if (colon) colon.style.visibility =
+      (colon.style.visibility === 'hidden') ? 'visible' : 'hidden';
+  }, 1000);
 })();
 
 // ══════════════════════════════════════════════════════════════
