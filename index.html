@@ -601,29 +601,22 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     position: absolute;
     left: 0; top: 0;
     pointer-events: none;
-    background-image: linear-gradient(
-      90deg,
-      rgba(241,236,232,0) 0%,
-      rgba(241,236,232,0) 41%,
-      #E8956A 47%,
-      #A78BDF 53%,
-      rgba(241,236,232,0) 59%,
-      rgba(241,236,232,0) 100%
-    );
-    background-size: 300% 100%;
-    background-position: 200% 0;   /* band parked off the left at rest */
-    background-repeat: no-repeat;
+    /* A narrow peach->lilac band scans left->right via a moving clip window
+       (~3 chars lit at a time, both colors visible), then fades; the muted
+       base text underneath stays visible the whole time. */
+    background: linear-gradient(90deg, #E8956A, #A78BDF);
     -webkit-background-clip: text; background-clip: text;
     color: transparent;
     -webkit-text-fill-color: transparent;
+    clip-path: inset(0 90% 0 0);
     opacity: 0;
-    animation: plLeadWash 3.2s cubic-bezier(0.4, 0, 0.2, 1) 0.5s 1 forwards;
+    animation: plLeadWash 3s ease 0.6s 1 forwards;
   }
   @keyframes plLeadWash {
-    0%   { background-position: 200% 0; opacity: 0; }   /* band off the LEFT edge */
-    28%  { opacity: 1; }                                 /* gentler fade-in */
-    72%  { opacity: 1; }                                 /* gentler fade-out */
-    100% { background-position: -100% 0; opacity: 0; }  /* swept off RIGHT, faded out */
+    0%   { clip-path: inset(0 90% 0 0);  opacity: 0; }
+    15%  { opacity: 1; }
+    85%  { opacity: 1; }
+    100% { clip-path: inset(0 0 0 90%);  opacity: 0; }
   }
   .pl-gate-subline {
     font-size: 19px;
