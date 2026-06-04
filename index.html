@@ -636,8 +636,13 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
      sweep starts, instead of arriving mid-fade and looking skipped. It only
      fades out at the very tail. */
   @keyframes plLeadWash {
+    /* Reveal from the LEFT edge (left inset pinned at 0) so the peach lands on
+       the "A" first, opening out across "A creative OS"... */
     0%   { clip-path: inset(0 100% 0 0);  opacity: 1; }
-    7%   { clip-path: inset(0 80% 0 0);   opacity: 1; }
+    10%  { clip-path: inset(0 66% 0 0);   opacity: 1; }
+    /* ...then HOLD there for a beat so the eye unmistakably catches the peach
+       on the opening words before the band sweeps off to the right. */
+    24%  { clip-path: inset(0 66% 0 0);   opacity: 1; }
     92%  { clip-path: inset(0 0 0 86%);   opacity: 1; }
     100% { clip-path: inset(0 0 0 100%);  opacity: 0; }
   }
