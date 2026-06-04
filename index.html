@@ -588,35 +588,42 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     color: var(--text-mute);
     margin-bottom: 8px;
   }
-  /* GUEST-ONLY shimmer-wash: a peach->lilac band sweeps left-to-right
-     through the eyebrow letters ONCE on load, like a shine passing over
-     the text, then settles back to the plain muted color. The gradient is
-     mostly the muted text color (rgba 241,236,232,0.56) with a NARROW
-     peach->lilac band in the middle -- so only ~3 chars glow at a time.
-     background-size 300% lets the band travel; the keyframe ends with the
-     band fully off-screen so the resting state is identical to the muted
-     eyebrow above (no gradient visible). Ivy's desktop build is untouched. */
-  html:not(.is-desktop) .pl-gate-lead {
+  /* GUEST-ONLY shimmer-wash: the base eyebrow text ALWAYS stays at its plain
+     muted color (see .pl-gate-lead above -- no transparent fill, ever). The
+     shine is an ADDITIVE ::after overlay that holds a copy of the same text
+     (via data-text/content:attr) sitting exactly on top. Only the overlay is
+     gradient-clipped peach->lilac; it sweeps left-to-right ONCE then fades to
+     opacity 0, leaving the real muted text fully visible underneath the whole
+     time. Ivy's desktop build is untouched. */
+  html:not(.is-desktop) .pl-gate-lead { position: relative; }
+  html:not(.is-desktop) .pl-gate-lead::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0; top: 0;
+    pointer-events: none;
     background-image: linear-gradient(
       90deg,
-      rgba(241,236,232,0.56) 0%,
-      rgba(241,236,232,0.56) 41%,
+      rgba(241,236,232,0) 0%,
+      rgba(241,236,232,0) 41%,
       #E8956A 47%,
       #A78BDF 53%,
-      rgba(241,236,232,0.56) 59%,
-      rgba(241,236,232,0.56) 100%
+      rgba(241,236,232,0) 59%,
+      rgba(241,236,232,0) 100%
     );
     background-size: 300% 100%;
-    background-position: 100% 0;   /* band parked off the right at rest */
+    background-position: 200% 0;   /* band parked off the left at rest */
     background-repeat: no-repeat;
     -webkit-background-clip: text; background-clip: text;
     color: transparent;
     -webkit-text-fill-color: transparent;
+    opacity: 0;
     animation: plLeadWash 1.7s cubic-bezier(0.4, 0, 0.2, 1) 0.5s 1 forwards;
   }
   @keyframes plLeadWash {
-    from { background-position: 200% 0; }   /* band off the LEFT edge */
-    to   { background-position: -100% 0; }  /* band swept off the RIGHT -> rests muted */
+    0%   { background-position: 200% 0; opacity: 0; }   /* band off the LEFT edge */
+    15%  { opacity: 1; }
+    85%  { opacity: 1; }
+    100% { background-position: -100% 0; opacity: 0; }  /* swept off RIGHT, faded out */
   }
   .pl-gate-subline {
     font-size: 19px;
@@ -823,12 +830,11 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     display: flex; align-items: center;
     padding-bottom: 14px;
   }
-  .gt-input .gt-prompt { color: #28c840; }     /* ➜ in the green prompt color */
-  .gt-input .gt-path   { color: var(--lilac); margin: 0 8px 0 6px; }
+  .gt-input .gt-prompt { color: #28c840; margin-right: 8px; }   /* ❯ in the green prompt color */
   .gt-cursor {
     display: inline-block; width: 7px; height: 14px;
     background: rgba(241,236,232,0.85);
-    animation: gtBlink 1s steps(1) infinite;
+    /* static caret -- no blink on the bottom input row */
   }
   html.is-desktop #guest-term { display: none !important; }
   /* Tuck it away on short / narrow viewports so it never collides. */
@@ -3728,7 +3734,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
          Hidden on Ivy's desktop build, which auto-plays. -->
     <div class="pl-gate" id="pl-gate" hidden>
       <div class="pl-gate-blurb">
-        <div class="pl-gate-lead">A creative OS for designers who code</div>
+        <div class="pl-gate-lead" data-text="A creative OS for designers who code">A creative OS for designers who code</div>
         <div class="pl-gate-subline">Unicorn turns building with AI into something you can see + share.</div>
       </div>
       <button class="pl-gate-btn" id="pl-gate-btn">▸ Click to begin <span class="pl-gate-sub">· sound on</span></button>
@@ -3776,7 +3782,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     <!-- Fake live-shell input row: divider + fresh zsh prompt + blinking
          block cursor. Pure set dressing; never accepts real input. -->
     <div class="gt-input">
-      <span class="gt-prompt">➜</span><span class="gt-path">~/unicorn</span><span class="gt-cursor"></span>
+      <span class="gt-prompt">❯</span><span class="gt-cursor"></span>
     </div>
   </div>
 
