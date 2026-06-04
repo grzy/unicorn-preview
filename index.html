@@ -605,45 +605,29 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
      overlay is exactly ONE full-width line matching the base, and the clip
      sweep maps cleanly from "A" all the way out past "code". */
   html:not(.is-desktop) .pl-gate-lead { position: relative; white-space: nowrap; }
-  html:not(.is-desktop) .pl-gate-lead::before,
+  /* ONE band only -- an ::after copy of the text, gradient-clipped to the
+     LETTERS (not a block), swept by a moving clip window. Full width + nowrap
+     so it travels "A" -> "code". (Two bands + transform broke background-clip
+     into solid rectangles, so we're back to the single band that worked.) */
   html:not(.is-desktop) .pl-gate-lead::after {
     content: attr(data-text);
     position: absolute;
-    left: 0; right: 0; top: 0;        /* pin BOTH edges -> full element width */
+    left: 0; right: 0; top: 0;
     width: 100%;
-    white-space: nowrap;              /* one line, never wraps -> full travel */
+    white-space: nowrap;
     pointer-events: none;
+    background: linear-gradient(90deg, #FFA873, #C4A6FF);
     -webkit-background-clip: text; background-clip: text;
     color: transparent;
     -webkit-text-fill-color: transparent;
     clip-path: inset(0 100% 0 0);
     opacity: 0;
+    animation: plLeadWash 1.7s linear 0.5s 1 forwards;
   }
-  /* Band A -- peach-leaning, leads. */
-  html:not(.is-desktop) .pl-gate-lead::before {
-    background: linear-gradient(90deg, #FFB682, #FF9E6E, #C9ABFF);
-    animation: plLeadWashA 1.7s linear 0.35s 1 forwards;
-  }
-  /* Band B -- lilac-leaning, trails ~0.4s behind and rides a touch lower so
-     the two read as displaced, not stacked. */
-  html:not(.is-desktop) .pl-gate-lead::after {
-    background: linear-gradient(90deg, #D9B4FF, #B79BFF, #8E7BE6);
-    transform: translateY(0.5px);
-    animation: plLeadWashB 1.7s linear 0.75s 1 forwards;
-  }
-  /* Each band opens from a 0-width window at the LEFT ("A"), travels a ~16%
-     lit band fully across, then closes off the RIGHT past "code". The two
-     keyframe tracks are near-identical; the staggered delays do the offset. */
-  @keyframes plLeadWashA {
+  @keyframes plLeadWash {
     0%   { clip-path: inset(0 100% 0 0);  opacity: 0; }
     7%   { clip-path: inset(0 84% 0 0);   opacity: 1; }
     93%  { clip-path: inset(0 0 0 84%);   opacity: 1; }
-    100% { clip-path: inset(0 0 0 100%);  opacity: 0; }
-  }
-  @keyframes plLeadWashB {
-    0%   { clip-path: inset(0 100% 0 0);  opacity: 0; }
-    7%   { clip-path: inset(0 82% 0 0);   opacity: 0.9; }
-    93%  { clip-path: inset(0 0 0 82%);   opacity: 0.9; }
     100% { clip-path: inset(0 0 0 100%);  opacity: 0; }
   }
   .pl-gate-subline {
@@ -4160,7 +4144,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
         <div class="a-section-body">
           <button class="u-brief-cta" id="u-brief-cta" title="Compose an HTML brief from this quest's keeps + commits + experiments. Saves to ~/unicorn/briefs/.">
             <span class="u-brief-cta-icon">✺</span>
-            <span class="u-brief-cta-text">Compose a weekly brief</span>
+            <span class="u-brief-cta-text">Compose weekly brief</span>
           </button>
           <div class="u-brief-meta">Shareable HTML · <em id="u-brief-open" title="Open the briefs folder">~/unicorn/briefs/</em></div>
           <ul class="u-brief-list" id="u-brief-list"></ul>
@@ -8305,7 +8289,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     const runCmd = () => {
       body.innerHTML = `<span class="gt-line">` + PROMPT + cmdHtml(CMD.length, 'is-entered') + `</span>` + ART;
       term.classList.add('gt-entered');
-      at(restart, 5200);             // hold the art, then loop
+      at(restart, 9000);             // hold the art ~9s, then loop
     };
     const restart = () => { cycle(); };
   };
