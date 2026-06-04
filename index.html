@@ -277,6 +277,12 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   /* Fully transparent, no blur -- the real panels + desktop show through
      clearly during load; only the center card + ripple sit on top. */
   html.is-desktop #preloader { background: transparent; }
+  /* WEB / guest preview: the preloader (gate screen AND the real reveal) sits
+     on the orchid wallpaper, not a flat dark void -- the glass center card +
+     blurb read over the signature neon flower. Desktop stays transparent above. */
+  html:not(.is-desktop) #preloader {
+    background: #191919 url('neon-flower.webp') center / cover no-repeat;
+  }
   /* Liquid-glass edge: a soft peach->lilac frame at the window perimeter.
      Marks the resizable boundary (the perimeter stays mouse-capturing so
      macOS can resize there) and gives the window a glassy, grabbable edge.
@@ -402,6 +408,12 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
      stays so you can see an experiment move through its stages. */
   html.is-desktop .q-add-stages,
   html.is-desktop .q-edit-stages { display: none !important; }
+  /* GUEST preview: the seeded experiments carry no stages, and a click-through
+     reviewer shouldn't see a manual "+ stages" affordance either -- it's a
+     Claude-Code-driven control, not a demo button. Hide it in guest too so
+     NO experiment shows a stages button. */
+  html:not(.is-desktop) .q-add-stages,
+  html:not(.is-desktop) .q-edit-stages { display: none !important; }
 
   /* ══════════════════════════════════════════
      PRELOADER -- a breath, not a gate
@@ -532,6 +544,14 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   /* When the guest audio gate is showing, the "press any key to skip" hint
      is wrong (nothing's playing yet) -- hide it until after the gate is tapped. */
   #preloader.gated .pl-skip { display: none; }
+  /* The GATE screen (guest, pre-click) shows ONLY the description + button.
+     The unicorn sprite, the typed "Unicorn" + caret, and the greeting all
+     belong to the SECOND preloader -- the real reveal that plays after the
+     click. Hide them while .gated; the click removes .gated and runReveal()
+     types the word + reveals everything. */
+  #preloader.gated .pl-uc,
+  #preloader.gated .pl-title,
+  #preloader.gated .pl-hello { display: none; }
 
   /* GUEST AUDIO GATE -- the tappable "click to begin" prompt + a one-line
      blurb on what Unicorn is. Only rendered in the web preview. */
@@ -547,38 +567,53 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   .pl-gate[hidden] { display: none; }
   .pl-gate-blurb {
     font-family: var(--sans);
-    font-size: 12.5px;
-    line-height: 1.55;
-    color: var(--text-mute);
-    max-width: 300px;
+    max-width: 320px;
     text-wrap: balance;
   }
+  /* Two-level hierarchy, mirroring the app's own wording: a capitalized lead
+     line (bigger + heavier) over a smaller, calmer subline. */
+  .pl-gate-lead {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--cream);
+    margin-bottom: 6px;
+  }
+  .pl-gate-subline {
+    font-size: 12.5px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--text-mute);
+  }
+  /* Matches the app's CTA buttons (.u-brief-cta): peach->lilac gradient
+     stroke via two background layers -- dark fill clipped to padding-box, the
+     peach->lilac stroke to border-box. NO red/tomato. 10px chrome radius so it
+     reads like a button, not a pill. */
   .pl-gate-btn {
     font-family: var(--mono);
     font-size: 12px;
     letter-spacing: 0.06em;
     color: var(--cream);
-    background: rgba(255,255,255,0.04);
+    background:
+      linear-gradient(135deg, #151419, #151419) padding-box,
+      linear-gradient(135deg, rgba(232,149,106,0.5), rgba(167,139,223,0.5)) border-box;
     border: 1px solid transparent;
-    border-radius: var(--radius, 18px);
+    border-radius: 10px;
     padding: 11px 22px;
     cursor: pointer;
     position: relative;
-    transition: background 0.18s ease, color 0.18s ease;
+    transition: color 0.4s ease, background 0.55s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  /* Peach->lilac gradient stroke ring (same mask-composite pattern as the
-     CTAs + intro ribbon) -- the invitation is an affirmation state. */
-  .pl-gate-btn::before {
-    content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1.4px;
-    background: linear-gradient(115deg,
-      rgba(232,149,106,0.95) 0%, rgba(255,94,113,0.6) 30%,
-      rgba(167,139,223,0.95) 60%, rgba(232,149,106,0.95) 100%);
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor; mask-composite: exclude;
-    pointer-events: none;
+  /* Hover: both layers become the peach->lilac gradient (edge-to-edge fill),
+     label goes void-dark to read against it -- same as .u-brief-cta:hover. */
+  .pl-gate-btn:hover {
+    color: #100F11;
+    background:
+      linear-gradient(135deg, var(--peach), var(--lilac)) padding-box,
+      linear-gradient(135deg, var(--peach), var(--lilac)) border-box;
   }
-  .pl-gate-btn:hover { background: rgba(255,255,255,0.08); }
   .pl-gate-sub { color: var(--text-mute); }
+  .pl-gate-btn:hover .pl-gate-sub { color: rgba(16,15,17,0.7); }
 
   /* ══════════════════════════════════════════
      WORKSPACE -- desktop with floating panels
@@ -3398,6 +3433,10 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   .u-brief-meta em { color: var(--lilac); font-style: normal; }
   #u-brief-open { cursor: pointer; }
   #u-brief-open:hover { text-decoration: underline; }
+  /* Case-story path link -- same affordance as the brief path link so it
+     reads as clickable (it already plays a sound; the underline confirms it). */
+  #u-case-open { cursor: pointer; }
+  #u-case-open:hover { text-decoration: underline; }
   /* Clickable local-path links (open the folder in Finder). Applied via JS
      only in the desktop app, so the web preview is unaffected. */
   .u-open-path { color: var(--lilac); cursor: pointer; }
@@ -3496,7 +3535,10 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
          starts the audio context, then runs the normal type + bloom reveal.
          Hidden on Ivy's desktop build, which auto-plays. -->
     <div class="pl-gate" id="pl-gate" hidden>
-      <div class="pl-gate-blurb">A creative OS that turns building with AI into something you can see and share.</div>
+      <div class="pl-gate-blurb">
+        <div class="pl-gate-lead">A creative OS for designers who code</div>
+        <div class="pl-gate-subline">turns building with AI into something you can see and share.</div>
+      </div>
       <button class="pl-gate-btn" id="pl-gate-btn">▸ Click to begin <span class="pl-gate-sub">· sound on</span></button>
     </div>
   </div>
@@ -4273,42 +4315,62 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   });
   if (migrated) saveApp(data);
 
-  // Seed if empty so it feels lived-in -- for the guest preview too,
-  // so a click-through reviewer sees something, not an empty shell.
-  if (data.quests.length === 0) {
-    const now = isoNow();
-    // A date N days ago, as an ISO string -- so the seed quest reads as a
-    // months-long build, not everything created "now". Lets the click-through
-    // reviewer see a lived-in mix of finished + in-flight threads.
-    const daysAgo = (n) => new Date(Date.now() - n * 86400000).toISOString();
-    // Believable Unicorn-build experiments. No stages -- the guest seed is a
-    // flat list of started/finished threads. ~7 complete, 5 in-flight.
-    const seedExps = [
-      ['New unicorn sprite',              'complete', 121, 96],
-      ['Launch bloom + caret',            'complete', 110, 88],
-      ['Steel-pan UI sounds',             'complete', 74,  61],
-      ['Commits calendar + music',        'complete', 58,  47],
-      ['Permanent trash safety net',      'complete', 41,  33],
-      ['Per-quest Taste',                 'complete', 29,  20],
-      ['Gitty up branding',               'complete', 17,  9],
-      ['Electron wrap',                   'active',   24,  null],
-      ['Commits calendar auto-refresh',   'active',   12,  null],
-      ['Creative brief pipeline',         'active',   8,   null],
-      ['Keep panel: paste a screenshot',  'starting', 4,   null],
-      ['Notch unicorn',                   'starting', 2,   null]
-    ];
-    data.quests = [{
-      id: 'q-unicorn',
-      name: 'Unicorn',
-      startedAt: daysAgo(130),
-      experiments: seedExps.map(([name, status, made, done]) => ({
-        id: uid(),
-        name,
-        status,
-        createdAt: daysAgo(made),
-        completedAt: done != null ? daysAgo(done) : null
-      }))
-    }];
+  // ── Curated demo seed ──────────────────────────────────────────────
+  // A date N days ago, as an ISO string -- so the seed quest reads as a
+  // months-long build, not everything created "now". Lets the click-through
+  // reviewer see a lived-in mix of finished + in-flight threads.
+  const daysAgo = (n) => new Date(Date.now() - n * 86400000).toISOString();
+  // Believable Unicorn-build experiments. NO stages (no template field) so the
+  // stage-render path never adds a "+ stages" / progress row to any of them --
+  // the guest seed is a flat list of started/finished threads. ~7 complete,
+  // 5 in-flight (all `active`, no `starting`, so they read as live work).
+  const SEED_EXPS = [
+    ['New unicorn sprite',              'complete', 121, 96],
+    ['Launch bloom + caret',            'complete', 110, 88],
+    ['Steel-pan UI sounds',             'complete', 74,  61],
+    ['Commits calendar + music',        'complete', 58,  47],
+    ['Permanent trash safety net',      'complete', 41,  33],
+    ['Per-quest Taste',                 'complete', 29,  20],
+    ['Gitty up branding',               'complete', 17,  9],
+    ['Keep panel: paste a screenshot',  'complete', 50,  38],
+    ['Electron wrap',                   'active',   24,  null],
+    ['Commits calendar auto-refresh',   'active',   12,  null],
+    ['Creative brief pipeline',         'active',   8,   null],
+    ['Notch unicorn',                   'active',   2,   null]
+  ];
+  const buildSeedQuest = () => ({
+    id: 'q-unicorn',
+    name: 'Unicorn',
+    startedAt: daysAgo(130),
+    experiments: SEED_EXPS.map(([name, status, made, done]) => ({
+      id: uid(),
+      name,
+      status,
+      createdAt: daysAgo(made),
+      completedAt: done != null ? daysAgo(done) : null
+    }))
+  });
+
+  if (window.GUEST_PREVIEW) {
+    // GUEST: FORCE the curated seed on every load whenever the stored seed
+    // version is stale. Without this, a previously-persisted demo (e.g. the
+    // old "Build Unicorn" quest with stages) survives in localStorage and the
+    // visitor never sees the new curated set. Bumping SEED_VERSION re-applies
+    // the curated quest + experiments, replacing whatever was stored.
+    const SEED_KEY = 'unicorn.guest-seed-version';
+    const SEED_VERSION = '3';
+    let stored = null;
+    try { stored = localStorage.getItem(SEED_KEY); } catch {}
+    if (stored !== SEED_VERSION) {
+      data.quests = [buildSeedQuest()];
+      data.activeQuestIndex = 0;
+      saveApp(data);
+      try { localStorage.setItem(SEED_KEY, SEED_VERSION); } catch {}
+    }
+  } else if (data.quests.length === 0) {
+    // DESKTOP / Ivy's build: only seed when truly empty so her real data is
+    // never overwritten.
+    data.quests = [buildSeedQuest()];
     saveApp(data);
   }
 
@@ -5825,6 +5887,10 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   const saveBtn = document.getElementById('ap-save-journey');
   if (saveBtn) {
     saveBtn.addEventListener('click', () => {
+      // PRIVACY: on the public web preview this is a no-op. It must NEVER
+      // read localStorage or download a snapshot of (demo or real) data.
+      // A harmless flash confirms the click did something; nothing exports.
+      if (window.GUEST_PREVIEW) { flashBtn(saveBtn, 'Demo only'); return; }
       const snapshot = {
         version: 1,
         savedAt: new Date().toISOString(),
@@ -5852,7 +5918,11 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   const restoreBtn  = document.getElementById('ap-restore-journey');
   const restoreFile = document.getElementById('ap-restore-file');
   if (restoreBtn && restoreFile) {
-    restoreBtn.addEventListener('click', () => restoreFile.click());
+    restoreBtn.addEventListener('click', () => {
+      // PRIVACY: no file-picker / data replacement on the public preview.
+      if (window.GUEST_PREVIEW) { flashBtn(restoreBtn, 'Demo only'); return; }
+      restoreFile.click();
+    });
     restoreFile.addEventListener('change', () => {
       const file = restoreFile.files && restoreFile.files[0];
       if (!file) return;
@@ -7591,6 +7661,10 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   const copyBtn = document.getElementById('a-capsule');
   if (copyBtn) {
     copyBtn.addEventListener('click', async () => {
+      // PRIVACY: the context capsule is built from quest / taste / signal data.
+      // On the public preview it must NOT build or copy anything to the
+      // clipboard -- a harmless flash only. (buildCapsule never runs in guest.)
+      if (window.GUEST_PREVIEW) { flash(copyBtn, 'Demo only'); return; }
       const { content } = buildCapsule();
       try {
         await navigator.clipboard.writeText(content);
@@ -7737,10 +7811,12 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   const ribbon = document.getElementById('intro-ribbon');
   if (!ribbon) return;
 
-  // Guest preview always shows the intro (every reviewer should see
-  // what this is). Ivy's own build remembers the dismissal.
+  // Guest preview: the gate preloader now explains what Unicorn is, so the
+  // center "welcome" ribbon is redundant -- remove it entirely. (The greeting
+  // band is already removed in guest elsewhere.) Ivy's own build keeps the
+  // ribbon and remembers the dismissal.
+  if (window.GUEST_PREVIEW) { ribbon.remove(); return; }
   const dismissed = (() => {
-    if (window.GUEST_PREVIEW) return false;
     try { return localStorage.getItem(KEY) === '1'; } catch { return false; }
   })();
   if (dismissed) return;
