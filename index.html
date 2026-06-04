@@ -617,12 +617,12 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     color: transparent;
     -webkit-text-fill-color: transparent;
     opacity: 0;
-    animation: plLeadWash 1.7s cubic-bezier(0.4, 0, 0.2, 1) 0.5s 1 forwards;
+    animation: plLeadWash 3.2s cubic-bezier(0.4, 0, 0.2, 1) 0.5s 1 forwards;
   }
   @keyframes plLeadWash {
     0%   { background-position: 200% 0; opacity: 0; }   /* band off the LEFT edge */
-    15%  { opacity: 1; }
-    85%  { opacity: 1; }
+    28%  { opacity: 1; }                                 /* gentler fade-in */
+    72%  { opacity: 1; }                                 /* gentler fade-out */
     100% { background-position: -100% 0; opacity: 0; }  /* swept off RIGHT, faded out */
   }
   .pl-gate-subline {
@@ -772,8 +772,15 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     flex-direction: column;
   }
   /* The prompt line stays at the top; this spacer shoves the art block down
-     into the lower-middle so it doesn't hug the prompt. */
-  .gt-art-wrap { margin-top: auto; }
+     into the lower-middle so it doesn't hug the prompt. A bottom margin lifts
+     the whole art+caption block up a touch so it isn't bottom-heavy. */
+  .gt-art-wrap {
+    margin-top: auto;
+    margin-bottom: 14px;
+    /* Reserve the art block's height so revealing the sprite doesn't shove
+       the layout: 4 sprite rows @ 13px line-height:1 + the .gt-art margin. */
+    min-height: 58px;
+  }
   /* Terminal token colors -- match the banner: peach body, lilac horn/mane,
      peach ✺, peach→lilac gradient "Unicorn" word, muted "· gitty up". */
   .gt-prompt { color: #28c840; }            /* green prompt arrow */
@@ -793,6 +800,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
      1.55 line-height of .gt-body. */
   .gt-art {
     display: flex;
+    flex-wrap: nowrap;            /* sprite + caption stay on ONE row */
     /* Caption text aligns to the BOTTOM of the sprite (the unicorn's feet),
        like the real hook -- not centered/top-bumped. */
     align-items: flex-end;
@@ -801,15 +809,19 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   }
   .gt-sprite {
     display: inline-block;
-    white-space: pre;
+    white-space: pre;             /* the 4 sprite rows never wrap */
     line-height: 1;               /* exactly 1 -- rows stack with no gap */
     font-size: 13px;
+    flex: 0 0 auto;               /* fixed -- never shrinks/reflows */
+    width: 6.5ch;                 /* reserve the sprite's width up front */
   }
   .gt-caption {
     display: flex;
     flex-direction: column;
+    flex: 0 1 auto;
+    white-space: nowrap;          /* caption lines don't wrap onto extra rows */
     line-height: 1.5;             /* captions keep comfortable spacing */
-    padding-bottom: 1px;          /* last line settles level with the feet */
+    padding-bottom: 4px;          /* nudge caption down a hair toward the feet */
   }
   .gt-cap-row { display: block; }
   .gt-caret  {
@@ -830,7 +842,20 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     display: flex; align-items: center;
     padding-bottom: 14px;
   }
-  .gt-input .gt-prompt { color: #28c840; margin-right: 8px; }   /* ❯ in the green prompt color */
+  /* The ❯ prompt glyph: white (matching the caret block) and vertically
+     centered on the caret. Sized + line-boxed so its middle lands on the
+     caret's middle instead of sitting low as a tiny sliver. */
+  .gt-input .gt-prompt {
+    color: rgba(241,236,232,0.85);   /* white, like the caret */
+    margin-right: 8px;
+    font-size: 14px;
+    line-height: 14px;               /* match the caret block height */
+    display: inline-flex;
+    align-items: center;
+    height: 14px;
+    position: relative;
+    top: -1px;                       /* nudge up onto the caret's center line */
+  }
   .gt-cursor {
     display: inline-block; width: 7px; height: 14px;
     background: rgba(241,236,232,0.85);
@@ -8139,6 +8164,11 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   const at = (fn, ms) => { timers.push(setTimeout(fn, ms)); };
   const clearTimers = () => { timers.forEach(clearTimeout); timers = []; };
 
+  // Static, paused state: just the prompt line + blinking caret, nothing
+  // typing yet. Shown the instant the window reveals, held until the welcome
+  // band has come and gone.
+  const showIdle = () => { body.innerHTML = PROMPT + CARET; };
+
   const cycle = () => {
     clearTimers();
     // 1) Empty prompt with a blinking caret.
@@ -8160,20 +8190,37 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     const restart = () => { cycle(); };
   };
 
-  // Reveal the window after the preloader dismisses (guest gate), then start
-  // the typing. Falls back to a timer if the dismiss flag never appears.
+  // Reveal the window after the preloader dismisses (guest gate), but keep
+  // the terminal PAUSED -- only the static prompt + caret show. The welcome
+  // band fades in/holds/fades out at the top; the typing animation must not
+  // begin until ~1s AFTER that band is fully gone, so the eye reads them in
+  // sequence (band first, then the terminal "wakes up" and types).
+  //
+  // Band timeline (guest, see greeting-band IIFE): revealed ~800ms after the
+  // gate dismiss, then its gbOut fade (CSS: 0.8s @ 6.4s) finishes ~7.2s after
+  // reveal -> band fully gone ~8.0s after dismiss. We start typing ~1s later.
+  const BAND_REVEAL_DELAY = 800;   // band un-hides this long after dismiss
+  const BAND_GONE_AT = 7200;       // gbOut (0.8s @6.4s) done this long after reveal
+  const TYPE_AFTER_GONE = 1000;    // begin typing ~1s after the band is gone
+  const TYPE_DELAY = BAND_REVEAL_DELAY + BAND_GONE_AT + TYPE_AFTER_GONE; // ~9s
+
   let booted = false;
   const boot = () => {
     if (booted) return; booted = true;
+    // Window appears immediately with the static, paused prompt line.
+    showIdle();
     term.hidden = false;
     requestAnimationFrame(() => term.classList.add('in'));
-    at(cycle, 600);
+    // Hold paused, then start the auto-typing once the band is gone (+1s).
+    at(cycle, TYPE_DELAY);
   };
   const startedAt = Date.now();
   const wait = setInterval(() => {
     if (window.__unicornPreloaderDismissedAt || Date.now() - startedAt > 9000) {
       clearInterval(wait);
-      setTimeout(boot, 1100);
+      // Reveal the (paused) window ~0.5s after the gate dismiss; typing is
+      // delayed separately inside boot() until the band has cleared.
+      setTimeout(boot, 500);
     }
   }, 200);
 
