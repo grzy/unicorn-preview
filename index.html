@@ -704,7 +704,13 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     height: 24px; padding: 0 11px;
     background: rgba(255,255,255,0.045);
     border-bottom: 1px solid rgba(255,255,255,0.05);
+    /* The window itself is pointer-events:none set dressing, but the title
+       bar is the drag handle in guest preview -- so it must catch the mouse.
+       The body below stays pass-through and never intercepts panel drags. */
+    pointer-events: auto;
+    cursor: grab;
   }
+  #guest-term.gt-dragging .gt-bar { cursor: grabbing; }
   .gt-dot { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
   .gt-dot.gt-r { background: #ff5f57; }
   .gt-dot.gt-y { background: #febc2e; }
@@ -8101,6 +8107,52 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
       setTimeout(boot, 1100);
     }
   }, 200);
+
+  // ── Draggable by the title bar (guest preview only) ──────────────
+  // The window starts centered via `left/top:50%` + a translate(-50%,-50%).
+  // On first grab we freeze it to absolute pixel coords (current bounding
+  // rect) and clear the transform so the drag math is a plain delta. The
+  // typing animation only touches #gt-body, so dragging never disturbs it.
+  const bar = term.querySelector('.gt-bar');
+  if (bar) {
+    let dragging = false, startX = 0, startY = 0, startLeft = 0, startTop = 0;
+
+    const onMove = (e) => {
+      if (!dragging) return;
+      const w = term.offsetWidth, h = term.offsetHeight;
+      let left = startLeft + (e.clientX - startX);
+      let top  = startTop  + (e.clientY - startY);
+      // Keep it within the viewport.
+      left = Math.max(0, Math.min(left, window.innerWidth  - w));
+      top  = Math.max(0, Math.min(top,  window.innerHeight - h));
+      term.style.left = left + 'px';
+      term.style.top  = top + 'px';
+    };
+
+    const onUp = () => {
+      if (!dragging) return;
+      dragging = false;
+      term.classList.remove('gt-dragging');
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+    };
+
+    bar.addEventListener('mousedown', (e) => {
+      if (e.button !== 0) return;
+      // Freeze the centering transform to absolute pixels on first grab.
+      const r = term.getBoundingClientRect();
+      term.style.left = r.left + 'px';
+      term.style.top  = r.top + 'px';
+      term.style.transform = 'none';
+      startLeft = r.left; startTop = r.top;
+      startX = e.clientX; startY = e.clientY;
+      dragging = true;
+      term.classList.add('gt-dragging');
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+      e.preventDefault();
+    });
+  }
 })();
 
 // ══════════════════════════════════════════════════════════════
