@@ -529,6 +529,56 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     opacity: 0;
     animation: plFadeIn 0.6s ease 0.9s forwards;
   }
+  /* When the guest audio gate is showing, the "press any key to skip" hint
+     is wrong (nothing's playing yet) -- hide it until after the gate is tapped. */
+  #preloader.gated .pl-skip { display: none; }
+
+  /* GUEST AUDIO GATE -- the tappable "click to begin" prompt + a one-line
+     blurb on what Unicorn is. Only rendered in the web preview. */
+  .pl-gate {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 16px;
+    margin-top: 28px;
+    /* Arrives a beat after the unicorn + title settle, so the eye lands on
+       the sprite first, then the invitation. */
+    opacity: 0;
+    animation: plFadeIn 0.7s ease 0.9s both;
+  }
+  .pl-gate[hidden] { display: none; }
+  .pl-gate-blurb {
+    font-family: var(--sans);
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--text-mute);
+    max-width: 300px;
+    text-wrap: balance;
+  }
+  .pl-gate-btn {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--cream);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid transparent;
+    border-radius: var(--radius, 18px);
+    padding: 11px 22px;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.18s ease, color 0.18s ease;
+  }
+  /* Peach->lilac gradient stroke ring (same mask-composite pattern as the
+     CTAs + intro ribbon) -- the invitation is an affirmation state. */
+  .pl-gate-btn::before {
+    content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1.4px;
+    background: linear-gradient(115deg,
+      rgba(232,149,106,0.95) 0%, rgba(255,94,113,0.6) 30%,
+      rgba(167,139,223,0.95) 60%, rgba(232,149,106,0.95) 100%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    pointer-events: none;
+  }
+  .pl-gate-btn:hover { background: rgba(255,255,255,0.08); }
+  .pl-gate-sub { color: var(--text-mute); }
 
   /* ══════════════════════════════════════════
      WORKSPACE -- desktop with floating panels
@@ -1252,6 +1302,16 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   #menubar .mb-pin { cursor: pointer; user-select: none; color: var(--text-whisper); transition: color 0.15s; }
   #menubar .mb-pin.on { color: var(--peach); }
   #menubar .mb-pin:hover { color: var(--cream); }
+
+  /* WEB / guest preview: nav text is white/cream to match Ivy's real desktop
+     app (where .is-desktop already forces white). Without this the guest nav
+     toggles render peach. Also hide the right-side "quest · time" label so the
+     guest menubar reads clean, like desktop (which hides .mb-right too). */
+  html:not(.is-desktop) #menubar .mb-toggle { color: rgba(255,255,255,0.52); }
+  html:not(.is-desktop) #menubar .mb-toggle:hover { color: rgba(255,255,255,0.82); }
+  html:not(.is-desktop) #menubar .mb-toggle.on { color: #fff; }
+  html:not(.is-desktop) #menubar .mb-pin.on { color: #fff; }
+  html:not(.is-desktop) #menubar .mb-right { display: none; }
 
   /* Panel internals -- shared grammar */
   /* Grid layout (not flex) so the right-side content (q-count, mb-time
@@ -3430,6 +3490,15 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     <div class="pl-title"><span id="pl-type"></span><span class="caret"></span></div>
     <div class="pl-hello" id="pl-hello">Welcome.</div>
     <div class="pl-meta" id="pl-meta"></div>
+    <!-- GUEST AUDIO GATE -- web browsers block audio until a click, so the
+         launch bloom can't play on its own. Shown only in the guest preview
+         (un-hidden by the preloader IIFE when window.GUEST_PREVIEW). A tap
+         starts the audio context, then runs the normal type + bloom reveal.
+         Hidden on Ivy's desktop build, which auto-plays. -->
+    <div class="pl-gate" id="pl-gate" hidden>
+      <div class="pl-gate-blurb">A creative OS that turns building with AI into something you can see and share.</div>
+      <button class="pl-gate-btn" id="pl-gate-btn">▸ Click to begin <span class="pl-gate-sub">· sound on</span></button>
+    </div>
   </div>
   <div class="pl-skip">press any key to skip</div>
 </div>
@@ -3968,16 +4037,26 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
 (function() {
   const target = document.getElementById('pl-type');
   const word = 'Unicorn';
-  let i = 0;
-  const type = () => {
-    if (i <= word.length) {
-      target.textContent = word.slice(0, i++);
-      setTimeout(type, 110);
-    }
+
+  // The reveal timeline: type the word, bloom the launch sound, then
+  // auto-dismiss. On desktop this runs immediately. In the guest preview
+  // it's deferred until the user taps the audio gate, so Tone.start() has a
+  // gesture and the launch bloom actually plays (browsers block autoplay).
+  let started = false;
+  const runReveal = () => {
+    if (started) return; started = true;
+    let i = 0;
+    const type = () => {
+      if (i <= word.length) {
+        target.textContent = word.slice(0, i++);
+        setTimeout(type, 110);
+      }
+    };
+    setTimeout(type, 700);
+    // The launch bloom -- the app waking up, as the unicorn types in.
+    setTimeout(() => { if (typeof ensureUiAudio === 'function') ensureUiAudio().then(() => { if (typeof uiPreloaderBloom === 'function') uiPreloaderBloom(); }); }, 650);
+    setTimeout(dismiss, 3400);
   };
-  setTimeout(type, 700);
-  // The launch bloom -- the app waking up, as the unicorn types in.
-  setTimeout(() => { if (typeof ensureUiAudio === 'function') ensureUiAudio().then(() => { if (typeof uiPreloaderBloom === 'function') uiPreloaderBloom(); }); }, 650);
 
   const dismiss = () => {
     const pre = document.getElementById('preloader');
@@ -3989,7 +4068,35 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     if (ws) ws.classList.add('in');
     setTimeout(() => pre.remove(), 1200);
   };
-  setTimeout(dismiss, 3400);
+
+  if (window.GUEST_PREVIEW) {
+    // GUEST: wait for the gate tap. Show the "click to begin" prompt and the
+    // one-line blurb; the typing + bloom + dismiss only start on click, after
+    // we've started the audio context so the launch sound is audible.
+    const pre = document.getElementById('preloader');
+    const gate = document.getElementById('pl-gate');
+    const gateBtn = document.getElementById('pl-gate-btn');
+    if (pre) pre.classList.add('gated');
+    if (gate) gate.hidden = false;
+    const begin = (e) => {
+      if (e) e.preventDefault();
+      if (started) return;
+      if (pre) pre.classList.remove('gated');
+      if (gate) gate.hidden = true;
+      // Start audio on this gesture, THEN run the reveal so the bloom plays.
+      if (typeof ensureUiAudio === 'function') ensureUiAudio();
+      runReveal();
+    };
+    if (gateBtn) gateBtn.addEventListener('click', begin);
+    // A click anywhere on the preloader (or any key) also begins -- the whole
+    // surface is the invitation, the button is just the visible affordance.
+    if (pre) pre.addEventListener('click', begin);
+    addEventListener('keydown', begin, { once: true });
+    return;
+  }
+
+  // DESKTOP: auto-play immediately, as before. A keypress or click still skips.
+  runReveal();
   addEventListener('keydown', dismiss, { once: true });
   document.getElementById('preloader').addEventListener('click', dismiss, { once: true });
 })();
@@ -4170,16 +4277,37 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   // so a click-through reviewer sees something, not an empty shell.
   if (data.quests.length === 0) {
     const now = isoNow();
+    // A date N days ago, as an ISO string -- so the seed quest reads as a
+    // months-long build, not everything created "now". Lets the click-through
+    // reviewer see a lived-in mix of finished + in-flight threads.
+    const daysAgo = (n) => new Date(Date.now() - n * 86400000).toISOString();
+    // Believable Unicorn-build experiments. No stages -- the guest seed is a
+    // flat list of started/finished threads. ~7 complete, 5 in-flight.
+    const seedExps = [
+      ['New unicorn sprite',              'complete', 121, 96],
+      ['Launch bloom + caret',            'complete', 110, 88],
+      ['Steel-pan UI sounds',             'complete', 74,  61],
+      ['Commits calendar + music',        'complete', 58,  47],
+      ['Permanent trash safety net',      'complete', 41,  33],
+      ['Per-quest Taste',                 'complete', 29,  20],
+      ['Gitty up branding',               'complete', 17,  9],
+      ['Electron wrap',                   'active',   24,  null],
+      ['Commits calendar auto-refresh',   'active',   12,  null],
+      ['Creative brief pipeline',         'active',   8,   null],
+      ['Keep panel: paste a screenshot',  'starting', 4,   null],
+      ['Notch unicorn',                   'starting', 2,   null]
+    ];
     data.quests = [{
-      id: 'q-build-unicorn',
-      name: 'Build Unicorn',
-      experiments: [
-        { id: uid(), name: 'Preloader breath',       status: 'complete', createdAt: now, completedAt: now },
-        { id: uid(), name: 'Commits calendar + music', status: 'active', createdAt: now, completedAt: null },
-        { id: uid(), name: 'Navigator + glossary',   status: 'active',   createdAt: now, completedAt: null },
-        { id: uid(), name: 'Signal archive',         status: 'active',   createdAt: now, completedAt: null },
-        { id: uid(), name: 'Electron wrap',          status: 'starting', createdAt: now, completedAt: null }
-      ]
+      id: 'q-unicorn',
+      name: 'Unicorn',
+      startedAt: daysAgo(130),
+      experiments: seedExps.map(([name, status, made, done]) => ({
+        id: uid(),
+        name,
+        status,
+        createdAt: daysAgo(made),
+        completedAt: done != null ? daysAgo(done) : null
+      }))
     }];
     saveApp(data);
   }
@@ -8246,7 +8374,9 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
       '◆ refactor', '✢ copy tweaks', '❋ ship it', 'tighten spacing',
       'add a hover state', 'calm the strokes', 'rename + cleanup'];
     const base = new Date(); base.setHours(12, 0, 0, 0);
-    for (let i = 0; i < 95; i++) {
+    // Reach back to early January 2026 so the calendar isn't empty at the
+    // start of the year -- a designer who codes has been at this for months.
+    for (let i = 0; i < 155; i++) {
       const d = new Date(base); d.setDate(d.getDate() - i);
       const wk = d.getDay() === 0 || d.getDay() === 6;
       // A designer who codes pushes a LOT -- most days lit, weekends too.
@@ -9840,6 +9970,31 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     }
   };
   cta.addEventListener('click', () => { ensureUiAudio().then(() => { if (typeof uiFlourish === 'function') uiFlourish(); }); compose(); });
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   GUEST PREVIEW — Brief + compose CTAs. The two IIFEs above both
+   return early when there's no Electron (no window.unicorn), so in the
+   web preview the Brief section stays hidden and the compose CTAs are
+   dead. This restores them for the click-through reviewer:
+     • un-hide #u-brief-section so the Mirror reads Taste · Brief · Case
+       story like desktop (the compose buttons are inert — they don't
+       write files in the browser, they just sound).
+     • play uiFlourish() on each CTA click so the buttons feel alive,
+       matching the editorial link's delegated flourish.
+   Gated entirely to GUEST_PREVIEW; desktop is untouched.
+   ══════════════════════════════════════════════════════════════ */
+(function() {
+  if (!window.GUEST_PREVIEW) return;
+  const section = document.getElementById('u-brief-section');
+  if (section) section.hidden = false;
+  ['u-brief-cta', 'u-case-cta'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('click', () => {
+      ensureUiAudio().then(() => { if (typeof uiFlourish === 'function') uiFlourish(); });
+    });
+  });
 })();
 
 /* ══════════════════════════════════════════════════════════════
