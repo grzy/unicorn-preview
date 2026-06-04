@@ -552,6 +552,15 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   #preloader.gated .pl-uc,
   #preloader.gated .pl-title,
   #preloader.gated .pl-hello { display: none; }
+  /* The empty .pl-meta (filled only during the post-click reveal) would
+     otherwise reserve dead space below the gate and pull the visual center
+     downward. Hide it while gated so the eyebrow + subline + button sit
+     truly centered in the preloader frame. */
+  #preloader.gated .pl-meta { display: none; }
+  /* With the sprite/title/hello hidden, the gate is the only content -- drop
+     its top margin (which was spacing it BELOW the sprite) so it centers
+     cleanly inside the stage rather than sitting low. */
+  #preloader.gated .pl-gate { margin-top: 0; }
 
   /* GUEST AUDIO GATE -- the tappable "click to begin" prompt + a one-line
      blurb on what Unicorn is. Only rendered in the web preview. */
@@ -581,7 +590,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   }
   .pl-gate-subline {
     font-size: 19px;
-    font-weight: 600;
+    font-weight: 470;
     line-height: 1.4;
     color: var(--cream);
   }
@@ -672,8 +681,10 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
      art. Set dressing: pointer-events off, never intercepts panel drags. */
   #guest-term {
     position: fixed;
-    left: calc(50vw - 184px);
-    bottom: 272px;
+    left: 50%;
+    top: 50%;
+    bottom: auto;
+    transform: translate(-50%, -50%);
     width: 368px;
     z-index: 12;            /* below panels (30+) and toasts, above wallpaper */
     border-radius: 12px;
@@ -711,7 +722,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     font-size: 12.5px; line-height: 1.55;
     color: rgba(241,236,232,0.9);
     white-space: pre;
-    min-height: 184px;
+    min-height: 120px;
   }
   /* Terminal token colors -- match the banner: peach body, lilac horn/mane,
      peach ✺, peach→lilac gradient "Unicorn" word, muted "· gitty up". */
@@ -726,6 +737,29 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     -webkit-background-clip: text; background-clip: text; color: transparent;
   }
   .gt-muted  { color: rgba(241,236,232,0.4); }   /* · gitty up + status */
+  /* The block-char sprite stacks SOLID: its own element at line-height 1
+     (like the preloader's .pl-uc) so the 4 rows touch with no gaps/lines
+     through the unicorn. The surrounding terminal text keeps the looser
+     1.55 line-height of .gt-body. */
+  .gt-art {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-top: 6px;
+  }
+  .gt-sprite {
+    display: inline-block;
+    white-space: pre;
+    line-height: 1;               /* exactly 1 -- rows stack with no gap */
+    font-size: 13px;
+  }
+  .gt-caption {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.5;             /* captions keep comfortable spacing */
+    padding-top: 1px;
+  }
+  .gt-cap-row { display: block; }
   .gt-caret  {
     display: inline-block; width: 7px; height: 14px;
     background: rgba(241,236,232,0.85); vertical-align: -2px;
@@ -8004,13 +8038,23 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
 
   // The hook art, exactly as the banner draws it: peach body, lilac
   // horn/mane/tail, peach ✺, peach→lilac "Unicorn", muted "· gitty up".
+  // The 4 block-char rows live in their OWN <span class="gt-sprite"> with
+  // line-height:1 so the sprite stacks SOLID (no gaps/lines through it),
+  // while the prompt + captions keep the comfortable 1.55 line-height. The
+  // sprite and captions sit side-by-side in a flex row (.gt-art).
   const ART =
-    `<span class="gt-uc-l">  ▐▖</span>\n` +
-    `<span class="gt-uc-p">  ▟█</span><span class="gt-uc-l">▙</span>\n` +
-    `<span class="gt-uc-p">  ▗███</span><span class="gt-uc-l">█</span>` +
-      `        <span class="gt-star">✺</span> <span class="gt-word">Unicorn</span><span class="gt-muted"> · gitty up</span>\n` +
-    `<span class="gt-uc-p">  ▝█ ▐▌</span>` +
-      `        <span class="gt-muted">reading ~/unicorn/unicorn.md</span>`;
+    `<span class="gt-art">` +
+      `<span class="gt-sprite">` +
+        `<span class="gt-uc-l">  ▐▖</span>\n` +
+        `<span class="gt-uc-p">  ▟█</span><span class="gt-uc-l">▙</span>\n` +
+        `<span class="gt-uc-p">  ▗███</span><span class="gt-uc-l">█</span>\n` +
+        `<span class="gt-uc-p">  ▝█ ▐▌</span>` +
+      `</span>` +
+      `<span class="gt-caption">` +
+        `<span class="gt-cap-row"><span class="gt-star">✺</span> <span class="gt-word">Unicorn</span><span class="gt-muted"> · gitty up</span></span>` +
+        `<span class="gt-cap-row gt-muted">reading ~/unicorn/unicorn.md</span>` +
+      `</span>` +
+    `</span>`;
 
   const PROMPT = `<span class="gt-prompt">➜</span>  <span class="gt-path">~/unicorn</span> `;
   const CMD = 'unicorn';
@@ -8035,7 +8079,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     at(typeNext, 700);
     // 3) "Run" it: drop the caret to a new line and print the art.
     const runCmd = () => {
-      body.innerHTML = PROMPT + `<span class="gt-cmd">${CMD}</span>\n` + ART;
+      body.innerHTML = `<span class="gt-line">` + PROMPT + `<span class="gt-cmd">${CMD}</span></span>` + ART;
       at(restart, 5200);             // hold the art, then loop
     };
     const restart = () => { cycle(); };
