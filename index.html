@@ -604,7 +604,14 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
      reaching the visual end. Fix: pin right:0 + white-space:nowrap so each
      overlay is exactly ONE full-width line matching the base, and the clip
      sweep maps cleanly from "A" all the way out past "code". */
-  html:not(.is-desktop) .pl-gate-lead { position: relative; white-space: nowrap; }
+  /* Shrink-wrap the lead box to the TEXT width (inline-block), centered by the
+     blurb, so the gradient overlay's 0%->100% clip maps exactly "A" -> "code"
+     with no empty margin to waste the sweep on. Before this, the lead was a
+     full-width block with the text centered inside it, so the clip window
+     spent its first frames crossing ~36px of blank left margin -- which is why
+     the peach only "arrived" around "crea" instead of the leading "A". */
+  html:not(.is-desktop) .pl-gate-blurb { text-align: center; }
+  html:not(.is-desktop) .pl-gate-lead { position: relative; display: inline-block; white-space: nowrap; }
   /* ONE band only -- an ::after copy of the text, gradient-clipped to the
      LETTERS (not a block), swept by a moving clip window. Full width + nowrap
      so it travels "A" -> "code". (Two bands + transform broke background-clip
