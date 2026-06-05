@@ -172,7 +172,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Unicorn -- desktop preview</title>
+<title>Unicorn</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Sans:wght@400;500;600&family=Ubuntu+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/tone@14.8.49/build/Tone.min.js"></script>
@@ -359,9 +359,10 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     user-select: none;
     -webkit-app-region: drag; /* the menubar is the window's drag handle */
   }
-  /* Tabs + brand + the Float pin stay clickable (not part of the drag handle). */
+  /* Only the actual buttons stay clickable. The "✺ Unicorn" wordmark is just a
+     label, so it joins the drag handle -- grab the app by its name like a real
+     title bar. (Tabs + the Float pin need clicks, so they stay no-drag.) */
   html.is-desktop #menubar .mb-toggle,
-  html.is-desktop #menubar .mb-mark,
   html.is-desktop #menubar .mb-pin { -webkit-app-region: no-drag; }
   /* Whole-window drag is for SOLID mode only (pin off): grab the app anywhere
      there's no panel. In HUD/float mode (pin on, default) the body must NOT be
@@ -374,8 +375,10 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   html.is-desktop #agent,
   html.is-desktop #activity-panel,
   html.is-desktop #focus-tray,
-  html.is-desktop #intro-ribbon,
-  html.is-desktop #greeting-band { -webkit-app-region: no-drag; }
+  html.is-desktop #intro-ribbon { -webkit-app-region: no-drag; }
+  /* The greeting band ("the words above") is display-only, so it's a drag
+     handle too -- the whole top of the window moves the app. */
+  html.is-desktop #greeting-band { -webkit-app-region: drag; }
   html.is-desktop #menubar .mb-pin:not(.on) { color: rgba(255,255,255,0.52); }
   html.is-desktop #menubar .mb-pin.on { color: var(--peach); }
   html.is-desktop #menubar .mb-right { display: none; }
@@ -604,58 +607,21 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
      reaching the visual end. Fix: pin right:0 + white-space:nowrap so each
      overlay is exactly ONE full-width line matching the base, and the clip
      sweep maps cleanly from "A" all the way out past "code". */
-  /* Shrink-wrap the lead box to the TEXT width (inline-block), centered by the
-     blurb, so the gradient overlay's 0%->100% clip maps exactly "A" -> "code"
-     with no empty margin to waste the sweep on. Before this, the lead was a
-     full-width block with the text centered inside it, so the clip window
-     spent its first frames crossing ~36px of blank left margin -- which is why
-     the peach only "arrived" around "crea" instead of the leading "A". */
+  /* The gate eyebrow is plain text now. The shimmer wash across it was removed
+     -- it wasn't landing -- and the movement moved to the CTA button below,
+     where a glow travels around the stroke instead. */
   html:not(.is-desktop) .pl-gate-blurb { text-align: center; }
-  html:not(.is-desktop) .pl-gate-lead { position: relative; display: inline-block; white-space: nowrap; }
-  /* ONE band only -- an ::after copy of the text, gradient-clipped to the
-     LETTERS (not a block), swept by a moving clip window. Full width + nowrap
-     so it travels "A" -> "code". (Two bands + transform broke background-clip
-     into solid rectangles, so we're back to the single band that worked.) */
-  html:not(.is-desktop) .pl-gate-lead::after {
-    content: attr(data-text);
-    position: absolute;
-    left: 0; right: 0; top: 0;
-    width: 100%;
-    white-space: nowrap;
-    pointer-events: none;
-    background: linear-gradient(90deg, #FFA873, #C4A6FF);
-    -webkit-background-clip: text; background-clip: text;
-    color: transparent;
-    -webkit-text-fill-color: transparent;
-    clip-path: inset(0 100% 0 0);
-    opacity: 1;
-    animation: plLeadWash 1.7s linear 0.5s 1 forwards;
-  }
-  /* Band is FULL-OPACITY from frame one (no fade-in), so the leftmost letters
-     -- the "A" before "creative" -- light up bright peach the instant the
-     sweep starts, instead of arriving mid-fade and looking skipped. It only
-     fades out at the very tail. */
-  @keyframes plLeadWash {
-    /* Reveal from the LEFT edge (left inset pinned at 0) so the peach lands on
-       the "A" first, opening out across "A creative OS"... */
-    0%   { clip-path: inset(0 100% 0 0);  opacity: 1; }
-    10%  { clip-path: inset(0 66% 0 0);   opacity: 1; }
-    /* ...then HOLD there for a beat so the eye unmistakably catches the peach
-       on the opening words before the band sweeps off to the right. */
-    24%  { clip-path: inset(0 66% 0 0);   opacity: 1; }
-    92%  { clip-path: inset(0 0 0 86%);   opacity: 1; }
-    100% { clip-path: inset(0 0 0 100%);  opacity: 0; }
-  }
   .pl-gate-subline {
     font-size: 19px;
     font-weight: 470;
     line-height: 1.4;
     color: var(--cream);
   }
-  /* Matches the app's CTA buttons (.u-brief-cta): peach->lilac gradient
-     stroke via two background layers -- dark fill clipped to padding-box, the
-     peach->lilac stroke to border-box. NO red/tomato. 10px chrome radius so it
-     reads like a button, not a pill. */
+  /* The "Click to begin" gate button. Two-layer gradient stroke (dark fill to
+     padding-box, peach->lilac stroke to border-box) like the app's CTAs. The
+     LABEL is a peach->lilac gradient that flips to void-dark INSTANTLY on hover
+     -- the .u-brief-cta trick that kills the hover flash (animating white->dark
+     through a grey midtone was the jerk). Only the fill eases. */
   .pl-gate-btn {
     font-family: var(--mono);
     font-size: 12px;
@@ -669,18 +635,45 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     padding: 11px 22px;
     cursor: pointer;
     position: relative;
-    /* Calm, symmetric ease on both arrival and pull-off -- no flash, no snap.
-       Matches .u-brief-cta so the gate button eases hover-IN and hover-OUT. */
-    transition: color 0.35s ease, background 0.4s ease;
+    transition: background 0.55s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  /* Hover: both layers become the peach->lilac gradient (edge-to-edge fill),
-     label goes void-dark to read against it -- same as .u-brief-cta:hover. */
+  /* A bright "comet" travels around the stroke: a conic gradient whose angle is
+     animated via a registered @property (GPU, no layout, no JS). Bright head,
+     peach->lilac tail, soft glow, masked to just the 1.4px border ring. The
+     modern way to send light around an exact rounded-rect edge. */
+  @property --gate-beam { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+  .pl-gate-btn::before {
+    content: ""; position: absolute; inset: 0; border-radius: inherit;
+    padding: 1.4px; pointer-events: none;
+    background: conic-gradient(from var(--gate-beam),
+      transparent 0deg, transparent 255deg,
+      rgba(232,149,106,0.5) 300deg,
+      #fff2e6 343deg,
+      rgba(167,139,223,0.85) 352deg,
+      transparent 360deg);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    filter: drop-shadow(0 0 3px rgba(255,206,166,0.85));
+    animation: gateBeam 3.4s linear infinite;
+    transition: opacity 0.4s ease;
+  }
+  @keyframes gateBeam { to { --gate-beam: 360deg; } }
+  @media (prefers-reduced-motion: reduce) { .pl-gate-btn::before { animation: none; } }
+  /* Label: peach->lilac gradient text at rest. */
+  .pl-gate-label {
+    background: linear-gradient(90deg, var(--peach), var(--lilac));
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent; -webkit-text-fill-color: transparent;
+  }
+  /* Hover: fill becomes the gradient, the comet fades under it, the label flips
+     to void-dark INSTANTLY (no transition = no flash). */
   .pl-gate-btn:hover {
-    color: #100F11;
     background:
       linear-gradient(135deg, var(--peach), var(--lilac)) padding-box,
       linear-gradient(135deg, var(--peach), var(--lilac)) border-box;
   }
+  .pl-gate-btn:hover::before { opacity: 0; }
+  .pl-gate-btn:hover .pl-gate-label { -webkit-text-fill-color: #100F11; }
   .pl-gate-sub { color: var(--text-mute); transition: color 0.35s ease; }
   .pl-gate-btn:hover .pl-gate-sub { color: rgba(16,15,17,0.7); }
 
@@ -3856,7 +3849,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
         <div class="pl-gate-lead" data-text="A creative OS for designers who code">A creative OS for designers who code</div>
         <div class="pl-gate-subline">Unicorn turns building with AI into something you can see + share.</div>
       </div>
-      <button class="pl-gate-btn" id="pl-gate-btn">▸ Click to begin <span class="pl-gate-sub">· sound on</span></button>
+      <button class="pl-gate-btn" id="pl-gate-btn"><span class="pl-gate-label">▸ Click to begin</span> <span class="pl-gate-sub">· sound on</span></button>
     </div>
   </div>
   <div class="pl-skip">press any key to skip</div>
