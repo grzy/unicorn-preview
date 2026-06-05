@@ -646,22 +646,22 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
      modern way to send light around an exact rounded-rect edge. */
   .pl-gate-btn::before {
     content: ""; position: absolute;
-    width: 15px; height: 4px; border-radius: 4px;
-    /* A short, rounded light that travels the EXACT border via offset-path:
-       constant LINEAR speed (even tempo) AND short enough to hug the rounded
-       corners instead of overhanging like a long flat streak did. The "comet"
-       is the bright head + glow. Goes around ONCE, then fades out. */
+    width: 22px; height: 4px; border-radius: 4px;
+    /* A short rounded light that travels the EXACT border via offset-path:
+       constant LINEAR speed (even tempo) and short enough to hug the corners.
+       Runs a little over one lap so it can FADE OUT near the top-right corner
+       (offset-distance wraps around the closed border-box loop). */
     background: linear-gradient(90deg, var(--lilac), #fff4ea 62%, var(--peach));
     offset-path: border-box; offset-rotate: auto; offset-distance: 0%;
     filter: drop-shadow(0 0 6px rgba(255,213,176,1));
     pointer-events: none;
-    animation: gateBeam 2.3s linear 0.35s 1 both;
+    animation: gateBeam 3.2s linear 0.35s 1 both;
   }
   @keyframes gateBeam {
     0%   { offset-distance: 0%;   opacity: 0; }
-    7%   { opacity: 1; }
-    90%  { opacity: 1; }
-    100% { offset-distance: 100%; opacity: 0; }
+    6%   { opacity: 1; }
+    86%  { opacity: 1; }
+    100% { offset-distance: 138%; opacity: 0; }
   }
   @media (prefers-reduced-motion: reduce) { .pl-gate-btn::before { animation: none; opacity: 0; } }
   /* Label: peach->lilac gradient text at rest. */
