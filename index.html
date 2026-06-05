@@ -679,7 +679,9 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   }
   .pl-gate-btn:hover::before { opacity: 0; }
   .pl-gate-btn:hover .pl-gate-label { -webkit-text-fill-color: #100F11; }
-  .pl-gate-sub { color: var(--text-mute); transition: color 0.35s ease; }
+  /* No color transition: the "· sound on" + the dot switch to dark INSTANTLY on
+     hover, same as the label -- animating the color flashed through a midtone. */
+  .pl-gate-sub { color: var(--text-mute); }
   .pl-gate-btn:hover .pl-gate-sub { color: rgba(16,15,17,0.7); }
 
   /* ══════════════════════════════════════════
@@ -8853,10 +8855,14 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   function flaggedKeeps(all) {
     return (all || load()).filter(k => k.northstar).sort((a, b) => b.ts - a.ts);
   }
-  function syncNorthstar(all) {
+  async function syncNorthstar(all) {
     if (!(window.unicorn && window.unicorn.writeNorthstar)) return;
     const flagged = flaggedKeeps(all);
-    try { window.unicorn.writeNorthstar(buildNorthstarMd(flagged), buildNorthstarHtml(flagged)); } catch {}
+    let synthesis = '';
+    try { if (window.unicorn.readNorthstar) synthesis = (await window.unicorn.readNorthstar()) || ''; } catch {}
+    // md stays null so the agent-maintained synthesis in northstar.md is never
+    // clobbered -- the app only composes the html (synthesis + flagged keeps).
+    try { window.unicorn.writeNorthstar(null, buildNorthstarHtml(synthesis, flagged)); } catch {}
   }
   function updateNorthstarFoot(all) {
     const foot = document.getElementById('keep-ns-foot');
@@ -8866,18 +8872,33 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     const link = document.getElementById('keep-ns-link');
     if (link) link.textContent = `✷ Your North Star · ${n} ↗`;
   }
-  function buildNorthstarMd(flagged) {
-    const out = ['# North Star', '', 'Who I am becoming, across everything I build. Flagged from Unicorn keeps, evolves as I do. For me, not for sharing.', ''];
-    if (!flagged.length) { out.push('_Nothing flagged yet. Tap ✷ on a keep to add it._'); return out.join('\n'); }
-    flagged.forEach(k => {
-      out.push(`## ${new Date(k.ts).toISOString().slice(0, 10)}${k.questName ? ' · ' + k.questName : ''}`);
-      if (k.text) out.push(k.text);
-      out.push('');
-    });
-    return out.join('\n');
-  }
-  function buildNorthstarHtml(flagged) {
+  // Light markdown -> html for the agent-written synthesis (h1/h2/h3, **bold**,
+  // *italic*, `code`, - lists, --- rules, paragraphs). The first "# " is the h1.
+  function mdToHtml(md) {
+    if (!md) return '';
     const esc = (s) => escapeHtml(String(s == null ? '' : s));
+    const inline = (s) => esc(s)
+      .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+      .replace(/(^|[^*])\*([^*]+)\*/g, '$1<em>$2</em>')
+      .replace(/`([^`]+)`/g, '<code>$1</code>');
+    let html = '', inList = false;
+    const closeList = () => { if (inList) { html += '</ul>'; inList = false; } };
+    String(md).split('\n').forEach(raw => {
+      const line = raw.replace(/\s+$/, '');
+      if (/^---+\s*$/.test(line)) { closeList(); html += '<hr>'; return; }
+      if (/^###\s+/.test(line)) { closeList(); html += `<h3>${inline(line.replace(/^###\s+/, ''))}</h3>`; return; }
+      if (/^##\s+/.test(line))  { closeList(); html += `<h2>${inline(line.replace(/^##\s+/, ''))}</h2>`; return; }
+      if (/^#\s+/.test(line))   { closeList(); html += `<h1>${inline(line.replace(/^#\s+/, ''))}</h1>`; return; }
+      if (/^[-*]\s+/.test(line)) { if (!inList) { html += '<ul>'; inList = true; } html += `<li>${inline(line.replace(/^[-*]\s+/, ''))}</li>`; return; }
+      if (line.trim() === '') { closeList(); return; }
+      closeList(); html += `<p>${inline(line)}</p>`;
+    });
+    closeList();
+    return html;
+  }
+  function buildNorthstarHtml(synthesisMd, flagged) {
+    const esc = (s) => escapeHtml(String(s == null ? '' : s));
+    const synthHtml = mdToHtml(synthesisMd);
     const cards = flagged.map(k => {
       const when = new Date(k.ts).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
       const q = k.questName ? `<span class="ns-q">${esc(k.questName)}</span>` : '';
@@ -8886,18 +8907,32 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
       const ocr = (k.ocrText && k.imagePath) ? `<details class="ns-ocr-wrap"><summary>select the text from this image ▾</summary><pre class="ns-ocr">${esc(k.ocrText)}</pre></details>` : '';
       return `<article class="ns-card"><div class="ns-meta">${esc(when)}${q}</div>${txt}${img}${ocr}</article>`;
     }).join('');
-    const body = flagged.length ? cards : '<p class="ns-empty">Nothing flagged yet. Tap ✷ on a keep to begin your north star.</p>';
+    const keepsBlock = flagged.length
+      ? `<section class="ns-keeps"><h2 class="ns-keeps-h">✷ Flagged moments</h2><div class="ns-cards">${cards}</div></section>` : '';
+    const emptyBlock = (!synthHtml && !flagged.length)
+      ? '<p class="ns-empty">Nothing here yet. Tap ✷ on a keep to begin, and Claude Code will add what it reads about you.</p>' : '';
     return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>✷ North Star</title>
 <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Sans:wght@400;500&family=Ubuntu+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{--lilac:#A78BDF;--lilac2:#c8a2ff;--peach:#E8956A;--cream:#F1ECE8}
   *{margin:0;box-sizing:border-box}
-  body{background:radial-gradient(120% 90% at 50% -10%,#1a1622 0%,#100F11 60%);color:var(--cream);font-family:'Ubuntu Sans',system-ui,sans-serif;line-height:1.6;padding:8vh 6vw;min-height:100vh}
-  .ns-head{max-width:60ch;margin:0 auto 8vh}
-  .ns-eyebrow{font-family:'Ubuntu Sans Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--lilac)}
-  h1{font-family:'Ubuntu Sans Mono',monospace;font-weight:600;font-size:clamp(44px,7vw,86px);letter-spacing:-.01em;margin:.18em 0;background:linear-gradient(100deg,var(--lilac2),var(--lilac) 52%,var(--peach));-webkit-background-clip:text;background-clip:text;color:transparent}
-  .ns-lede{font-size:clamp(15px,1.4vw,18px);color:rgba(241,236,232,.66);max-width:54ch}
-  .ns-wrap{max-width:60ch;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+  body{background:radial-gradient(120% 90% at 50% -10%,#1a1622 0%,#100F11 60%);color:var(--cream);font-family:'Ubuntu Sans',system-ui,sans-serif;line-height:1.62;padding:8vh 6vw;min-height:100vh}
+  .ns-eyebrow{display:block;max-width:62ch;margin:0 auto 6px;font-family:'Ubuntu Sans Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--lilac)}
+  .ns-synth{max-width:62ch;margin:0 auto}
+  .ns-synth h1{font-family:'Ubuntu Sans Mono',monospace;font-weight:600;font-size:clamp(44px,7vw,80px);letter-spacing:-.01em;margin:.05em 0 .4em;background:linear-gradient(100deg,var(--lilac2),var(--lilac) 52%,var(--peach));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .ns-synth h2{font-family:'Ubuntu Sans Mono',monospace;font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--lilac);margin:36px 0 12px}
+  .ns-synth h3{font-size:17px;color:var(--cream);margin:22px 0 6px}
+  .ns-synth p{font-size:16px;color:rgba(241,236,232,.82);margin:0 0 13px}
+  .ns-synth ul{margin:0 0 15px;padding-left:0;list-style:none}
+  .ns-synth li{font-size:16px;color:rgba(241,236,232,.82);padding-left:22px;position:relative;margin:0 0 8px}
+  .ns-synth li::before{content:'✦';position:absolute;left:0;top:4px;color:var(--peach);font-size:10px}
+  .ns-synth strong{color:var(--cream);font-weight:600}
+  .ns-synth em{font-style:italic;color:var(--lilac2)}
+  .ns-synth code{font-family:'Ubuntu Sans Mono',monospace;font-size:.9em;background:rgba(255,255,255,.06);padding:1px 5px;border-radius:4px}
+  .ns-synth hr{border:none;border-top:1px solid rgba(255,255,255,.08);margin:32px 0}
+  .ns-keeps{max-width:62ch;margin:7vh auto 0}
+  .ns-keeps-h{font-family:'Ubuntu Sans Mono',monospace;font-weight:600;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--lilac);margin-bottom:18px}
+  .ns-cards{display:flex;flex-direction:column;gap:18px}
   .ns-card{border:1px solid rgba(255,255,255,.07);border-radius:14px;background:rgba(255,255,255,.02);padding:18px 20px}
   .ns-meta{font-family:'Ubuntu Sans Mono',monospace;font-size:11px;letter-spacing:.04em;color:rgba(241,236,232,.42);margin-bottom:8px;display:flex;gap:10px;align-items:center}
   .ns-q{color:var(--lilac)}
@@ -8909,12 +8944,13 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   .ns-ocr-wrap summary:hover{opacity:1}
   .ns-ocr-wrap[open] summary{margin-bottom:8px}
   .ns-ocr{font-family:'Ubuntu Sans Mono',monospace;font-size:12px;line-height:1.5;color:rgba(241,236,232,.6);white-space:pre-wrap;padding:12px 14px;border-radius:10px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.05);max-height:300px;overflow:auto;user-select:text}
-  .ns-empty{max-width:60ch;margin:0 auto;color:rgba(241,236,232,.5);font-style:italic}
-  .ns-foot{max-width:60ch;margin:8vh auto 0;font-family:'Ubuntu Sans Mono',monospace;font-size:11px;letter-spacing:.08em;color:rgba(241,236,232,.32)}
+  .ns-empty{max-width:62ch;margin:0 auto;color:rgba(241,236,232,.5);font-style:italic}
+  .ns-foot{max-width:62ch;margin:8vh auto 0;font-family:'Ubuntu Sans Mono',monospace;font-size:11px;letter-spacing:.08em;color:rgba(241,236,232,.32)}
 </style></head><body>
-<header class="ns-head"><span class="ns-eyebrow">✷ for me, not for sharing</span><h1>North&nbsp;Star</h1><p class="ns-lede">Who I am becoming, across everything I build. The mirror of what Unicorn pulls from my work. It evolves as I do.</p></header>
-<main class="ns-wrap">${body}</main>
-<footer class="ns-foot">composed by Unicorn from ${flagged.length} flagged keep${flagged.length === 1 ? '' : 's'}</footer>
+<span class="ns-eyebrow">✷ for me, not for sharing</span>
+<main class="ns-synth">${synthHtml}</main>
+${keepsBlock}${emptyBlock}
+<footer class="ns-foot">maintained by Claude Code · ${flagged.length} flagged keep${flagged.length === 1 ? '' : 's'}</footer>
 </body></html>`;
   }
   (function () {
@@ -8922,7 +8958,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     if (!link) return;
     link.addEventListener('click', async () => {
       if (!(window.unicorn && window.unicorn.paths)) return;
-      syncNorthstar(load());
+      try { await syncNorthstar(load()); } catch {}
       try { const p = await window.unicorn.paths(); if (p && p.northstarHtml) window.unicorn.openPath(p.northstarHtml); } catch {}
     });
   })();
