@@ -547,6 +547,9 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   /* When the guest audio gate is showing, the "press any key to skip" hint
      is wrong (nothing's playing yet) -- hide it until after the gate is tapped. */
   #preloader.gated .pl-skip { display: none; }
+  /* In the guest preview, hide the skip hint entirely -- the fake terminal is
+     timed, skipping would break it, and you can't actually skip there anyway. */
+  html:not(.is-desktop) .pl-skip { display: none; }
   /* The GATE screen (guest, pre-click) shows ONLY the description + button.
      The unicorn sprite, the typed "Unicorn" + caret, and the greeting all
      belong to the SECOND preloader -- the real reveal that plays after the
@@ -641,24 +644,22 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
      animated via a registered @property (GPU, no layout, no JS). Bright head,
      peach->lilac tail, soft glow, masked to just the 1.4px border ring. The
      modern way to send light around an exact rounded-rect edge. */
-  @property --gate-beam { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
   .pl-gate-btn::before {
-    content: ""; position: absolute; inset: 0; border-radius: inherit;
-    padding: 1.4px; pointer-events: none;
-    background: conic-gradient(from var(--gate-beam),
-      transparent 0deg, transparent 255deg,
-      rgba(232,149,106,0.5) 300deg,
-      #fff2e6 343deg,
-      rgba(167,139,223,0.85) 352deg,
-      transparent 360deg);
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor; mask-composite: exclude;
-    filter: drop-shadow(0 0 3px rgba(255,206,166,0.85));
-    animation: gateBeam 3.4s linear infinite;
+    content: ""; position: absolute;
+    width: 56px; height: 5px; border-radius: 5px;
+    /* A comet streak that travels the EXACT border via offset-path -- constant
+       LINEAR speed (even tempo around the corners, unlike a rotating conic that
+       races the short edges) + a bright head and glow big enough to fully cover
+       the static stroke as it passes over it. */
+    background: linear-gradient(90deg, rgba(232,149,106,0) 0%, rgba(232,149,106,0.55) 42%, #fff3e8 86%, var(--lilac) 100%);
+    offset-path: border-box; offset-rotate: auto; offset-distance: 0%;
+    filter: drop-shadow(0 0 5px rgba(255,206,166,0.95));
+    pointer-events: none;
+    animation: gateBeam 2s linear infinite;
     transition: opacity 0.4s ease;
   }
-  @keyframes gateBeam { to { --gate-beam: 360deg; } }
-  @media (prefers-reduced-motion: reduce) { .pl-gate-btn::before { animation: none; } }
+  @keyframes gateBeam { to { offset-distance: 100%; } }
+  @media (prefers-reduced-motion: reduce) { .pl-gate-btn::before { animation: none; opacity: 0; } }
   /* Label: peach->lilac gradient text at rest. */
   .pl-gate-label {
     background: linear-gradient(90deg, var(--peach), var(--lilac));
@@ -1260,6 +1261,23 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   }
   #panel-keep:hover .keep-folder { opacity: 1; }
   .keep-folder:hover { text-decoration: underline; }
+  /* North Star: a ✷ toggle on each keep (lilac when flagged) + a lilac link
+     below the panel that opens the global northstar.html. */
+  .keep-item-ns {
+    position: absolute; top: 9px; right: 28px; z-index: 2;
+    font-size: 11px; line-height: 1; cursor: pointer;
+    color: rgba(255,255,255,0.17);
+    transition: color 0.2s ease, transform 0.2s ease, text-shadow 0.2s ease;
+  }
+  .keep-item-ns:hover { color: var(--lilac); transform: scale(1.18); }
+  .keep-item-ns.on { color: #c8a2ff; text-shadow: 0 0 2px rgba(200,162,255,0.3); }
+  .keep-ns-foot { margin-top: 11px; text-align: center; }
+  .keep-ns-link {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.07em;
+    color: var(--lilac); cursor: pointer; opacity: 0.82;
+    transition: opacity 0.18s ease;
+  }
+  .keep-ns-link:hover { opacity: 1; text-decoration: underline; }
   .keep-tag-row {
     display: flex;
     align-items: baseline;
@@ -4027,6 +4045,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     </div>
 
     <div class="keep-list" id="keep-list"></div>
+    <div class="keep-ns-foot" id="keep-ns-foot" hidden><span class="keep-ns-link" id="keep-ns-link" title="Open your North Star — for you, never shared">✷ your North Star ↗</span></div>
   </section>
 
 
@@ -8785,6 +8804,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
       const imgSrc = k.imagePath ? ('file://' + k.imagePath) : (k.image || '');
       const imgHtml = imgSrc ? `<img class="keep-item-img" src="${imgSrc}" alt="kept screenshot" />` : '';
       item.innerHTML = `
+        ${(window.unicorn && window.unicorn.isDesktop) ? `<span class="keep-item-ns${k.northstar ? ' on' : ''}" data-id="${k.id}" title="${k.northstar ? 'In your North Star — click to remove' : 'Add to your North Star'}">✷</span>` : ''}
         <span class="keep-item-delete" data-id="${k.id}" title="Remove">×</span>
         <div class="keep-item-meta">${fmtWhen(k.ts)}${questTag}${truncTag}</div>
         ${k.text ? `<div class="keep-item-text">${escapeHtml(displayText)}</div>` : ''}
@@ -8805,7 +8825,96 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         render();
       });
     });
+    list.querySelectorAll('.keep-item-ns').forEach(el => {
+      el.addEventListener('click', () => {
+        const all = load();
+        const k = all.find(x => x.id === el.dataset.id);
+        if (!k) return;
+        k.northstar = !k.northstar;
+        save(all);
+        el.classList.toggle('on', k.northstar);
+        el.title = k.northstar ? 'In your North Star — click to remove' : 'Add to your North Star';
+        if (typeof ensureUiAudio === 'function' && typeof uiSave === 'function') { try { ensureUiAudio().then(() => uiSave()); } catch {} }
+        syncNorthstar(all);
+        updateNorthstarFoot(all);
+      });
+    });
+    updateNorthstarFoot(all);
   };
+
+  // ── North Star ──────────────────────────────────────────────────────────
+  // Keeps flagged ✺ (across ALL quests, not just the active one) compose a
+  // global, never-shared northstar.md + a human-readable northstar.html: the
+  // mirror of who you are across everything you build.
+  function flaggedKeeps(all) {
+    return (all || load()).filter(k => k.northstar).sort((a, b) => b.ts - a.ts);
+  }
+  function syncNorthstar(all) {
+    if (!(window.unicorn && window.unicorn.writeNorthstar)) return;
+    const flagged = flaggedKeeps(all);
+    try { window.unicorn.writeNorthstar(buildNorthstarMd(flagged), buildNorthstarHtml(flagged)); } catch {}
+  }
+  function updateNorthstarFoot(all) {
+    const foot = document.getElementById('keep-ns-foot');
+    if (!foot) return;
+    const n = flaggedKeeps(all).length;
+    foot.hidden = !(n > 0 && window.unicorn && window.unicorn.isDesktop);
+    const link = document.getElementById('keep-ns-link');
+    if (link) link.textContent = `✷ your North Star · ${n} ↗`;
+  }
+  function buildNorthstarMd(flagged) {
+    const out = ['# North Star', '', 'Who I am becoming, across everything I build. Flagged from Unicorn keeps, evolves as I do. For me, not for sharing.', ''];
+    if (!flagged.length) { out.push('_Nothing flagged yet. Tap ✷ on a keep to add it._'); return out.join('\n'); }
+    flagged.forEach(k => {
+      out.push(`## ${new Date(k.ts).toISOString().slice(0, 10)}${k.questName ? ' · ' + k.questName : ''}`);
+      if (k.text) out.push(k.text);
+      out.push('');
+    });
+    return out.join('\n');
+  }
+  function buildNorthstarHtml(flagged) {
+    const esc = (s) => escapeHtml(String(s == null ? '' : s));
+    const cards = flagged.map(k => {
+      const when = new Date(k.ts).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+      const q = k.questName ? `<span class="ns-q">${esc(k.questName)}</span>` : '';
+      const img = k.imagePath ? `<img src="file://${esc(k.imagePath)}" alt="">` : '';
+      const txt = k.text ? `<p>${esc(k.text)}</p>` : '';
+      return `<article class="ns-card"><div class="ns-meta">${esc(when)}${q}</div>${txt}${img}</article>`;
+    }).join('');
+    const body = flagged.length ? cards : '<p class="ns-empty">Nothing flagged yet. Tap ✷ on a keep to begin your north star.</p>';
+    return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>✷ North Star</title>
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu+Sans:wght@400;500&family=Ubuntu+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--lilac:#A78BDF;--lilac2:#c8a2ff;--peach:#E8956A;--cream:#F1ECE8}
+  *{margin:0;box-sizing:border-box}
+  body{background:radial-gradient(120% 90% at 50% -10%,#1a1622 0%,#100F11 60%);color:var(--cream);font-family:'Ubuntu Sans',system-ui,sans-serif;line-height:1.6;padding:8vh 6vw;min-height:100vh}
+  .ns-head{max-width:60ch;margin:0 auto 8vh}
+  .ns-eyebrow{font-family:'Ubuntu Sans Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--lilac)}
+  h1{font-family:'Ubuntu Sans Mono',monospace;font-weight:600;font-size:clamp(44px,7vw,86px);letter-spacing:-.01em;margin:.18em 0;background:linear-gradient(100deg,var(--lilac2),var(--lilac) 52%,var(--peach));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .ns-lede{font-size:clamp(15px,1.4vw,18px);color:rgba(241,236,232,.66);max-width:54ch}
+  .ns-wrap{max-width:60ch;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+  .ns-card{border:1px solid rgba(255,255,255,.07);border-radius:14px;background:rgba(255,255,255,.02);padding:18px 20px}
+  .ns-meta{font-family:'Ubuntu Sans Mono',monospace;font-size:11px;letter-spacing:.04em;color:rgba(241,236,232,.42);margin-bottom:8px;display:flex;gap:10px;align-items:center}
+  .ns-q{color:var(--lilac)}
+  .ns-card p{font-size:16px;color:var(--cream)}
+  .ns-card img{display:block;margin-top:12px;max-width:100%;border-radius:10px;border:1px solid rgba(255,255,255,.06)}
+  .ns-empty{max-width:60ch;margin:0 auto;color:rgba(241,236,232,.5);font-style:italic}
+  .ns-foot{max-width:60ch;margin:8vh auto 0;font-family:'Ubuntu Sans Mono',monospace;font-size:11px;letter-spacing:.08em;color:rgba(241,236,232,.32)}
+</style></head><body>
+<header class="ns-head"><span class="ns-eyebrow">✷ for me, not for sharing</span><h1>North&nbsp;Star</h1><p class="ns-lede">Who I am becoming, across everything I build. The mirror of what Unicorn pulls from my work. It evolves as I do.</p></header>
+<main class="ns-wrap">${body}</main>
+<footer class="ns-foot">composed by Unicorn from ${flagged.length} flagged keep${flagged.length === 1 ? '' : 's'}</footer>
+</body></html>`;
+  }
+  (function () {
+    const link = document.getElementById('keep-ns-link');
+    if (!link) return;
+    link.addEventListener('click', async () => {
+      if (!(window.unicorn && window.unicorn.paths)) return;
+      syncNorthstar(load());
+      try { const p = await window.unicorn.paths(); if (p && p.northstarHtml) window.unicorn.openPath(p.northstarHtml); } catch {}
+    });
+  })();
 
   const saveCurrent = async () => {
     let text = input.value.trim();
