@@ -646,19 +646,23 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
      modern way to send light around an exact rounded-rect edge. */
   .pl-gate-btn::before {
     content: ""; position: absolute;
-    width: 56px; height: 5px; border-radius: 5px;
-    /* A comet streak that travels the EXACT border via offset-path -- constant
-       LINEAR speed (even tempo around the corners, unlike a rotating conic that
-       races the short edges) + a bright head and glow big enough to fully cover
-       the static stroke as it passes over it. */
-    background: linear-gradient(90deg, rgba(232,149,106,0) 0%, rgba(232,149,106,0.55) 42%, #fff3e8 86%, var(--lilac) 100%);
+    width: 15px; height: 4px; border-radius: 4px;
+    /* A short, rounded light that travels the EXACT border via offset-path:
+       constant LINEAR speed (even tempo) AND short enough to hug the rounded
+       corners instead of overhanging like a long flat streak did. The "comet"
+       is the bright head + glow. Goes around ONCE, then fades out. */
+    background: linear-gradient(90deg, var(--lilac), #fff4ea 62%, var(--peach));
     offset-path: border-box; offset-rotate: auto; offset-distance: 0%;
-    filter: drop-shadow(0 0 5px rgba(255,206,166,0.95));
+    filter: drop-shadow(0 0 6px rgba(255,213,176,1));
     pointer-events: none;
-    animation: gateBeam 2s linear infinite;
-    transition: opacity 0.4s ease;
+    animation: gateBeam 2.3s linear 0.35s 1 both;
   }
-  @keyframes gateBeam { to { offset-distance: 100%; } }
+  @keyframes gateBeam {
+    0%   { offset-distance: 0%;   opacity: 0; }
+    7%   { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { offset-distance: 100%; opacity: 0; }
+  }
   @media (prefers-reduced-motion: reduce) { .pl-gate-btn::before { animation: none; opacity: 0; } }
   /* Label: peach->lilac gradient text at rest. */
   .pl-gate-label {
@@ -4045,7 +4049,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     </div>
 
     <div class="keep-list" id="keep-list"></div>
-    <div class="keep-ns-foot" id="keep-ns-foot" hidden><span class="keep-ns-link" id="keep-ns-link" title="Open your North Star — for you, never shared">✷ your North Star ↗</span></div>
+    <div class="keep-ns-foot" id="keep-ns-foot" hidden><span class="keep-ns-link" id="keep-ns-link" title="Open your North Star — for you, never shared">✷ Your North Star ↗</span></div>
   </section>
 
 
@@ -8860,7 +8864,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     const n = flaggedKeeps(all).length;
     foot.hidden = !(n > 0 && window.unicorn && window.unicorn.isDesktop);
     const link = document.getElementById('keep-ns-link');
-    if (link) link.textContent = `✷ your North Star · ${n} ↗`;
+    if (link) link.textContent = `✷ Your North Star · ${n} ↗`;
   }
   function buildNorthstarMd(flagged) {
     const out = ['# North Star', '', 'Who I am becoming, across everything I build. Flagged from Unicorn keeps, evolves as I do. For me, not for sharing.', ''];
@@ -8879,7 +8883,8 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
       const q = k.questName ? `<span class="ns-q">${esc(k.questName)}</span>` : '';
       const img = k.imagePath ? `<img src="file://${esc(k.imagePath)}" alt="">` : '';
       const txt = k.text ? `<p>${esc(k.text)}</p>` : '';
-      return `<article class="ns-card"><div class="ns-meta">${esc(when)}${q}</div>${txt}${img}</article>`;
+      const ocr = (k.ocrText && k.imagePath) ? `<details class="ns-ocr-wrap"><summary>select the text from this image ▾</summary><pre class="ns-ocr">${esc(k.ocrText)}</pre></details>` : '';
+      return `<article class="ns-card"><div class="ns-meta">${esc(when)}${q}</div>${txt}${img}${ocr}</article>`;
     }).join('');
     const body = flagged.length ? cards : '<p class="ns-empty">Nothing flagged yet. Tap ✷ on a keep to begin your north star.</p>';
     return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>✷ North Star</title>
@@ -8898,6 +8903,12 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   .ns-q{color:var(--lilac)}
   .ns-card p{font-size:16px;color:var(--cream)}
   .ns-card img{display:block;margin-top:12px;max-width:100%;border-radius:10px;border:1px solid rgba(255,255,255,.06)}
+  .ns-ocr-wrap{margin-top:10px}
+  .ns-ocr-wrap summary{font-family:'Ubuntu Sans Mono',monospace;font-size:11px;letter-spacing:.04em;color:var(--lilac);cursor:pointer;opacity:.78;list-style:none}
+  .ns-ocr-wrap summary::-webkit-details-marker{display:none}
+  .ns-ocr-wrap summary:hover{opacity:1}
+  .ns-ocr-wrap[open] summary{margin-bottom:8px}
+  .ns-ocr{font-family:'Ubuntu Sans Mono',monospace;font-size:12px;line-height:1.5;color:rgba(241,236,232,.6);white-space:pre-wrap;padding:12px 14px;border-radius:10px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.05);max-height:300px;overflow:auto;user-select:text}
   .ns-empty{max-width:60ch;margin:0 auto;color:rgba(241,236,232,.5);font-style:italic}
   .ns-foot{max-width:60ch;margin:8vh auto 0;font-family:'Ubuntu Sans Mono',monospace;font-size:11px;letter-spacing:.08em;color:rgba(241,236,232,.32)}
 </style></head><body>
@@ -8933,12 +8944,16 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     setTimeout(() => { saveBtn.classList.remove('done'); saveBtn.textContent = prev; }, 1400);
     if (typeof uiChord === 'function') uiChord(['C5', 'E5', 'G5']);
 
-    // Auto-title an UNtitled screenshot from the text inside it -- native
-    // macOS Vision OCR (offline, no API). Only when there's no caption.
-    if (!text && img && window.unicorn && window.unicorn.isDesktop && window.unicorn.ocrImage) {
+    // Read the screenshot's text with native macOS Vision OCR (offline, no API).
+    // The FULL text is kept on the entry (selectable later on the North Star
+    // page); the first good line auto-titles an untitled keep. Handles both the
+    // new {title, full} return and the older string-only one.
+    let ocrFull = null;
+    if (img && window.unicorn && window.unicorn.isDesktop && window.unicorn.ocrImage) {
       try {
-        const t = await window.unicorn.ocrImage(img);
-        if (t) text = t;
+        const r = await window.unicorn.ocrImage(img);
+        if (typeof r === 'string') { if (!text && r) text = r; }
+        else if (r) { ocrFull = r.full || null; if (!text && r.title) text = r.title; }
       } catch {}
     }
 
@@ -8948,6 +8963,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
       questId: active ? active.id : null,
       questName: active ? active.name : null,
       text: text || null,
+      ocrText: ocrFull,   // full text read from the image (desktop OCR)
       image: null,      // base64 only as a web fallback
       imagePath: null   // desktop: real file on disk
     };
