@@ -173,8 +173,26 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <title>Unicorn</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Ubuntu+Sans:wght@400;500;600&family=Ubuntu+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+  /* Fonts self-hosted locally (src/fonts/) so there is NO network fetch and NO
+     flash-of-fallback-font on cold start -- the wrong typeface used to flash in
+     for a frame while Google Fonts downloaded over the network. font-display:block
+     hides text for the (sub-ms, from disk) load instead of showing a fallback.
+     The gstatic URL is a fallback for the web preview only. */
+  @font-face { font-family:'Ubuntu Sans'; font-style:normal; font-weight:400; font-display:block;
+    src: url('fonts/ubuntu-sans-400.woff2') format('woff2'), url('https://fonts.gstatic.com/s/ubuntusans/v4/co3VmWd6mSRtB7_9UaLWwJnCq5ALePfPu1tPcW2d6TaG1DVxOg.woff2') format('woff2'); }
+  @font-face { font-family:'Ubuntu Sans'; font-style:normal; font-weight:500; font-display:block;
+    src: url('fonts/ubuntu-sans-500.woff2') format('woff2'), url('https://fonts.gstatic.com/s/ubuntusans/v4/co3VmWd6mSRtB7_9UaLWwJnCq5ALePfPu1tPcW2d6TaG1DVxOg.woff2') format('woff2'); }
+  @font-face { font-family:'Ubuntu Sans'; font-style:normal; font-weight:600; font-display:block;
+    src: url('fonts/ubuntu-sans-600.woff2') format('woff2'), url('https://fonts.gstatic.com/s/ubuntusans/v4/co3VmWd6mSRtB7_9UaLWwJnCq5ALePfPu1tPcW2d6TaG1DVxOg.woff2') format('woff2'); }
+  @font-face { font-family:'Ubuntu Sans Mono'; font-style:normal; font-weight:400; font-display:block;
+    src: url('fonts/ubuntu-sans-mono-400.woff2') format('woff2'), url('https://fonts.gstatic.com/s/ubuntusansmono/v3/jVyR7mzgBHrR5yE7ZyRg0QRJMKI45grIfDfySZU.woff2') format('woff2'); }
+  @font-face { font-family:'Ubuntu Sans Mono'; font-style:normal; font-weight:500; font-display:block;
+    src: url('fonts/ubuntu-sans-mono-500.woff2') format('woff2'), url('https://fonts.gstatic.com/s/ubuntusansmono/v3/jVyR7mzgBHrR5yE7ZyRg0QRJMKI45grIfDfySZU.woff2') format('woff2'); }
+  @font-face { font-family:'Ubuntu Sans Mono'; font-style:normal; font-weight:600; font-display:block;
+    src: url('fonts/ubuntu-sans-mono-600.woff2') format('woff2'), url('https://fonts.gstatic.com/s/ubuntusansmono/v3/jVyR7mzgBHrR5yE7ZyRg0QRJMKI45grIfDfySZU.woff2') format('woff2'); }
+</style>
 <script src="https://cdn.jsdelivr.net/npm/tone@14.8.49/build/Tone.min.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -354,15 +372,22 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   html.is-desktop #menubar {
     height: auto;
     align-items: flex-start;
-    padding: 19px 26px 10px 100px;
+    /* Traffic lights are pinned top-left (absolute, below); Panels + Float float
+       centered in the bar for a balanced HUD feel. */
+    justify-content: center;
+    padding: 19px 26px 10px 18px;
     background: none;
     user-select: none;
     -webkit-app-region: drag; /* the menubar is the window's drag handle */
   }
+  /* Pin the lights to the top-left corner, out of the centered flow. */
+  html.is-desktop #menubar .mb-lights { position: absolute; left: 18px; top: 20px; }
   /* Only the actual buttons stay clickable. The "✺ Unicorn" wordmark is just a
      label, so it joins the drag handle -- grab the app by its name like a real
      title bar. (Tabs + the Float pin need clicks, so they stay no-drag.) */
   html.is-desktop #menubar .mb-toggle,
+  html.is-desktop #menubar .mb-panels-btn,
+  html.is-desktop #menubar .mb-panels-pop,
   html.is-desktop #menubar .mb-pin { -webkit-app-region: no-drag; }
   /* Whole-window drag is for SOLID mode only (pin off): grab the app anywhere
      there's no panel. In HUD/float mode (pin on, default) the body must NOT be
@@ -380,9 +405,14 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
      handle too -- the whole top of the window moves the app. */
   html.is-desktop #greeting-band { -webkit-app-region: drag; }
   html.is-desktop #menubar .mb-pin:not(.on) { color: rgba(255,255,255,0.52); }
-  html.is-desktop #menubar .mb-pin.on { color: var(--peach); }
+  html.is-desktop #menubar .mb-pin.on { color: #fff; } /* white so Float reads on any wallpaper (peach vanished on sky-blue art) */
   html.is-desktop #menubar .mb-right { display: none; }
   html.is-desktop #menubar .mb-mark { color: #fff; }
+  /* Panels is the primary control -> always bright white, like Float when on
+     (no dim-until-hover). Float-off is the only dimmed state up here. */
+  html.is-desktop #menubar .mb-panels-btn,
+  html.is-desktop #menubar .mb-panels-btn:hover,
+  html.is-desktop #menubar .mb-panels-btn[aria-expanded="true"] { color: #fff; }
   html.is-desktop #menubar .mb-toggle { color: rgba(255,255,255,0.52); }
   html.is-desktop #menubar .mb-toggle:hover { color: rgba(255,255,255,0.82); }
   html.is-desktop #menubar .mb-toggle.on { color: #fff; }
@@ -713,6 +743,29 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   #menubar .mb-sep { color: rgba(255,255,255,0.18); }
   #menubar .mb-right { margin-left: auto; display: flex; gap: 16px; align-items: center; }
 
+  /* Custom traffic lights (Unicorn colors) -- desktop only; web has no window. */
+  .mb-lights { display: none; align-items: center; gap: 8px; }
+  html.is-desktop .mb-lights { display: inline-flex; -webkit-app-region: no-drag; margin-top: 1px; }
+  .mb-light {
+    width: 12px; height: 12px; border-radius: 50%; border: 0; padding: 0;
+    cursor: pointer; -webkit-app-region: no-drag;
+    display: inline-flex; align-items: center; justify-content: center;
+    font: 600 9px/1 var(--mono); color: rgba(0,0,0,0.55);
+    box-shadow: inset 0 0 0 0.5px rgba(0,0,0,0.18);
+    transition: filter 0.12s;
+  }
+  .mb-light:hover { filter: brightness(1.08); }
+  .mb-light:active { filter: brightness(0.9); }
+  .mb-light-close { background: var(--tomato); }
+  .mb-light-min   { background: var(--peach); }
+  .mb-light-zoom  { background: var(--lilac); }
+  /* glyphs (× – +) reveal on cluster hover, like the native buttons. */
+  .mb-light::before { opacity: 0; transition: opacity 0.12s; pointer-events: none; }
+  .mb-lights:hover .mb-light::before { opacity: 1; }
+  .mb-light-close::before { content: '×'; }
+  .mb-light-min::before   { content: '–'; }
+  .mb-light-zoom::before  { content: '+'; }
+
   /* Fake macOS menubar clock -- guest preview only. The guest menubar's
      .mb-right is hidden, so this fixed element occupies the empty top-right
      and reads like the OS clock. System-font, small, low-contrast cream --
@@ -837,7 +890,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     min-height: 58px;
   }
   /* Terminal token colors -- match the banner: peach body, lilac horn/mane,
-     peach ✺, peach→lilac gradient "Unicorn" word, muted "· gitty up". */
+     peach ✺, peach→lilac gradient "Unicorn" word, muted "· git-ty up". */
   /* The command-prompt line must read as ONE row the entire time it types.
      .gt-body is a flex column, so bare inline parts would each become a flex
      item and stack vertically (the 4-line break). Wrapping them in .gt-line
@@ -868,7 +921,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     background: linear-gradient(90deg, #E8956A, #A78BDF);
     -webkit-background-clip: text; background-clip: text; color: transparent;
   }
-  .gt-muted  { color: rgba(241,236,232,0.4); }   /* · gitty up + status */
+  .gt-muted  { color: rgba(241,236,232,0.4); }   /* · git-ty up + status */
   /* The block-char sprite stacks SOLID: its own element at line-height 1
      (like the preloader's .pl-uc) so the 4 rows touch with no gaps/lines
      through the unicorn. The surrounding terminal text keeps the looser
@@ -1259,7 +1312,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   }
   /* The count is ambient -- it surfaces on hover, not a constant badge. */
   #panel-keep:hover .keep-count { opacity: 1; }
-  .keep-meta-right { display: inline-flex; align-items: baseline; gap: 12px; }
+  .keep-meta-right { display: inline-flex; align-items: baseline; gap: 12px; flex-shrink: 0; white-space: nowrap; }
   .keep-folder {
     font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em;
     color: var(--lilac); cursor: pointer; opacity: 0;
@@ -1267,8 +1320,8 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   }
   #panel-keep:hover .keep-folder { opacity: 1; }
   .keep-folder:hover { text-decoration: underline; }
-  /* North Star: a ✷ toggle on each keep (lilac when flagged) + a lilac link
-     below the panel that opens the global northstar.html. */
+  /* North Star: a ✷ toggle on each keep (lilac when flagged). The link to open
+     the global northstar.html lives under Mirror › Taste ("For you" row). */
   .keep-item-ns {
     position: absolute; top: 9px; right: 28px; z-index: 2;
     font-size: 11px; line-height: 1; cursor: pointer;
@@ -1277,13 +1330,6 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   }
   .keep-item-ns:hover { color: var(--lilac); transform: scale(1.18); }
   .keep-item-ns.on { color: #c8a2ff; text-shadow: 0 0 2px rgba(200,162,255,0.3); }
-  .keep-ns-foot { margin-top: 11px; text-align: center; }
-  .keep-ns-link {
-    font-family: var(--mono); font-size: 10px; letter-spacing: 0.07em;
-    color: var(--lilac); cursor: pointer; opacity: 0.82;
-    transition: opacity 0.18s ease;
-  }
-  .keep-ns-link:hover { opacity: 1; text-decoration: underline; }
   .keep-tag-row {
     display: flex;
     align-items: baseline;
@@ -1664,10 +1710,61 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   #menubar .mb-toggle { cursor: pointer; transition: color 0.15s; user-select: none; }
   #menubar .mb-toggle:hover { color: var(--text-mute); }
   #menubar .mb-toggle.on { color: var(--peach); }
-  /* "Float" pin -- toggles the always-on-top HUD. Peach when floating. */
+  /* "Float" pin -- toggles the always-on-top HUD. White when floating so it
+     reads on any desktop background (peach vanished against sky-blue art). */
   #menubar .mb-pin { cursor: pointer; user-select: none; color: var(--text-whisper); transition: color 0.15s; }
-  #menubar .mb-pin.on { color: var(--peach); }
+  #menubar .mb-pin.on { color: #fff; }
   #menubar .mb-pin:hover { color: var(--cream); }
+  #menubar .mb-pin.on:hover { color: #fff; }
+
+  /* "Panels ▾" -- one button that opens a popover of the panel toggles, so the
+     bar reads as one slim native strip instead of a row of six labels. */
+  #menubar .mb-panels { position: relative; display: inline-flex; }
+  #menubar .mb-panels-btn {
+    font: inherit; letter-spacing: inherit; text-transform: inherit;
+    color: var(--text-whisper); background: none; border: 0; padding: 0;
+    cursor: pointer; user-select: none; transition: color 0.15s;
+  }
+  #menubar .mb-panels-btn:hover,
+  #menubar .mb-panels-btn[aria-expanded="true"] { color: var(--cream); }
+  /* Dropdown = a mini panel: same frosted fill, radius, shadow, and the
+     signature peach->lilac gradient ring edge as every other panel. */
+  #menubar .mb-panels-pop {
+    position: absolute; top: calc(100% + 8px); left: 0;
+    display: flex; flex-direction: column; gap: 2px;
+    min-width: 0; padding: 9px 8px;
+    background: var(--panel-bg);
+    border-radius: var(--r-panel);
+    box-shadow: var(--shadow-panel);
+    -webkit-backdrop-filter: blur(var(--panel-blur)) saturate(1.2);
+            backdrop-filter: blur(var(--panel-blur)) saturate(1.2);
+    z-index: 60;
+  }
+  #menubar .mb-panels-pop::before {
+    content: ""; position: absolute; inset: 0;
+    border-radius: inherit; padding: 1px;
+    background: linear-gradient(to top right,
+      transparent 1%,
+      rgba(232,149,106,0.30) 13%,
+      rgba(167,139,223,0.30) 87%,
+      transparent 99%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    pointer-events: none;
+  }
+  #menubar .mb-panels-pop[hidden] { display: none; }
+  #menubar .mb-panels-pop .mb-toggle {
+    position: relative; padding: 6px 12px; border-radius: 8px;
+    text-transform: none; letter-spacing: 0.04em;
+    display: flex; align-items: center; justify-content: space-between; gap: 22px;
+  }
+  #menubar .mb-panels-pop .mb-toggle:hover { background: rgba(255,255,255,0.06); }
+  /* Shortcut hint on the right of each row -- dim + steady, like a macOS menu. */
+  #menubar .mb-panels-pop .mb-tog-key { color: rgba(255,255,255,0.4); letter-spacing: 0.02em; }
+  html:not(.is-desktop) #menubar .mb-panels-btn,
+  html:not(.is-desktop) #menubar .mb-panels-btn:hover,
+  html:not(.is-desktop) #menubar .mb-panels-btn[aria-expanded="true"] { color: #fff; }
 
   /* WEB / guest preview: nav text is white/cream to match Ivy's real desktop
      app (where .is-desktop already forces white). Without this the guest nav
@@ -3035,9 +3132,10 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     flex: 0 1 auto;
     min-height: 0;
     overflow-y: auto;
-    /* More bottom padding now that the footer's gone -- the last section
-       (Case story) was crunching against the panel's rounded bottom. */
-    padding: 18px 20px 26px;
+    /* Tight top (the hairline already provides the gap above "Currently" -- 18px
+       here stacked with it and left too much space). More bottom padding since
+       the footer's gone -- the last section was crunching the rounded bottom. */
+    padding: 2px 20px 26px;
     display: flex; flex-direction: column; gap: 18px;
   }
   .a-body::-webkit-scrollbar { width: 4px; }
@@ -3075,8 +3173,12 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     transition: transform 0.2s ease;
     transform-origin: center;
   }
+  /* Expanded: the whole label (carrot + words) goes peach so the open section
+     is easy to spot and re-collapse. Minimized = back to the whisper default. */
+  .a-section.collapsible.open .a-label { color: var(--peach); }
   .a-section.collapsible.open .a-label::before {
     transform: rotate(90deg);
+    color: var(--peach);
   }
   .a-section.collapsible .a-section-body {
     overflow: hidden;
@@ -3322,7 +3424,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   .u-taste {
     list-style: none;
     display: flex; flex-direction: column;
-    gap: 6px;
+    gap: 11px;
   }
   .u-taste li {
     font-family: var(--sans); font-size: 12px;
@@ -3367,7 +3469,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
      Palette = 3 chips @16px + 2 gaps @6px = 60px. */
   .u-taste-edge { width: 60px; height: 16px; border-radius: 6px; position: relative; background: var(--panel-bg); }
   .u-taste-edge::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
-    background: linear-gradient(to top right, transparent 8%, rgba(232,149,106,0.7) 26%, rgba(167,139,223,0.7) 74%, transparent 92%);
+    background: linear-gradient(to top right, transparent 3%, rgba(232,149,106,0.42) 28%, rgba(167,139,223,0.42) 72%, transparent 97%);
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor; mask-composite: exclude; }
   /* Lilac = the link color everywhere (local-file + HTML links), so the LDS
@@ -3751,7 +3853,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   .u-brief-cta:hover .u-brief-cta-text { -webkit-text-fill-color: #100F11; }
   .u-brief-cta.composing { opacity: 0.7; pointer-events: none; }
   .u-brief-meta {
-    margin-top: 8px;
+    margin-top: 12px;
     color: var(--text-whisper);
     font-family: var(--mono); font-size: 9px;
     letter-spacing: 0.12em; text-transform: uppercase;
@@ -3884,13 +3986,29 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
 
   <!-- Menubar -->
   <div id="menubar">
-    <span class="mb-mark">✺ Unicorn</span>
-    <span class="mb-toggle on" data-panel="quest"      title="⌘1">Quest</span>
-    <span class="mb-toggle on" data-panel="claude"     title="⌘2">Mirror</span>
-    <span class="mb-toggle on" data-panel="keep"       title="⌘3">Keep</span>
-    <span class="mb-toggle on" data-panel="commits"    title="⌘4">Commits</span>
-    <span class="mb-toggle" data-panel="activity"      title="⌘5">Activity</span>
-    <span class="mb-toggle" data-panel="appearance"    title="⌘,">Settings</span>
+    <!-- Custom traffic lights in Unicorn's own colors (tomato/peach/lilac). The
+         native ones are hidden in main.js -- because the window is transparent,
+         generic red/yellow/green from apps BEHIND Unicorn bleed through and
+         double up; brand-colored buttons stay unmistakably ours. Desktop only. -->
+    <span class="mb-lights" id="mb-lights">
+      <button class="mb-light mb-light-close" id="mb-light-close" type="button" title="Close" aria-label="Close window"></button>
+      <button class="mb-light mb-light-min"   id="mb-light-min"   type="button" title="Minimize" aria-label="Minimize window"></button>
+      <button class="mb-light mb-light-zoom"  id="mb-light-zoom"  type="button" title="Zoom" aria-label="Zoom window"></button>
+    </span>
+    <!-- Panel toggles collapsed into one "Panels ▾" popover (the macOS View menu
+         mirrors them with ⌘1-5/⌘,). Drops the redundant "✺ Unicorn" mark -- the
+         OS title bar already names the app. Keeps one slim, native-feeling bar. -->
+    <span class="mb-panels" id="mb-panels">
+      <button class="mb-panels-btn" id="mb-panels-btn" type="button" aria-haspopup="true" aria-expanded="false" title="Show or hide panels (also in the View menu)">⊞ Panels</button>
+      <div class="mb-panels-pop" id="mb-panels-pop" hidden>
+        <span class="mb-toggle on" data-panel="quest"><span class="mb-tog-name">Quest</span><span class="mb-tog-key">⌘1</span></span>
+        <span class="mb-toggle on" data-panel="claude"><span class="mb-tog-name">Mirror</span><span class="mb-tog-key">⌘2</span></span>
+        <span class="mb-toggle on" data-panel="keep"><span class="mb-tog-name">Keep</span><span class="mb-tog-key">⌘3</span></span>
+        <span class="mb-toggle on" data-panel="commits"><span class="mb-tog-name">Commits</span><span class="mb-tog-key">⌘4</span></span>
+        <span class="mb-toggle" data-panel="activity"><span class="mb-tog-name">Activity</span><span class="mb-tog-key">⌘5</span></span>
+        <span class="mb-toggle" data-panel="appearance"><span class="mb-tog-name">Settings</span><span class="mb-tog-key">⌘,</span></span>
+      </div>
+    </span>
     <span class="mb-pin on" id="mb-pin" title="Float on top: Unicorn stays above your other windows, beside the terminal. Click to let other apps come forward instead (⌥U).">⊹ Float</span>
     <span class="mb-right">
       <span id="mb-quest">Build Unicorn</span>
@@ -3906,7 +4024,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
 
   <!-- FAKE iTerm TERMINAL (guest preview only) -- a tiny terminal window that
        auto-types `unicorn` and prints the Unicorn hook art (the block-char
-       sprite + ✺ Unicorn · gitty up). Sells "Unicorn lives NEXT TO your
+       sprite + ✺ Unicorn · git-ty up). Sells "Unicorn lives NEXT TO your
        terminal." Sits in the open center-bottom space, between Commits
        (bottom-left) and Keep (bottom-right). Hidden on Ivy's build. -->
   <div id="guest-term" hidden aria-hidden="true">
@@ -4051,7 +4169,6 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     </div>
 
     <div class="keep-list" id="keep-list"></div>
-    <div class="keep-ns-foot" id="keep-ns-foot" hidden><span class="keep-ns-link" id="keep-ns-link" title="Open your North Star — for you, never shared">✷ Your North Star ↗</span></div>
   </section>
 
 
@@ -4067,13 +4184,6 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
         <div class="ap-row-sub">tap, signal, loop close</div>
       </div>
       <button class="ap-btn" id="ap-ui-sounds-toggle">On</button>
-    </div>
-    <div class="ap-row">
-      <div>
-        <div class="ap-row-label">Reset layout</div>
-        <div class="ap-row-sub">snap panels back to default</div>
-      </div>
-      <button class="ap-btn" id="ap-reset-layout">Reset</button>
     </div>
     <div class="ap-row">
       <div>
@@ -4096,6 +4206,13 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
         <div class="ap-row-sub">paste into a new agent / tool</div>
       </div>
       <button class="ap-btn" id="a-capsule" title="Copy today's context -- quest, taste, recent breakthroughs -- to paste into a tool that doesn't have the Unicorn skill.">Copy</button>
+    </div>
+    <div class="ap-row">
+      <div>
+        <div class="ap-row-label">Reset layout</div>
+        <div class="ap-row-sub">snap panels back to default</div>
+      </div>
+      <button class="ap-btn" id="ap-reset-layout">Reset</button>
     </div>
   </section>
 
@@ -4177,7 +4294,6 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
         <div class="a-label">Brief</div>
         <div class="a-section-body">
           <button class="u-brief-cta" id="u-brief-cta" title="Compose an HTML brief from this quest's keeps + commits + experiments. Saves to ~/unicorn/briefs/.">
-            <span class="u-brief-cta-icon">✺</span>
             <span class="u-brief-cta-text">Compose weekly brief</span>
           </button>
           <div class="u-brief-meta">Shareable HTML · <em id="u-brief-open" title="Open the briefs folder">~/unicorn/briefs/</em></div>
@@ -4192,7 +4308,6 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
         <div class="a-label">Case story</div>
         <div class="a-section-body">
           <button class="u-brief-cta" id="u-case-cta" title="Compose the case story -- the global workshop view from this quest's experiments, commits, and CASESTORY.md. For you, not shared.">
-            <span class="u-brief-cta-icon">❖</span>
             <span class="u-brief-cta-text">Tell the case story</span>
           </button>
           <div class="u-brief-meta">Workshop · for you · <em id="u-case-open" title="Open the case-story folder">~/unicorn/case-story/</em></div>
@@ -4606,7 +4721,7 @@ function uiUndo() {
 // open-path link, and the past-brief list -- sound on click. One delegated
 // listener so new links of these kinds sound automatically.
 document.addEventListener('click', (e) => {
-  if (e.target.closest('#u-brief-open, #u-case-open, #u-taste-lds:not(.muted), #keep-folder, .u-open-path, .u-brief-row-meta')) {
+  if (e.target.closest('#u-brief-open, #u-case-open, .u-taste-lds:not(.muted), #keep-folder, .u-open-path, .u-brief-row-meta')) {
     ensureUiAudio().then(() => { if (typeof uiLink === 'function') uiLink(); });
   } else if (e.target.closest('.u-toast-undo')) {
     // Every undo button (delete/close/archive/quest) -- a soft revert.
@@ -4994,14 +5109,15 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     const visible = q.experiments
       .map((exp, i) => ({ exp, i }))
       .filter(({ exp }) => !hiddenCompleteIds.has(exp.id));
-    // Sort: STARTING on top (the thing you're about to begin), then the
-    // active/paused group in creation order, then completed (newest
-    // closure first) at the bottom.
-    const rank = (s) => s === 'starting' ? 0 : s === 'complete' ? 2 : 1;
+    // Sort: STARTING on top (about to begin) → ACTIVE (in motion) → PAUSED
+    // (set aside) → COMPLETE (newest closure first) at the bottom. Each status
+    // gets its own tier so a freshly-activated experiment rises above the
+    // paused ones instead of sinking below them in creation order.
+    const rank = (s) => s === 'starting' ? 0 : s === 'active' ? 1 : s === 'paused' ? 2 : s === 'complete' ? 3 : 1;
     visible.sort((a, b) => {
       const ra = rank(a.exp.status), rb = rank(b.exp.status);
       if (ra !== rb) return ra - rb;
-      if (ra === 2) {
+      if (ra === 3) {
         return new Date(b.exp.completedAt || 0) - new Date(a.exp.completedAt || 0);
       }
       return 0; // keep existing order within a tier
@@ -5554,7 +5670,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     const t = document.createElement('div');
     t.className = 'u-toast';
     t.innerHTML = `
-      <span class="u-toast-text">✺ Gitty up — closed <span class="u-toast-hl">${escapeHtml(expName)}</span></span>
+      <span class="u-toast-text">✺ git-ty up — closed <span class="u-toast-hl">${escapeHtml(expName)}</span></span>
       <span class="u-toast-undo">undo</span>
     `;
     document.body.appendChild(t);
@@ -7364,13 +7480,21 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
       <li class="u-taste-row"><span class="u-taste-k">Type</span><span class="u-taste-v">Ubuntu Mono × Ubuntu Sans</span></li>
       <li class="u-taste-row"><span class="u-taste-k">Sound</span><span class="u-taste-v">Commits have a soundtrack</span></li>
       <li class="u-taste-row"><span class="u-taste-k">Voice</span><span class="u-taste-v">Ships at midnight Pacific</span></li>
-      <li class="u-taste-lds${hasLDS ? '' : ' muted'}" id="u-taste-lds">${hasLDS ? '<span class="u-taste-lds-k">Shareable</span><em>Living Design System ↗</em>' : 'Start a living design system?'}</li>`;
+      <li class="u-taste-lds${hasLDS ? '' : ' muted'}" id="u-taste-lds">${hasLDS ? '<em>Living Design System ↗</em>' : 'Start a living design system?'}</li>`
+      // North Star: private (for you, never shared). No label -- just the link,
+      // stacked under the Living Design System. Desktop only, since it opens the
+      // local northstar.html.
+      + ((window.unicorn && window.unicorn.isDesktop)
+        ? `<li class="u-taste-lds" id="u-taste-ns" title="Open your North Star — for you, never shared"><em>North Star ↗</em></li>`
+        : '');
     const lds = document.getElementById('u-taste-lds');
     if (lds && hasLDS) {
       // Open the SHAREABLE, hosted Living Design System (not the local file) --
       // window.open routes through the window-open handler to the browser.
       lds.addEventListener('click', () => window.open('https://grzy.github.io/unicorn-preview/living-ds/', '_blank'));
     }
+    const nsRow = document.getElementById('u-taste-ns');
+    if (nsRow) nsRow.addEventListener('click', () => { if (window.__unicornOpenNorthstar) window.__unicornOpenNorthstar(); });
   };
 
   const renderBreakthroughs = () => {
@@ -7540,7 +7664,15 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     if (q) {
       setText('a-attached-quest', q.name);
       setText('a-attached-day',   `Day ${dayCountFor(q)}`);
-      setText('a-attached-repo',  repoFor(q) || '');
+      const repo = repoFor(q) || '';
+      setText('a-attached-repo', repo);
+      // Stash repo + slug so the click handler can open the REAL build folder
+      // (board builds from the mood-board skill live in ~/experiments/<slug>).
+      const repoEl = document.getElementById('a-attached-repo');
+      if (repoEl) {
+        repoEl.dataset.repo = repo;
+        repoEl.dataset.slug = (q.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      }
     }
   };
 
@@ -8249,7 +8381,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   if (!term || !body) return;
 
   // The hook art, exactly as the banner draws it: peach body, lilac
-  // horn/mane/tail, peach ✺, peach→lilac "Unicorn", muted "· gitty up".
+  // horn/mane/tail, peach ✺, peach→lilac "Unicorn", muted "· git-ty up".
   // The 4 block-char rows live in their OWN <span class="gt-sprite"> with
   // line-height:1 so the sprite stacks SOLID (no gaps/lines through it),
   // while the prompt + captions keep the comfortable 1.55 line-height. The
@@ -8263,7 +8395,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         `<span class="gt-uc-p">  ▝█ ▐▌</span>` +
       `</span>` +
       `<span class="gt-caption">` +
-        `<span class="gt-cap-row"><span class="gt-star">✺</span> <span class="gt-word">Unicorn</span><span class="gt-muted"> · gitty up</span></span>` +
+        `<span class="gt-cap-row"><span class="gt-star">✺</span> <span class="gt-word">Unicorn</span><span class="gt-muted"> · git-ty up</span></span>` +
         `<span class="gt-cap-row gt-muted">reading ~/unicorn/unicorn.md</span>` +
       `</span>` +
     `</span></span>`;
@@ -8865,12 +8997,13 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     try { window.unicorn.writeNorthstar(null, buildNorthstarHtml(synthesis, flagged)); } catch {}
   }
   function updateNorthstarFoot(all) {
-    const foot = document.getElementById('keep-ns-foot');
-    if (!foot) return;
-    const n = flaggedKeeps(all).length;
-    foot.hidden = !(n > 0 && window.unicorn && window.unicorn.isDesktop);
+    // North Star link now lives in the Keep header beside Folder ↗; reveal it
+    // only once at least one keep is flagged (✷), on desktop.
     const link = document.getElementById('keep-ns-link');
-    if (link) link.textContent = `✷ Your North Star · ${n} ↗`;
+    if (!link) return;
+    const n = flaggedKeeps(all).length;
+    link.hidden = !(n > 0 && window.unicorn && window.unicorn.isDesktop);
+    link.textContent = `✷ North Star · ${n}`;
   }
   // Light markdown -> html for the agent-written synthesis (h1/h2/h3, **bold**,
   // *italic*, `code`, - lists, --- rules, paragraphs). The first "# " is the h1.
@@ -8919,7 +9052,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   body{background:radial-gradient(120% 90% at 50% -10%,#1a1622 0%,#100F11 60%);color:var(--cream);font-family:'Ubuntu Sans',system-ui,sans-serif;line-height:1.62;padding:8vh 6vw;min-height:100vh}
   .ns-eyebrow{display:block;max-width:62ch;margin:0 auto 6px;font-family:'Ubuntu Sans Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--lilac)}
   .ns-synth{max-width:62ch;margin:0 auto}
-  .ns-synth h1{font-family:'Ubuntu Sans Mono',monospace;font-weight:600;font-size:clamp(44px,7vw,80px);letter-spacing:-.01em;margin:.05em 0 .4em;background:linear-gradient(100deg,var(--lilac2),var(--lilac) 52%,var(--peach));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .ns-synth h1{font-family:'Ubuntu Sans Mono',monospace;font-weight:600;font-size:clamp(44px,7vw,80px);letter-spacing:-.01em;margin:.05em 0 .4em;background:linear-gradient(100deg,var(--lilac2),var(--lilac) 38%,var(--peach) 85%);-webkit-background-clip:text;background-clip:text;color:transparent}
   .ns-synth h2{font-family:'Ubuntu Sans Mono',monospace;font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--lilac);margin:36px 0 12px}
   .ns-synth h3{font-size:17px;color:var(--cream);margin:22px 0 6px}
   .ns-synth p{font-size:16px;color:rgba(241,236,232,.82);margin:0 0 13px}
@@ -8953,14 +9086,16 @@ ${keepsBlock}${emptyBlock}
 <footer class="ns-foot">maintained by Claude Code · ${flagged.length} flagged keep${flagged.length === 1 ? '' : 's'}</footer>
 </body></html>`;
   }
+  // Shared opener: sync the North Star html, then open it. Lives on window so
+  // the Mirror › Taste "For you" row (renderTaste) can call it too.
+  window.__unicornOpenNorthstar = async () => {
+    if (!(window.unicorn && window.unicorn.paths)) return;
+    try { await syncNorthstar(load()); } catch {}
+    try { const p = await window.unicorn.paths(); if (p && p.northstarHtml) window.unicorn.openPath(p.northstarHtml); } catch {}
+  };
   (function () {
     const link = document.getElementById('keep-ns-link');
-    if (!link) return;
-    link.addEventListener('click', async () => {
-      if (!(window.unicorn && window.unicorn.paths)) return;
-      try { await syncNorthstar(load()); } catch {}
-      try { const p = await window.unicorn.paths(); if (p && p.northstarHtml) window.unicorn.openPath(p.northstarHtml); } catch {}
-    });
+    if (link) link.addEventListener('click', () => window.__unicornOpenNorthstar());
   })();
 
   const saveCurrent = async () => {
@@ -9180,6 +9315,7 @@ ${keepsBlock}${emptyBlock}
       if (!byPanel[key]) return; // not-yet-built panels are silent
       const nowOn = !el.classList.contains('on');
       setVisible(key, nowOn);
+      reportMenuState();
       // Float in = rising motif, out = falling -- the direction is audible.
       if (typeof ensureUiAudio === 'function') ensureUiAudio().then(() => { if (typeof uiPanelToggle === 'function') uiPanelToggle(nowOn); });
     });
@@ -9189,8 +9325,87 @@ ${keepsBlock}${emptyBlock}
     el.addEventListener('click', (e) => {
       e.stopPropagation();
       setVisible(el.dataset.close, false);
+      reportMenuState();
     });
   });
+
+  // ── Native macOS menu bridge + "Panels ▾" popover ──
+  // The View menu (built in electron/main.js) mirrors these toggles + Float.
+  // reportMenuState() keeps the menu's checkmarks in sync with what's open.
+  function reportMenuState() {
+    if (!(window.unicorn && window.unicorn.reportMenuState)) return;
+    const panels = {};
+    document.querySelectorAll('.mb-toggle').forEach(el => { panels[el.dataset.panel] = el.classList.contains('on'); });
+    const pin = document.getElementById('mb-pin');
+    try { window.unicorn.reportMenuState({ panels, float: !!(pin && pin.classList.contains('on')) }); } catch {}
+  }
+  window.unicornReportMenuState = reportMenuState; // so the Float pin handler can re-sync too
+
+  if (window.unicorn && window.unicorn.onMenuCommand) {
+    window.unicorn.onMenuCommand((cmd) => {
+      if (!cmd) return;
+      if (cmd.type === 'toggle') {
+        const tog = document.querySelector(`.mb-toggle[data-panel="${cmd.panel}"]`);
+        if (tog) tog.click();
+      } else if (cmd.type === 'float') {
+        const pin = document.getElementById('mb-pin');
+        if (pin) pin.click();
+      }
+    });
+  }
+
+  const panelsBtn = document.getElementById('mb-panels-btn');
+  const panelsPop = document.getElementById('mb-panels-pop');
+  if (panelsBtn && panelsPop) {
+    let closeTimer = null;
+    // Rising tone on reveal (open only) -- the same motif the panels use.
+    const panelSound = (on) => {
+      if (window.__uiSoundsOn === false) return;
+      if (typeof ensureUiAudio === 'function') ensureUiAudio().then(() => { if (typeof uiPanelToggle === 'function') uiPanelToggle(on); });
+    };
+    const openPop = () => {
+      if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
+      if (!panelsPop.hidden) return;
+      panelsPop.hidden = false; panelsBtn.setAttribute('aria-expanded', 'true');
+      panelSound(true);
+    };
+    const closePop = () => {
+      if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
+      if (panelsPop.hidden) return;
+      panelsPop.hidden = true; panelsBtn.setAttribute('aria-expanded', 'false');
+      // No sound on close -- only the open is worth a note; the retract was too much.
+    };
+    const cancelClose = () => { if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; } };
+    // A short timer bridges the gap between the button and the popover so moving
+    // from one to the other doesn't flicker it closed.
+    const scheduleClose = () => { cancelClose(); closeTimer = setTimeout(closePop, 150); };
+    // CLICK opens (and toggles). Once open, hovering the button or any row keeps
+    // it open; moving the cursor off both closes it. It does NOT open on hover.
+    panelsBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (panelsPop.hidden) openPop(); else closePop();
+    });
+    panelsBtn.addEventListener('mouseenter', cancelClose);
+    panelsBtn.addEventListener('mouseleave', scheduleClose);
+    panelsPop.addEventListener('mouseenter', cancelClose);
+    panelsPop.addEventListener('mouseleave', scheduleClose);
+    document.addEventListener('click', (e) => {
+      if (panelsPop.hidden) return;
+      if (!panelsPop.contains(e.target) && e.target !== panelsBtn) closePop();
+    });
+    addEventListener('keydown', (e) => { if (e.key === 'Escape' && !panelsPop.hidden) closePop(); });
+  }
+
+  // Custom traffic lights -> window controls (native buttons hidden in main.js).
+  const _winCtl = (fn) => () => { try { if (window.unicorn && window.unicorn[fn]) window.unicorn[fn](); } catch {} };
+  const lc = document.getElementById('mb-light-close');
+  const lm = document.getElementById('mb-light-min');
+  const lz = document.getElementById('mb-light-zoom');
+  if (lc) lc.addEventListener('click', _winCtl('winClose'));
+  if (lm) lm.addEventListener('click', _winCtl('winMin'));
+  if (lz) lz.addEventListener('click', _winCtl('winZoom'));
+
+  reportMenuState(); // initial sync once the bar is wired
 
   // ── Keyboard shortcuts ──
   // ⌘1-6 + ⌘, toggle panels. Order matches the new menubar.
@@ -9199,6 +9414,9 @@ ${keepsBlock}${emptyBlock}
     '4': 'commits', '5': 'activity', ',': 'appearance'
   };
   addEventListener('keydown', (e) => {
+    // In Electron the native View menu owns ⌘1-5/⌘, (its accelerators fire the
+    // same toggles via onMenuCommand). Skip here so we don't double-toggle.
+    if (window.unicorn && window.unicorn.isDesktop) return;
     if (!(e.metaKey || e.ctrlKey)) return;
 
     // ⌘1-6 + ⌘, -- toggle panels
@@ -10556,18 +10774,25 @@ ${keepsBlock}${emptyBlock}
     });
   }
 
-  // Click the ~/unicorn path under Mirror "Currently" to open the project
-  // folder. Derive the project dir from dataDir (strips the trailing /data).
+  // Click the repo path under Mirror "Currently" to open the build's ACTUAL
+  // folder. main resolves it: ~/experiments/<slug> wins when it exists (board
+  // builds), else the quest repo, else the unicorn project dir.
   const repoLink = document.getElementById('a-attached-repo');
   if (repoLink) {
     repoLink.classList.add('u-open-path');
-    repoLink.title = 'Open the unicorn folder';
+    repoLink.title = 'Open this build’s folder';
     repoLink.addEventListener('click', async () => {
       try {
-        const p = await window.unicorn.paths();
-        const proj = p && p.dataDir ? p.dataDir.replace(/\/data$/, '') : null;
-        if (proj) window.unicorn.openPath(proj);
-      } catch (e) { console.error('[unicorn] open project folder failed:', e); }
+        const repo = repoLink.dataset.repo || '';
+        const slug = repoLink.dataset.slug || '';
+        if (window.unicorn.openBuild) {
+          await window.unicorn.openBuild({ repo, slug });
+        } else {
+          const p = await window.unicorn.paths();
+          const proj = p && p.dataDir ? p.dataDir.replace(/\/data$/, '') : null;
+          if (proj) window.unicorn.openPath(proj);
+        }
+      } catch (e) { console.error('[unicorn] open build folder failed:', e); }
     });
   }
 })();
@@ -10925,6 +11150,7 @@ ${keepsBlock}${emptyBlock}
     // the gaps click through, so the body can't be a drag region then.
     document.body.classList.toggle('hud-off', !hud);
     if (pinEl) pinEl.classList.toggle('on', hud);
+    if (window.unicornReportMenuState) window.unicornReportMenuState();
     hudToast(hud
       ? '✦ Floating on top · beside the terminal, gaps click through'
       : '✦ Off · other apps can come forward');
