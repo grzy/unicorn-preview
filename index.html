@@ -1445,7 +1445,10 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     position: relative;
     padding: 10px 28px 10px 12px;
     background: rgba(255,255,255,0.025);
-    border: 1px solid rgba(255,255,255,0.02);
+    /* stroke dropped to match the strokeless Mirror rows -- saved keeps were
+       reading as hard bordered cards next to the very subtle Mirror. The faint
+       fill alone gives enough card definition. */
+    border: 1px solid transparent;
     border-radius: 7px;
   }
   .keep-item-meta {
