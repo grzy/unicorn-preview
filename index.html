@@ -681,17 +681,17 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
        constant LINEAR speed (even tempo) and short enough to hug the corners.
        Runs a little over one lap so it can FADE OUT near the top-right corner
        (offset-distance wraps around the closed border-box loop). */
-    background: linear-gradient(90deg, var(--peach), var(--lilac));
+    background: var(--peach);
     offset-path: border-box; offset-rotate: auto; offset-distance: 0%;
-    filter: drop-shadow(0 0 6px rgba(232,149,106,0.85));
+    filter: drop-shadow(0 0 6px rgba(232,149,106,0.9));
     pointer-events: none;
     animation: gateBeam 3.2s linear 0.35s 1 both;
   }
   @keyframes gateBeam {
-    0%   { offset-distance: 0%;   opacity: 0; }
+    0%   { offset-distance: 0%;   opacity: 0; background: var(--peach); filter: drop-shadow(0 0 6px rgba(232,149,106,0.9)); }
     6%   { opacity: 1; }
     86%  { opacity: 1; }
-    100% { offset-distance: 138%; opacity: 0; }
+    100% { offset-distance: 138%; opacity: 0; background: var(--lilac); filter: drop-shadow(0 0 6px rgba(167,139,223,0.9)); }
   }
   @media (prefers-reduced-motion: reduce) { .pl-gate-btn::before { animation: none; opacity: 0; } }
   /* Label: peach->lilac gradient text at rest. */
