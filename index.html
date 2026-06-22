@@ -472,6 +472,12 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    /* Both preloader states share this panel. The reveal (unicorn + "Unicorn"
+       + good-evening) is taller than the gate (blurb + button), so the panel
+       jumped size on click. A min-height >= the reveal locks both to the SAME
+       height; justify-content centers the shorter gate content within it. */
+    min-height: 360px;
     text-align: center;
     max-width: 460px;
     padding: 38px 46px 34px;
@@ -676,7 +682,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
      modern way to send light around an exact rounded-rect edge. */
   .pl-gate-btn::before {
     content: ""; position: absolute;
-    width: 22px; height: 2.5px; border-radius: 4px;
+    width: 14px; height: 1.5px; border-radius: 4px;
     /* A short rounded light that travels the EXACT border via offset-path:
        constant LINEAR speed (even tempo) and short enough to hug the corners.
        Runs a little over one lap so it can FADE OUT near the top-right corner
@@ -688,10 +694,10 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     animation: gateBeam 3.2s linear 0.35s 1 both;
   }
   @keyframes gateBeam {
-    0%   { offset-distance: 0%;   opacity: 0; background: var(--peach); filter: drop-shadow(0 0 5px rgba(232,149,106,0.7)); }
-    6%   { opacity: 0.6; }
-    86%  { opacity: 0.6; }
-    100% { offset-distance: 138%; opacity: 0; background: var(--lilac); filter: drop-shadow(0 0 5px rgba(167,139,223,0.7)); }
+    0%   { offset-distance: 0%;   opacity: 0; background: var(--peach); filter: drop-shadow(0 0 4px rgba(232,149,106,0.5)); }
+    6%   { opacity: 0.35; }
+    86%  { opacity: 0.35; }
+    100% { offset-distance: 138%; opacity: 0; background: var(--lilac); filter: drop-shadow(0 0 4px rgba(167,139,223,0.5)); }
   }
   @media (prefers-reduced-motion: reduce) { .pl-gate-btn::before { animation: none; opacity: 0; } }
   /* Label: peach->lilac gradient text at rest. */
