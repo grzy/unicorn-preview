@@ -4807,26 +4807,26 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   // the guest seed is a flat list of started/finished threads. ~7 complete,
   // 5 in-flight (all `active`, no `starting`, so they read as live work).
   const SEED_EXPS = [
-    ['New unicorn sprite',              'complete', 121, 96],
-    ['Launch bloom + caret',            'complete', 110, 88],
+    ['Pixel unicorn hook',              'complete', 121, 96],
+    ['Liquid-glass launch bloom',       'complete', 110, 88],
     ['Steel-pan UI sounds',             'complete', 74,  61],
-    ['Commits calendar + music',        'complete', 58,  47],
-    ['Permanent trash safety net',      'complete', 41,  33],
-    ['Per-quest Taste',                 'complete', 29,  20],
-    ['Keep panel: paste a screenshot',  'complete', 50,  38],
-    ['Electron wrap',                   'active',   24,  null],
-    ['Commits calendar auto-refresh',   'active',   12,  null],
-    ['Creative brief pipeline',         'active',   8,   null],
+    ['Git history played as music',     'complete', 58,  47],
+    ['Nothing ever truly deleted',      'complete', 41,  33],
+    ['Per-quest Mirror',                'complete', 29,  20],
+    ['Keep a screenshot mid-session',   'complete', 50,  38],
+    ['A real desktop app',              'active',   24,  null],
+    ['Live commit heatmap',             'active',   12,  null],
+    ['Brief that writes itself',        'active',   8,   null],
     ['Notch unicorn',                   'active',   2,   null]
   ];
   // A SECOND demo quest so the switcher shows real breadth: a mix of finished
   // + in-flight threads, no stages (flat list, like the Unicorn seed).
   const SEED_EXPS_PORTFOLIO = [
-    ['Update the Unicorn project page',  'complete', 44, 31],
-    ['Rebuild the case-story layout',    'complete', 26, 15],
-    ['Ship the about page',              'complete', 19, 10],
-    ['New hero animation',               'active',   7,  null],
-    ['Polish the work grid hover',       'active',   3,  null]
+    ['Unicorn case story page',          'complete', 44, 31],
+    ['Living case-story layout',         'complete', 26, 15],
+    ['About page in my voice',           'complete', 19, 10],
+    ['Orchid bloom hero',                'active',   7,  null],
+    ['Chromatic-ghost card hover',       'active',   3,  null]
   ];
   const mapExps = (rows) => rows.map(([name, status, made, done]) => ({
     id: uid(),
@@ -4861,7 +4861,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     // visitor never sees the new curated set. Bumping SEED_VERSION re-applies
     // the curated quest + experiments, replacing whatever was stored.
     const SEED_KEY = 'unicorn.guest-seed-version';
-    const SEED_VERSION = '5';
+    const SEED_VERSION = '6';
     let stored = null;
     try { stored = localStorage.getItem(SEED_KEY); } catch {}
     if (stored !== SEED_VERSION) {
