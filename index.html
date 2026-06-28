@@ -1402,33 +1402,31 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   .keep-save {
     appearance: none; -webkit-appearance: none;
     position: relative;
-    padding: 7px 14px;
-    /* Peach label by default, white on hover. Body transparent -- the
-       ::before carries the gradient stroke. */
-    background: transparent;
-    border: 0;
+    padding: 7px 16px;
+    /* Same treatment as the Compose / Tell-the-case-story CTAs: dark fill
+       (padding-box) + peach->lilac gradient stroke (border-box). On hover the
+       fill BECOMES the gradient and the label goes void-dark -- no white flash. */
+    background:
+      linear-gradient(135deg, #151419, #151419) padding-box,
+      linear-gradient(135deg, rgba(232,149,106,0.5), rgba(167,139,223,0.5)) border-box;
+    border: 1px solid transparent;
     border-radius: 6px;
     font-family: var(--mono); font-size: 10px;
     letter-spacing: 0.10em; text-transform: uppercase;
     color: var(--peach);
     cursor: pointer;
-    transition: color 0.15s;
+    transition: color 0.4s ease, background 0.55s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  .keep-save::before {
-    content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
-    background: linear-gradient(135deg, rgba(232,149,106,0.3), rgba(167,139,223,0.3));
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
-    transition: background 0.3s ease;
+  .keep-save:hover {
+    background:
+      linear-gradient(135deg, var(--peach), var(--lilac)) padding-box,
+      linear-gradient(135deg, var(--peach), var(--lilac)) border-box;
+    color: #100F11;
   }
-  .keep-save:hover::before {
-    background: linear-gradient(135deg, rgba(232,149,106,0.65), rgba(167,139,223,0.65));
-    padding: 1px;
-  }
-  .keep-save:hover { color: var(--cream); }
   .keep-save.done {
-    background: rgba(167,139,223,0.12);
-    border-color: rgba(167,139,223,0.45);
+    background:
+      linear-gradient(135deg, rgba(167,139,223,0.16), rgba(167,139,223,0.16)) padding-box,
+      linear-gradient(135deg, rgba(167,139,223,0.5), rgba(167,139,223,0.5)) border-box;
     color: var(--lilac);
   }
   .keep-list {
@@ -9390,13 +9388,10 @@ ${keepsBlock}${emptyBlock}
     // A short timer bridges the gap between the button and the popover so moving
     // from one to the other doesn't flicker it closed.
     const scheduleClose = () => { cancelClose(); closeTimer = setTimeout(closePop, 150); };
-    // CLICK opens (and toggles). Once open, hovering the button or any row keeps
-    // it open; moving the cursor off both closes it. It does NOT open on hover.
-    panelsBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (panelsPop.hidden) openPop(); else closePop();
-    });
-    panelsBtn.addEventListener('mouseenter', cancelClose);
+    // HOVER opens, off-hover closes (the 150ms timer bridges the button->popover
+    // gap so it never flickers). Click also opens, as a fallback / touch path.
+    panelsBtn.addEventListener('click', (e) => { e.stopPropagation(); openPop(); });
+    panelsBtn.addEventListener('mouseenter', openPop);
     panelsBtn.addEventListener('mouseleave', scheduleClose);
     panelsPop.addEventListener('mouseenter', cancelClose);
     panelsPop.addEventListener('mouseleave', scheduleClose);
