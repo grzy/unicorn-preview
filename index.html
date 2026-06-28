@@ -1739,7 +1739,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   /* Dropdown = a mini panel: same frosted fill, radius, shadow, and the
      signature peach->lilac gradient ring edge as every other panel. */
   #menubar .mb-panels-pop {
-    position: absolute; top: calc(100% + 8px); left: 0;
+    position: absolute; top: 35px; left: 0;
     display: flex; flex-direction: column; gap: 2px;
     min-width: 0; padding: 9px 8px;
     background: var(--panel-bg);
@@ -1748,6 +1748,23 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     -webkit-backdrop-filter: blur(var(--panel-blur)) saturate(1.2);
             backdrop-filter: blur(var(--panel-blur)) saturate(1.2);
     z-index: 60;
+    opacity: 0;
+    transform: translateY(-8px) scale(0.985);
+    transform-origin: top left;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.26s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.26s cubic-bezier(0.22, 1, 0.36, 1),
+                visibility 0s linear 0.26s;
+  }
+  #menubar .mb-panels-pop.open {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity 0.26s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.26s cubic-bezier(0.22, 1, 0.36, 1),
+                visibility 0s;
   }
   #menubar .mb-panels-pop::before {
     content: ""; position: absolute; inset: 0;
@@ -1762,7 +1779,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
             mask-composite: exclude;
     pointer-events: none;
   }
-  #menubar .mb-panels-pop[hidden] { display: none; }
+  /* open/close is class-driven now via .open + the transition above. */
   #menubar .mb-panels-pop .mb-toggle {
     position: relative; padding: 6px 12px; border-radius: 8px;
     text-transform: none; letter-spacing: 0.04em;
@@ -4009,7 +4026,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
          OS title bar already names the app. Keeps one slim, native-feeling bar. -->
     <span class="mb-panels" id="mb-panels">
       <button class="mb-panels-btn" id="mb-panels-btn" type="button" aria-haspopup="true" aria-expanded="false" title="Show or hide panels (also in the View menu)">⊞ Panels</button>
-      <div class="mb-panels-pop" id="mb-panels-pop" hidden>
+      <div class="mb-panels-pop" id="mb-panels-pop">
         <span class="mb-toggle on" data-panel="quest"><span class="mb-tog-name">Quest</span><span class="mb-tog-key">⌘1</span></span>
         <span class="mb-toggle on" data-panel="claude"><span class="mb-tog-name">Mirror</span><span class="mb-tog-key">⌘2</span></span>
         <span class="mb-toggle on" data-panel="keep"><span class="mb-tog-name">Keep</span><span class="mb-tog-key">⌘3</span></span>
@@ -9374,14 +9391,14 @@ ${keepsBlock}${emptyBlock}
     };
     const openPop = () => {
       if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
-      if (!panelsPop.hidden) return;
-      panelsPop.hidden = false; panelsBtn.setAttribute('aria-expanded', 'true');
+      if (panelsPop.classList.contains('open')) return;
+      panelsPop.classList.add('open'); panelsBtn.setAttribute('aria-expanded', 'true');
       panelSound(true);
     };
     const closePop = () => {
       if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
-      if (panelsPop.hidden) return;
-      panelsPop.hidden = true; panelsBtn.setAttribute('aria-expanded', 'false');
+      if (!panelsPop.classList.contains('open')) return;
+      panelsPop.classList.remove('open'); panelsBtn.setAttribute('aria-expanded', 'false');
       // No sound on close -- only the open is worth a note; the retract was too much.
     };
     const cancelClose = () => { if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; } };
@@ -9396,10 +9413,10 @@ ${keepsBlock}${emptyBlock}
     panelsPop.addEventListener('mouseenter', cancelClose);
     panelsPop.addEventListener('mouseleave', scheduleClose);
     document.addEventListener('click', (e) => {
-      if (panelsPop.hidden) return;
+      if (!panelsPop.classList.contains('open')) return;
       if (!panelsPop.contains(e.target) && e.target !== panelsBtn) closePop();
     });
-    addEventListener('keydown', (e) => { if (e.key === 'Escape' && !panelsPop.hidden) closePop(); });
+    addEventListener('keydown', (e) => { if (e.key === 'Escape' && panelsPop.classList.contains('open')) closePop(); });
   }
 
   // Custom traffic lights -> window controls (native buttons hidden in main.js).
