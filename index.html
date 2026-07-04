@@ -2630,36 +2630,32 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     margin: 0; font: inherit;
     position: relative;
     width: 100%;
-    padding: 11px 14px;
-    background: linear-gradient(135deg, rgba(232,149,106,0.09), rgba(167,139,223,0.09));
+    padding: 12px 14px;
+    /* CTA treatment (matches the desktop app + the Compose/Save CTAs): dark fill
+       (padding-box) + peach->lilac gradient stroke (border-box). Hover: the fill
+       becomes the full gradient + the label goes void-dark. */
+    background:
+      linear-gradient(135deg, #151419, #151419) padding-box,
+      linear-gradient(135deg, rgba(232,149,106,0.5), rgba(167,139,223,0.5)) border-box;
     border: 1px solid transparent;
     border-radius: 10px;
     font-family: var(--mono); font-size: 11px; font-weight: 500;
-    letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--peach);
+    letter-spacing: 0.14em; text-transform: uppercase;
     cursor: pointer;
     display: flex; align-items: center; justify-content: center; gap: 8px;
-    transition: color 0.32s ease;
+    transition: background 0.55s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  /* Calm peach->lilac gradient ring. Mask technique keeps the corners
-     crisp and stops the fill bleeding through. Brightens on hover. */
-  .q-complete-btn::before {
-    content: none; /* stroke removed -- fill + peach text carry it, matches the calm neutral buttons */
-    position: absolute;
-    inset: -1px;
-    border-radius: inherit;
-    padding: 1px;
-    background: linear-gradient(135deg, rgba(232,149,106,0.16), rgba(167,139,223,0.16));
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-            mask-composite: exclude;
-    pointer-events: none;
-    transition: background 0.32s ease;
+  .q-complete-btn > span {
+    background: linear-gradient(90deg, var(--peach), var(--lilac));
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
   }
-  .q-complete-btn:hover { color: var(--cream); }
-  .q-complete-btn:hover::before {
-    background: linear-gradient(135deg, rgba(232,149,106,0.28), rgba(167,139,223,0.28));
+  .q-complete-btn:hover {
+    background:
+      linear-gradient(135deg, var(--peach), var(--lilac)) padding-box,
+      linear-gradient(135deg, var(--peach), var(--lilac)) border-box;
   }
+  .q-complete-btn:hover > span { -webkit-text-fill-color: #100F11; }
   .q-complete-btn:focus-visible {
     outline: 2px solid rgba(167,139,223,0.5);
     outline-offset: 2px;
@@ -2711,11 +2707,14 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   .q-del-btn:hover { color: var(--tomato); background: rgba(255,94,113,0.08); }
   .q-del-btn.armed { color: var(--tomato); background: rgba(255,94,113,0.16); }
   .q-finish-btn.armed { color: var(--peach); background: rgba(232,149,106,0.14); }
-  /* Armed: no ring anymore, so the brighter fill carries the confirm state. */
+  /* Armed: the confirm state IS the filled state -- same full gradient as
+     hover so the two-step confirm reads as "already pressed halfway". */
   .q-complete-btn.armed {
-    color: var(--cream);
-    background: linear-gradient(135deg, rgba(232,149,106,0.20), rgba(167,139,223,0.20));
+    background:
+      linear-gradient(135deg, var(--peach), var(--lilac)) padding-box,
+      linear-gradient(135deg, var(--peach), var(--lilac)) border-box;
   }
+  .q-complete-btn.armed > span { -webkit-text-fill-color: #100F11; }
 
   /* Archived-quest recovery in the switcher. Completed quests are hidden
      by default; this reveals them so an accidental archive is never
