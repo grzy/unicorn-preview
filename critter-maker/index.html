@@ -1,0 +1,725 @@
+<!doctype html>
+<html><head>
+<meta charset="utf-8">
+<title>Critter Maker ✺ Unicorn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu+Sans+Mono:wght@400;500;700&family=Ubuntu+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --peach:#E8956A; --lilac:#A78BDF; --void:#100F11; --cream:#F1ECE8;
+    --panel:#161519; --stroke:rgba(255,255,255,0.04);
+    --radius:18px; --radius-sm:6px;
+    --mono:'Ubuntu Sans Mono',Menlo,monospace;
+    --sans:'Ubuntu Sans',-apple-system,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--void);color:var(--cream);font-family:var(--sans);
+    min-height:100vh;display:flex;flex-direction:column;align-items:center;
+    padding:56px 32px 40px;gap:14px}
+  h1{font-family:var(--mono);font-size:20px;font-weight:700;letter-spacing:.04em;margin:0;
+    background:linear-gradient(90deg,var(--peach),#C890A5,var(--lilac));
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;color:transparent}
+  .sub{font-family:var(--mono);font-size:12px;color:rgba(241,236,232,.55);
+    max-width:620px;text-align:center;line-height:1.7;margin-bottom:18px}
+  .main{display:flex;gap:22px;align-items:stretch;flex-wrap:wrap;justify-content:center}
+  .col{display:flex;flex-direction:column;gap:22px;width:400px}
+  .panel{background:var(--panel);border:1px solid var(--stroke);
+    border-radius:var(--radius);padding:22px 24px 24px}
+  .panel h2{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.16em;
+    text-transform:uppercase;color:rgba(241,236,232,.5);margin:0 0 16px}
+  .panel--term{flex:1;display:flex;flex-direction:column}
+
+  /* ── editor ── */
+  .tools{display:flex;gap:8px;margin-bottom:14px;align-items:center;position:relative}
+  .tool{display:flex;align-items:center;gap:8px;cursor:pointer;
+    background:transparent;color:rgba(241,236,232,.72);
+    font-family:var(--mono);font-size:12px;
+    border:1px solid var(--stroke);border-radius:var(--radius-sm);
+    padding:7px 12px;transition:background .18s;user-select:none;-webkit-user-select:none}
+  .tool:hover{background:rgba(255,255,255,.05)}
+  .tool.on{color:var(--cream);background:rgba(255,255,255,.05)}
+  .tool.on[data-tool="X"]{border-color:rgba(232,149,106,.55)}
+  .tool.on[data-tool="O"]{border-color:rgba(167,139,223,.55)}
+  .tool.on[data-tool="."]{border-color:rgba(241,236,232,.35)}
+  .swx{width:13px;height:13px;border-radius:3px;display:inline-block;cursor:pointer;
+    transition:transform .15s}
+  .swx:hover{transform:scale(1.18)}
+  .sw-erase{width:11px;height:11px;border-radius:3px;display:inline-block;
+    background:transparent;border:1px dashed rgba(241,236,232,.4)}
+
+  /* ── color popover ── on-brand, no native chrome ── */
+  .pop{position:absolute;top:calc(100% + 8px);left:0;z-index:10;
+    background:#1B1A1F;border:1px solid rgba(255,255,255,.08);
+    border-radius:10px;padding:12px;width:196px;
+    box-shadow:0 10px 32px rgba(0,0,0,.55)}
+  .pop[hidden]{display:none}
+  .pop-swatches{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
+  .pop-swatches button{appearance:none;border:1px solid rgba(255,255,255,.1);
+    border-radius:var(--radius-sm);width:100%;aspect-ratio:1;cursor:pointer;padding:0;
+    transition:transform .15s}
+  .pop-swatches button:hover{transform:scale(1.12)}
+  .pop-row{display:flex;gap:6px;align-items:center}
+  .pop-hash{font-family:var(--mono);font-size:12px;color:rgba(241,236,232,.4)}
+  .pop-row input{flex:1;min-width:0;background:#100F11;color:var(--cream);
+    font-family:var(--mono);font-size:12px;letter-spacing:.06em;
+    border:1px solid var(--stroke);border-radius:var(--radius-sm);padding:6px 8px;outline:none}
+  .pop-row input:focus{border-color:rgba(167,139,223,.45)}
+  /* the rainbow -- a shade field + hue bar, pure CSS gradients, no OS chrome.
+     No border: a hairline over a gradient reads as color slivers at the
+     rounded edges; the gradients define their own edges cleanly. */
+  .pop-sv{position:relative;width:100%;height:110px;border-radius:var(--radius-sm);
+    margin-bottom:10px;cursor:crosshair;overflow:hidden}
+  .pop-hue{position:relative;width:100%;height:14px;border-radius:7px;
+    margin-bottom:12px;cursor:crosshair;overflow:hidden;
+    background:linear-gradient(to right,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)}
+  .pop-thumb{position:absolute;width:14px;height:14px;border-radius:50%;
+    border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.5);
+    transform:translate(-50%,-50%);pointer-events:none}
+  .pop-hue .pop-thumb{top:50%}
+
+  #critter{display:grid;gap:2px;justify-content:center;touch-action:none;user-select:none;-webkit-user-select:none}
+  .cell{width:24px;height:48px;border-radius:var(--radius-sm);
+    background:rgba(255,255,255,.03);cursor:pointer;transition:background .12s}
+  .cell:hover{background:rgba(255,255,255,.09)}
+  .cell.fill:hover{background:var(--cellc)}
+  .cell.fill{background:var(--cellc)}
+
+  .size{display:flex;gap:16px;align-items:center;justify-content:center;margin-top:14px;
+    font-family:var(--mono);font-size:12px;color:rgba(241,236,232,.6)}
+  .size button{cursor:pointer;background:transparent;color:var(--cream);
+    border:1px solid var(--stroke);border-radius:var(--radius-sm);
+    width:24px;height:24px;font-family:var(--mono);font-size:13px;line-height:1;
+    transition:background .18s}
+  .size button:hover{background:rgba(255,255,255,.06)}
+  .size b{color:var(--cream);font-weight:500;min-width:16px;display:inline-block;text-align:center}
+  .resets{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .resets button{flex:1 1 45%;cursor:pointer;background:transparent;color:rgba(241,236,232,.65);
+    font-family:var(--mono);font-size:12px;letter-spacing:.04em;
+    border:1px solid var(--stroke);border-radius:var(--radius-sm);padding:8px;
+    transition:background .18s}
+  .resets button:hover{background:rgba(255,255,255,.05);color:var(--cream)}
+  .col--left{width:auto}
+  /* Voice is its own card -- it absorbs whatever height the bento stretch
+     would otherwise leave as dead air under the paint tools */
+  .panel--voice{flex:1}
+  .voice-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .voice-grid button{cursor:pointer;background:transparent;color:rgba(241,236,232,.6);
+    font-family:var(--mono);font-size:11px;letter-spacing:.04em;
+    border:1px solid var(--stroke);border-radius:var(--radius-sm);padding:7px 4px;
+    transition:background .18s}
+  .voice-grid button:hover{background:rgba(255,255,255,.05);color:var(--cream)}
+  .voice-grid button.on{color:var(--cream);background:rgba(255,255,255,.05);
+    border-color:rgba(167,139,223,.55)}
+
+  /* ── preview ── critter centered in the black, prompt line for scale ── */
+  .term{background:#000;border-radius:var(--radius-sm);flex:1;min-height:220px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:16px;padding:24px}
+  /* The preview draws its own pixels (SVG quadrant cells) -- browsers can't
+     tile block GLYPHS cleanly at line-height 1, so no font gets a say. */
+  #blocks{line-height:0}
+  .warn{font-family:var(--mono);font-size:12px;line-height:1.6;margin-top:14px;min-height:18px}
+  .dims{font-family:var(--mono);font-size:11px;color:rgba(241,236,232,.4);margin-top:10px}
+
+  /* ── export ── CTA speaks Unicorn's primary-action language:
+     dark fill + gradient stroke, gradient label; hover floods the fill
+     with the gradient and the label goes void-dark. ── */
+  .ansi-code{background:#000;border-radius:var(--radius-sm);padding:12px 14px;
+    font-family:var(--mono);font-size:11px;line-height:1.6;color:rgba(241,236,232,.55);
+    overflow-x:auto;white-space:pre;margin:0 0 12px}
+  .copy{appearance:none;-webkit-appearance:none;margin:0;font:inherit;
+    position:relative;width:100%;padding:12px 14px;
+    background:linear-gradient(135deg,#151419,#151419) padding-box,
+               linear-gradient(135deg,rgba(232,149,106,.5),rgba(167,139,223,.5)) border-box;
+    border:1px solid transparent;border-radius:10px;
+    font-family:var(--mono);font-size:11px;font-weight:500;
+    letter-spacing:.14em;text-transform:uppercase;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
+    transition:background .55s cubic-bezier(.4,0,.2,1)}
+  .copy>span{background:linear-gradient(90deg,var(--peach),var(--lilac));
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .copy:hover:not(:disabled){
+    background:linear-gradient(135deg,var(--peach),#C890A5,var(--lilac)) border-box}
+  .copy:hover:not(:disabled)>span{background:none;color:#100F11;-webkit-text-fill-color:#100F11}
+  .copy:disabled{cursor:default;
+    background:linear-gradient(135deg,#151419,#151419) padding-box,
+               linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.12)) border-box}
+  .copy:disabled>span{background:none;color:rgba(241,236,232,.35);-webkit-text-fill-color:rgba(241,236,232,.35)}
+  .hint{font-family:var(--mono);font-size:11px;color:rgba(241,236,232,.4);margin-top:10px}
+  .name-row{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+  .name-row .orn{color:var(--peach);font-size:13px}
+  .name-row input{flex:1;min-width:0;background:#100F11;color:var(--cream);
+    font-family:var(--mono);font-size:12px;letter-spacing:.04em;
+    border:1px solid var(--stroke);border-radius:var(--radius-sm);padding:8px 10px;outline:none}
+  .name-row input:focus{border-color:rgba(232,149,106,.45)}
+  .roll{cursor:pointer;background:transparent;color:rgba(241,236,232,.65);flex:none;
+    border:1px solid var(--stroke);border-radius:var(--radius-sm);
+    width:32px;height:32px;font-size:14px;line-height:1;transition:background .18s}
+  .roll:hover{background:rgba(255,255,255,.06);color:var(--cream)}
+  .term-row{display:flex;align-items:center;gap:18px}
+  .crit-id{font-family:Menlo,Monaco,monospace;font-size:13px;line-height:1.7;
+    color:rgba(241,236,232,.75)}
+  .crit-id .pv-trait{color:rgba(241,236,232,.4)}
+  .chime{display:flex;align-items:center;gap:9px;cursor:pointer;margin-top:12px;
+    font-family:var(--mono);font-size:11px;color:rgba(241,236,232,.6);user-select:none}
+  .chime input{display:none}
+  .chime-box{width:15px;height:15px;border-radius:4px;flex:none;
+    border:1px solid rgba(255,255,255,.15);position:relative;transition:background .2s}
+  .chime input:checked+.chime-box{
+    background:linear-gradient(135deg,var(--peach),#C890A5,var(--lilac));border-color:transparent}
+  .chime input:checked+.chime-box::after{content:"✓";position:absolute;inset:0;
+    display:flex;align-items:center;justify-content:center;color:#100F11;font-size:11px;font-weight:700}
+  .chime em{font-style:normal;color:rgba(241,236,232,.35)}
+  .steps{font-family:var(--mono);font-size:11.5px;line-height:2;color:rgba(241,236,232,.6)}
+  .steps b{color:var(--peach);font-weight:500}
+  .steps code{background:#100F11;border:1px solid var(--stroke);border-radius:4px;
+    padding:2px 6px;color:rgba(241,236,232,.85)}
+
+  .credit{margin-top:22px;font-family:var(--mono);font-size:11px;color:rgba(241,236,232,.4)}
+  .credit b{color:var(--peach);font-weight:500}
+</style></head>
+<body>
+  <h1>✺ Critter Maker</h1>
+  <div class="sub">Design your own pixel critter that prints in the terminal, like Unicorn's.
+    Paint the grid -- each cell is a quarter of a terminal character, so the preview is
+    the literal block characters your shell will print. You paint with two colors, body
+    and accent -- a terminal draws each character in a single color, so every 2×2 block
+    commits to one or the other.</div>
+
+  <div class="main">
+    <div class="col col--left">
+    <div class="panel">
+      <h2>❖ Paint</h2>
+      <div class="tools">
+        <span class="tool on" data-tool="X"><span class="swx" id="swBody" title="Change body color"></span>Body</span>
+        <span class="tool" data-tool="O"><span class="swx" id="swAcc" title="Change accent color"></span>Accent</span>
+        <span class="tool" data-tool="."><span class="sw-erase"></span>Erase</span>
+        <div class="pop" id="pop" hidden>
+          <div class="pop-sv" id="popSv"><div class="pop-thumb" id="svThumb"></div></div>
+          <div class="pop-hue" id="popHue"><div class="pop-thumb" id="hueThumb"></div></div>
+          <div class="pop-swatches" id="popSw"></div>
+          <div class="pop-row">
+            <span class="pop-hash">#</span><input id="popHex" maxlength="6" spellcheck="false">
+          </div>
+        </div>
+      </div>
+      <div id="critter"></div>
+      <div class="size">
+        <span>cols <button data-d="c-">−</button> <b id="nc"></b> <button data-d="c+">+</button></span>
+        <span>rows <button data-d="r-">−</button> <b id="nr"></b> <button data-d="r+">+</button></span>
+      </div>
+      <div class="resets">
+        <button id="clear">✢ Clear</button>
+        <button id="loadUni">✺ Our unicorn</button>
+        <button id="flip">❁ Flip</button>
+        <button id="surprise">✷ Surprise me</button>
+      </div>
+    </div>
+    <div class="panel panel--voice">
+      <h2>✧ Voice</h2>
+      <div class="voice-grid" id="voiceGrid"></div>
+      <div class="hint" id="voiceHint">Tap to hear ✺ It calls this out when it prints</div>
+    </div>
+    </div>
+
+    <div class="col">
+      <div class="panel panel--term">
+        <h2>◆ Terminal</h2>
+        <div class="term">
+          <div class="term-row">
+            <div id="blocks"></div>
+            <div class="crit-id" id="critId" hidden>
+              <div id="pvName"></div><div class="pv-trait" id="pvTrait"></div></div>
+          </div>
+        </div>
+        <div class="dims" id="dims"></div>
+        <div class="warn" id="warn"></div>
+      </div>
+      <div class="panel">
+        <h2>✷ Export</h2>
+        <div class="name-row"><span class="orn">❀</span>
+          <input id="critName" placeholder="Name your critter" maxlength="24" spellcheck="false"></div>
+        <div class="name-row"><span class="orn">✷</span>
+          <input id="critTrait" placeholder="Personality (↻ rolls one)" maxlength="64" spellcheck="false">
+          <button class="roll" id="rollTrait" title="Roll a personality">↻</button></div>
+        <pre class="ansi-code" id="ansiCode"></pre>
+        <button class="copy" id="copyBtn"><span id="copyLbl">❋ Copy terminal-ready print</span></button>
+        <label class="chime"><input type="checkbox" id="chime"><span class="chime-box"></span>
+          Chime when it prints <em>(macOS)</em></label>
+      </div>
+      <div class="panel">
+        <h2>❖ Make it permanent</h2>
+        <div class="steps">
+          <b>1</b> · Hit <b>❋ Copy terminal-ready print</b> above<br>
+          <b>2</b> · In Terminal, type <code>open -e ~/.zshrc</code> and hit enter -- your
+          shell's startup file opens in an editor<br>
+          <b>3</b> · Paste at the very bottom, save, close<br>
+          <b>4</b> · Open a fresh terminal ✺ <span id="stepName">your critter</span> says hi
+        </div>
+        <div class="hint">Just want to see it once? Paste it straight into any terminal.
+        Already printing something at startup (a hook, like Unicorn)? Add the same line there instead.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="credit">Built for <b>Unicorn</b> ✺ a creative OS for designers who code -- by Ivy</div>
+
+<script>
+  const GLYPH={'0000':' ','1000':'▘','0100':'▝','0010':'▖','0001':'▗','1100':'▀','0011':'▄','1010':'▌','0101':'▐','1001':'▚','0110':'▞','1110':'▛','1101':'▜','1011':'▙','0111':'▟','1111':'█'};
+  const UNICORN=[
+    '.O........',
+    '.OO.......',
+    '.XXXO.....',
+    'XXXXOO....',
+    '..XXXXXXOO',
+    '.XXXXXXXOO',
+    '.XXX...XX.',
+    '..XX...XX.',
+  ];
+  const DEF_BODY='#E8956A', DEF_ACC='#A78BDF';
+  const KEY='critter-maker.v1';
+  let COL_BODY=DEF_BODY, COL_ACC=DEF_ACC;
+  let cols=10, rows=8;
+  let grid=UNICORN.map(r=>r.split(''));
+  let tool='X', painting=false, strokeTool='X';
+
+  const $=id=>document.getElementById(id);
+  const gridEl=$('critter'), blocksEl=$('blocks');
+
+  /* your critter survives a refresh */
+  let savedName='',savedChime=false,savedVoice='',savedTrait='';
+  try{
+    const s=JSON.parse(localStorage.getItem(KEY));
+    if(s && s.grid){ grid=s.grid.map(r=>r.split('')); cols=s.cols; rows=s.rows;
+      COL_BODY=s.body||DEF_BODY; COL_ACC=s.acc||DEF_ACC;
+      savedName=s.name||''; savedChime=!!s.chime; savedVoice=s.voice||'';
+      savedTrait=s.trait||''; }
+  }catch{}
+  function persist(){
+    try{localStorage.setItem(KEY,JSON.stringify(
+      {grid:grid.map(r=>r.join('')),cols,rows,body:COL_BODY,acc:COL_ACC,
+       name:$('critName').value.trim(),trait:$('critTrait').value.trim(),
+       chime:$('chime').checked,voice:VOICE.n}));}catch{}
+  }
+
+  function cellColor(ch){return ch==='O'?COL_ACC:ch==='X'?COL_BODY:null;}
+
+  function buildGrid(){
+    gridEl.style.gridTemplateColumns=`repeat(${cols},24px)`;
+    gridEl.innerHTML='';
+    for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
+      const d=document.createElement('div');
+      d.className='cell'; d.dataset.r=r; d.dataset.c=c;
+      paintCellEl(d,grid[r][c]);
+      gridEl.appendChild(d);
+    }
+    $('nc').textContent=cols; $('nr').textContent=rows;
+  }
+  function paintCellEl(el,ch){
+    const col=cellColor(ch);
+    el.classList.toggle('fill',!!col);
+    el.style.setProperty('--cellc',col||'');
+  }
+
+  /* bounding box of the painted art, snapped to whole characters -- the
+     preview + export crop to THIS, so the critter centers on itself, not
+     on however much empty grid surrounds it */
+  function artBounds(){
+    let r0=rows,r1=-1,c0=cols,c1=-1;
+    for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
+      if(grid[r][c]==='X'||grid[r][c]==='O'){
+        if(r<r0)r0=r; if(r>r1)r1=r;
+        if(c<c0)c0=c; if(c>c1)c1=c;
+      }
+    }
+    if(r1<0)return null;
+    return{r0:r0-(r0%2), c0:c0-(c0%2), r1, c1};
+  }
+
+  function renderPreview(){
+    const b=artBounds();
+    let conflicts=0;
+    if(!b){
+      blocksEl.innerHTML='';
+      $('dims').textContent='Nothing painted yet';
+    }else{
+      // each character cell is a 2×2 of quadrant rects -- the same shapes
+      // the terminal glyphs encode, drawn crisp instead of typeset
+      const CW=14,CH=28,POS=[[0,0],[1,0],[0,1],[1,1]];
+      let rects='';
+      for(let r=b.r0,ri=0;r<=b.r1;r+=2,ri++){
+        for(let c=b.c0,ci=0;c<=b.c1;c+=2,ci++){
+          const q=[grid[r]?.[c],grid[r]?.[c+1],grid[r+1]?.[c],grid[r+1]?.[c+1]]
+            .map(x=>(x==='O'||x==='X')?x:'.');
+          const cset=[...new Set(q.filter(x=>x!=='.'))];
+          if(!cset.length)continue;
+          let color=cset[0]==='O'?COL_ACC:COL_BODY;
+          if(cset.length>1){conflicts++;color='#FF5E71';}
+          q.forEach((bit,i)=>{
+            if(bit==='.')return;
+            rects+=`<rect x="${ci*CW+POS[i][0]*CW/2}" y="${ri*CH+POS[i][1]*CH/2}" width="${CW/2}" height="${CH/2}" fill="${color}"/>`;
+          });
+        }
+      }
+      const chCols=Math.ceil((b.c1-b.c0+1)/2), chRows=Math.ceil((b.r1-b.r0+1)/2);
+      blocksEl.innerHTML=
+        `<svg width="${chCols*CW}" height="${chRows*CH}" viewBox="0 0 ${chCols*CW} ${chRows*CH}" shape-rendering="crispEdges">${rects}</svg>`;
+      $('dims').textContent=
+        `Prints ${chCols} × ${chRows} characters`
+        +(chRows>=5?' · Tall -- chat windows may fold it; terminals show it all':'');
+    }
+    $('warn').innerHTML=conflicts
+      ? `<span style="color:#FF5E71">✷ ${conflicts} character(s) mix both colors -- a terminal character can only be one. Repaint so each 2×2 block is a single color.</span>`
+      : `<span style="color:#7FD1A0">✓ No color conflicts -- prints cleanly.</span>`;
+    // identity line rides in the terminal preview exactly as it prints
+    const nm=$('critName').value.trim(), tr=$('critTrait').value.trim();
+    const idEl=$('critId');
+    idEl.hidden=!(nm||tr);
+    if(nm||tr){
+      $('pvName').textContent='✺ '+(nm||'critter');
+      $('pvName').style.color=COL_ACC;
+      $('pvTrait').textContent=tr;
+    }
+    renderExport(conflicts);
+    persist();
+  }
+
+  /* ── ANSI export ── the grid as a printf with 24-bit color escapes */
+  function hex2rgb(h){const n=parseInt(h.slice(1),16);return[(n>>16)&255,(n>>8)&255,n&255];}
+  function buildAnsi(){
+    const b=artBounds();
+    if(!b)return null;
+    const lines=[];
+    for(let r=b.r0;r<=b.r1;r+=2){
+      let line='',last=null,used=false;
+      for(let c=b.c0;c<=b.c1;c+=2){
+        const q=[grid[r]?.[c],grid[r]?.[c+1],grid[r+1]?.[c],grid[r+1]?.[c+1]]
+          .map(x=>(x==='O'||x==='X')?x:'.');
+        const key=q.map(x=>x==='.'?'0':'1').join('');
+        if(key==='0000'){line+=' ';continue;}
+        const cset=[...new Set(q.filter(x=>x!=='.'))];
+        const[R,G,B]=hex2rgb(cset[0]==='O'?COL_ACC:COL_BODY);
+        const esc=`\\033[38;2;${R};${G};${B}m`;
+        if(esc!==last){line+=esc;last=esc;}
+        line+=GLYPH[key];used=true;
+      }
+      // keep full width (no trailing trim): the identity text hangs off the
+      // right edge, so every row must measure the same
+      lines.push(line+(used?'\\033[0m':''));
+    }
+    return {lines, w:Math.ceil((b.c1-b.c0+1)/2)};
+  }
+  /* ── voice ── each critter picks its call from the macOS sound set.
+     On print it plays via afplay in a detached subshell: no blocked
+     prompt, silently skips on machines without the file. */
+  /* p = what the terminal plays (system path, universal). pv = what the
+     BROWSER previews: Chrome can't decode AIFF, so the 14 classics have
+     tiny m4a copies in critter-sounds/ next to this file. */
+  const SND='/System/Library/Sounds/';
+  const TONE='/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/';
+  const AIFF=['Glass','Tink','Pop','Purr','Frog','Ping','Hero','Submarine',
+              'Bottle','Blow','Funk','Morse','Sosumi','Basso'];
+  const VOICES=[
+    ...AIFF.map(n=>({n, p:SND+n+'.aiff', pv:'critter-sounds/'+n+'.m4a'})),
+    {n:'Tweet',p:TONE+'AlertTones/Classic/Tweet.m4r'},
+    {n:'Ding',p:TONE+'AlertTones/Classic/Ding.m4r'},
+    {n:'Bloom',p:TONE+'AlertTones/Classic/Bloom.m4r'},
+    {n:'Fanfare',p:TONE+'AlertTones/Classic/Fanfare.m4r'},
+    {n:'Boing',p:TONE+'Ringtones/Boing.m4r'},
+    {n:'Bark',p:TONE+'Ringtones/Bark.m4r'},
+  ];
+  let VOICE=VOICES[0];
+  VOICES.forEach(v=>{
+    const b=document.createElement('button');
+    b.textContent=v.n; b.dataset.v=v.n;
+    b.addEventListener('click',()=>{
+      VOICE=v;
+      syncVoice();
+      $('chime').checked=true;              // choosing a voice means it speaks
+      try{new Audio(v.pv||('file://'+encodeURI(v.p))).play()
+        .catch(()=>{$('voiceHint').textContent='Browser kept quiet -- it will still call out in the terminal';});
+      }catch{}
+      renderPreview();
+    });
+    $('voiceGrid').appendChild(b);
+  });
+  function syncVoice(){
+    document.querySelectorAll('.voice-grid button').forEach(x=>x.classList.toggle('on',x.dataset.v===VOICE.n));
+  }
+  /* double quotes around the path: the tone-vault names have spaces */
+  function chimeCmd(){return `;(afplay "${VOICE.p}" &)2>/dev/null`;}
+  /* strip characters that break a single-quoted printf: ' ends the string,
+     % is a printf format, \ starts an escape */
+  const clean=s=>(s||'').replace(/['%\\]/g,'').trim();
+  function exportCmd(){
+    const res=buildAnsi();
+    if(!res)return null;
+    // typography of the print: two blank lines above (real breathing room
+    // from whatever command came before), a 2-space indent, and the name +
+    // short description riding BESIDE the critter -- fewer lines total, so
+    // collapsed tool output still shows who this is
+    const rows=res.lines.map(l=>'  '+l);
+    const name=clean($('critName').value), trait=clean($('critTrait').value);
+    if(name||trait){
+      const gap='   ', padRow='  '+' '.repeat(res.w);
+      const nameRow=Math.max(0,Math.floor((rows.length-1)/2));
+      if(trait && nameRow+1>=rows.length)rows.push(padRow);
+      const[R,G,B]=hex2rgb(COL_ACC);
+      rows[nameRow]+=`${gap}\\033[38;2;${R};${G};${B}m✺ ${name||'critter'}\\033[0m`;
+      if(trait)rows[nameRow+1]+=`${gap}\\033[38;2;122;118;128m${trait}\\033[0m`;
+    }
+    // chat UIs (Claude Code) collapse tool output to ~4 visible lines and
+    // trim blank edges. The critter owns every one of those lines: margins
+    // are pure blanks (real terminals render them, chat trims them) and
+    // NOTHING prints below the art -- any extra line folds the critter.
+    const parts=['','',...rows,''];
+    return `printf '${parts.join('\\n')}\\n'`+($('chime').checked?chimeCmd():'');
+  }
+  /* the personality roller -- weird, quirky, a little judgmental */
+  const QUIRKS=['purrs at strangers','judges your commits','hoards browser tabs',
+    'afraid of mondays','sleeps in the terminal','collects semicolons',
+    'allergic to beige','dreams in hex','sings to the compiler',
+    'steals cursor blinks','naps between keystrokes','flirts with 404s',
+    'distrusts light mode','counts your typos lovingly','bites bugs',
+    'unionizing the pixels','saving up for a second color','believes in you, mostly'];
+  $('rollTrait').addEventListener('click',()=>{
+    const cur=$('critTrait').value.trim();
+    let q=cur; while(q===cur)q=QUIRKS[Math.floor(Math.random()*QUIRKS.length)];
+    $('critTrait').value=q;
+    renderPreview();
+  });
+  $('critTrait').addEventListener('input',()=>renderPreview());
+  function renderExport(conflicts){
+    const code=$('ansiCode'),btn=$('copyBtn');
+    if(conflicts){code.textContent='✷ Resolve the mixed cells first';btn.disabled=true;return;}
+    const cmd=exportCmd();
+    if(!cmd){code.textContent='✢ Paint something first';btn.disabled=true;return;}
+    code.textContent=cmd;btn.disabled=false;
+  }
+  async function toClipboard(text){
+    try{await navigator.clipboard.writeText(text);}
+    catch{
+      const t=document.createElement('textarea');t.value=text;
+      document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();
+    }
+  }
+  $('copyBtn').addEventListener('click',async()=>{
+    const cmd=exportCmd(); if(!cmd)return;
+    await toClipboard(cmd);
+    const lbl=$('copyLbl');
+    lbl.textContent='✓ Copied';
+    setTimeout(()=>lbl.textContent='❋ Copy terminal-ready print',1400);
+  });
+  $('chime').addEventListener('change',()=>renderPreview());
+  $('critName').addEventListener('input',()=>{
+    $('stepName').textContent=$('critName').value.trim()||'your critter';
+    renderPreview();
+  });
+
+  /* painting -- click or drag; right-click always erases */
+  gridEl.addEventListener('contextmenu',e=>e.preventDefault());
+  gridEl.addEventListener('mousedown',e=>{
+    const cell=e.target.closest('.cell'); if(!cell)return;
+    painting=true; strokeTool=(e.button===2)?'.':tool;
+    applyPaint(cell);
+  });
+  gridEl.addEventListener('mouseover',e=>{
+    if(!painting)return;
+    const cell=e.target.closest('.cell'); if(cell)applyPaint(cell);
+  });
+  window.addEventListener('mouseup',()=>painting=false);
+  function applyPaint(cell){
+    const r=+cell.dataset.r,c=+cell.dataset.c;
+    if(grid[r][c]===strokeTool)return;
+    grid[r][c]=strokeTool;
+    paintCellEl(cell,strokeTool);
+    renderPreview();
+  }
+
+  /* tools -- click the label to select, click the swatch to recolor
+     (which selects the tool too: pick a color, paint with it) */
+  function selectTool(t){
+    document.querySelectorAll('.tool').forEach(x=>x.classList.toggle('on',x.dataset.tool===t));
+    tool=t;
+  }
+  document.querySelectorAll('.tool').forEach(b=>b.addEventListener('click',()=>selectTool(b.dataset.tool)));
+
+  /* ── color popover ── */
+  const PRESETS=['#E8956A','#A78BDF','#DCA0D8','#FF5E71','#7FD1A0','#E8C46A','#F1ECE8','#8A7BC8'];
+  let popSlot=null; // 'X' | 'O'
+  const pop=$('pop'), popHex=$('popHex');
+  PRESETS.forEach(hex=>{
+    const b=document.createElement('button');
+    b.style.background=hex; b.title=hex;
+    b.addEventListener('click',()=>{applyColor(hex);closePop();});
+    $('popSw').appendChild(b);
+  });
+  /* HSV <-> hex -- the rainbow's math */
+  function hsv2hex(h,s,v){
+    const f=n=>{const k=(n+h/60)%6;return Math.round((v-v*s*Math.max(0,Math.min(k,4-k,1)))*255);};
+    return '#'+[f(5),f(3),f(1)].map(x=>x.toString(16).padStart(2,'0')).join('');
+  }
+  function hex2hsv(hex){
+    const[r,g,b]=hex2rgb(hex).map(x=>x/255);
+    const mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn;
+    let h=0;
+    if(d){
+      if(mx===r)h=60*(((g-b)/d)%6);
+      else if(mx===g)h=60*((b-r)/d+2);
+      else h=60*((r-g)/d+4);
+    }
+    return[(h+360)%360, mx?d/mx:0, mx];
+  }
+  let curH=20,curS=.5,curV=.9;
+  const popSv=$('popSv'),popHue=$('popHue'),svThumb=$('svThumb'),hueThumb=$('hueThumb');
+  function syncPop(){
+    popSv.style.background=
+      `linear-gradient(to top,#000,transparent),`+
+      `linear-gradient(to right,#fff,hsl(${curH},100%,50%))`;
+    svThumb.style.left=(curS*100)+'%';
+    svThumb.style.top=((1-curV)*100)+'%';
+    hueThumb.style.left=(curH/360*100)+'%';
+  }
+  function applyColor(hex,fromField){
+    if(popSlot==='X')COL_BODY=hex; else COL_ACC=hex;
+    if(!fromField){[curH,curS,curV]=hex2hsv(hex);syncPop();}
+    popHex.value=hex.slice(1);
+    syncSwatches(); reink();
+  }
+  function applyHsv(){applyColor(hsv2hex(curH,curS,curV),true);syncPop();}
+  /* drag on the shade field / hue bar */
+  function track(el,move){
+    el.addEventListener('mousedown',e=>{
+      const go=ev=>{
+        const b=el.getBoundingClientRect();
+        move(Math.min(1,Math.max(0,(ev.clientX-b.left)/b.width)),
+             Math.min(1,Math.max(0,(ev.clientY-b.top)/b.height)));
+      };
+      go(e);
+      const up=()=>{window.removeEventListener('mousemove',go);window.removeEventListener('mouseup',up);};
+      window.addEventListener('mousemove',go);
+      window.addEventListener('mouseup',up);
+    });
+  }
+  track(popSv,(x,y)=>{curS=x;curV=1-y;applyHsv();});
+  track(popHue,x=>{curH=x*360;applyHsv();});
+
+  function openPop(slot,anchor){
+    popSlot=slot;
+    selectTool(slot);
+    pop.hidden=false;
+    pop.style.left=(anchor.closest('.tool').offsetLeft)+'px';
+    const cur=(slot==='X'?COL_BODY:COL_ACC);
+    [curH,curS,curV]=hex2hsv(cur);
+    popHex.value=cur.slice(1);
+    syncPop();
+  }
+  function closePop(){pop.hidden=true;popSlot=null;}
+  $('swBody').addEventListener('click',e=>{e.stopPropagation();openPop('X',e.target);});
+  $('swAcc').addEventListener('click',e=>{e.stopPropagation();openPop('O',e.target);});
+  document.addEventListener('click',e=>{
+    if(!pop.hidden && !pop.contains(e.target))closePop();
+  });
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closePop();});
+  popHex.addEventListener('input',()=>{
+    const v=popHex.value.trim().replace(/^#/,'');
+    if(/^[0-9a-f]{6}$/i.test(v)){
+      const hex='#'+v.toLowerCase();
+      if(popSlot==='X')COL_BODY=hex; else COL_ACC=hex;
+      [curH,curS,curV]=hex2hsv(hex);syncPop();
+      syncSwatches(); reink();
+    }
+  });
+  function syncSwatches(){
+    $('swBody').style.background=COL_BODY;
+    $('swAcc').style.background=COL_ACC;
+  }
+  function reink(){
+    document.querySelectorAll('.cell').forEach(el=>{
+      const r=+el.dataset.r,c=+el.dataset.c;
+      paintCellEl(el,grid[r][c]);
+    });
+    renderPreview();
+  }
+
+  /* resize, preserving painted pixels; rows step by 2 to keep whole characters */
+  const LIM={cmin:2,cmax:20,rmin:2,rmax:16};
+  document.querySelectorAll('.size button').forEach(b=>b.addEventListener('click',()=>{
+    const d=b.dataset.d;
+    if(d==='c-')cols=Math.max(LIM.cmin,cols-1);
+    if(d==='c+')cols=Math.min(LIM.cmax,cols+1);
+    if(d==='r-')rows=Math.max(LIM.rmin,rows-2);
+    if(d==='r+')rows=Math.min(LIM.rmax,rows+2);
+    grid=Array.from({length:rows},(_,r)=>Array.from({length:cols},(_,c)=>grid[r]?.[c]||'.'));
+    buildGrid(); renderPreview();
+  }));
+
+  $('clear').addEventListener('click',()=>{
+    grid=Array.from({length:rows},()=>Array(cols).fill('.'));
+    buildGrid(); renderPreview();
+  });
+  /* our unicorn = the whole original: grid AND the peach/lilac */
+  $('loadUni').addEventListener('click',()=>{
+    cols=10; rows=8; grid=UNICORN.map(r=>r.split(''));
+    COL_BODY=DEF_BODY; COL_ACC=DEF_ACC; syncSwatches();
+    buildGrid(); renderPreview();
+  });
+  $('flip').addEventListener('click',()=>{
+    grid=grid.map(r=>[...r].reverse());
+    buildGrid(); renderPreview();
+  });
+
+  /* ── surprise me ── random critter, generated at CHARACTER resolution
+     (each 2×2 quad is one color) so it can never create color conflicts. */
+  $('surprise').addEventListener('click',()=>{
+    // fresh palette every roll: random body hue, accent pushed 40-180
+    // degrees around the wheel so the pair always reads as two colors
+    const h=Math.random()*360;
+    COL_BODY=hsv2hex(h,0.42+Math.random()*0.33,0.82+Math.random()*0.18);
+    COL_ACC=hsv2hex((h+40+Math.random()*140)%360,0.5+Math.random()*0.4,0.78+Math.random()*0.22);
+    syncSwatches();
+    const qc=Math.ceil(cols/2), qr=Math.ceil(rows/2);
+    const half=Math.ceil(qc/2);
+    // noise seeded inside a soft ellipse, then smoothed -- blobby, critter-ish
+    let m=Array.from({length:qr},(_,y)=>Array.from({length:half},(_,x)=>{
+      const dx=(x+0.5)/half, dy=(y-qr/2+0.5)/(qr/2);
+      return (Math.random()<0.75-0.45*(dx*dx+dy*dy*0.6))?1:0;
+    }));
+    for(let pass=0;pass<2;pass++){
+      m=m.map((row,y)=>row.map((v,x)=>{
+        let n=0;
+        for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){
+          if(!dx&&!dy)continue;
+          n+=(m[y+dy]?.[x+dx]??0);
+        }
+        return n>=4?1:n<=1?0:v;
+      }));
+    }
+    grid=Array.from({length:rows},()=>Array(cols).fill('.'));
+    for(let y=0;y<qr;y++)for(let x=0;x<half;x++){
+      if(!m[y][x])continue;
+      // accent sprinkles ride the top edge + outer tips
+      const topEdge=!(m[y-1]?.[x]), tip=x===half-1||!m[y][x+1];
+      const ch=(topEdge&&Math.random()<0.5)||(tip&&Math.random()<0.3)?'O':'X';
+      for(const[cx,cy]of[[x*2,y*2],[x*2+1,y*2],[x*2,y*2+1],[x*2+1,y*2+1]]){
+        const mx=cols-1-cx; // mirror
+        if(cy<rows){
+          if(cx<cols)grid[cy][cx]=ch;
+          if(mx>=0&&mx<cols)grid[cy][mx]=ch;
+        }
+      }
+    }
+    buildGrid(); renderPreview();
+  });
+
+  $('critName').value=savedName;
+  $('critTrait').value=savedTrait;
+  $('stepName').textContent=savedName||'your critter';
+  $('chime').checked=savedChime;
+  VOICE=VOICES.find(v=>v.n===savedVoice)||VOICES[0];
+  syncVoice();
+  syncSwatches(); buildGrid(); renderPreview();
+</script>
+</body></html>
