@@ -53,6 +53,8 @@
     padding: 6px 12px; border-radius: 999px; background: rgba(255,255,255,0.03);
     border: 1px solid var(--hairline); }
   .meta-pill b { color: var(--peach); font-weight: 600; }
+  a.meta-pill { text-decoration: none; transition: color 0.25s ease-in-out, background 0.25s ease-in-out; }
+  a.meta-pill:hover { color: var(--cream); background: rgba(255,255,255,0.06); }
 
   /* ── Sections ── */
   section { margin-bottom: 64px; }
@@ -220,7 +222,7 @@
   .st-active { background: var(--peach); }
   .st-starting { background: var(--lilac); }
   .st-paused { background: var(--text-mute); }
-  .st-complete { background: var(--text-whisper); }
+  .status.is-complete { color: var(--text-whisper); }
 
   /* ── Principle list ── */
   .principles { list-style: none; display: flex; flex-direction: column; gap: 14px; }
@@ -245,9 +247,10 @@
     <h1><span class="grad">The language Unicorn<br>is built in.</span></h1>
     <p class="lede">A living reference for the colors, type, glass, and motion that make Unicorn feel like itself. <strong>Living</strong> because it updates as the product does, not after. It documents what is true in the build right now, so the app, the briefs, and the case story all speak the same visual language.</p>
     <div class="meta-row">
-      <span class="meta-pill">Updated <b>2026-06-03</b></span>
+      <span class="meta-pill">Updated <b>2026-07-12</b></span>
       <span class="meta-pill">Reviewed <b>weekly</b></span>
       <span class="meta-pill">Surface <b>desktop app + briefs</b></span>
+      <a class="meta-pill" href="https://www.figma.com/design/m9JRahV6Do3uHFYJycqby7/Design-System" target="_blank" rel="noopener">Open in <b>Figma</b> ↗</a>
     </div>
   </header>
 
@@ -381,12 +384,12 @@
 
   <section>
     <div class="sec-label"><span class="num">08</span>Experiment status</div>
-    <div class="sec-note">An experiment moves through a small set of states. Color, not labels, carries the signal: <b>lilac</b> is just starting, <b>peach</b> is in motion, a <b>muted</b> dot is paused (sleeping, doesn't count toward active work), and <b>whisper</b> is a closed loop.</div>
+    <div class="sec-note">An experiment moves through a small set of states. Color, not labels, carries the signal: <b>lilac</b> is just starting, <b>peach</b> is in motion, a <b>muted</b> dot is paused (sleeping, doesn't count toward active work), and a closed loop <b>goes quiet</b> -- whisper label, no dot.</div>
     <div class="panel-demo"><div class="status-row">
       <span class="status"><span class="st-dot st-starting"></span>Starting</span>
       <span class="status"><span class="st-dot st-active"></span>Active</span>
       <span class="status"><span class="st-dot st-paused"></span>Paused</span>
-      <span class="status"><span class="st-dot st-complete"></span>Complete</span>
+      <span class="status is-complete">Complete</span>
     </div></div>
   </section>
 
