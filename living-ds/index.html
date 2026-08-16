@@ -55,6 +55,22 @@
   .meta-pill b { color: var(--peach); font-weight: 600; }
   a.meta-pill { text-decoration: none; transition: color 0.25s ease-in-out, background 0.25s ease-in-out; }
   a.meta-pill:hover { color: var(--cream); background: rgba(255,255,255,0.06); }
+  /* the "Open in Figma" CTA gets the fill treatment: peach->lilac gradient
+     stroke + gradient text at rest, fills with the gradient on hover and the
+     text drops to the void so it pops. scoped to just this pill. */
+  a.meta-pill.meta-pill--figma {
+    position: relative; border: 0; background: linear-gradient(135deg, var(--peach), var(--lilac));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    transition: color 0.3s ease-in-out; }
+  a.meta-pill.meta-pill--figma b { color: inherit; }
+  a.meta-pill.meta-pill--figma::before {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px;
+    background: linear-gradient(135deg, var(--peach), var(--lilac));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+  a.meta-pill.meta-pill--figma:hover {
+    background: linear-gradient(135deg, var(--peach), var(--lilac));
+    -webkit-background-clip: border-box; background-clip: border-box; color: var(--bg); }
 
   /* ── Sections ── */
   section { margin-bottom: 64px; }
@@ -250,7 +266,7 @@
       <span class="meta-pill">Updated <b>2026-07-12</b></span>
       <span class="meta-pill">Reviewed <b>weekly</b></span>
       <span class="meta-pill">Surface <b>desktop app + briefs</b></span>
-      <a class="meta-pill" href="https://www.figma.com/design/m9JRahV6Do3uHFYJycqby7/Design-System" target="_blank" rel="noopener">Open in <b>Figma</b> ↗</a>
+      <a class="meta-pill meta-pill--figma" href="https://www.figma.com/design/m9JRahV6Do3uHFYJycqby7/Design-System" target="_blank" rel="noopener">Open in <b>Figma</b> ↗</a>
     </div>
   </header>
 
