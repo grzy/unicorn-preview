@@ -193,7 +193,10 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   @font-face { font-family:'Ubuntu Sans Mono'; font-style:normal; font-weight:600; font-display:block;
     src: url('fonts/ubuntu-sans-mono-600.woff2') format('woff2'), url('https://fonts.gstatic.com/s/ubuntusansmono/v3/jVyR7mzgBHrR5yE7ZyRg0QRJMKI45grIfDfySZU.woff2') format('woff2'); }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/tone@14.8.49/build/Tone.min.js"></script>
+<!-- Tone.js vendored (npm tone@14.8.49 build/Tone.js, sha512 verified against
+     the registry 2026-09-27). Was a CDN script: blocked first paint on a cold
+     cache, went silent offline, and ran remote code next to window.unicorn. -->
+<script src="vendor/tone-14.8.49.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -296,8 +299,8 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
      clearly during load; only the center card + ripple sit on top. */
   html.is-desktop #preloader { background: transparent; }
   /* WEB / guest preview: the preloader (gate screen AND the real reveal) sits
-     on Ivy's field painting, not a flat dark void -- the glass center card +
-     blurb read over the same wallpaper the panels do. Desktop stays transparent. */
+     on the orchid wallpaper, not a flat dark void -- the glass center card +
+     blurb read over the signature neon flower. Desktop stays transparent above. */
   html:not(.is-desktop) #preloader {
     background: #191919 url('field-painting.jpg') center / cover no-repeat;
   }
@@ -752,15 +755,39 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   #menubar .mb-right { margin-left: auto; display: flex; gap: 16px; align-items: center; }
 
   /* Custom traffic lights (Unicorn colors) -- desktop only; web has no window. */
-  .mb-lights { display: none; align-items: center; gap: 8px; }
+  .mb-lights { display: none; align-items: center; gap: 10px; }
   html.is-desktop .mb-lights { display: inline-flex; -webkit-app-region: no-drag; margin-top: 1px; }
   .mb-light {
-    width: 12px; height: 12px; border-radius: 50%; border: 0; padding: 0;
+    /* 14px / 10px gap. Native macOS is 12px/8px and ours WERE exactly that --
+       they only read smaller because our brand pastels on transparent glass
+       have far less contrast than saturated red/yellow/green on an opaque
+       title bar. Bumping the size is the honest fix for the perception. */
+    width: 14px; height: 14px; border-radius: 50%; border: 0; padding: 0;
+    position: relative;
     cursor: pointer; -webkit-app-region: no-drag;
     display: inline-flex; align-items: center; justify-content: center;
-    font: 600 9px/1 var(--mono); color: rgba(0,0,0,0.55);
-    box-shadow: inset 0 0 0 0.5px rgba(0,0,0,0.18);
+    /* Glyph ink is #000 at 0.55 OPACITY (on the ::before), not an rgba color --
+       so the text-stroke below composites with the fill as one shape instead
+       of doubling up darker where they overlap. */
+    font: 600 11px/1 var(--mono); color: #000;
     transition: filter 0.12s;
+  }
+  /* Edge = the same peach->lilac ring the panels wear (.panel::before), in
+     place of the old dark 0.5px hairline -- the buttons read as part of the
+     glass, not stickers on it. */
+  .mb-light::after {
+    content: ""; position: absolute; inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(to top right,
+      transparent 1%,
+      rgba(232,149,106,0.30) 13%,
+      rgba(167,139,223,0.30) 87%,
+      transparent 99%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    pointer-events: none;
   }
   .mb-light:hover { filter: brightness(1.08); }
   .mb-light:active { filter: brightness(0.9); }
@@ -768,8 +795,16 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   .mb-light-min   { background: var(--peach); }
   .mb-light-zoom  { background: var(--lilac); }
   /* glyphs (× – +) reveal on cluster hover, like the native buttons. */
-  .mb-light::before { opacity: 0; transition: opacity 0.12s; pointer-events: none; }
-  .mb-lights:hover .mb-light::before { opacity: 1; }
+  /* Ubuntu Sans Mono tops out at 600, so "bolder" = a 0.6px text-stroke
+     (0.4 read light next to the native macOS glyphs; 0.7 went chunky).
+     translateY(-0.5px): the glyphs sat 0.38px low (measured at 8x); this
+     lands them on 0.00. */
+  .mb-light::before {
+    opacity: 0; transition: opacity 0.12s; pointer-events: none;
+    transform: translateY(-0.5px);
+    -webkit-text-stroke: 0.6px currentColor;
+  }
+  .mb-lights:hover .mb-light::before { opacity: 0.55; }
   .mb-light-close::before { content: '×'; }
   .mb-light-min::before   { content: '–'; }
   .mb-light-zoom::before  { content: '+'; }
@@ -1288,7 +1323,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     max-height: 80vh;
   }
   .panel--quest .q-exps { flex: 1; min-height: 0; overflow-y: auto; }
-  .panel--commits { bottom: 48px; left: 32px; width: 336px; padding-bottom: 14px; }
+  .panel--commits { bottom: 48px; left: 32px; width: 336px; padding-bottom: 20px; }
   /* Appearance is stowed by default -- summoned via Settings in menubar.
      Center column, top row -- aligns with Quest + Mirror. */
   .panel--appearance {
@@ -1311,6 +1346,14 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     max-height: min(400px, calc(100vh - 260px));
   }
   .panel--keep.shown { display: block; animation: termIn 0.45s ease; }
+  /* CRITICAL for file drops: the body flips to -webkit-app-region: drag when the
+     HUD is off, and drag-regions EAT file drops (the OS treats them as a window
+     move, so no dragover fires -> no orange tint -> drop silently fails). Force
+     the entire Keep panel to no-drag so dropping a screenshot/video always works,
+     regardless of HUD state. This was the "sometimes it drops, sometimes nothing"
+     bug. */
+  html.is-desktop .panel--keep,
+  html.is-desktop .panel--keep * { -webkit-app-region: no-drag; }
   .keep-count {
     font-family: var(--mono); font-size: 10px;
     color: var(--lilac);
@@ -1321,23 +1364,37 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   /* The count is ambient -- it surfaces on hover, not a constant badge. */
   #panel-keep:hover .keep-count { opacity: 1; }
   .keep-meta-right { display: inline-flex; align-items: baseline; gap: 12px; flex-shrink: 0; white-space: nowrap; }
+  /* Always visible. It used to fade in on panel hover, which was fine while
+     "Saving to: <quest>" held the row -- with that gone the row read as an
+     empty gap that only spoke when you hovered it. The path IS the row now. */
   .keep-folder {
     font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em;
-    color: var(--lilac); cursor: pointer; opacity: 0;
-    transition: opacity 0.18s ease;
+    color: var(--lilac); cursor: pointer; opacity: 0.75;
+    transition: opacity 0.18s ease, color 0.15s;
   }
   #panel-keep:hover .keep-folder { opacity: 1; }
   .keep-folder:hover { text-decoration: underline; }
   /* North Star: a ✷ toggle on each keep (lilac when flagged). The link to open
      the global northstar.html lives under Mirror › Taste ("For you" row). */
   .keep-item-ns {
-    position: absolute; top: 9px; right: 28px; z-index: 2;
-    font-size: 11px; line-height: 1; cursor: pointer;
+    position: absolute; top: 10px; right: 36px; z-index: 2;
+    font-size: 9.5px; line-height: 1; cursor: pointer;
     color: rgba(255,255,255,0.17);
     transition: color 0.2s ease, transform 0.2s ease, text-shadow 0.2s ease;
   }
   .keep-item-ns:hover { color: var(--lilac); transform: scale(1.18); }
   .keep-item-ns.on { color: #c8a2ff; text-shadow: 0 0 2px rgba(200,162,255,0.3); }
+  /* Case-story green-flag: a ● dot on each keep, left of the North Star ✷.
+     Green = "this one tells the story" -> included in the case story + stamped
+     with a green Finder label on the file in ~/unicorn/keeps. */
+  .keep-item-cs {
+    position: absolute; top: 10px; right: 50px; z-index: 2;
+    font-size: 9px; line-height: 1; cursor: pointer;
+    color: rgba(255,255,255,0.17);
+    transition: color 0.2s ease, transform 0.2s ease, text-shadow 0.2s ease;
+  }
+  .keep-item-cs:hover { color: #5af26a; transform: scale(1.25); }
+  .keep-item-cs.on { color: #5af26a; }
   .keep-tag-row {
     display: flex;
     align-items: baseline;
@@ -1395,14 +1452,29 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   /* Native resize grip is a bright white triangle that pops against the
      dark panel. Blend it away -- the corner still drags. */
   .keep-input::-webkit-resizer { background: transparent; }
+  /* Back to the trailing edge. Save is a form submit attached to a text
+     field, not a document-producing CTA like Compose weekly brief -- full
+     width gave it a weight it hadn't earned. The real problem was that it
+     floated alone in an empty row, so the row now has a left anchor. */
   .keep-actions {
-    display: flex; justify-content: flex-end;
+    display: flex; align-items: center; justify-content: space-between;
     margin-top: 10px;
   }
+  .keep-hint {
+    font-family: var(--mono); font-size: 9px;
+    letter-spacing: 0.10em;
+    color: var(--text-whisper);
+    user-select: none;
+    opacity: 0;
+    transition: opacity 0.18s ease;
+  }
+  /* Only speaks once you're actually in the panel. */
+  #panel-keep:hover .keep-hint,
+  #panel-keep:focus-within .keep-hint { opacity: 1; }
   .keep-save {
     appearance: none; -webkit-appearance: none;
     position: relative;
-    padding: 7px 16px;
+    padding: 7px 12px;   /* tier 2 -- was 7px 16px, wider than every sibling */
     /* Same treatment as the Compose / Tell-the-case-story CTAs: dark fill
        (padding-box) + peach->lilac gradient stroke (border-box). On hover the
        fill BECOMES the gradient and the label goes void-dark -- no white flash. */
@@ -1423,11 +1495,15 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
       linear-gradient(135deg, var(--peach), var(--lilac)) border-box;
     color: #100F11;
   }
+  /* Lilac letters + lilac tick on a 16%-alpha lilac fill was three lilacs
+     stacked -- technically a confirmation, practically unreadable. The done
+     state is the one moment this button should be unmissable, so the fill
+     goes SOLID and the letters go dark against it. */
   .keep-save.done {
     background:
-      linear-gradient(135deg, rgba(167,139,223,0.16), rgba(167,139,223,0.16)) padding-box,
-      linear-gradient(135deg, rgba(167,139,223,0.5), rgba(167,139,223,0.5)) border-box;
-    color: var(--lilac);
+      linear-gradient(135deg, var(--lilac), var(--lilac)) padding-box,
+      linear-gradient(135deg, var(--lilac), var(--lilac)) border-box;
+    color: var(--ink);
   }
   .keep-list {
     display: flex; flex-direction: column;
@@ -1435,6 +1511,8 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     margin-top: 16px;
     flex: 1; min-height: 0;
     overflow-y: auto;
+    /* breathing room so the last keep doesn't hug the panel's bottom edge */
+    padding-bottom: 10px;
   }
   /* No saved items -> no list, no gap. Panel ends right after Save. */
   .keep-list:empty { margin-top: 0; }
@@ -1473,10 +1551,34 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     word-wrap: break-word;
   }
   .keep-item-img {
-    max-width: 100%;
+    /* the item has 28px right padding (X clearance) but 12px left -- the media
+       sits below the X, so reclaim the extra right padding (calc + negative
+       margin) to fill symmetrically (12px both sides) and read bigger. */
+    width: calc(100% + 16px);
+    max-width: none;
+    margin-right: -16px;
     border-radius: 4px;
     margin-top: 6px;
   }
+  /* Video keep: thumbnail + a "▶ video" badge; click opens the file on disk. */
+  .keep-item-video {
+    position: relative; margin-top: 6px; cursor: pointer; line-height: 0;
+    border-radius: 4px; overflow: hidden;
+    width: calc(100% + 16px);
+    margin-right: -16px;
+  }
+  .keep-item-video .keep-item-img { margin-top: 0; display: block; width: 100%; max-width: 100%; margin-right: 0; }
+  .keep-video-blank { width: 100%; aspect-ratio: 16/9; background: rgba(255,255,255,0.05); }
+  .keep-video-badge {
+    position: absolute; left: 7px; bottom: 7px;
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.08em;
+    color: var(--cream);
+    background: rgba(16,15,17,0.66);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    padding: 3px 7px; border-radius: 5px;
+    pointer-events: none;
+  }
+  .keep-item-img[data-open] { cursor: pointer; }
   .keep-item-delete {
     position: absolute; top: 6px; right: 8px;
     font-family: var(--mono); font-size: 12px;
@@ -1577,7 +1679,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     background: transparent;
     border: 0;
     border-radius: 6px;
-    padding: 4px 9px;
+    padding: 7px 12px;   /* tier 2 (10px mono buttons) -- matches .keep-save */
     font-family: var(--mono); font-size: 10px;
     letter-spacing: 0.12em; text-transform: uppercase;
     color: var(--text-mute);
@@ -1621,17 +1723,20 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
      header clean. */
   /* Meta line + sound toggle share one bottom row -- toggle sits
      bottom-right next to the meta text, not dangling below it. */
+  /* Same footer language as the Quest panel's complete-quest row: hairline
+     divider, then breathing room, so the toggle never crowds the calendar. */
   .c-foot {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     gap: 12px;
-    margin-top: 2px;
+    margin-top: 14px;
+    padding-top: 0;   /* line removed 2026-09-19 -- only two rules survive app-wide: the peach->lilac .p-hair under each panel title, and the quest progress fill. */
   }
   /* c-meta reserves 2 lines (min-height) but usually shows 1, so top-
      align the row and nudge the button to sit on the first line. */
   .c-foot .c-meta { flex: 1; min-width: 0; }
-  .c-foot .c-sound { margin-top: -3px; }
+  .c-foot .c-sound { margin-top: -1px; }
 
   /* Calendar layout -- month view, day numbers visible, intensity colors */
   .c-month-head {
@@ -1703,12 +1808,14 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   .c-meta {
     font-family: var(--mono); font-size: 11px;
     color: var(--text-whisper); line-height: 1.5;
-    /* Fixed height so the panel never resizes on hover */
-    min-height: 2.6em; height: 2.6em;
+    /* Fixed height so the panel never resizes on hover. One line -- the
+       messages here ("quiet", "N commits") never wrap; the old 2-line
+       reserve just left dead air under the sound toggle. */
+    min-height: 1.5em; height: 1.5em;
     overflow: hidden;
     letter-spacing: 0.02em;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
   }
   .c-meta .c-day { color: var(--text-mute); }
@@ -1748,6 +1855,10 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     -webkit-backdrop-filter: blur(var(--panel-blur)) saturate(1.2);
             backdrop-filter: blur(var(--panel-blur)) saturate(1.2);
     z-index: 60;
+    /* Fluid open/close: fade + a small settle from above (no display toggle, so
+       it can animate). visibility flips after the fade so it's not focusable
+       while closed. top:35px lines the popover's TOP up with the Quest/Mirror
+       panels, which sit at top:54px. */
     opacity: 0;
     transform: translateY(-8px) scale(0.985);
     transform-origin: top left;
@@ -1779,7 +1890,8 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
             mask-composite: exclude;
     pointer-events: none;
   }
-  /* open/close is class-driven now via .open + the transition above. */
+  /* (open/close is class-driven now via .open + the transition above, not the
+     hidden attribute -- so it can animate.) */
   #menubar .mb-panels-pop .mb-toggle {
     position: relative; padding: 6px 12px; border-radius: 8px;
     text-transform: none; letter-spacing: 0.04em;
@@ -1788,6 +1900,62 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   #menubar .mb-panels-pop .mb-toggle:hover { background: rgba(255,255,255,0.06); }
   /* Shortcut hint on the right of each row -- dim + steady, like a macOS menu. */
   #menubar .mb-panels-pop .mb-tog-key { color: rgba(255,255,255,0.4); letter-spacing: 0.02em; }
+
+  /* Float hover tip -- same glass + gradient ring + settle as the Panels
+     popover. Appears after a beat (so a pass-over doesn't flash it), leaves
+     quicker than it arrives. pointer-events:none so it never eats a click. */
+  /* Centered under the PANELS + FLOAT pair, like the Panels popover reads.
+     left = the pair's midpoint, measured on hover (setTipAnchor); 59px is
+     that midpoint at the current labels, as a fallback. */
+  #menubar .mb-tip {
+    position: absolute; top: 35px; left: 59px;
+    display: flex; flex-direction: column; gap: 2px;
+    padding: 6px 4px;
+    white-space: nowrap;
+    font-size: 0.9em; /* a touch smaller than the bar -- it's a hint, not a menu */
+    text-transform: none; letter-spacing: 0.03em;
+    color: var(--cream);
+    background: var(--panel-bg);
+    border-radius: 12px;
+    box-shadow: var(--shadow-panel);
+    -webkit-backdrop-filter: blur(var(--panel-blur)) saturate(1.2);
+            backdrop-filter: blur(var(--panel-blur)) saturate(1.2);
+    z-index: 61;
+    opacity: 0;
+    transform: translate(-50%, -6px) scale(0.985);
+    transform-origin: top center;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.16s ease-out, transform 0.16s ease-out, visibility 0s linear 0.16s;
+  }
+  #menubar:has(#mb-pin:hover):not(:has(.mb-panels-pop.open)) .mb-tip {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+    visibility: visible;
+    transition: opacity 0.26s cubic-bezier(0.22, 1, 0.36, 1) 0.45s,
+                transform 0.26s cubic-bezier(0.22, 1, 0.36, 1) 0.45s,
+                visibility 0s linear 0.45s;
+  }
+  #menubar .mb-tip::before {
+    content: ""; position: absolute; inset: 0;
+    border-radius: inherit; padding: 1px;
+    background: linear-gradient(to top right,
+      transparent 1%,
+      rgba(232,149,106,0.30) 13%,
+      rgba(167,139,223,0.30) 87%,
+      transparent 99%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    pointer-events: none;
+  }
+  #menubar .mb-tip-row { display: flex; justify-content: space-between; gap: 14px; padding: 4px 9px; }
+  #menubar .mb-tip-key { color: rgba(255,255,255,0.4); letter-spacing: 0.02em; }
+
+  /* ⌥ held: the WHOLE window is a drag handle (setAltDrag). In Float mode the
+     gaps click through, so the thin top strip was the only grab spot. */
+  html.is-desktop body.alt-drag,
+  html.is-desktop body.alt-drag * { -webkit-app-region: drag !important; cursor: grab !important; }
   html:not(.is-desktop) #menubar .mb-panels-btn,
   html:not(.is-desktop) #menubar .mb-panels-btn:hover,
   html:not(.is-desktop) #menubar .mb-panels-btn[aria-expanded="true"] { color: #fff; }
@@ -1822,7 +1990,9 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--text-whisper);
-    margin-bottom: 14px;
+    /* 9px, was 14. Title-to-rule was the largest gap in any panel and it made
+       the header look detached from the line that's meant to underline it. */
+    margin-bottom: 9px;
     cursor: grab;
     user-select: none;
   }
@@ -1877,7 +2047,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
      directly after with horizontal padding that matches. */
   .p-head-agent {
     padding: 20px 20px 0;   /* 20px top matches the minimized chip + the other panels -- no lift on expand */
-    margin-bottom: 14px;
+    margin-bottom: 9px;
   }
   #agent > .p-hair {
     margin: 0 20px 14px;
@@ -1890,11 +2060,25 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
        panel's right content edge (the count, Save, etc.) instead of
        reading inset. The 18px box still gives a comfy click target. */
     position: relative;
+    /* TWO separate things were holding this off the edge:
+       1. The grid. .p-head is `1fr auto auto`, sized for a middle corner slot
+          (#q-count) that is display:none on every panel -- so .p-mini fell
+          into column 2 and sat a dead column 3 PLUS an 8px gap away from the
+          right edge. `grid-column: -2 / -1` pins it to the last column, so
+          it's flush no matter how many items precede it.
+       2. The glyph. The -/+ bars are absolutely positioned at left:50% inside
+          an 18px box, so they sat another (18-8)/2 = 5px in. justify-content
+          can't touch them (they aren't in the flex flow); pulling the box
+          right by exactly 5px lands the bar on the true content edge. The box
+          overhanging into the 22px panel padding just makes the target comfy.
+       Both the − and the + use the same box, so they land together. */
+    grid-column: -2 / -1;
+    justify-self: end;
     display: inline-flex; align-items: center; justify-content: center;
     width: 18px; height: 18px;
     overflow: hidden;
     margin-left: 8px;
-    margin-right: 0;
+    margin-right: -5px;
     /* Off-white, same as the "Quest" label + the ⋯ menu. */
     color: var(--text-whisper);
     cursor: pointer;
@@ -2107,9 +2291,18 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     /* flex-shrink:0 is critical -- panels using flex column (Activity, Claude
        dock) were collapsing this 1px line to 0px, which is why the Activity
        header had no gradient line under it. */
-    height: 1px;
+    /* 2px, not 1px -- border-radius on a 1px line is mathematically real and
+       visually nothing. 2px is the thinnest the rounded cap actually reads at. */
+    height: 2px;
+    border-radius: 1px;
     flex-shrink: 0;
-    background: linear-gradient(90deg, rgba(232,149,106,0.7), rgba(167,139,223,0.35), transparent);
+    /* Ends ON lilac -- no fade to transparent. The fade made the line look
+       like it had been cut off rather than finished. Three stops so the
+       peach->lilac midpoint doesn't go muddy. */
+    background: linear-gradient(90deg,
+      rgba(232,149,106,0.70),
+      rgba(199,151,175,0.60) 55%,
+      rgba(167,139,223,0.55));
     margin: 0 0 14px;
   }
 
@@ -2130,6 +2323,14 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   /* Stats line + ⋯ share a row: stats on the left, the actions menu toggle
      pinned to the right end (where it acts on THIS quest, off the panel
      header). The ⋯ pops complete/pause/delete just below, not at the bottom. */
+  /* The ⋯ sits on the QUEST TITLE line now, not the stats line. It's the
+     quest's own menu, so it belongs beside the quest's name -- and the stats
+     line gets its full width back. */
+  /* The ⋯ moved up to the title line and back down again -- on the title it
+     sat too high, floating above the content it acts on. It belongs on the
+     stats line, level with the quest's numbers. */
+  .q-title-row { display: flex; align-items: center; gap: 8px; }
+  .q-title-row .p-title { min-width: 0; }
   .q-sub-row {
     display: flex; align-items: center; justify-content: space-between; gap: 8px;
     margin-bottom: 14px;
@@ -2145,9 +2346,13 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   }
   .q-sw-btn {
     position: relative;
+    display: inline-flex; align-items: center; justify-content: center;
+    line-height: 1;
     font-family: var(--mono); font-size: 9px;
     letter-spacing: 0.12em; text-transform: uppercase;
-    padding: 4px 9px;
+    /* extra left padding offsets the phantom trailing letter-space so the
+       label sits optically centered */
+    padding: 5px 9px 5px calc(9px + 0.12em);
     border-radius: 5px;
     color: var(--text-whisper);
     background: transparent;
@@ -2195,8 +2400,13 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   }
 
   .q-prog { height: 2px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; margin: 4px 0 12px; }
-  .q-prog > span { display: block; height: 100%; background: linear-gradient(90deg, var(--peach), var(--lilac)); width: 0; transition: width 0.5s ease; }
-  .q-exps { display: flex; flex-direction: column; gap: 8px; }
+  /* The FILL needs its own radius -- the track's overflow:hidden only rounds
+     the outer ends, so the fill's leading edge was a square cut mid-track. */
+  .q-prog > span { display: block; height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--peach), var(--lilac)); width: 0; transition: width 0.5s ease; }
+  /* 3px. The chips carry their own vertical padding now, so the row's visual
+     breathing room comes from INSIDE the chip -- the gap only has to separate
+     one row from the next, not create the air. 8px then 5px both read loose. */
+  .q-exps { display: flex; flex-direction: column; gap: 3px; }
   .q-exp {
     display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
     font-family: var(--mono);
@@ -2404,23 +2614,23 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     letter-spacing: 0.10em;
     font-size: 9px;
   }
-  .q-exp .q-bar {
-    /* Invisible spacer -- just pushes the status chip to the right edge.
-       (The connector line read as an odd dash between name and chip.) */
-    flex: 1;
-    height: 1px;
-    background: transparent;
-  }
   .q-exp .q-name {
     color: var(--text);
     cursor: text;
     padding: 1px 0;
     border-bottom: 1px solid transparent;
     transition: border-color 0.15s;
-    /* Truncate with ellipsis so a long name doesn't push the status chip
-       or delete × down to a second line. */
+    /* `flex: 1 1 0%` is what stops the × wrapping to a second line, and it's
+       why the old `max-width: 60%` existed. In a flex-wrap:wrap row the
+       browser decides line breaks from each item's HYPOTHETICAL size BEFORE
+       any shrinking happens -- so a long name (basis:auto = its full text
+       width) blew the line and pushed the × down, even though it was
+       perfectly allowed to shrink. A basis of ZERO means the name never
+       contributes width to that decision: it can't force a wrap, it just
+       grows into whatever is left between the chip and the ×, and ellipses.
+       The "…" is part of that box, so it can't bump anything either. */
+    flex: 1 1 0%;
     min-width: 0;
-    max-width: 60%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -2433,12 +2643,39 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   }
   .q-exp.finished .q-name:hover { border-bottom-color: transparent; }
   /* Status chip -- one color per status, all in brand family */
+  /* The chip moved to the FAR LEFT of the row (2026-09-19). It used to sit on
+     the right and scoot sideways when the × faded in on hover -- a control
+     moving out from under a cursor that's already travelling toward it, which
+     is exactly the pattern that makes you mis-click a delete. Now nothing in
+     the row moves, ever: the chip is a fixed column on the left, the × is a
+     fixed slot on the right, and only the name flexes between them.
+     min-width fits the longest status ("COMPLETE"), so every name in the list
+     starts at the same x and it reads as a proper status column. */
+  /* The chip sits in a fixed-width SLOT rather than being fixed-width itself.
+     That was the thing making PAUSED look like a mostly-empty box while
+     STARTING looked cramped -- one width stretched across words of very
+     different lengths. Now the box hugs its own word (so the padding reads
+     even on all four), and the SLOT is what keeps every experiment name
+     starting at the same x. COMPLETE draws no box, but it carries the same
+     left padding, so its word lines up with the words in the bordered chips
+     instead of floating out of column. */
+  .q-slot {
+    flex: 0 0 84px;
+    display: flex; align-items: center;
+    min-width: 0;
+  }
   .q-exp .q-status {
     position: relative;
+    flex: 0 0 auto;
+    text-align: left;
+    line-height: 1;   /* deterministic chip height -- the archive math needs it */
     font-family: var(--mono); font-size: 9px;
     letter-spacing: 0.14em; text-transform: uppercase;
-    padding: 3px 7px;
-    border-radius: 4px;
+    /* PADDING SCALE, tier 1 (9px mono pills): 5px 9px / radius 5. Shared with
+       .q-sw-btn and .u-brief-row-act so every small pill in the app reads as
+       the same component at the same size. */
+    padding: 5px 9px;
+    border-radius: 5px;
     border: 0;
     background: transparent;
     cursor: pointer;
@@ -2460,15 +2697,40 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   .q-exp .q-status[data-s="starting"]  { color: var(--lilac);       --chip-stroke: rgba(167,139,223,0.32); }
   .q-exp .q-status[data-s="active"]    { color: var(--peach);        --chip-stroke: rgba(232,149,106,0.32); }
   .q-exp .q-status[data-s="paused"]    { color: var(--text-mute);    --chip-stroke: rgba(255,255,255,0.18); }
-  .q-exp .q-status[data-s="complete"] { color: var(--text-whisper); --chip-stroke: transparent; }
-  .q-exp .q-status[data-s="complete"]:hover { color: var(--peach); }
+  /* COMPLETE used to draw no box at all, so its word sat 9px inside a left
+     edge that every chip above it met squarely -- a notch, and always right
+     under PAUSED where it showed most. It gets the same recessed well as the
+     Currently card and the archived pill instead of a coloured stroke: same
+     shape and alignment as the live chips, but reading as put-away rather
+     than lit. One system -- live states are drawn in light, done in shadow. */
+  .q-exp .q-status[data-s="complete"] {
+    color: var(--text-whisper);
+    --chip-stroke: transparent;
+    background: rgba(0,0,0,0.18);
+  }
+  /* No peach on hover. Peach is the ACTIVE colour, so lighting a finished
+     chip up in it implied "this is about to become active" before you'd even
+     decided to click. Just a quiet brighten now. */
+  .q-exp .q-status[data-s="complete"]:hover { color: var(--text-mute); }
+  /* Armed = the one state where it IS about to become active, so it says so
+     and wears the active colour honestly. */
+  .q-exp .q-status[data-s="complete"].armed {
+    color: var(--peach);
+    background: rgba(232,149,106,0.14);
+  }
   .q-exp .q-status:hover { filter: brightness(1.15); }
 
   /* Delete affordance -- hidden by default, fades in on row hover.
      Click prompts a confirm() before removing the experiment + cleaning
      up any associated session log entries. */
+  /* The × slot is ALWAYS reserved -- fixed 14px, sitting flush on the panel's
+     right content edge whether it's visible or not. It fades in on row hover
+     and that is the ONLY thing that changes. Nothing reflows, nothing slides
+     under the cursor on approach. */
   .q-exp .q-delete {
+    flex: 0 0 14px;
     width: 14px; height: 14px;
+    margin-left: auto;
     display: inline-flex; align-items: center; justify-content: center;
     font-family: var(--mono); font-size: 13px; line-height: 1;
     color: var(--text-whisper);
@@ -2480,7 +2742,9 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   }
   /* Armed (two-click confirm): widen so the red fill wraps "✕ ?"; the ? is
      smaller + spaced so it doesn't crowd or dominate the ✕. */
-  .q-exp .q-delete.armed { width: auto; padding: 0 7px; background: rgba(255,94,113,0.16); }
+  /* Armed widens to wrap "× ?" -- it grows LEFTWARD from the fixed right edge
+     (flex-basis auto + margin-left:auto), so the row's right edge holds. */
+  .q-exp .q-delete.armed { flex: 0 0 auto; width: auto; padding: 0 7px; background: rgba(255,94,113,0.16); }
   .q-exp .q-delete .q-del-q { font-size: 0.7em; opacity: 0.85; margin-left: 3px; }
   .q-exp:hover .q-delete { opacity: 1; }
   .q-exp .q-delete:hover {
@@ -2502,8 +2766,11 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
 
   /* Add experiment -- compact input below the list */
   .q-add {
-    margin-top: 12px; padding-top: 10px;
-    border-top: 1px solid var(--panel-inner-line);
+    /* 14px, not the 8px used INSIDE the list. 8px is the step between groups
+       of experiments; this is the step from the list to a text field, which is
+       a structural break and wants the same 14px the panel uses under its
+       stats line. At 8px the input crowded the last closed loop. */
+    margin-top: 14px; padding-top: 0;
   }
   .q-add-in {
     display: block; width: 100%;
@@ -2529,32 +2796,77 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
 
   /* Archive toggle -- shows finished experiments older than 7 days.
      Subtle by default; click to reveal. */
-  .q-archive-toggle {
-    font-family: var(--mono); font-size: 10px;
-    letter-spacing: 0.1em;
-    color: var(--text-whisper);
-    cursor: pointer;
-    transition: color 0.15s;
-    user-select: none;
-    padding: 8px 0 4px;
-  }
   /* Archived experiments live in a bounded, self-scrolling box so 41 of them
      never take over the panel; "Hide" sits right below it, always visible. */
-  .q-archive-box {
+  /* ── SHARED SCROLLBOX ──────────────────────────────────────────────
+     One overflow treatment for every bounded list in the app (the quest
+     panel's archived experiments, the Mirror's brief history). Instead of
+     truncating a list to N items, it scrolls -- so W27 is still reachable
+     by scrolling back, the panel never stretches down the screen, and both
+     panels behave identically.
+
+     The trick is WHERE the scrollbar sits. A plain `overflow-y:auto` puts
+     the 4px track at the content's right edge -- directly on top of the
+     experiment × / status chip. The negative margin + matching padding
+     pushes the BORDER box 10px out into the panel's 20-22px padding, while
+     the CONTENT box stays exactly where it was. Result: rows keep their
+     full width and stay flush with the unarchived rows above them, and the
+     track floats 6px clear of the × in the gutter. Nothing overlaps,
+     nothing shifts. (Thumb styling comes from the global * rule.) */
+  .u-scrollbox {
     max-height: 200px;
     overflow-y: auto;
-    margin: 4px 0 2px;
+    margin-right: -10px;
+    padding-right: 10px;
+    /* Firefox: thin overlay bar, same whisper thumb as webkit. */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.10) transparent;
   }
-  .q-archive-toggle:hover { color: var(--peach); }
+  /* Closed loops: a history you scan, not a list you act on. Tighter rhythm
+     than the live rows above, and a hairline to mark where "in motion" ends. */
+  .q-archive-box {
+    display: flex; flex-direction: column; gap: 2px;
+    /* No divider. /* line removed 2026-09-19 -- only two rules survive app-wide: the peach->lilac .p-hair under each panel title, and the quest progress fill. */
+       With the line gone, the step from the last live row to the first closed
+       one is carried by space alone: 5px + the 3px .q-exps gap = 8px -- the
+       SAME 8px that sits above "+ Add experiment". Every break in this panel
+       is one size now. */
+    margin: 5px 0 2px;
+    padding-top: 0;
+    /* EXACTLY three rows -- no sliver of a fourth. The usual UX advice is to
+       let a partial row peek so people know it scrolls, and Ivy's call is to
+       skip that here: the scrollbar says it, and a clipped row reads as a
+       rendering bug rather than an invitation.
+       The row height is PINNED (not measured) so the arithmetic is exact --
+       an unpinned row let a few px of row four through. Safe because closed
+       experiments never show a stages sub-row (.q-exp.finished .q-stages is
+       display:none), so an archived row is always exactly one line. */
+    --archive-row: 20px;
+    --archive-gap: 2px;
+    max-height: calc(var(--archive-row) * 3 + var(--archive-gap) * 2);
+    /* inherits max-height / scroll from .u-scrollbox */
+    margin-right: -10px;
+  }
+  /* ⚠️ flex: 0 0 auto is LOAD-BEARING. This is a column flex container with a
+     max-height, and flex items default to flex-shrink:1 -- so 106 closed loops
+     in a 200px box each got crushed to ~2px and the rows printed on top of
+     each other. (It looked incredible. It was unreadable.) Rows must keep
+     their natural height and let the box SCROLL instead of squashing them. */
+  .q-archive-box { gap: var(--archive-gap); }
+  .q-archive-box .q-exp { flex: 0 0 auto; height: var(--archive-row); min-height: 0; }
 
   /* Pause-quest row -- small inline action under the experiment list.
      Lets the user park a quest without completing it (e.g. "Learn Rive"
      when she's not working on Rive this week). Paused quests show up in
      the switcher with a "· paused" tag and don't count toward the
      "carries N quests in parallel" taste line. */
-  /* Left-aligned with the rest of the panel content, evenly spaced.
-     -7px offsets the first button's padding so its text lines up
-     exactly with "+ Add experiment" / the body copy. */
+  /* Spread edge to edge: the first button's text lines up with "+ Add
+     experiment" / the body copy, the last one lands flush on the panel's
+     right content edge (same edge as the progress bar, the status chips and
+     the header's minimize). The negative margins cancel each end button's
+     6px padding so it's the TEXT that's flush, not the hit box. And
+     space-between hands all the leftover width to the two gaps, which is
+     where the extra breathing room comes from. */
   .q-pause-row {
     margin-top: 2px;
     padding-top: 0;
@@ -2562,8 +2874,10 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
+    justify-content: space-between;
     gap: 12px;
     margin-left: -6px;
+    margin-right: -6px;
   }
   /* When the actions are open, tuck the stats line tighter to them so the
      complete/pause/delete row sits right under ⋯ instead of floating low. */
@@ -2575,7 +2889,11 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   .q-manage {
     font-family: var(--mono); font-size: 12px; font-weight: 400; line-height: 1;
     color: var(--text-whisper); cursor: pointer; user-select: none;
-    margin-left: auto; padding: 0 6px;
+    /* -6px cancels the right padding so the DOTS themselves are flush with the
+       panel edge (and so with the minimize directly above). The padding stays
+       as hit area. The trailing letter-space after the last dot is dead width
+       too, hence the extra -2px. */
+    margin-left: auto; padding: 0 6px; margin-right: -8px;
     letter-spacing: 0.12em;   /* breathe the three dots apart -- middle ground */
     opacity: 0;               /* hidden until the panel is hovered */
     transition: opacity 0.18s ease, color 0.15s;
@@ -2598,7 +2916,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   }
   .q-pause-btn {
     font-family: var(--mono); font-size: 9px;
-    letter-spacing: 0.12em; text-transform: lowercase;
+    letter-spacing: 0.12em; text-transform: none;
     color: var(--text-whisper);
     cursor: pointer;
     user-select: none;
@@ -2622,18 +2940,18 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
      the whole quest. */
   .q-complete-row {
     margin-top: 14px;
-    padding-top: 12px;
-    border-top: 1px solid var(--panel-inner-line);
+    padding-top: 0;   /* line removed 2026-09-19 -- only two rules survive app-wide: the peach->lilac .p-hair under each panel title, and the quest progress fill. */
   }
+  /* Matches the Mirror CTA family (.u-brief-cta / copy-context): two-layer
+     background -- dark fill clipped to padding-box + peach->lilac stroke on
+     border-box -- gradient-clipped label, full gradient fill on hover with
+     the label going void-dark. One primary-action language everywhere. */
   .q-complete-btn {
     appearance: none; -webkit-appearance: none;
     margin: 0; font: inherit;
     position: relative;
     width: 100%;
     padding: 12px 14px;
-    /* CTA treatment (matches the desktop app + the Compose/Save CTAs): dark fill
-       (padding-box) + peach->lilac gradient stroke (border-box). Hover: the fill
-       becomes the full gradient + the label goes void-dark. */
     background:
       linear-gradient(135deg, #151419, #151419) padding-box,
       linear-gradient(135deg, rgba(232,149,106,0.5), rgba(167,139,223,0.5)) border-box;
@@ -2687,7 +3005,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
      armed confirm (see .armed) prevents the accidental-archive disaster. */
   .q-finish-btn {
     font-family: var(--mono); font-size: 9px;
-    letter-spacing: 0.12em; text-transform: lowercase;
+    letter-spacing: 0.12em; text-transform: none;
     color: var(--text-whisper);
     cursor: pointer; user-select: none;
     padding: 3px 7px; border-radius: 4px;
@@ -2698,7 +3016,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
      goes tomato. Two-step confirm + undo toast (mirrors complete). */
   .q-del-btn {
     font-family: var(--mono); font-size: 9px;
-    letter-spacing: 0.12em; text-transform: lowercase;
+    letter-spacing: 0.12em; text-transform: none;
     color: var(--text-whisper);
     cursor: pointer; user-select: none;
     padding: 3px 7px; border-radius: 4px;
@@ -2720,15 +3038,24 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
      by default; this reveals them so an accidental archive is never
      permanent. */
   .q-sw-archived {
+    display: inline-flex; align-items: center; justify-content: center;
+    line-height: 1;
     font-family: var(--mono); font-size: 9px;
     letter-spacing: 0.12em; text-transform: uppercase;
+    /* Same recessed fill + hairline as the Mirror's "Currently" block, so the
+       two "quiet container" surfaces in the app match. The old --ink text on
+       this fill was near-invisible; whisper reads as put-away without hiding. */
     color: var(--text-whisper);
     cursor: pointer; user-select: none;
-    padding: 4px 9px; border-radius: 5px;
-    border: 1px dashed rgba(255,255,255,0.12);
-    transition: color 0.15s, border-color 0.15s;
+    padding: 5px 9px 5px calc(9px + 0.12em);
+    border-radius: 5px;
+    border: 0;   /* no stroke -- the recessed fill is the edge */
+    background: rgba(0,0,0,0.18);
+    transition: color 0.15s, background 0.15s;
   }
-  .q-sw-archived:hover { color: var(--lilac); border-color: rgba(167,139,223,0.32); }
+  /* Fill holds steady on hover -- the text going lilac is signal enough, and a
+     grey wash on a recessed well just muddies it. */
+  .q-sw-archived:hover { color: var(--lilac); }
   .q-sw-btn.completed { opacity: 0.55; border-style: dashed !important; }
   .q-sw-btn.completed:hover { opacity: 0.85; }
 
@@ -3173,10 +3500,10 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     margin-bottom: 10px;
     display: flex; align-items: center; gap: 6px;
   }
-  .a-label::after {
-    content: ''; flex: 1; height: 1px;
-    background: rgba(255,255,255,0.05);
-  }
+  /* No trailing rule beside the section label. Only two lines survive in the
+     whole app: the peach->lilac .p-hair under each panel title, and the quest
+     progress fill. (The Brief history keeps its ROW separators -- those divide
+     rows inside a list, which is a different job from dividing sections.) */
 
   /* Collapsible sections in Claude panel.
      Strategy: every section label has zero margin-bottom. The body owns its
@@ -3197,6 +3524,10 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     color: var(--text-whisper);
     transition: transform 0.2s ease;
     transform-origin: center;
+    /* the triangle glyph sits low in its box; lift it ~1px so it reads centered
+       with the label. `top` (not transform) so the open-state rotate is unaffected. */
+    position: relative;
+    top: -1px;
   }
   /* Expanded: the whole label (carrot + words) goes peach so the open section
      is easy to spot and re-collapse. Minimized = back to the whisper default. */
@@ -3279,11 +3610,21 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   .a-sess-body .a-sess-hl { color: var(--peach); font-weight: 500; }
 
   /* ATTACHED -- which quest this terminal is linked to */
+  /* The whole card is the click target for "open this build's folder". */
+  .a-attached-open { cursor: pointer; }
+  .a-attached-open:hover #a-attached-repo { text-decoration: underline; }
+  /* Hovering the Figma link means Figma, not the folder. */
+  .a-attached-open:has(#a-attached-figma:hover) #a-attached-repo { text-decoration: none; }
+  /* DARK wash, not a white one. A white overlay LIGHTENS whatever is under
+     it -- and what's under it is the panel's own top-left-to-bottom-right
+     gradient, so the card amplified that and genuinely was lighter on the
+     left. A black wash recedes instead: it reads as a well cut into the
+     panel, and it looks the same wherever it sits on the gradient. */
   .a-attached {
     display: flex; align-items: flex-start; gap: 10px;
     padding: 12px 14px;
-    background: rgba(255,255,255,0.035);
-    border: 1px solid rgba(255,255,255,0.012);
+    background: rgba(0,0,0,0.18);
+    border: 0;   /* no stroke -- the recessed fill is the edge */
     border-radius: 10px;
   }
   .a-attached-mark {
@@ -3305,7 +3646,12 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     font-family: var(--mono); font-size: 10px;
     letter-spacing: 0.08em;
     color: var(--text-whisper);
+    /* One line: Day · path · Figma. The PATH is the only part that gives way
+       (fitRepoLabel shortens it from the front); day + Figma never squeeze. */
+    display: flex; align-items: baseline; white-space: nowrap; min-width: 0;
   }
+  .a-attached-meta > * { flex-shrink: 0; }
+  .a-attached-meta #a-attached-repo { flex-shrink: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
   .a-attached-meta .sep { color: rgba(255,255,255,0.2); margin: 0 5px; }
 
   /* PAST -- browsable daily summaries */
@@ -3847,7 +4193,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
       linear-gradient(135deg, rgba(232,149,106,0.5), rgba(167,139,223,0.5)) border-box;
     border: 1px solid transparent;
     border-radius: 10px;
-    padding: 12px 14px;
+    padding: 12px 16px;   /* tier 3 (11px mono CTAs) */
     color: var(--cream);
     font-family: var(--mono); font-size: 11px;
     letter-spacing: 0.14em; text-transform: uppercase;
@@ -3877,19 +4223,20 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   .u-brief-cta:hover .u-brief-cta-icon { color: #100F11; }
   .u-brief-cta:hover .u-brief-cta-text { -webkit-text-fill-color: #100F11; }
   .u-brief-cta.composing { opacity: 0.7; pointer-events: none; }
+  /* Was a one-line path label (uppercase, nowrap, ellipsis). It's a CAPTION
+     now -- it says what the brief / case story actually IS, since the purple
+     path link is gone and the CTA above opens the artifact directly. So it
+     wraps, drops the caps, and loses most of the tracking: sentence case at
+     0.12em tracking is genuinely hard to read. */
   .u-brief-meta {
-    margin-top: 12px;
+    margin-top: 10px;
     color: var(--text-whisper);
     font-family: var(--mono); font-size: 9px;
-    letter-spacing: 0.12em; text-transform: uppercase;
+    letter-spacing: 0.03em; text-transform: none;
     text-align: left;
-    line-height: 1.6;
-    /* Long quest slugs (e.g. design-technologist) must never wrap to a second
-       line -- keep it one clean line, ellipsis at the edge. The full path is
-       still the element's text, so the click-to-open folder still works. */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    line-height: 1.7;
+    white-space: normal;
+    max-width: 30em;
   }
   .u-brief-meta em { color: var(--lilac); font-style: normal; }
   #u-brief-open { cursor: pointer; }
@@ -3903,20 +4250,23 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   .u-open-path { color: var(--lilac); cursor: pointer; }
   .u-open-path:hover { text-decoration: underline; }
   .u-brief-list {
-    margin-top: 14px;
+    margin-top: 8px;
     list-style: none;
     display: flex; flex-direction: column; gap: 1px;
-    /* Cap the history so accumulating weeks scroll inside this area instead
-       of stretching the Mirror panel down the screen. */
-    max-height: 232px;
-    overflow-y: auto;
-    padding-right: 4px;
+    /* Scroll + gutter come from .u-scrollbox so this and the quest panel's
+       archive box behave identically. Only the height differs: the brief rows
+       are taller and the Mirror has less room to give, so ~5 weeks show and
+       the rest scroll. The full history is still reachable back to W27. */
+    /* Exactly 3 rows (each 30px: a 19px control + 5px padding top/bottom +
+       the 1px separator), matching the quest archive's three closed loops.
+       No half-row peek in either list -- the scrollbar carries that. */
+    max-height: 90px;
   }
-  .u-brief-list::-webkit-scrollbar { width: 4px; }
-  .u-brief-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 2px; }
   .u-brief-list li {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 7px 0;
+    /* 5px, was 7. The row's own controls (Publish / Open) already carry 5px of
+       vertical padding, so 7 on top of that double-counted the air. */
+    padding: 5px 0;
     font-family: var(--mono); font-size: 11px;
     color: var(--text);
     border-bottom: 1px solid rgba(255,255,255,0.04);
@@ -3924,31 +4274,43 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     transition: color 0.15s, background 0.15s;
   }
   .u-brief-list .u-brief-row-meta { cursor: pointer; }
-  .u-brief-list .u-brief-row-meta:hover { color: var(--peach); }
+  .u-brief-list .u-brief-row-meta:hover { color: var(--cream); background: none; }
   .u-brief-list li:last-child { border-bottom: 0; }
   .u-brief-list .u-brief-row-name { color: var(--text); }
-  .u-brief-list .u-brief-row-meta { color: var(--text-whisper); font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; }
+  .u-brief-list .u-brief-row-meta {
+    color: var(--lilac); font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 5px 9px; border-radius: 5px;   /* tier 1 */
+    transition: color 0.18s, background 0.18s;
+  }
   .u-brief-list .u-brief-row-actions {
     display: inline-flex; align-items: center; gap: 12px;
   }
   /* Publish button -- ghost styling so it doesn't compete with the row
      itself, then warms to peach on hover. Disabled state during the
      push; lilac when done (one-shot success). */
+  /* Publish and Open read as one colour system with the rest of the app now:
+     PEACH = the action that does something (publish pushes it to the web),
+     LILAC = the link that opens a document (same as the Living Design System
+     and the ~/ folder paths). No idle fill on either -- colour alone carries
+     the difference, and the fill is reserved for hover, so the row stays calm
+     until you're actually on it. */
   .u-brief-row-act {
     appearance: none; -webkit-appearance: none;
     background: none;
-    border: 1px solid transparent; /* no stroke -- ghost text action, color carries state */
-    border-radius: 4px;
-    padding: 3px 8px;
+    border: 0;
+    border-radius: 5px;   /* tier 1 */
+    padding: 5px 9px;
     font-family: var(--mono); font-size: 9px;
     letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--text-mute);
+    color: var(--peach);
     cursor: pointer;
     transition: color 0.18s, background 0.18s;
   }
   /* Publish is the primary row action -- warms to a peach fill pill on hover
      so it carries more weight than the plain "open" link next to it. */
-  .u-brief-row-act:hover { color: var(--peach); background: rgba(232,149,106,0.08); }
+  /* No fill on hover, on either action -- just a brighten. A box appearing
+     under the cursor was the thing Ivy didn't want in the first place. */
+  .u-brief-row-act:hover { color: var(--cream); background: none; }
   .u-brief-row-act.publishing { color: var(--text-mute); cursor: progress; }
   .u-brief-row-act.published {
     color: var(--lilac);
@@ -4025,6 +4387,13 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
          OS title bar already names the app. Keeps one slim, native-feeling bar. -->
     <span class="mb-panels" id="mb-panels">
       <button class="mb-panels-btn" id="mb-panels-btn" type="button" aria-haspopup="true" aria-expanded="false" title="Show or hide panels (also in the View menu)">⊞ Panels</button>
+      <!-- Float's hover tip lives HERE (not in the Float span) so it opens in
+           exactly the Panels popover's spot: same anchor, same top/left.
+           Shown via #menubar:has(#mb-pin:hover). -->
+      <span class="mb-tip" id="mb-pin-tip" role="tooltip">
+        <span class="mb-tip-row"><span>Float on top</span><span class="mb-tip-key">⌥U</span></span>
+        <span class="mb-tip-row"><span>Move window</span><span class="mb-tip-key">⌥ drag</span></span>
+      </span>
       <div class="mb-panels-pop" id="mb-panels-pop">
         <span class="mb-toggle on" data-panel="quest"><span class="mb-tog-name">Quest</span><span class="mb-tog-key">⌘1</span></span>
         <span class="mb-toggle on" data-panel="claude"><span class="mb-tog-name">Mirror</span><span class="mb-tog-key">⌘2</span></span>
@@ -4034,7 +4403,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
         <span class="mb-toggle" data-panel="appearance"><span class="mb-tog-name">Settings</span><span class="mb-tog-key">⌘,</span></span>
       </div>
     </span>
-    <span class="mb-pin on" id="mb-pin" title="Float on top: Unicorn stays above your other windows, beside the terminal. Click to let other apps come forward instead (⌥U).">⊹ Float</span>
+    <span class="mb-pin on" id="mb-pin" aria-describedby="mb-pin-tip">⊹ Float</span>
     <span class="mb-right">
       <span id="mb-quest">Build Unicorn</span>
       <span class="mb-sep">·</span>
@@ -4112,15 +4481,17 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     </div>
     <div class="p-hair"></div>
     <div class="q-switcher" id="q-switcher"></div>
-    <div class="p-title" id="q-title">—</div>
+    <div class="q-title-row">
+      <div class="p-title" id="q-title">—</div>
+    </div>
     <div class="q-sub-row">
       <div class="p-sub" id="q-sub">—</div>
       <span class="q-manage" id="q-manage" role="button" title="Quest actions — complete, pause, delete">···</span>
     </div>
     <div class="q-pause-row" id="q-pause-row">
-      <span class="q-finish-btn" id="q-finish-btn" title="Wrap this quest -- archives it (recoverable). Click twice to confirm.">complete quest</span>
-      <span class="q-pause-btn" id="q-pause-btn" title="Pause this quest -- it stays in the switcher but stops counting as active">pause quest</span>
-      <span class="q-del-btn" id="q-del-btn" title="Delete this quest -- removes it (undo available). Click twice to confirm.">delete quest</span>
+      <span class="q-finish-btn" id="q-finish-btn" title="Wrap this quest -- archives it (recoverable). Click twice to confirm.">Complete quest</span>
+      <span class="q-pause-btn" id="q-pause-btn" title="Pause this quest -- it stays in the switcher but stops counting as active">Pause quest</span>
+      <span class="q-del-btn" id="q-del-btn" title="Delete this quest -- removes it (undo available). Click twice to confirm.">Delete quest</span>
     </div>
     <div class="q-prog"><span id="q-fill"></span></div>
     <div class="q-exps" id="q-list"></div>
@@ -4151,9 +4522,9 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     </div>
     <div class="c-calendar" id="c-calendar"></div>
     <div class="c-foot">
-      <div class="c-meta" id="c-meta">hover a day to listen</div>
+      <div class="c-meta" id="c-meta">Hover a day to listen</div>
       <button class="c-sound" id="c-sound" aria-label="Toggle sound" title="Toggle ambient music">
-        <span class="c-dot"></span><span id="c-sound-label">sound off</span>
+        <span class="c-dot"></span><span id="c-sound-label">Sound off</span>
       </button>
     </div>
   </section>
@@ -4169,9 +4540,14 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     <div class="p-hair"></div>
 
     <div class="keep-tag-row">
-      <div class="keep-quest-tag" id="keep-quest-tag">Saving to: <em>—</em></div>
+      <!-- Only renders in the NO-ACTIVE-QUEST case now. "Saving to: <quest>"
+           was removed 2026-09-19 -- it named the same thing twice, since the
+           path beside it already reads ~/unicorn/keeps/ and the Mirror's
+           "Currently" block names the active quest. The warning is not
+           redundant though, so that half stays. -->
+      <div class="keep-quest-tag" id="keep-quest-tag" hidden></div>
       <span class="keep-meta-right">
-        <span id="keep-folder" class="keep-folder" hidden title="Open the keeps folder on disk">Folder ↗</span>
+        <span id="keep-folder" class="keep-folder u-open-path" hidden title="Open the keeps folder on disk">~/unicorn/keeps/</span>
         <span id="keep-count" class="keep-count">0</span>
       </span>
     </div>
@@ -4190,6 +4566,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     </div>
 
     <div class="keep-actions">
+      <span class="keep-hint">⌘ Return to save</span>
       <button class="keep-save" id="keep-save">Save</button>
     </div>
 
@@ -4289,6 +4666,8 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
               <span id="a-attached-day">Day 1</span>
               <span class="sep">·</span>
               <span id="a-attached-repo">~/unicorn</span>
+              <span class="sep" id="a-attached-figma-sep" hidden>·</span>
+              <span class="u-open-path" id="a-attached-figma" hidden title="Open this quest’s Figma file -- the settled record of the build">Figma ↗</span>
             </div>
           </div>
         </div>
@@ -4321,8 +4700,8 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
           <button class="u-brief-cta" id="u-brief-cta" title="Compose an HTML brief from this quest's keeps + commits + experiments. Saves to ~/unicorn/briefs/.">
             <span class="u-brief-cta-text">Compose weekly brief</span>
           </button>
-          <div class="u-brief-meta">Shareable HTML · <em id="u-brief-open" title="Open the briefs folder">~/unicorn/briefs/</em></div>
-          <ul class="u-brief-list" id="u-brief-list"></ul>
+          <div class="u-brief-meta">A shareable HTML page, composed from this week's keeps, commits and experiments.</div>
+          <ul class="u-brief-list u-scrollbox" id="u-brief-list"></ul>
         </div>
       </div>
 
@@ -4335,7 +4714,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
           <button class="u-brief-cta" id="u-case-cta" title="Compose the case story -- the global workshop view from this quest's experiments, commits, and CASESTORY.md. For you, not shared.">
             <span class="u-brief-cta-text">Tell the case story</span>
           </button>
-          <div class="u-brief-meta">Workshop · for you · <em id="u-case-open" title="Open the case-story folder">~/unicorn/case-story/</em></div>
+          <div class="u-brief-meta">Your workshop view of the whole quest, drawn from every experiment and commit.</div>
         </div>
       </div>
 
@@ -4652,6 +5031,27 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
 // ══════════════════════════════════════════════════════════════
 let _uiSynth = null;
 let _uiReady = false;
+// ── Audio sleeps when silent ──
+// A running AudioContext keeps the reverb convolution + chorus LFOs working
+// on silence: ~17% CPU all day, measured 2026-09-27 (0.3% suspended). So the
+// context suspends after 20s with no note (longer than any reverb tail), and
+// every instrument wakes it before it plays. A suspended context's clock is
+// frozen, so a note scheduled at Tone.now() simply plays on wake (~ms late).
+const AUDIO_SLEEP_MS = 20000;
+let _audioSleepT = null;
+function _audioWake() {
+  if (typeof Tone === 'undefined') return;
+  try { if (Tone.context.state !== 'running') Tone.context.rawContext.resume(); } catch {}
+  clearTimeout(_audioSleepT);
+  _audioSleepT = setTimeout(() => {
+    try { if (Tone.context.state === 'running') Tone.context.rawContext.suspend(); } catch {}
+  }, AUDIO_SLEEP_MS);
+}
+function _wakeOnPlay(inst) {
+  const play = inst.triggerAttackRelease.bind(inst);
+  inst.triggerAttackRelease = (...args) => { _audioWake(); return play(...args); };
+  return inst;
+}
 async function ensureUiAudio() {
   if (_uiReady || typeof Tone === 'undefined') return;
   try {
@@ -4671,6 +5071,8 @@ async function ensureUiAudio() {
       modulationEnvelope: { attack: 0.004, decay: 0.35, sustain: 0, release: 0.55 }
     }).connect(chorus);
     _uiSynth.volume.value = -3;
+    _wakeOnPlay(_uiSynth);
+    _audioWake(); // start the sleep countdown from launch
     _uiReady = true;
   } catch (e) { /* silent fallback */ }
 }
@@ -4782,8 +5184,11 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   const saveApp = (d) => {
     // Loud-fail: losing quests silently is the worst case (it happened).
     window.__unicornSafeStore(KEY, JSON.stringify(d));
-    // Notify Activity panel so it refreshes in real time
-    window.dispatchEvent(new CustomEvent('unicorn:quests-updated'));
+    // Notify Activity panel so it refreshes in real time. `local` tells this
+    // panel's own listener to skip the re-read -- otherwise every save swapped
+    // `data` for a fresh copy and closures holding the old quest (archive Undo)
+    // edited a stale object: Undo left the quest archived.
+    window.dispatchEvent(new CustomEvent('unicorn:quests-updated', { detail: { local: true } }));
   };
   const uid = () => 'e-' + Date.now().toString(36) + Math.random().toString(36).slice(2,5);
   const isoNow = () => new Date().toISOString();
@@ -4912,6 +5317,15 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   // Toggle for showing archived (finished > 7d) experiments
   let showArchived = false;
   let showArchivedQuests = false;
+  /* ⚠️ ORDER FREEZE. The list is tier-sorted (starting / active / paused /
+     completed), so changing a status re-sorted the list UNDER THE CURSOR --
+     click a chip to move active->paused and the row teleports to the bottom
+     of the paused group, putting a DIFFERENT experiment where your finger
+     already is. Click again and you've just completed the wrong one.
+     So: the moment you touch a chip, the current order is pinned. Rows update
+     in place, nothing moves. The order re-settles when the pointer leaves the
+     list, which is the one moment a reshuffle can't hurt anyone. */
+  let frozenOrder = null;   // array of experiment ids, in pinned order
 
   const calcPct = (q) => {
     if (!q.experiments.length) return 0;
@@ -5084,7 +5498,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
 
     // Pause-button label reflects current state
     const pauseBtnEl = document.getElementById('q-pause-btn');
-    if (pauseBtnEl) pauseBtnEl.textContent = q.paused ? 'resume quest' : 'pause quest';
+    if (pauseBtnEl) pauseBtnEl.textContent = q.paused ? 'Resume quest' : 'Pause quest';
 
     // Tell the Claude panel which quest is now attached
     window.dispatchEvent(new CustomEvent('unicorn:quest-attached', {
@@ -5107,7 +5521,11 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     } else {
       subText = `${finished} Finished · All complete`;
     }
-    subEl.innerHTML = `${subText}${total ? ` <em>· ${pct}%</em>` : ''}`;
+    // No percentage. It was finished/total, so ADDING an experiment dropped
+    // the number -- a score that punishes you for having ideas. The bar keeps
+    // the same ratio as ambient texture (a shrinking bar when you add work is
+    // honest); it's the false precision of "95%" that read as broken.
+    subEl.textContent = subText;
     fillEl.style.width = pct + '%';
 
     // Badge: just total count -- inline body text now carries the breakdown
@@ -5120,33 +5538,48 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     // COMPLETED ones, so a long history of closed loops doesn't stretch the
     // panel. The "Show N more" toggle reveals the rest. Age-independent --
     // count-based -- because freshly-closed loops would all show otherwise.
-    const MAX_COMPLETE_SHOWN = 3;
+    // The "Show N archived" toggle is GONE (2026-09-19). It was a click
+    // standing between Ivy and her own history, and it split closed loops into
+    // two arbitrary groups -- 3 "recent" ones styled loosely, the rest behind a
+    // control. Now every completed experiment renders, and they ALL move into
+    // one bounded scrollbox below the live ones (see the move step further
+    // down). The panel height is capped by the box, not by hiding work, so
+    // scrolling back through all 102 costs nothing.
     const completedNewestFirst = q.experiments
       .filter(exp => exp.status === 'complete')
       .sort((a, b) => new Date(b.completedAt || 0) - new Date(a.completedAt || 0));
-    // The overflow count is independent of the toggle state, so the
-    // "Hide" affordance still renders when everything's expanded.
-    const archived = Math.max(0, completedNewestFirst.length - MAX_COMPLETE_SHOWN);
-    const hiddenCompleteIds = new Set(
-      showArchived ? [] : completedNewestFirst.slice(MAX_COMPLETE_SHOWN).map(e => e.id)
-    );
+    const archived = completedNewestFirst.length;
 
-    const visible = q.experiments
-      .map((exp, i) => ({ exp, i }))
-      .filter(({ exp }) => !hiddenCompleteIds.has(exp.id));
+    const visible = q.experiments.map((exp, i) => ({ exp, i }));
     // Sort: STARTING on top (about to begin) → ACTIVE (in motion) → PAUSED
     // (set aside) → COMPLETE (newest closure first) at the bottom. Each status
     // gets its own tier so a freshly-activated experiment rises above the
     // paused ones instead of sinking below them in creation order.
+    /* DISPLAY labels only -- the stored status stays 'complete' everywhere in
+       the data. "COMPLETE" is an imperative as easily as an adjective, so on a
+       clickable chip it read as "click to complete this" even on something
+       already finished. "COMPLETED" can only be a state. */
+    const STATUS_LABEL = { complete: 'Completed' };
     const rank = (s) => s === 'starting' ? 0 : s === 'active' ? 1 : s === 'paused' ? 2 : s === 'complete' ? 3 : 1;
-    visible.sort((a, b) => {
-      const ra = rank(a.exp.status), rb = rank(b.exp.status);
-      if (ra !== rb) return ra - rb;
-      if (ra === 3) {
-        return new Date(b.exp.completedAt || 0) - new Date(a.exp.completedAt || 0);
-      }
-      return 0; // keep existing order within a tier
-    });
+    if (frozenOrder) {
+      // Pinned: keep exactly the order that was on screen when you reached in.
+      // Anything created since (an agent event landing mid-session) falls to
+      // the end rather than shoving the rows you're working on.
+      const pos = (id) => {
+        const i = frozenOrder.indexOf(id);
+        return i === -1 ? Number.MAX_SAFE_INTEGER : i;
+      };
+      visible.sort((a, b) => pos(a.exp.id) - pos(b.exp.id));
+    } else {
+      visible.sort((a, b) => {
+        const ra = rank(a.exp.status), rb = rank(b.exp.status);
+        if (ra !== rb) return ra - rb;
+        if (ra === 3) {
+          return new Date(b.exp.completedAt || 0) - new Date(a.exp.completedAt || 0);
+        }
+        return 0; // keep existing order within a tier
+      });
+    }
 
     listEl.innerHTML = '';
     // Empty-state message depends on whether anything ARCHIVED exists.
@@ -5158,9 +5591,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     if (visible.length === 0) {
       const empty = document.createElement('div');
       empty.className = 'q-empty';
-      empty.textContent = archived > 0
-        ? `All ${archived} experiments complete. Use the toggle below to revisit.`
-        : 'No experiments yet. Add one below.';
+      empty.textContent = 'No experiments yet. Add one below.';
       listEl.appendChild(empty);
       // No early return -- let the archive toggle render below if any.
     } else {
@@ -5174,9 +5605,8 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
       // listener was getting eaten somewhere we didn't pin down; inline
       // onclick is the simplest, most-resilient binding.
       row.innerHTML = `
+        <span class="q-slot"><span class="q-status" data-id="${exp.id}" data-s="${exp.status}">${STATUS_LABEL[exp.status] || exp.status}</span></span>
         <span class="q-name" data-id="${exp.id}">${escapeHtml(exp.name)}</span>
-        <span class="q-bar"></span>
-        <span class="q-status" data-id="${exp.id}" data-s="${exp.status}">${exp.status}</span>
         <span class="q-delete" data-id="${exp.id}" title="Delete experiment" onclick="event.stopPropagation(); window.__unicornDeleteExp('${exp.id}');">×</span>
       `;
       // Inline stages row -- only when an experiment has a template.
@@ -5240,7 +5670,51 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
       el.addEventListener('click', () => editName(el.dataset.id));
     });
     listEl.querySelectorAll('.q-status').forEach(el => {
-      el.addEventListener('click', () => cycleStatus(el.dataset.id));
+      el.addEventListener('click', () => {
+        const cur = el.dataset.s;
+
+        /* A completed chip ARMS before it reopens. The cycle wraps
+           complete -> active, which is genuinely useful but landed as a
+           surprise: you click something labelled "completed" and it springs
+           back to life. Same two-click confirm as Delete quest / the row ×,
+           so it's a pattern already in the app rather than a new rule.
+           Disarms on mouse-out or after 3s; any re-render clears it too. */
+        if (cur === 'complete' && !el.classList.contains('armed')) {
+          el.classList.add('armed');
+          el.textContent = 'Reopen?';
+          clearTimeout(el._disarm);
+          const disarm = () => {
+            el.classList.remove('armed');
+            el.textContent = 'Completed';
+            clearTimeout(el._disarm);
+          };
+          el._disarm = setTimeout(disarm, 3000);
+          el.addEventListener('mouseleave', disarm, { once: true });
+          return;
+        }
+
+        /* WHICH transitions are allowed to move the row?
+           The pin exists so that cycling a chip doesn't slide a DIFFERENT
+           experiment under your finger mid-click. But it should only hold
+           within the live list. Crossing the live/closed boundary genuinely
+           changes which group a row belongs to, and staying put there looks
+           broken -- a Completed row sitting up among the active ones with the
+           live list's spacing, or a just-reopened one stranded at the bottom
+           under the paused group.
+             paused  -> complete   : crosses into the closed loops -> unpin
+             complete-> active     : crosses back out (reopen)     -> unpin
+             everything else       : stays in the live list        -> pin
+           Unpinning here is also why it's safe: both crossings END the cycle
+           you were clicking through, so there's no third click coming. */
+        const crossesGroup = (cur === 'paused' || cur === 'complete');
+        if (crossesGroup) {
+          frozenOrder = null;
+        } else if (!frozenOrder) {
+          frozenOrder = [...listEl.querySelectorAll('.q-exp .q-delete')]
+            .map(d => d.dataset.id);
+        }
+        cycleStatus(el.dataset.id);
+      });
     });
     } // end of `else` block (visible.length > 0 branch)
 
@@ -5256,33 +5730,23 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
       finishLink.style.display = '';
     }
 
-    // Archive toggle whenever there ARE older-than-7-day completed
-    // experiments. Hidden by default, click to reveal -- reduces clutter.
+    // Every CLOSED loop moves into one bounded, self-scrolling box below the
+    // live ones. The live experiments (starting / active / paused) stay fully
+    // visible and never scroll -- those are what's in motion, and the panel's
+    // whole job is to show them. The finished ones get a tighter row rhythm
+    // inside the box: they're a history you scan, not a list you act on.
     if (archived > 0) {
-      const toggle = document.createElement('div');
-      toggle.className = 'q-archive-toggle';
-      toggle.textContent = showArchived
-        ? `← Hide ${archived} archived`
-        : `Show ${archived} archived →`;
-      toggle.addEventListener('click', () => {
-        showArchived = !showArchived;
-        uiClick(showArchived ? 'E5' : 'C5');
-        render();
+      const box = document.createElement('div');
+      box.className = 'q-archive-box u-scrollbox';
+      // A completed experiment ALWAYS files itself down here immediately --
+      // the pin never holds it up in the live list. Left up there it kept the
+      // live list's looser spacing and read as a rendering fault.
+      completedNewestFirst.forEach(e => {
+        const del = listEl.querySelector(`.q-delete[data-id="${e.id}"]`);
+        const row = del ? del.closest('.q-exp') : null;
+        if (row) box.appendChild(row);
       });
-      if (showArchived) {
-        // Move the archived rows into a bounded, self-scrolling box so 41 of
-        // them don't take over the panel. "Hide" sits right below it -- always
-        // visible, no overlay needed.
-        const box = document.createElement('div');
-        box.className = 'q-archive-box';
-        completedNewestFirst.slice(MAX_COMPLETE_SHOWN).forEach(e => {
-          const del = listEl.querySelector(`.q-delete[data-id="${e.id}"]`);
-          const row = del ? del.closest('.q-exp') : null;
-          if (row) box.appendChild(row);
-        });
-        listEl.appendChild(box);
-      }
-      listEl.appendChild(toggle);
+      listEl.appendChild(box);
     }
   };
 
@@ -5291,6 +5755,16 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   // handlers all live here. This avoids any timing race where the per-
   // element binding loop fires before the elements were laid out (which
   // was making the delete button mysteriously dead).
+  /* Release the pinned order once the pointer is out of the list -- the one
+     moment a reshuffle can't put a different row under your finger. */
+  if (listEl && !listEl.__qOrderRelease) {
+    listEl.__qOrderRelease = true;
+    listEl.addEventListener('mouseleave', () => {
+      if (!frozenOrder) return;
+      frozenOrder = null;
+      render();
+    });
+  }
   if (listEl && !listEl.__qDelegated) {
     listEl.__qDelegated = true;
     listEl.addEventListener('click', (e) => {
@@ -5454,8 +5928,8 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
       </div>
       <input class="q-art-input" placeholder="Path or one-line description" />
       <div class="q-art-actions">
-        <span class="q-art-skip">skip artifact</span>
-        <span class="q-art-save">close the loop ✺</span>
+        <span class="q-art-skip">Skip artifact</span>
+        <span class="q-art-save">Close the loop ✺</span>
       </div>
     `;
     stageEl.parentElement.replaceWith(wrap);
@@ -5807,10 +6281,15 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     toastEl = t;
     requestAnimationFrame(() => t.classList.add('show'));
     t.querySelector('.u-toast-undo').addEventListener('click', () => {
-      q.completed = false;
-      q.completedAt = null;
+      // Re-find the quest in the CURRENT data: an agent event during the 8s
+      // window swaps `data` for a fresh copy, and editing the old `q` would
+      // leave the quest archived (caught by the monthly audit, 2026-09-28).
+      const cur = data.quests.find(x => x.id === q.id) || q;
+      cur.completed = false;
+      cur.completedAt = null;
       saveApp(data);
-      setActiveQ(idx);
+      const at = data.quests.indexOf(cur);
+      setActiveQ(at >= 0 ? at : idx);
       render();
       if (typeof uiClick === 'function') uiClick('F5');
       dismissToast();
@@ -6216,6 +6695,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
 // ══════════════════════════════════════════════════════════════
 (function() {
   const POS_KEY = 'unicorn.panel-positions';
+  const VP_KEY = 'unicorn.panel-viewport'; // window size the positions were saved in
   const loadPos = () => {
     try { return JSON.parse(localStorage.getItem(POS_KEY)) || {}; }
     catch { return {}; }
@@ -6286,13 +6766,15 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
       panel.classList.remove('dragging');
       handle.classList.remove('dragging');
       try { handle.releasePointerCapture(e.pointerId); } catch {}
-      // Persist
+      // Persist -- with the window size they were placed in, so a launch in
+      // a different-sized window can re-fit them (see fitRestored below).
       const positions = loadPos();
       positions[panelId(panel)] = {
         left: panel.style.left,
         top: panel.style.top
       };
       savePos(positions);
+      try { localStorage.setItem(VP_KEY, JSON.stringify({ w: innerWidth, h: innerHeight })); } catch {}
     };
     handle.addEventListener('pointerup', endDrag);
     handle.addEventListener('pointercancel', endDrag);
@@ -6360,6 +6842,21 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     });
     lastVW = vw; lastVH = vh;
   };
+  // At LAUNCH, re-fit restored positions from the window size they were saved
+  // in. Resize already reflowed, but launch didn't: positions saved in a
+  // full-screen window restored into the default 1440px one put Mirror + Keep
+  // past the right edge -- "both panels are missing" (2026-09-27). With no
+  // recorded size (positions saved before this fix), just pull every panel
+  // back inside the window.
+  const fitRestored = () => {
+    if (window.GUEST_PREVIEW) return;
+    let vp = null;
+    try { vp = JSON.parse(localStorage.getItem(VP_KEY)); } catch {}
+    lastVW = (vp && vp.w) || innerWidth;
+    lastVH = (vp && vp.h) || innerHeight;
+    reflowPanels();
+  };
+  fitRestored();
   let rzTimer = null;
   window.addEventListener('resize', () => {
     clearTimeout(rzTimer);
@@ -6654,6 +7151,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
 
   // Public API: append an event to today's session
   window.__unicornAddEvent = (text, hl = []) => {
+    rollOver(); // app open past midnight -> file yesterday first
     const events = loadEvents();
     events.push({ ts: Date.now(), text, hl });
     saveEvents(events);
@@ -6665,6 +7163,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   // skip. Used by the backfill (below) and any future bridge that needs
   // to re-derive events without creating duplicates. Renders if added.
   window.__unicornAddEventOnce = (id, text, ts) => {
+    rollOver();
     const events = loadEvents();
     if (events.some(e => e.id === id)) return false;
     events.push({ id, ts: ts || Date.now(), text, hl: [] });
@@ -6925,8 +7424,14 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   renderYesterday();
   backfillToday();
 
-  // Refresh "X minutes ago" every minute
-  setInterval(renderSession, 60 * 1000);
+  // Refresh "X minutes ago" every minute; also roll the day over at midnight
+  // (it used to roll only at launch, so an overnight session merged days).
+  setInterval(() => {
+    const before = localStorage.getItem(KEY_DAY);
+    rollOver();
+    renderSession();
+    if (localStorage.getItem(KEY_DAY) !== before) renderPast();
+  }, 60 * 1000);
 })();
 
 // ══════════════════════════════════════════════════════════════
@@ -7472,9 +7977,56 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   // ── Render -- design taste, a tiny living style guide of how Ivy designs.
   //    Short + witty; tight on space. The LDS link auto-shows when the quest
   //    has a living design system (Unicorn does), else prompts to start one. ──
+  // ── Taste from the quest's own file. Once the design is established, the
+  //    quest's agent writes a "## Mirror" section into the build's taste file
+  //    and links it with a quest-taste event (skill: "Taste"):
+  //      ## Mirror
+  //      - Palette: #F4BA82 #E1A170 #AB707F #100F11
+  //      - Type: Ubuntu Sans Mono × BN Decos
+  //      - Voice: Warm, a little absurd
+  //      - Design system: ~/path/living-ds.html
+  //    Palette hexes become chips (max 5); a "Design system" row (local path
+  //    or URL) becomes the "Living Design System ↗" link, same as Unicorn's;
+  //    every other "- Key: value" is a text row (max 6). No section yet =
+  //    the quiet empty state, never a guess. ──
+  const parseTasteMirror = (md) => {
+    const lines = String(md || '').split('\n');
+    const start = lines.findIndex(l => /^##\s+Mirror\s*$/i.test(l.trim()));
+    if (start < 0) return [];
+    const rows = [];
+    for (let i = start + 1; i < lines.length; i++) {
+      const l = lines[i].trim();
+      if (/^#{1,2}\s/.test(l)) break;
+      const m = l.match(/^[-*]\s+\**([^:*]+?)\**\s*:\s*(.+)$/);
+      // "- **Voice:** warm" leaves "** warm" after the colon -- strip it.
+      if (m) rows.push({ k: m[1].trim(), v: m[2].replace(/^\*+\s*/, '').trim() });
+    }
+    return rows;
+  };
+  const DS_KEY = /^(living\s+)?design\s+system$|^(living\s+)?ds$|^lds$/i;
+  const tasteRowHtml = ({ k, v }) => {
+    const key = `<span class="u-taste-k">${escapeHtml(k)}</span>`;
+    if (/^(palette|colou?rs?)$/i.test(k)) {
+      const hexes = (v.match(/#(?:[0-9a-f]{6}|[0-9a-f]{3})\b/gi) || []).slice(0, 5);
+      if (hexes.length) {
+        const chips = hexes.map(h => {
+          const x = h.length === 4 ? h.slice(1).split('').map(c => c + c).join('') : h.slice(1);
+          const [r, g, b] = [0, 2, 4].map(i => parseInt(x.slice(i, i + 2), 16));
+          // Near-black chips vanish on the panel -- give them the void chip's rim.
+          const rim = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255 < 0.12 ? ';border-color:rgba(255,255,255,0.16)' : '';
+          return `<i class="u-chip" style="background:${h}${rim}" title="${h}"></i>`;
+        }).join('');
+        return `<li class="u-taste-row">${key}<span class="u-taste-chips">${chips}</span></li>`;
+      }
+    }
+    const plain = v.replace(/`([^`]*)`/g, '$1').replace(/\*\*([^*]+)\*\*/g, '$1');
+    return `<li class="u-taste-row">${key}<span class="u-taste-v">${escapeHtml(plain)}</span></li>`;
+  };
+
+  let tasteToken = 0;
   const renderTaste = () => {
     const list = document.getElementById('u-taste'); if (!list) return;
-    let isUnicorn = false;
+    let isUnicorn = false, tastePath = null;
     try {
       // Use the ACTIVE quest (the one being viewed), same source as the
       // "Currently" row -- not "first incomplete quest", which was always
@@ -7482,14 +8034,42 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
       const { app } = loadAll();
       const q = getActiveQuest(app);
       isUnicorn = !!(q && /unicorn/i.test(q.name || ''));
+      tastePath = (q && q.taste) || null;
     } catch {}
+    const u = window.unicorn;
+    // Watch follows the active quest (null clears it). Main re-sends
+    // taste-changed on every save, which re-runs this.
+    if (u && u.watchTaste) u.watchTaste(tastePath);
+    const token = ++tasteToken;
     // Taste is PER QUEST -- it accumulates as Unicorn notices how you work on
     // THIS quest. A fresh quest (Living Brief, etc.) hasn't established one, so
     // never spill the Unicorn taste into it. Quiet empty state, no homework.
-    if (!isUnicorn) {
-      list.innerHTML = `<li class="u-taste-empty">Nothing established yet — your taste for this quest fills in as you build.</li>`;
+    const empty = () => {
+      list.innerHTML = `<li class="u-taste-empty">Nothing established yet; your taste for this quest fills in as you build.</li>`;
+    };
+    if (tastePath && u && u.readTaste) {
+      u.readTaste(tastePath).then(md => {
+        if (token !== tasteToken) return; // quest switched mid-read
+        const all = parseTasteMirror(md);
+        const dsRow = all.find(r => DS_KEY.test(r.k));
+        let ds = dsRow ? dsRow.v.replace(/`/g, '').trim() : '';
+        // A bare "living-ds.html" (the skill says save it NEXT TO the taste
+        // file) resolves against the taste file's folder, not the app's cwd.
+        if (ds && !/^(https?:\/\/|~\/|\/)/i.test(ds)) ds = tastePath.replace(/[^/]*$/, '') + ds.replace(/^\.\//, '');
+        const rows = all.filter(r => r !== dsRow).slice(0, 6);
+        if (!rows.length && !ds) { empty(); return; }
+        list.innerHTML = rows.map(tasteRowHtml).join('')
+          + (ds ? `<li class="u-taste-lds" id="u-taste-lds" title="${escapeHtml(ds)}"><em>Living Design System ↗</em></li>` : '');
+        const link = document.getElementById('u-taste-lds');
+        // URL -> browser (window-open handler); local file -> default app.
+        if (link) link.addEventListener('click', () => {
+          if (/^https?:\/\//i.test(ds)) window.open(ds, '_blank');
+          else if (u.openPath) u.openPath(ds);
+        });
+      }).catch(() => { if (token === tasteToken) empty(); });
       return;
     }
+    if (!isUnicorn) { empty(); return; }
     const hasLDS = true;
     list.innerHTML = `
       <li class="u-taste-row"><span class="u-taste-k">Logo</span><span class="u-taste-v"><pre class="u-taste-uc" aria-hidden="true"><span class="uc-l">▐▖</span>
@@ -7505,21 +8085,20 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
       <li class="u-taste-row"><span class="u-taste-k">Type</span><span class="u-taste-v">Ubuntu Mono × Ubuntu Sans</span></li>
       <li class="u-taste-row"><span class="u-taste-k">Sound</span><span class="u-taste-v">Commits have a soundtrack</span></li>
       <li class="u-taste-row"><span class="u-taste-k">Voice</span><span class="u-taste-v">Ships at midnight Pacific</span></li>
-      <li class="u-taste-lds${hasLDS ? '' : ' muted'}" id="u-taste-lds">${hasLDS ? '<em>Living Design System ↗</em>' : 'Start a living design system?'}</li>`
-      // North Star: private (for you, never shared). No label -- just the link,
-      // stacked under the Living Design System. Desktop only, since it opens the
-      // local northstar.html.
-      + ((window.unicorn && window.unicorn.isDesktop)
-        ? `<li class="u-taste-lds" id="u-taste-ns" title="Open your North Star — for you, never shared"><em>North Star ↗</em></li>`
-        : '');
+      <li class="u-taste-lds${hasLDS ? '' : ' muted'}" id="u-taste-lds">${hasLDS ? '<em>Living Design System ↗</em>' : 'Start a living design system?'}</li>`;
+      // North Star row REMOVED 2026-09-19. Three reasons: Ivy never opened it
+      // (that's the whole test); it's a link OUT of a panel whose entire job is
+      // to reflect BACK; and it read stale because nothing keeps the synthesis
+      // in northstar.md current except an agent being explicitly asked to.
+      // The ✷ flag on individual keeps stays -- that gesture actually captures
+      // something -- and northstar.html still lives on disk. If it ever earns a
+      // place in Mirror again, the honest version SHOWS a line from it.
     const lds = document.getElementById('u-taste-lds');
     if (lds && hasLDS) {
       // Open the SHAREABLE, hosted Living Design System (not the local file) --
       // window.open routes through the window-open handler to the browser.
       lds.addEventListener('click', () => window.open('https://grzy.github.io/unicorn-preview/living-ds/', '_blank'));
     }
-    const nsRow = document.getElementById('u-taste-ns');
-    if (nsRow) nsRow.addEventListener('click', () => { if (window.__unicornOpenNorthstar) window.__unicornOpenNorthstar(); });
   };
 
   const renderBreakthroughs = () => {
@@ -7682,6 +8261,24 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     });
   };
 
+  // Long folder paths keep their END visible -- "~/ivy-portfolio/notes/404-art"
+  // becomes "~/…/notes/404-art", then "~/…/404-art" -- so the part that names
+  // the build survives and Figma ↗ stays on the line. Full path on hover.
+  // (Runs after the Figma link is set, since it shares the row.)
+  const fitRepoLabel = () => {
+    const el = document.getElementById('a-attached-repo');
+    const repo = el && el.dataset.repo;
+    if (!el || !repo) return;
+    el.title = repo;
+    const segs = repo.replace(/^~\//, '').split('/').filter(Boolean);
+    const tries = [repo];
+    for (let k = segs.length - 1; k >= 1; k--) tries.push('~/…/' + segs.slice(segs.length - k).join('/'));
+    for (const t of tries) {
+      el.textContent = t;
+      if (!el.clientWidth || el.scrollWidth <= el.clientWidth) break;
+    }
+  };
+
   const renderCurrently = () => {
     const { app } = loadAll();
     const q = getActiveQuest(app);
@@ -7699,7 +8296,22 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         repoEl.dataset.slug = (q.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
       }
     }
+    // The quest's Figma file (quest-figma event) -- shown only when linked.
+    const figUrl = (q && q.figma && /^https:\/\/(www\.)?figma\.com\//i.test(q.figma)) ? q.figma : '';
+    const fig = document.getElementById('a-attached-figma');
+    const figSep = document.getElementById('a-attached-figma-sep');
+    if (fig) { fig.hidden = !figUrl; fig.dataset.url = figUrl; }
+    if (figSep) figSep.hidden = !figUrl;
+    fitRepoLabel();
   };
+  (function () {
+    const fig = document.getElementById('a-attached-figma');
+    if (!fig) return;
+    fig.addEventListener('click', (e) => {
+      e.stopPropagation(); // the card behind it opens the build FOLDER
+      if (fig.dataset.url) window.open(fig.dataset.url, '_blank'); // -> browser / Figma app
+    });
+  })();
 
   const escapeHtml = (s) => String(s).replace(/[&<>"']/g, c => (
     {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]
@@ -7936,6 +8548,8 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   renderAll();
   window.addEventListener('unicorn:signals-updated', renderAll);
   window.addEventListener('unicorn:quests-updated',  renderAll);
+  // Taste file saved by an agent -> just the Taste section re-reads it.
+  if (window.unicorn && window.unicorn.onTasteChanged) window.unicorn.onTasteChanged(renderTaste);
   // Re-render when the active quest changes (per-quest filtering for
   // Proof + Taste needs to react to switches).
   window.addEventListener('unicorn:quest-attached',  renderAll);
@@ -7989,7 +8603,10 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   const loadActive = () => {
     try {
       const data = JSON.parse(localStorage.getItem('unicorn-data') || '{}');
-      const activeQuest = (data.quests || []).find(q => !q.completed) || (data.quests || [])[0];
+      // The quest you're LOOKING at (activeQuestIndex), same as every other
+      // panel -- not "first incomplete", which was always Unicorn.
+      const activeQuest = (typeof data.activeQuestIndex === 'number' && (data.quests || [])[data.activeQuestIndex])
+        || (data.quests || []).find(q => !q.completed) || (data.quests || [])[0];
       let activeExp = null;
       if (activeQuest) {
         activeExp = (activeQuest.experiments || []).find(e => e.status === 'active')
@@ -8844,6 +9461,27 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
 // ══════════════════════════════════════════════════════════════
 (function() {
   const STORAGE_KEY = 'unicorn.keeps';
+  // One-time: keep files moved from ~/unicorn/data/keeps -> ~/unicorn/keeps.
+  // Rewrite stored absolute paths so existing image/video keeps still resolve.
+  (function migrateKeepDirPaths(){
+    try {
+      if (!(window.unicorn && window.unicorn.isDesktop)) return;
+      if (localStorage.getItem('unicorn.keeps-dir-v1')) return;
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const arr = JSON.parse(raw); let changed = false;
+        for (const k of (arr || [])) {
+          for (const key of ['imagePath', 'videoPath']) {
+            if (k && typeof k[key] === 'string' && k[key].indexOf('/unicorn/data/keeps/') !== -1) {
+              k[key] = k[key].replace('/unicorn/data/keeps/', '/unicorn/keeps/'); changed = true;
+            }
+          }
+        }
+        if (changed) localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+      }
+      localStorage.setItem('unicorn.keeps-dir-v1', '1');
+    } catch {}
+  })();
   const TRUNCATE_AT = 400;
   const panel  = document.getElementById('panel-keep');
   const input  = document.getElementById('keep-input');
@@ -8908,12 +9546,22 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
 
   // Holds an image data URL temporarily if the user pastes/drops one
   let pendingImage = null;
+  let pendingImageSrc = null; // disk path of a DROPPED image file (so we can move it into keeps); null for pasted images
+  let pendingVideo = null;   // {path, thumb, name} -- a dropped video file to move into keeps
+  // Keeps mid-save. Shown in the list the instant Save is pressed, memory-only
+  // (never saved), and swapped for the real entry once OCR + the file move
+  // land. OCR's first run of a session can take 8s+ (Vision cold start), and a
+  // Save that shows nothing reads as a failed save -- Ivy re-dropped and
+  // doubled keeps (2026-09-27).
+  let savingKeeps = [];
   const pendingBox = document.getElementById('keep-pending');
   const pendingImg = document.getElementById('keep-pending-img');
   const pendingX   = document.getElementById('keep-pending-x');
   // Back out a pending (attached, not yet saved) screenshot.
   const clearPending = () => {
     pendingImage = null;
+    pendingImageSrc = null;
+    pendingVideo = null;
     if (pendingBox) pendingBox.hidden = true;
     if (pendingImg) pendingImg.removeAttribute('src');
     input.placeholder = DEFAULT_PLACEHOLDER;
@@ -8923,15 +9571,21 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   // Intuitive filename for a kept image: date + caption slug.
   // e.g. 2026-05-28-transparent-background-on-electron. Collisions are
   // deduped on the disk side (-2, -3) so no random id is needed.
+  // Navigable filename: date + quest + caption (quest/caption dropped if absent).
+  // e.g. 2026-06-21-unicorn-keep-panel-video. Falls back to "capture" (not
+  // "screenshot") so videos don't get mislabeled. A real caption is what makes
+  // the folder browsable -- captions become the filename.
   const keepBasename = (k) => {
-    const slug = (k.text || 'screenshot').toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 48) || 'screenshot';
+    const slugify = (s, fb) => String(s || '').toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || fb;
     const date = new Date(k.ts || Date.now()).toISOString().slice(0, 10);
-    return date + '-' + slug;
+    const quest = k.questName ? slugify(k.questName, '') : '';
+    const caption = slugify(k.text, 'capture');
+    return [date, quest, caption].filter(Boolean).join('-');
   };
 
   const render = () => {
-    const all = load();
+    const all = load().concat(savingKeeps);
     const active = getActiveQuest();
     // Scope the visible list to the active quest. Other quests' keeps
     // are not deleted -- they're hidden until you switch to that quest.
@@ -8944,15 +9598,19 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         )
       : [];
     if (tag) {
-      tag.innerHTML = active
-        ? `Saving to: <em>${escapeHtml(active.name)}</em>`
-        : 'No active quest -- pick one in the Quest panel first.';
+      // Silent when a quest IS active (the folder path + Mirror already say
+      // which one). Speaks up only when there's nothing to save into.
+      tag.hidden = !!active;
+      tag.textContent = active ? '' : 'No active quest -- pick one in the Quest panel first.';
     }
     // The count lives in the folder link only ("{N} in folder ↗", arrow on the
     // edge); the separate header count is hidden so the number isn't doubled.
     if (count) count.style.display = 'none';
     const folderEl = document.getElementById('keep-folder');
-    if (folderEl) folderEl.textContent = inScope.length + ' in folder ↗';
+    // The count is dropped. It told you nothing actionable (and read oddly at
+    // zero); the link's job is just "take me to the folder". Path shape, mono
+    // + lilac, no arrow -- the ~/ already says filesystem.
+    if (folderEl) folderEl.textContent = '~/unicorn/keeps/';
 
     list.innerHTML = '';
     if (inScope.length === 0) return; // input + Save speak for themselves
@@ -8965,8 +9623,27 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
       const questTag = k.questName ? ` · <em>${escapeHtml(k.questName)}</em>` : '';
       // Image source: a real file on disk (desktop) or base64 (web fallback).
       const imgSrc = k.imagePath ? ('file://' + k.imagePath) : (k.image || '');
-      const imgHtml = imgSrc ? `<img class="keep-item-img" src="${imgSrc}" alt="kept screenshot" />` : '';
+      // A video keep is a POINTER: thumbnail + "▶ video" badge; click opens the
+      // file on disk. The bytes are never copied into the app.
+      // decoding="async": big retina screenshots decode off the main thread
+      // instead of stalling the panel while the list rebuilds.
+      const saving = !!k._saving;
+      const imgHtml = k.videoPath
+        ? `<div class="keep-item-video"${saving ? '' : ` data-video="${escapeHtml(k.videoPath)}" title="Open video"`}>${k.thumb ? `<img class="keep-item-img" src="${k.thumb}" alt="kept video" decoding="async" />` : '<div class="keep-item-img keep-video-blank"></div>'}<span class="keep-video-badge">▶ video</span></div>`
+        : (imgSrc ? `<img class="keep-item-img" src="${imgSrc}" alt="kept screenshot" decoding="async" loading="lazy"${k.imagePath && !saving ? ` data-open="${escapeHtml(k.imagePath)}" title="Open image"` : ''} />` : '');
+      // A keep mid-save shows its content only -- no delete / flag controls
+      // until it's real (they'd act on an entry that isn't stored yet).
+      if (saving) {
+        item.innerHTML = `
+        <div class="keep-item-meta">${fmtWhen(k.ts)}${questTag}</div>
+        ${k.text ? `<div class="keep-item-text">${escapeHtml(displayText)}</div>` : ''}
+        ${imgHtml}
+      `;
+        list.appendChild(item);
+        return;
+      }
       item.innerHTML = `
+        ${(window.unicorn && window.unicorn.isDesktop) ? `<span class="keep-item-cs${k.caseStory ? ' on' : ''}" data-id="${k.id}" title="${k.caseStory ? 'In the case story — click to remove' : 'Green-flag for the case story'}">●</span>` : ''}
         ${(window.unicorn && window.unicorn.isDesktop) ? `<span class="keep-item-ns${k.northstar ? ' on' : ''}" data-id="${k.id}" title="${k.northstar ? 'In your North Star — click to remove' : 'Add to your North Star'}">✷</span>` : ''}
         <span class="keep-item-delete" data-id="${k.id}" title="Remove">×</span>
         <div class="keep-item-meta">${fmtWhen(k.ts)}${questTag}${truncTag}</div>
@@ -8985,7 +9662,26 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         if (removed && removed.imagePath && window.unicorn && window.unicorn.deleteKeepFiles) {
           try { window.unicorn.deleteKeepFiles([removed.imagePath]); } catch {}
         }
+        // A video keep only POINTS at a file (never copied in), so we do NOT
+        // delete the original on removal -- it's the user's own file.
         render();
+      });
+    });
+    list.querySelectorAll('.keep-item-video').forEach(el => {
+      el.addEventListener('click', () => {
+        const p = el.dataset.video;
+        if (p && window.unicorn && window.unicorn.openPath) {
+          try { window.unicorn.openPath(p); } catch {}
+        }
+      });
+    });
+    // Click an image keep to open the actual file too (same as video).
+    list.querySelectorAll('.keep-item-img[data-open]').forEach(el => {
+      el.addEventListener('click', () => {
+        const p = el.dataset.open;
+        if (p && window.unicorn && window.unicorn.openPath) {
+          try { window.unicorn.openPath(p); } catch {}
+        }
       });
     });
     list.querySelectorAll('.keep-item-ns').forEach(el => {
@@ -8998,8 +9694,40 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         el.classList.toggle('on', k.northstar);
         el.title = k.northstar ? 'In your North Star — click to remove' : 'Add to your North Star';
         if (typeof ensureUiAudio === 'function' && typeof uiSave === 'function') { try { ensureUiAudio().then(() => uiSave()); } catch {} }
+        // Purple macOS Finder label on North-Starred files (the green case-story
+        // flag wins if a keep is both). Same labels-on-disk idea as the green dot.
+        const p = k.videoPath || k.imagePath;
+        if (p && window.unicorn && window.unicorn.setFinderTags) {
+          // Both tags coexist: green = case story, purple = North Star.
+          const tags = [];
+          if (k.caseStory) tags.push('Green');
+          if (k.northstar) tags.push('Purple');
+          try { window.unicorn.setFinderTags(p, tags); } catch {}
+        }
         syncNorthstar(all);
         updateNorthstarFoot(all);
+      });
+    });
+    // Case-story green-flag toggle: marks the keep for the case story + stamps a
+    // green Finder label on the file so the keeps folder shows the picks.
+    list.querySelectorAll('.keep-item-cs').forEach(el => {
+      el.addEventListener('click', () => {
+        const all = load();
+        const k = all.find(x => x.id === el.dataset.id);
+        if (!k) return;
+        k.caseStory = !k.caseStory;
+        save(all);
+        el.classList.toggle('on', k.caseStory);
+        el.title = k.caseStory ? 'In the case story — click to remove' : 'Green-flag for the case story';
+        if (typeof ensureUiAudio === 'function' && typeof uiSave === 'function') { try { ensureUiAudio().then(() => uiSave()); } catch {} }
+        const p = k.videoPath || k.imagePath;
+        if (p && window.unicorn && window.unicorn.setFinderTags) {
+          // Both tags coexist: green = case story, purple = North Star.
+          const tags = [];
+          if (k.caseStory) tags.push('Green');
+          if (k.northstar) tags.push('Purple');
+          try { window.unicorn.setFinderTags(p, tags); } catch {}
+        }
       });
     });
     updateNorthstarFoot(all);
@@ -9060,7 +9788,9 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     const cards = flagged.map(k => {
       const when = new Date(k.ts).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
       const q = k.questName ? `<span class="ns-q">${esc(k.questName)}</span>` : '';
-      const img = k.imagePath ? `<img src="file://${esc(k.imagePath)}" alt="">` : '';
+      const img = k.videoPath
+        ? `<div class="ns-video">${k.thumb ? `<img src="${esc(k.thumb)}" alt="">` : ''}<span class="ns-video-badge">▶ video</span></div>`
+        : (k.imagePath ? `<img src="file://${esc(k.imagePath)}" alt="">` : '');
       const txt = k.text ? `<p>${esc(k.text)}</p>` : '';
       const ocr = (k.ocrText && k.imagePath) ? `<details class="ns-ocr-wrap"><summary>select the text from this image ▾</summary><pre class="ns-ocr">${esc(k.ocrText)}</pre></details>` : '';
       return `<article class="ns-card"><div class="ns-meta">${esc(when)}${q}</div>${txt}${img}${ocr}</article>`;
@@ -9075,8 +9805,8 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   :root{--lilac:#A78BDF;--lilac2:#c8a2ff;--peach:#E8956A;--cream:#F1ECE8}
   *{margin:0;box-sizing:border-box}
   body{background:radial-gradient(120% 90% at 50% -10%,#1a1622 0%,#100F11 60%);color:var(--cream);font-family:'Ubuntu Sans',system-ui,sans-serif;line-height:1.62;padding:8vh 6vw;min-height:100vh}
-  .ns-eyebrow{display:block;max-width:62ch;margin:0 auto 6px;font-family:'Ubuntu Sans Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--lilac)}
-  .ns-synth{max-width:62ch;margin:0 auto}
+  .ns-eyebrow{display:block;margin:0 0 6px;font-family:'Ubuntu Sans Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--lilac)}
+  .ns-synth{margin:0}
   .ns-synth h1{font-family:'Ubuntu Sans Mono',monospace;font-weight:600;font-size:clamp(44px,7vw,80px);letter-spacing:-.01em;margin:.05em 0 .4em;background:linear-gradient(100deg,var(--lilac2),var(--lilac) 38%,var(--peach) 85%);-webkit-background-clip:text;background-clip:text;color:transparent}
   .ns-synth h2{font-family:'Ubuntu Sans Mono',monospace;font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--lilac);margin:36px 0 12px}
   .ns-synth h3{font-size:17px;color:var(--cream);margin:22px 0 6px}
@@ -9088,7 +9818,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   .ns-synth em{font-style:italic;color:var(--lilac2)}
   .ns-synth code{font-family:'Ubuntu Sans Mono',monospace;font-size:.9em;background:rgba(255,255,255,.06);padding:1px 5px;border-radius:4px}
   .ns-synth hr{border:none;border-top:1px solid rgba(255,255,255,.08);margin:32px 0}
-  .ns-keeps{max-width:62ch;margin:7vh auto 0}
+  .ns-keeps{margin:7vh 0 0}
   .ns-keeps-h{font-family:'Ubuntu Sans Mono',monospace;font-weight:600;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--lilac);margin-bottom:18px}
   .ns-cards{display:flex;flex-direction:column;gap:18px}
   .ns-card{border:1px solid rgba(255,255,255,.07);border-radius:14px;background:rgba(255,255,255,.02);padding:18px 20px}
@@ -9096,19 +9826,25 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
   .ns-q{color:var(--lilac)}
   .ns-card p{font-size:16px;color:var(--cream)}
   .ns-card img{display:block;margin-top:12px;max-width:100%;border-radius:10px;border:1px solid rgba(255,255,255,.06)}
+  .ns-video{position:relative;margin-top:12px;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,.06)}
+  .ns-video img{display:block;margin-top:0;max-width:100%;border:0;border-radius:0}
+  .ns-video-badge{position:absolute;left:9px;bottom:9px;font-family:'Ubuntu Sans Mono',monospace;font-size:10px;letter-spacing:.08em;color:#fff;background:rgba(16,15,17,.66);padding:3px 8px;border-radius:6px}
+  .ns-wrap{max-width:62ch;margin:0 auto}
   .ns-ocr-wrap{margin-top:10px}
   .ns-ocr-wrap summary{font-family:'Ubuntu Sans Mono',monospace;font-size:11px;letter-spacing:.04em;color:var(--lilac);cursor:pointer;opacity:.78;list-style:none}
   .ns-ocr-wrap summary::-webkit-details-marker{display:none}
   .ns-ocr-wrap summary:hover{opacity:1}
   .ns-ocr-wrap[open] summary{margin-bottom:8px}
   .ns-ocr{font-family:'Ubuntu Sans Mono',monospace;font-size:12px;line-height:1.5;color:rgba(241,236,232,.6);white-space:pre-wrap;padding:12px 14px;border-radius:10px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.05);max-height:300px;overflow:auto;user-select:text}
-  .ns-empty{max-width:62ch;margin:0 auto;color:rgba(241,236,232,.5);font-style:italic}
-  .ns-foot{max-width:62ch;margin:8vh auto 0;font-family:'Ubuntu Sans Mono',monospace;font-size:11px;letter-spacing:.08em;color:rgba(241,236,232,.32)}
+  .ns-empty{margin:0;color:rgba(241,236,232,.5);font-style:italic}
+  .ns-foot{margin:8vh 0 0;font-family:'Ubuntu Sans Mono',monospace;font-size:11px;letter-spacing:.08em;color:rgba(241,236,232,.32)}
 </style></head><body>
+<div class="ns-wrap">
 <span class="ns-eyebrow">✷ for me, not for sharing</span>
 <main class="ns-synth">${synthHtml}</main>
 ${keepsBlock}${emptyBlock}
 <footer class="ns-foot">maintained by Claude Code · ${flagged.length} flagged keep${flagged.length === 1 ? '' : 's'}</footer>
+</div>
 </body></html>`;
   }
   // Shared opener: sync the North Star html, then open it. Lives on window so
@@ -9125,11 +9861,13 @@ ${keepsBlock}${emptyBlock}
 
   const saveCurrent = async () => {
     let text = input.value.trim();
-    if (!text && !pendingImage) return;
+    if (!text && !pendingImage && !pendingVideo) return;
     // Only sound once something is actually being saved (not on an empty click).
     ensureUiAudio().then(() => { if (typeof uiSave === 'function') uiSave(); });
     const active = getActiveQuest();
     const img = pendingImage;
+    const imgSrcPath = pendingImageSrc; // set when an image FILE was dropped (not pasted)
+    const vid = pendingVideo;
     // Clear the input immediately so the UI feels instant; the OCR + image
     // write (desktop) finish in the background.
     input.value = '';
@@ -9140,6 +9878,18 @@ ${keepsBlock}${emptyBlock}
     setTimeout(() => { saveBtn.classList.remove('done'); saveBtn.textContent = prev; }, 1400);
     if (typeof uiChord === 'function') uiChord(['C5', 'E5', 'G5']);
 
+    const savingId = 'saving-' + Date.now().toString(36);
+    if (img || vid) {
+      savingKeeps.push({
+        id: savingId, ts: Date.now(), _saving: true,
+        questId: active ? active.id : null, questName: active ? active.name : null,
+        text: text || null, image: img || null,
+        videoPath: vid ? vid.path : null, thumb: vid ? (vid.thumb || null) : null
+      });
+      render();
+    }
+    try {
+
     // Read the screenshot's text with native macOS Vision OCR (offline, no API).
     // The FULL text is kept on the entry (selectable later on the North Star
     // page); the first good line auto-titles an untitled keep. Handles both the
@@ -9147,7 +9897,8 @@ ${keepsBlock}${emptyBlock}
     let ocrFull = null;
     if (img && window.unicorn && window.unicorn.isDesktop && window.unicorn.ocrImage) {
       try {
-        const r = await window.unicorn.ocrImage(img);
+        // A dropped file is OCR'd where it sits (no base64 round trip).
+        const r = await window.unicorn.ocrImage(imgSrcPath || img);
         if (typeof r === 'string') { if (!text && r) text = r; }
         else if (r) { ocrFull = r.full || null; if (!text && r.title) text = r.title; }
       } catch {}
@@ -9161,19 +9912,47 @@ ${keepsBlock}${emptyBlock}
       text: text || null,
       ocrText: ocrFull,   // full text read from the image (desktop OCR)
       image: null,      // base64 only as a web fallback
-      imagePath: null   // desktop: real file on disk
+      imagePath: null,  // desktop: real file on disk
+      videoPath: null,  // a video keep POINTS to a file on disk (not copied in)
+      thumb: null       // small base64 first-frame thumbnail for a video keep
     };
 
     if (img) {
-      if (window.unicorn && window.unicorn.isDesktop && window.unicorn.writeKeepImage) {
+      if (window.unicorn && window.unicorn.isDesktop) {
         try {
-          const res = await window.unicorn.writeKeepImage(keepBasename(entry), img);
-          if (res && res.ok) entry.imagePath = res.path;
-          else entry.image = img; // write failed -> keep base64 so nothing's lost
+          if (imgSrcPath && window.unicorn.importKeepFile) {
+            // dropped an image FILE -> move the real file into keeps (off the desktop)
+            const res = await window.unicorn.importKeepFile(imgSrcPath, keepBasename(entry), entry.questName);
+            if (res && res.ok) entry.imagePath = res.path;
+            else if (window.unicorn.writeKeepImage) {
+              const r2 = await window.unicorn.writeKeepImage(keepBasename(entry), img, entry.questName);
+              if (r2 && r2.ok) entry.imagePath = r2.path; else entry.image = img;
+            } else entry.image = img;
+          } else if (window.unicorn.writeKeepImage) {
+            // pasted image (no source file) -> write the base64 into keeps
+            const res = await window.unicorn.writeKeepImage(keepBasename(entry), img, entry.questName);
+            if (res && res.ok) entry.imagePath = res.path; else entry.image = img;
+          } else entry.image = img;
         } catch { entry.image = img; }
       } else {
         entry.image = img; // web preview has no disk
       }
+    }
+    if (vid) {
+      if (window.unicorn && window.unicorn.isDesktop && window.unicorn.importKeepFile) {
+        try {
+          const res = await window.unicorn.importKeepFile(vid.path, keepBasename(entry), entry.questName);
+          entry.videoPath = (res && res.ok) ? res.path : vid.path; // fall back to the pointer
+        } catch { entry.videoPath = vid.path; }
+      } else {
+        entry.videoPath = vid.path; // web / no-IPC fallback: just point at it
+      }
+      entry.thumb = vid.thumb || null;
+    }
+    // Decode the on-disk copy before swapping it in, so the card doesn't
+    // blink empty between the in-memory preview and the real file.
+    if (entry.imagePath) {
+      try { const pre = new Image(); pre.src = 'file://' + entry.imagePath; await pre.decode(); } catch {}
     }
     const arr = load();
     arr.push(entry);
@@ -9181,8 +9960,16 @@ ${keepsBlock}${emptyBlock}
     // base64 screenshots) in memory and only mirrors image-less keeps to
     // localStorage, so a pasted screenshot can't overflow quota / throw a
     // "storage full" toast in the public preview. The thumbnail still renders.
+    savingKeeps = savingKeeps.filter(k => k.id !== savingId);
     save(arr);
     render();
+    } finally {
+      // Never strand a mid-save card, even if something above threw.
+      if (savingKeeps.some(k => k.id === savingId)) {
+        savingKeeps = savingKeeps.filter(k => k.id !== savingId);
+        render();
+      }
+    }
   };
 
   saveBtn.addEventListener('click', saveCurrent);
@@ -9192,12 +9979,20 @@ ${keepsBlock}${emptyBlock}
     if (e.metaKey || e.ctrlKey) { e.preventDefault(); saveCurrent(); return; }
     // With a screenshot attached, plain Enter saves (with or without a
     // caption); Shift+Enter still adds a newline for a longer caption.
-    if (pendingImage && !e.shiftKey) { e.preventDefault(); saveCurrent(); }
+    if ((pendingImage || pendingVideo) && !e.shiftKey) { e.preventDefault(); saveCurrent(); }
   });
 
   // Capture an image file (paste or drop) as a data URL, ready to Save.
   const attachImageFile = (file) => {
     if (!file || !file.type || !file.type.startsWith('image/')) return false;
+    // A dropped image FILE has a real disk path -> remember it so we move the
+    // file into keeps (off the desktop) on save. Pasted clipboard images have
+    // no path -> pendingImageSrc stays null and we write the base64 into keeps.
+    pendingImageSrc = null;
+    pendingVideo = null;
+    if (window.unicorn && window.unicorn.getPathForFile) {
+      try { const p = window.unicorn.getPathForFile(file); if (p) pendingImageSrc = p; } catch {}
+    }
     const reader = new FileReader();
     reader.onload = (ev) => {
       pendingImage = ev.target.result;
@@ -9209,6 +10004,51 @@ ${keepsBlock}${emptyBlock}
       ensureUiAudio().then(() => { if (typeof uiClick === 'function') uiClick('E5'); });
     };
     reader.readAsDataURL(file);
+    return true;
+  };
+
+  // Make a small first-frame thumbnail (base64 jpeg) from a video File.
+  const makeVideoThumb = (file) => new Promise((resolve) => {
+    try {
+      const v = document.createElement('video');
+      v.muted = true; v.preload = 'metadata';
+      const url = URL.createObjectURL(file);
+      v.src = url;
+      const grab = () => {
+        try {
+          const W = 480;
+          const ratio = (v.videoHeight && v.videoWidth) ? v.videoHeight / v.videoWidth : 0.5625;
+          const c = document.createElement('canvas');
+          c.width = W; c.height = Math.round(W * ratio);
+          c.getContext('2d').drawImage(v, 0, 0, c.width, c.height);
+          resolve(c.toDataURL('image/jpeg', 0.72));
+        } catch { resolve(''); }
+        finally { URL.revokeObjectURL(url); }
+      };
+      v.onloadeddata = () => { try { v.currentTime = Math.min(0.1, (v.duration || 1) * 0.1); } catch { grab(); } };
+      v.onseeked = grab;
+      v.onerror = () => { resolve(''); try { URL.revokeObjectURL(url); } catch {} };
+    } catch { resolve(''); }
+  });
+
+  // Capture a dropped VIDEO as a POINTER: its real disk path (Electron) + a
+  // thumbnail. The bytes are never copied; the keep just references the file.
+  const attachVideoFile = async (file) => {
+    if (!file || !file.type || !file.type.startsWith('video/')) return false;
+    let path = '';
+    if (window.unicorn && window.unicorn.isDesktop && window.unicorn.getPathForFile) {
+      try { path = window.unicorn.getPathForFile(file) || ''; } catch { path = ''; }
+    }
+    if (!path) return false; // no real path (e.g. web preview) -> can't point to it
+    const thumb = await makeVideoThumb(file);
+    pendingImage = null;
+    pendingImageSrc = null;
+    pendingVideo = { path, thumb, name: file.name || 'video' };
+    input.placeholder = 'Add an optional caption, then Save.';
+    if (pendingImg) pendingImg.src = thumb || '';
+    if (pendingBox) pendingBox.hidden = false;
+    input.focus();
+    ensureUiAudio().then(() => { if (typeof uiClick === 'function') uiClick('E5'); });
     return true;
   };
 
@@ -9236,13 +10076,17 @@ ${keepsBlock}${emptyBlock}
   panel.addEventListener('dragleave', (e) => {
     if (!panel.contains(e.relatedTarget)) panel.classList.remove('keep-dragover');
   });
-  panel.addEventListener('drop', (e) => {
+  panel.addEventListener('drop', async (e) => {
     e.preventDefault();
     panel.classList.remove('keep-dragover');
     const files = e.dataTransfer && e.dataTransfer.files;
     if (!files) return;
     for (let i = 0; i < files.length; i++) {
-      if (attachImageFile(files[i])) break; // first image wins, like paste
+      const f = files[i];
+      if (f.type && f.type.startsWith('video/')) {
+        if (await attachVideoFile(f)) return; // a video pointer wins
+      }
+      if (attachImageFile(f)) return; // first image wins, like paste
     }
   });
   // A file dropped anywhere else would make the window navigate to it --
@@ -9280,12 +10124,44 @@ ${keepsBlock}${emptyBlock}
       let changed = false;
       for (const k of arr) {
         if (k.image && !k.imagePath) {
-          const res = await window.unicorn.writeKeepImage(keepBasename(k), k.image);
+          const res = await window.unicorn.writeKeepImage(keepBasename(k), k.image, k.questName);
           if (res && res.ok) { k.imagePath = res.path; delete k.image; changed = true; }
         }
       }
       if (changed) { save(arr); render(); }
     } catch (e) { console.error('[unicorn] keep image migration failed', e); }
+  })();
+
+  // File flat keeps into per-quest folders (keeps/<Quest>/...). The main
+  // process moves only files sitting directly in keeps/ (idempotent), returns
+  // the old->new map, and we heal our own records -- so the running app's
+  // state stays the truth and Finder tags ride along with the rename.
+  (async function migrateKeepsIntoQuestFolders(){
+    if (!(window.unicorn && window.unicorn.isDesktop && window.unicorn.migrateKeeps)) return;
+    try {
+      const items = [];
+      for (const k of load()) {
+        // one-time data fix (2026-07-06, per Ivy): the Lunation screenshot was
+        // saved while the Unicorn quest was active -- it belongs to Lunation.
+        const base = (k.imagePath || k.videoPath || '').split('/').pop() || '';
+        const quest = /lunation/i.test(base) ? 'Lunation' : k.questName;
+        if (k.imagePath) items.push({ path: k.imagePath, quest });
+        if (k.videoPath) items.push({ path: k.videoPath, quest });
+      }
+      if (!items.length) return;
+      const res = await window.unicorn.migrateKeeps(items);
+      const moves = (res && res.moves) || {};
+      if (!Object.keys(moves).length) return;
+      const arr = load();  // re-load after the await so we heal fresh state
+      let changed = false;
+      for (const k of arr) {
+        if (k.imagePath && moves[k.imagePath]) { k.imagePath = moves[k.imagePath]; changed = true; }
+        if (k.videoPath && moves[k.videoPath]) { k.videoPath = moves[k.videoPath]; changed = true; }
+        const base = (k.imagePath || k.videoPath || '').split('/').pop() || '';
+        if (/lunation/i.test(base) && k.questName !== 'Lunation') { k.questName = 'Lunation'; changed = true; }
+      }
+      if (changed) { save(arr); render(); }
+    } catch (e) { console.error('[unicorn] quest-folder migration failed', e); }
   })();
 
   // Self-heal renamed keep images: if a keep's image file is missing but
@@ -9523,7 +10399,7 @@ ${keepsBlock}${emptyBlock}
   const showMeta = (cell) => {
     const n = cell._commits.length;
     if (n === 0) {
-      meta.innerHTML = `<span class="c-msg">quiet</span>`;
+      meta.innerHTML = `<span class="c-msg">Quiet</span>`;
     } else {
       meta.innerHTML = `<span class="c-count-inline">${n} commit${n !== 1 ? 's' : ''}</span>`;
     }
@@ -9675,6 +10551,7 @@ ${keepsBlock}${emptyBlock}
       modulationEnvelope: { attack: 0.004, decay: 0.5, sustain: 0, release: 0.7 }
     }).connect(chorus);
     steelPan.volume.value = -6;
+    _wakeOnPlay(steelPan);
 
     // Bells -- reserved for close-the-loop chord only (not hover playback)
     bells = new Tone.MetalSynth({
@@ -9683,6 +10560,7 @@ ${keepsBlock}${emptyBlock}
       envelope: { attack: 0.002, decay: 0.8, release: 0.25 }
     }).connect(reverb);
     bells.volume.value = -24;
+    _wakeOnPlay(bells);
 
     audioReady = true;
   };
@@ -9734,7 +10612,7 @@ ${keepsBlock}${emptyBlock}
       btn.disabled = false;
       audioOn = true;
       btn.classList.add('on');
-      lbl.textContent = 'sound on';
+      lbl.textContent = 'Sound on';
       // Fade master in. No pad, no drone -- silence until you hover a day.
       masterGain.gain.rampTo(1, 0.5);
       // A welcoming steel-pan flourish in the panel's own beautiful voice --
@@ -9743,7 +10621,7 @@ ${keepsBlock}${emptyBlock}
     } else {
       audioOn = false;
       btn.classList.remove('on');
-      lbl.textContent = 'sound off';
+      lbl.textContent = 'Sound off';
       // Fade everything to silence in 0.5s, then release any ringing notes
       if (masterGain) masterGain.gain.rampTo(0, 0.5);
       setTimeout(() => {
@@ -10635,7 +11513,10 @@ ${keepsBlock}${emptyBlock}
     }
     list.innerHTML = '';
     if (!briefs.length) return;
-    briefs.slice(0, 8).forEach(b => {
+    // No slice cap. The 8-item cut meant older weeks were simply gone; the
+    // shared .u-scrollbox bounds the height instead, so the whole history
+    // stays scrollable back to W27 without stretching the panel.
+    briefs.forEach(b => {
       const li = document.createElement('li');
       // Filename shape: YYYY-Www-quest-slug.html
       const m = b.name.match(/^(\d{4})-W(\d{2})-(.+)\.html$/);
@@ -10646,8 +11527,8 @@ ${keepsBlock}${emptyBlock}
       li.innerHTML = `
         <span class="u-brief-row-name">${ESC(wkText)}</span>
         <span class="u-brief-row-actions">
-          <button class="u-brief-row-act u-brief-publish" data-name="${ESC(b.rel || b.name)}" title="Publish to grzy.github.io/unicorn-preview/briefs and copy the link">publish</button>
-          <span class="u-brief-row-meta">open</span>
+          <button class="u-brief-row-act u-brief-publish" data-name="${ESC(b.rel || b.name)}" title="Publish to grzy.github.io/unicorn-preview/briefs and copy the link">Publish</button>
+          <span class="u-brief-row-meta">Open</span>
         </span>`;
       li.title = b.path;
       // Only the "open" label opens the local file -- NOT the whole row.
@@ -10672,14 +11553,14 @@ ${keepsBlock}${emptyBlock}
           pubBtn.disabled = true;
           pubBtn.classList.add('publishing');
           const original = pubBtn.textContent;
-          pubBtn.textContent = 'publishing…';
+          pubBtn.textContent = 'Publishing…';
           try {
             const res = await window.unicorn.publishBrief(pubBtn.getAttribute('data-name'));
             if (res && res.ok) {
               try { await navigator.clipboard.writeText(res.url); } catch {}
               toast('Published · link copied (live in ~1–2 min)');
               pubBtn.dataset.url = res.url;
-              pubBtn.textContent = 'published';
+              pubBtn.textContent = 'Published';
               pubBtn.classList.remove('publishing');
               pubBtn.classList.add('published');
               pubBtn.disabled = false;  // re-enable so it's clickable (re-opens the link)
@@ -10800,22 +11681,53 @@ ${keepsBlock}${emptyBlock}
   // folder. main resolves it: ~/experiments/<slug> wins when it exists (board
   // builds), else the quest repo, else the unicorn project dir.
   const repoLink = document.getElementById('a-attached-repo');
+  const attachedBlock = document.querySelector('#agent .a-attached');
   if (repoLink) {
     repoLink.classList.add('u-open-path');
-    repoLink.title = 'Open this build’s folder';
-    repoLink.addEventListener('click', async () => {
+
+    /* ⚠️ This deliberately does NOT call window.unicorn.openBuild any more.
+       openBuild lives in the MAIN process, and Unicorn runs as a packaged app
+       (/Applications/Unicorn.app) whose main process is frozen inside the
+       bundle -- only the renderer is loaded live from the repo. So no amount
+       of fixing electron/main.js reaches a running install until it's
+       repackaged, which is why this link stayed broken through three fixes.
+       openBuild was also guessing: it scanned ~/experiments/<slug> and matched
+       ~/experiments/neon/unicorn for the quest named "Unicorn".
+
+       So the renderer resolves the path ITSELF and opens it literally -- the
+       link opens exactly what the label says, no candidate list, no guess.
+       unicorn:paths and unicorn:open-path both exist in the old bundle, and
+       open-path works fine given an ABSOLUTE path (it's a bare shell.openPath,
+       which silently no-ops on a literal "~/..." string). */
+    const resolveAbs = async () => {
+      const repo = repoLink.dataset.repo || '';
+      const p = await window.unicorn.paths();
+      const base = p && p.keepsDir ? p.keepsDir.replace(/\/keeps$/, '') : null;
+      if (!base) return null;
+      const home = base.replace(/\/unicorn$/, '');
+      if (!repo) return base;
+      if (repo.startsWith('~/')) return home + '/' + repo.slice(2);
+      if (repo.startsWith('/')) return repo;
+      return base;   // a bare "org/repo" value isn't a local path at all
+    };
+
+    const openBuildFolder = async () => {
       try {
-        const repo = repoLink.dataset.repo || '';
-        const slug = repoLink.dataset.slug || '';
-        if (window.unicorn.openBuild) {
-          await window.unicorn.openBuild({ repo, slug });
-        } else {
-          const p = await window.unicorn.paths();
-          const proj = p && p.dataDir ? p.dataDir.replace(/\/data$/, '') : null;
-          if (proj) window.unicorn.openPath(proj);
-        }
+        const abs = await resolveAbs();
+        if (!abs) return;
+        console.log('[unicorn] Currently ->', abs);
+        window.unicorn.openPath(abs);
       } catch (e) { console.error('[unicorn] open build folder failed:', e); }
-    });
+    };
+
+    repoLink.addEventListener('click', openBuildFolder);
+    // The WHOLE "Currently" card is the target -- click anywhere in that
+    // filled block and the folder opens; the path underlines to say so.
+    if (attachedBlock) {
+      attachedBlock.classList.add('a-attached-open');
+      attachedBlock.title = 'Open this build’s folder';
+      attachedBlock.addEventListener('click', openBuildFolder);
+    }
   }
 })();
 
@@ -10889,7 +11801,7 @@ ${keepsBlock}${emptyBlock}
   };
 
 
-  const buildCaseStory = ({ q, exps, active, starting, done, commits, timeline, summary, sharpen }) => {
+  const buildCaseStory = ({ q, exps, active, starting, done, commits, timeline, summary, sharpen, keeps = [] }) => {
     // Living summary -- "where it stands now," adapting as the build evolves.
     const summaryHtml = summary.length
       ? summary.map(s => `<div class="cs-sum-row"><div class="cs-sum-label">${ESC(s.label)}</div><div class="cs-sum-body">${ESC(s.body)}</div></div>`).join('')
@@ -10913,6 +11825,23 @@ ${keepsBlock}${emptyBlock}
           ${e.why ? `<p class="cs-why">${ESC(e.why)}</p>` : ''}
         </li>`).join('')}</ol>`
       : '<p class="cs-muted">CASESTORY.md is empty. As decisions and pivots happen, they get written there and feed this timeline.</p>';
+    // The visual spine: this quest's keeps (videos + images), chronological,
+    // caption BELOW the visual (figure-style) so the motion/stills lead and the
+    // text supports. This is what makes the case story mostly-visual.
+    const fmtKeepDate = (ts) => { try { return new Date(ts).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }); } catch { return ''; } };
+    const keepsHtml = (keeps && keeps.length)
+      ? `<div class="cs-gallery">${keeps.map(k => {
+          let media = '';
+          if (k.videoPath) media = `<video src="file://${ESC(k.videoPath)}" controls preload="metadata"${k.thumb ? ` poster="${ESC(k.thumb)}"` : ''}></video>`;
+          else if (k.imagePath) media = `<img src="file://${ESC(k.imagePath)}" alt="${ESC(k.text || '')}" loading="lazy" />`;
+          else if (k.image) media = `<img src="${ESC(k.image)}" alt="${ESC(k.text || '')}" loading="lazy" />`;
+          else return '';
+          const cap = k.text
+            ? `<figcaption>${ESC(k.text)}</figcaption>`
+            : `<figcaption class="cs-muted">No caption yet — add one in Keep so this moment tells its part of the story (what it shows, what changed).</figcaption>`;
+          return `<figure class="cs-fig">${media}${cap}<div class="cs-fig-meta">${ESC(fmtKeepDate(k.ts))}</div></figure>`;
+        }).filter(Boolean).join('')}</div>`
+      : '<p class="cs-muted">Nothing green-flagged yet. In Keep, click the green ● on the moments that tell the story (what it shows, what changed) — those become the visual spine here, newest first.</p>';
     const n = exps.length;
     const expRow = (e) => `<li><span class="cs-dot cs-${ESC(e.status)}"></span><span class="cs-exp-name${e.status==='complete'?' done':''}">${ESC(e.name)}</span><span class="cs-exp-status">${ESC(e.status)}</span></li>`;
     const expList = n ? `<ul class="cs-exps">${[...active,...starting,...done].map(expRow).join('')}</ul>` : '<p class="cs-muted">No experiments yet.</p>';
@@ -10961,6 +11890,13 @@ ${keepsBlock}${emptyBlock}
   .cs-voice p:last-of-type { margin-bottom:6px; }
   .cs-voice cite { font-style:normal; font-family:var(--mono); font-size:9px; letter-spacing:0.16em; text-transform:uppercase; color:var(--lilac); }
   .cs-why { font-size:14px; color:var(--whisper); margin:0; max-width:62ch; }
+  /* Visual spine -- the kept videos/images, chronological. Caption sits BELOW
+     the visual (figure-style): the motion/stills lead, the text supports. */
+  .cs-gallery { margin:26px 0 0; display:flex; flex-direction:column; gap:40px; }
+  .cs-fig { margin:0; }
+  .cs-fig video, .cs-fig img { display:block; width:100%; border-radius:12px; border:1px solid var(--soft); background:#000; }
+  .cs-fig figcaption { font-size:16px; color:var(--cream); margin-top:13px; max-width:62ch; line-height:1.5; }
+  .cs-fig-meta { font-family:var(--mono); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--whisper); margin-top:7px; }
   /* Metrics strip -- the measurable proof, scannable. */
   .cs-metrics { display:flex; flex-wrap:wrap; gap:14px; margin:28px 0 8px; }
   .cs-metric { background:rgba(255,255,255,0.025); border:1px solid var(--soft); border-radius:12px; padding:14px 20px; min-width:96px; }
@@ -11007,6 +11943,11 @@ ${keepsBlock}${emptyBlock}
     <h2><span class="a">✺</span>Where it stands -- and how the thinking got here</h2>
     ${summaryHtml}
     ${q.tech ? `<div class="cs-sum-row"><div class="cs-sum-label">How it's built</div><div class="cs-sum-body">${ESC(q.tech)}</div></div>` : ''}
+  </section>
+
+  <section>
+    <h2><span class="a">✺</span>The build, seen -- result first</h2>
+    ${keepsHtml}
   </section>
 
   <section>
@@ -11069,7 +12010,21 @@ ${keepsBlock}${emptyBlock}
       if (narrative && !/\d/.test(narrative)) sharpen.push('No numbers in the narrative — proof reads stronger with metrics.');
       if (!narrative) sharpen.push('CASESTORY.md is empty — the arc lives there.');
       if (narrative && !summary.length) sharpen.push('No "## Summary" block in CASESTORY.md — add what-it-is / problem / solution / product-thinking / pivots so the top of the case study writes itself.');
-      const html = buildCaseStory({ q, exps, active, starting, done, commits, timeline, summary, sharpen });
+      // The visual spine: this quest's image + video keeps, chronological.
+      let keeps = [];
+      try {
+        keeps = (JSON.parse(localStorage.getItem('unicorn.keeps') || '[]') || [])
+          .filter(k => (k.questId && k.questId === q.id) ||
+                       (!k.questId && k.questName && q.name && k.questName.toLowerCase() === q.name.toLowerCase()))
+          // GREEN-FLAGGED visual keeps only -- the case story is a curated
+          // highlight reel, not a dump. The green ● dot in Keep is the editorial
+          // pick. RESULT-FIRST: newest -> oldest, so it leads with the finished
+          // thing, not the process crawl.
+          .filter(k => (k.videoPath || k.imagePath || k.image) && k.caseStory)
+          .sort((a, b) => (b.ts || 0) - (a.ts || 0));
+      } catch {}
+      if (!keeps.length) sharpen.push('No keeps green-flagged yet — click the green ● on the keeps that tell the story; they become the visual spine here.');
+      const html = buildCaseStory({ q, exps, active, starting, done, commits, timeline, summary, sharpen, keeps });
       const sl = slugify(q.name);
       const res = await window.unicorn.writeCaseStory(`${sl}/${sl}.html`, html);
       if (res && res.ok) window.unicorn.openPath(res.path);
@@ -11140,10 +12095,24 @@ ${keepsBlock}${emptyBlock}
     const el = document.elementFromPoint(x, y);
     return !!(el && el.closest(CHROME));
   };
+  // ⌥-drag anywhere moves the window (Ivy 2026-09-28: "kind of hard to grab").
+  // Holding ⌥ captures every pixel (no click-through) and makes it all a drag
+  // region; letting go hands the gaps back to the apps behind.
+  let altDrag = false;
+  const setAltDrag = (on) => {
+    if (on === altDrag) return;
+    altDrag = on;
+    document.body.classList.toggle('alt-drag', on);
+    if (on) setPass(false);
+  };
   window.addEventListener('mousemove', (e) => {
-    if (!hud) return;
+    setAltDrag(e.altKey);
+    if (altDrag || !hud) return;
     setPass(!overChrome(e.clientX, e.clientY));
   });
+  window.addEventListener('keydown', (e) => { if (e.key === 'Alt') setAltDrag(true); });
+  window.addEventListener('keyup', (e) => { if (e.key === 'Alt') setAltDrag(false); });
+  window.addEventListener('blur', () => setAltDrag(false));
 
   let toastEl = null, toastTimer = null;
   const hudToast = (text) => {
@@ -11164,6 +12133,16 @@ ${keepsBlock}${emptyBlock}
   };
 
   const pinEl = document.getElementById('mb-pin');
+  // Center the Float tip under the PANELS + FLOAT pair (its anchor is the
+  // Panels wrapper, so left = distance to the pair's midpoint).
+  const tipEl = document.getElementById('mb-pin-tip');
+  const panelsWrap = document.getElementById('mb-panels');
+  if (pinEl && tipEl && panelsWrap) {
+    pinEl.addEventListener('mouseenter', () => {
+      const a = panelsWrap.getBoundingClientRect(), b = pinEl.getBoundingClientRect();
+      tipEl.style.left = Math.round((b.right - a.left) / 2) + 'px';
+    });
+  }
   const setHud = (on) => {
     hud = on;
     window.unicorn.setAlwaysOnTop(hud);
@@ -11201,9 +12180,10 @@ ${keepsBlock}${emptyBlock}
   const STATUS = {
     shipped:'complete', complete:'complete', completed:'complete', done:'complete',
     started:'active', active:'active', start:'active',
-    paused:'paused', pause:'paused', starting:'starting'
+    paused:'paused', pause:'paused', starting:'starting',
+    ship:'complete', finish:'complete', finished:'complete', resume:'active'
   };
-  const QUEST_ACTION = /^quest[-_:]?(start|create|new|active|begin|pause|complete|done|ship|finish|archive|delete|remove|drop|describe|desc|tech)$/;
+  const QUEST_ACTION = /^quest[-_:]?(start|create|new|active|begin|pause|complete|done|ship|finish|archive|delete|remove|drop|describe|desc|tech|repo|folder|rename|taste|figma)$/;
 
   /* Quest-level events. Lets a session ask Claude to spin up a brand new
      quest live ("start a new quest called Demo Day") -- creates it if
@@ -11225,6 +12205,14 @@ ${keepsBlock}${emptyBlock}
     const desc = (ev.description || '').trim();
     const isTech = /tech/.test(verb);
     const tech = (ev.tech || '').trim();
+    const isRepo = /repo|folder/.test(verb);
+    const repo = (ev.repo || ev.folder || '').trim();
+    const isRename = /rename/.test(verb);
+    const renameTo = (ev.to || ev.newName || '').trim();
+    const isTaste = /taste/.test(verb);
+    const isFigma = /figma/.test(verb);
+    const figmaUrl = String(ev.url || ev.figma || '').trim();
+    const tastePath = (ev.taste || (isTaste ? ev.path : '') || '').trim();
     if (!q && isStart) {
       q = { id:'q-ag-'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),
             name: qname, startedAt: ts, experiments: [] };
@@ -11233,6 +12221,8 @@ ${keepsBlock}${emptyBlock}
     }
     if (!q) return null;
     if (isDelete) {
+      // Same safety net as a UI delete: the full quest goes to trash.jsonl.
+      try { if (window.unicorn && window.unicorn.trash) window.unicorn.trash({ ts: Date.now(), kind: 'quest', quest: q.name || null, data: JSON.parse(JSON.stringify(q)), via: 'agent' }); } catch {}
       const idx = data.quests.indexOf(q);
       data.quests.splice(idx, 1);
       // If the deleted quest was active, fall back to the first remaining
@@ -11274,6 +12264,21 @@ ${keepsBlock}${emptyBlock}
     // technical section (for hiring managers + as the user's learning log).
     if (tech) q.tech = tech;
     if (isTech) return { name: qname, status: 'tech set', kind:'quest' };
+    // Folder on disk -- powers the Mirror "Currently" open-folder link. Set it
+    // on quest-start (or via quest-repo) so the link works from minute one.
+    if (repo) q.repo = repo;
+    if (isRepo) return { name: qname, status: 'folder set', kind:'quest' };
+    // Taste file -- the agent links it once the design is established; its
+    // "## Mirror" section fills Mirror › Taste (see renderTaste).
+    if (tastePath) q.taste = tastePath;
+    if (isTaste) return { name: qname, status: 'taste linked', kind:'quest' };
+    // Figma file = the settled record of the build (Mirror › Currently link).
+    if (isFigma && /^https:\/\/(www\.)?figma\.com\//i.test(figmaUrl)) q.figma = figmaUrl;
+    if (isFigma) return { name: qname, status: 'figma linked', kind:'quest' };
+    if (isRename && renameTo) {
+      q.name = renameTo;
+      return { name: qname + ' → ' + renameTo, status: 'renamed', kind:'quest' };
+    }
     if (isStart) {
       q.paused = false; q.completed = false; q.completedAt = null;
       data.activeQuestIndex = data.quests.indexOf(q);
@@ -11337,9 +12342,12 @@ ${keepsBlock}${emptyBlock}
       const lc = expName.toLowerCase();
       const explicit = (ev.quest || '').trim();
       let parent = null, idx = -1;
+      // No explicit quest -> search the ACTIVE quest first, then the rest, so
+      // a common name can't delete the wrong quest's experiment.
+      const act = (typeof data.activeQuestIndex === 'number') ? data.quests[data.activeQuestIndex] : null;
       const qs = explicit
         ? data.quests.filter(x => (x.name || '').toLowerCase() === explicit.toLowerCase())
-        : data.quests;
+        : (act ? [act, ...data.quests.filter(x => x !== act)] : data.quests);
       for (const q of qs) {
         if (!q.experiments) continue;
         const i = q.experiments.findIndex(e => (e.name || '').toLowerCase() === lc);
@@ -11377,10 +12385,25 @@ ${keepsBlock}${emptyBlock}
     // user's active quest, else Build Unicorn, else first non-completed.
     const name = (ev.experiment || ev.name || '').trim();
     if (!name) return null;
-    const status = STATUS[action] || 'active';
+    // Unknown actions are ignored -- defaulting to 'active' let a typo or an
+    // unsupported verb reopen a shipped experiment.
+    const status = STATUS[action];
+    if (!status) { console.warn('[unicorn] agent event: unknown action', action, ev); return null; }
     const explicit = (ev.quest || '').trim();
     let q = null;
-    if (explicit) q = data.quests.find(x => (x.name || '').toLowerCase() === explicit.toLowerCase());
+    if (explicit) {
+      q = data.quests.find(x => (x.name || '').toLowerCase() === explicit.toLowerCase());
+      // An explicit quest name is deliberate: if it doesn't exist yet,
+      // CREATE it rather than silently filing under the active quest
+      // (Ivy 2026-07-04: "better it auto-creates the quest instead of
+      // misfiling -- I can always rename it"). Doesn't steal active
+      // status; quest-start remains the way to activate.
+      if (!q) {
+        q = { id:'q-ag-'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),
+              name: explicit, startedAt: ts, experiments: [] };
+        data.quests.push(q);
+      }
+    }
     if (!q) {
       q = (typeof data.activeQuestIndex === 'number' && data.quests[data.activeQuestIndex])
         ? data.quests[data.activeQuestIndex]
@@ -11404,18 +12427,35 @@ ${keepsBlock}${emptyBlock}
   };
 
   let cursor = parseInt(localStorage.getItem(CURSOR_KEY) || '0', 10) || 0;
+  const LAST_KEY = 'unicorn.agent-events-last';
   const handle = (content) => {
     const lines = (content || '').split('\n').map(s => s.trim()).filter(Boolean);
-    if (lines.length < cursor) cursor = 0; // file was reset -> reprocess
+    // The file was edited, not just appended to (a line hand-deleted, or
+    // rewritten): re-anchor on the last line we applied, if it's still there.
+    // A bare count broke both ways -- shorter replayed EVERYTHING from 0
+    // (resurrecting deleted quests); same-length silently skipped new events.
+    const last = localStorage.getItem(LAST_KEY);
+    if (last && lines[cursor - 1] !== last) {
+      const at = lines.lastIndexOf(last);
+      if (at >= 0) cursor = at + 1;
+      else if (lines.length < cursor) cursor = 0; // truly reset -> reprocess
+    } else if (lines.length < cursor) {
+      cursor = 0;
+    }
     if (lines.length <= cursor) return;
     let applied = null;
     for (let i = cursor; i < lines.length; i++) {
       let ev; try { ev = JSON.parse(lines[i]); } catch { continue; }
-      const res = applyEvent(ev);
+      if (!ev || typeof ev !== 'object') continue;
+      // One malformed event (e.g. a non-string field) used to throw here,
+      // leaving the cursor behind and jamming every event after it.
+      let res = null;
+      try { res = applyEvent(ev); } catch (e) { console.error('[unicorn] agent event failed', lines[i], e); }
       if (res) applied = res;
     }
     cursor = lines.length;
     localStorage.setItem(CURSOR_KEY, String(cursor));
+    localStorage.setItem(LAST_KEY, lines[lines.length - 1]);
     if (applied) {
       window.dispatchEvent(new CustomEvent('unicorn:quests-updated'));
       let t = document.getElementById('agent-toast');

@@ -204,20 +204,18 @@
      layers (padding-box fill + border-box stroke), no pseudo-element. */
   .cta-demo { position: relative; display: inline-flex; align-items: center; gap: 10px;
     font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
-    padding: 12px 18px; border-radius: 10px; cursor: pointer;
+    padding: 12px 16px; border-radius: 10px; cursor: pointer;
     border: 1px solid transparent;
     background:
       linear-gradient(135deg, #151419, #151419) padding-box,
       linear-gradient(135deg, rgba(232,149,106,0.5), rgba(167,139,223,0.5)) border-box;
     transition: color 0.4s ease, background 0.55s cubic-bezier(0.4,0,0.2,1); }
-  .cta-demo .cta-icon { color: var(--peach); }
   .cta-demo .cta-text { background: linear-gradient(90deg, var(--peach), var(--lilac));
     -webkit-background-clip: text; background-clip: text; color: transparent; }
   .cta-demo:hover {
     background:
       linear-gradient(135deg, var(--peach), var(--lilac)) padding-box,
       linear-gradient(135deg, var(--peach), var(--lilac)) border-box; }
-  .cta-demo:hover .cta-icon { color: #100F11; }
   .cta-demo:hover .cta-text { -webkit-text-fill-color: #100F11; color: #100F11; }
   /* Static "hover" twin -- shows the filled hover state in the doc without
      needing a pointer, so the spec reads both rest + hover at a glance. */
@@ -225,20 +223,25 @@
     background:
       linear-gradient(135deg, var(--peach), var(--lilac)) padding-box,
       linear-gradient(135deg, var(--peach), var(--lilac)) border-box; }
-  .cta-demo.is-hover .cta-icon { color: #100F11; }
   .cta-demo.is-hover .cta-text { -webkit-text-fill-color: #100F11; color: #100F11; }
   .cta-state { font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em;
     text-transform: uppercase; color: var(--text-whisper); margin-top: 8px; }
 
   /* ── Status dots ── */
-  .status-row { display: flex; flex-wrap: wrap; gap: 22px; }
-  .status { display: flex; align-items: center; gap: 9px; font-family: var(--mono);
-    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-mute); }
-  .st-dot { width: 8px; height: 8px; border-radius: 50%; }
-  .st-active { background: var(--peach); }
-  .st-starting { background: var(--lilac); }
-  .st-paused { background: var(--text-mute); }
-  .status.is-complete { color: var(--text-whisper); }
+  .status-row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+  /* Mirrors the app's .q-status chip: 9px mono pill (padding tier 1), a
+     1px stroke in the status's own hue, Completed sunk in a recessed well. */
+  .chip { position: relative; font-family: var(--mono); font-size: 9px; line-height: 1;
+    letter-spacing: 0.14em; text-transform: uppercase; padding: 5px 9px; border-radius: 5px; }
+  .chip::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
+    background: var(--chip-stroke, transparent);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+  .chip[data-s="starting"] { color: var(--lilac); --chip-stroke: rgba(167,139,223,0.32); }
+  .chip[data-s="active"]   { color: var(--peach); --chip-stroke: rgba(232,149,106,0.32); }
+  .chip[data-s="paused"]   { color: var(--text-mute); --chip-stroke: rgba(255,255,255,0.18); }
+  .chip[data-s="complete"] { color: var(--text-whisper); background: rgba(0,0,0,0.18); }
+  .chip[data-s="armed"]    { color: var(--peach); background: rgba(232,149,106,0.14); }
 
   /* ── Principle list ── */
   .principles { list-style: none; display: flex; flex-direction: column; gap: 14px; }
@@ -263,7 +266,7 @@
     <h1><span class="grad">The language Unicorn<br>is built in.</span></h1>
     <p class="lede">A living reference for the colors, type, glass, and motion that make Unicorn feel like itself. <strong>Living</strong> because it updates as the product does, not after. It documents what is true in the build right now, so the app, the briefs, and the case story all speak the same visual language.</p>
     <div class="meta-row">
-      <span class="meta-pill">Updated <b>2026-07-12</b></span>
+      <span class="meta-pill">Updated <b>2026-10-02</b></span>
       <span class="meta-pill">Reviewed <b>weekly</b></span>
       <span class="meta-pill">Surface <b>desktop app + briefs</b></span>
       <a class="meta-pill meta-pill--figma" href="https://www.figma.com/design/m9JRahV6Do3uHFYJycqby7/Design-System" target="_blank" rel="noopener">Open in <b>Figma</b> ↗</a>
@@ -272,7 +275,7 @@
 
   <section>
     <div class="sec-label"><span class="num">01</span>The mark</div>
-    <div class="sec-note">The unicorn is built from terminal block glyphs, not an illustration. The exact same pixel sprite -- horn, mane, and tail in lilac, body in peach -- is the <b>single logo across every surface</b>: the terminal hook that prints at the start of each Claude Code session, the desktop app icon, the preloader, and the Taste panel's <code>Logo</code> row. It is rendered as text or solid pixels, never as a smooth vector, so it always reads as <code>made of pixels</code>.</div>
+    <div class="sec-note">The unicorn is built from terminal block glyphs, not an illustration. The exact same pixel sprite -- horn, mane, and tail in lilac, body in peach -- is the <b>single logo across every surface</b>: the terminal hook that prints at the start of each Claude Code session, the desktop app icon, the preloader, and the <code>Logo</code> row in Mirror › Taste. It is rendered as text or solid pixels, never as a smooth vector, so it always reads as <code>made of pixels</code>.</div>
     <div class="uc-stage">
       <div class="uc-glyph"><span class="l">▐▖</span>
 <span class="p">▟█</span><span class="l">▙</span>
@@ -306,25 +309,25 @@
     <div class="sec-note">Peach to lilac is the one gesture that signals Unicorn, and it shows up as a 1px gradient stroke in <b>two forms</b>, matched to scale. Both are drawn with the same <code>mask-composite</code> technique so the gradient sits on the edge, not the fill -- light does the work, fills are avoided.</div>
     <div class="grid g2">
       <div>
-        <div class="ring-demo-even">✺ even stroke</div>
+        <div class="ring-demo-even">✺ Even stroke</div>
         <div class="sec-note" style="margin:12px 0 0;">① <b>Even</b> -- peach→lilac runs the full perimeter at even weight, no corner fade. On the <b>small UI</b>: buttons, chips, labels, tabs, filters.</div>
       </div>
       <div>
-        <div class="ring-demo">✺ faded corners</div>
+        <div class="ring-demo">✺ Faded corners</div>
         <div class="sec-note" style="margin:12px 0 0;">② <b>Faded corners</b> -- the gradient runs bottom-left→top-right and whispers off to transparent at the top-right + bottom-left tips. On the <b>large chrome</b>: panels, the window's glass edge, the preloader, and the two compose CTAs.</div>
       </div>
     </div>
-    <div style="margin-top:16px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:22px;font-weight:600;background:linear-gradient(90deg,var(--peach) 0%,var(--peach) 30%,var(--lilac) 70%,var(--lilac) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;border:1px solid var(--hairline);border-radius:12px;padding:14px;">gradient text</div>
+    <div style="margin-top:16px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:22px;font-weight:600;background:linear-gradient(90deg,var(--peach) 0%,var(--peach) 30%,var(--lilac) 70%,var(--lilac) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;border:1px solid var(--hairline);border-radius:12px;padding:14px;">Gradient text</div>
 
     <div class="sec-note" style="margin-top:24px;"><b>Where each form lands.</b> The signature shows up two ways depending on the surface -- and the banners break from both: they are <b>filled</b>, not stroked.</div>
     <div class="grid g2" style="margin-top:8px;">
       <div>
-        <div class="ring-demo">✺ preloader card · window edge</div>
+        <div class="ring-demo">✺ Preloader card · window edge</div>
         <div class="sec-note" style="margin:12px 0 0;"><b>Preloader card + the app window edge</b> -- the <b>faded-corner gradient stroke</b> over the glass / void, same edge language as the panels and the icon. The peach→lilac rides the stroke here, never a fill.</div>
       </div>
       <div>
-        <div style="display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;letter-spacing:-0.005em;color:#100F11;background:linear-gradient(135deg,var(--peach),var(--lilac));border-radius:8px;padding:8px 14px;">✷ Good afternoon, Ivy &nbsp;·&nbsp; day 7 &nbsp;☽ Full Moon</div>
-        <div class="sec-note" style="margin:12px 0 0;"><b>Banners</b> (the welcome / greeting band + the experiment toasts) -- <b>not glass</b>. They are <b>filled</b> with the peach→lilac gradient, carry <b>dark void text</b> (<code>#100F11</code>), and have <b>no corner fade</b>. A saturated fill on a panel browned at the midpoint and read too heavy -- so the fill is reserved for these small, transient bands where it pops on purpose.</div>
+        <div style="display:flex;align-items:center;justify-content:center;font-family:var(--sans);font-size:12px;letter-spacing:-0.005em;color:#100F11;background:linear-gradient(135deg,var(--peach),var(--lilac));border-radius:8px;padding:6px 14px;">San Francisco &nbsp;·&nbsp; 64° &nbsp;·&nbsp; waning gibbous &nbsp;·&nbsp; 2 hr 10 min of daylight left</div>
+        <div class="sec-note" style="margin:12px 0 0;"><b>Banners</b> (the welcome strip -- place · temperature · moon phase · daylight left -- plus the experiment toasts) -- <b>not glass</b>. They are <b>filled</b> with the peach→lilac gradient, carry <b>dark void text</b> (<code>#100F11</code>), and have <b>no corner fade</b>. A saturated fill on a panel browned at the midpoint and read too heavy -- so the fill is reserved for these small, transient bands where it pops on purpose.</div>
       </div>
     </div>
   </section>
@@ -344,9 +347,9 @@
       <div class="spec">
         <div class="spec-big-mono">Ubuntu Sans Mono</div>
         <div class="spec-scale">
-          <span class="s-display" style="font-family:var(--mono)">Display · compose this quest's brief</span>
-          <span class="s-body" style="font-family:var(--mono)">Body · ~/unicorn/briefs/2026-W22.html</span>
-          <span class="s-meta">Meta · quest · taste · keep · activity</span>
+          <span class="s-display" style="font-family:var(--mono)">Display · Compose weekly brief</span>
+          <span class="s-body" style="font-family:var(--mono)">Body · ~/unicorn/briefs/unicorn/2026-W40-unicorn.html</span>
+          <span class="s-meta">Meta · quest · mirror · keep · commits</span>
         </div>
       </div>
     </div>
@@ -364,12 +367,12 @@
 
   <section>
     <div class="sec-label"><span class="num">06</span>Glass &amp; geometry</div>
-    <div class="sec-note">Panels are liquid glass: a translucent dark fill (<code>rgba(22,22,22,0.78)</code>) with a generous <b>26px backdrop blur</b> and a <b>soft drop shadow for depth</b> (<code>0 6px 16px rgba(0,0,0,0.35)</code>). The edge is the signature peach→lilac gradient stroke that <b>fades at the top-right and bottom-left corners</b> -- the same edge as the icon and the window. A soft hairline still sits under each header. Radii: <code>18px</code> for panels, <code>6px</code> for chips and inputs.</div>
+    <div class="sec-note">On the desktop the glass is <b>painted, not sampled</b>: a near-opaque base (<code>rgba(21,20,25,0.99)</code>) under two crossing gradients -- a soft top-left light sheen and a faint lilac→peach wash from the bottom-right -- so panels stay legible over a busy terminal. The web preview uses the translucent fill (<code>rgba(22,22,22,0.78)</code>) with a <b>26px backdrop blur</b>. Both carry a <b>soft drop shadow</b> (<code>0 6px 16px rgba(0,0,0,0.35)</code>) and the signature peach→lilac stroke that <b>fades at the top-right and bottom-left corners</b>. Only two lines survive inside a panel: the <b>2px peach→lilac hairline</b> under each title (it ends on lilac, no fade) and the quest progress fill. Recessed wells (the Currently card, the archived pill, Completed chips) sink with <code>rgba(0,0,0,0.18)</code>, never a white wash. Radii: <code>18px</code> for panels, <code>6px</code> for chips and inputs.</div>
     <div class="grid g2">
       <div class="panel-demo">
         <div class="pd-head"><span class="pd-dot"></span>Panel</div>
         <div class="pd-hair"></div>
-        <div class="pd-body">Glass fill, 26px blur, soft drop shadow, 18px radius. The gradient stroke wraps the edge and fades at the top-right + bottom-left corners. On the desktop app these panels float on a transparent window over the real desktop.</div>
+        <div class="pd-body">Painted glass, soft drop shadow, 18px radius. The gradient stroke wraps the edge and fades at the top-right + bottom-left corners. On the desktop app these panels float on a transparent window over the real desktop.</div>
       </div>
       <div style="display:flex;flex-direction:column;gap:12px;justify-content:center">
         <div style="background:var(--panel-bg);border:1px solid var(--hairline);border-radius:18px;padding:14px 16px;font-family:var(--mono);font-size:11px;color:var(--text-mute)">radius 18px · panel chrome</div>
@@ -380,32 +383,33 @@
 
   <section>
     <div class="sec-label"><span class="num">07</span>Buttons &amp; the compose CTA</div>
-    <div class="sec-note">Neutral buttons stay calm: a background tint shifts on hover, with no border-color swap. The <b>primary action -- the compose CTA</b> is the showpiece: it rests as a <b>void fill with a peach→lilac gradient stroke</b>, and on hover the whole pill <b>fills with the gradient while the label goes void-dark</b> (<code>#100F11</code>). Reserved for the two compose buttons -- composing a brief / telling the case story is making an artifact, so the click earns more than a tap (it even gets its own ascending arpeggio -- see Sound).</div>
+    <div class="sec-note">Neutral buttons stay calm: a background tint shifts on hover, with no border-color swap. The <b>primary action -- the compose CTA</b> is the showpiece: it rests as a <b>void fill with a peach→lilac gradient stroke</b>, and on hover the whole pill <b>fills with the gradient while the label goes void-dark</b> (<code>#100F11</code>). Reserved for the two compose buttons, <b>Compose weekly brief</b> and <b>Tell the case story</b> -- making an artifact earns more than a tap (it even gets its own ascending arpeggio -- see Sound). The label stands alone, no symbol in front. Padding runs on a three-tier scale: <code>9px</code> pills, <code>10px</code> buttons, <code>11px</code> CTAs.</div>
     <div class="panel-demo"><div class="btn-row">
-      <span class="btn">secondary</span>
-      <span class="btn" style="color:var(--text-whisper)">quiet link</span>
+      <span class="btn">Secondary</span>
+      <span class="btn" style="color:var(--text-whisper)">Quiet link</span>
     </div>
     <div class="btn-row" style="margin-top:16px;align-items:flex-start;gap:64px;">
       <div style="display:flex;flex-direction:column;align-items:flex-start;gap:10px;">
-        <span class="cta-demo"><span class="cta-icon">✺</span><span class="cta-text">compose brief</span></span>
+        <span class="cta-demo"><span class="cta-text">Compose weekly brief</span></span>
         <span class="cta-state">rest · void fill + gradient stroke</span>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-start;gap:10px;margin-left:48px;">
-        <span class="cta-demo is-hover"><span class="cta-icon">✺</span><span class="cta-text">compose brief</span></span>
+        <span class="cta-demo is-hover"><span class="cta-text">Compose weekly brief</span></span>
         <span class="cta-state">hover · gradient fill + void-dark label</span>
       </div>
     </div>
-    <div class="sec-note" style="margin:14px 0 0;">On hover the whole pill <b>fills with the peach→lilac gradient</b> and the label + symbol go <b>void-dark</b> (<code>#100F11</code>). Hover the left CTA to watch the fill bloom in; the right one is pinned to its hover state for reference.</div></div>
+    <div class="sec-note" style="margin:14px 0 0;">On hover the whole pill <b>fills with the peach→lilac gradient</b> and the label goes <b>void-dark</b> (<code>#100F11</code>). Hover the left CTA to watch the fill bloom in; the right one is pinned to its hover state for reference.</div></div>
   </section>
 
   <section>
     <div class="sec-label"><span class="num">08</span>Experiment status</div>
-    <div class="sec-note">An experiment moves through a small set of states. Color, not labels, carries the signal: <b>lilac</b> is just starting, <b>peach</b> is in motion, a <b>muted</b> dot is paused (sleeping, doesn't count toward active work), and a closed loop <b>goes quiet</b> -- whisper label, no dot.</div>
+    <div class="sec-note">Each experiment row is <code>[chip] name ... ×</code>: the status chip sits hard left in a fixed slot, the × in a reserved slot on the right, so nothing moves under the cursor. The chip is the only action -- click to cycle. Color carries the signal: <b>lilac</b> is just starting, <b>peach</b> is in motion, <b>muted</b> is paused (doesn't count toward active work). Live states are drawn in light (a faded-corner stroke in their own hue); a closed loop is drawn in shadow -- <b>Completed</b>, whisper label in a recessed well. Reopening one arms first (<b>Reopen?</b>), the same two-click confirm as Delete quest.</div>
     <div class="panel-demo"><div class="status-row">
-      <span class="status"><span class="st-dot st-starting"></span>Starting</span>
-      <span class="status"><span class="st-dot st-active"></span>Active</span>
-      <span class="status"><span class="st-dot st-paused"></span>Paused</span>
-      <span class="status is-complete">Complete</span>
+      <span class="chip" data-s="starting">Starting</span>
+      <span class="chip" data-s="active">Active</span>
+      <span class="chip" data-s="paused">Paused</span>
+      <span class="chip" data-s="complete">Completed</span>
+      <span class="chip" data-s="armed">Reopen?</span>
     </div></div>
   </section>
 
@@ -444,12 +448,12 @@
         <div class="pd-body">A soft tap on clicks. A <b>launch bloom</b> -- a slow ascending pentatonic run -- as the preloader wakes. A celebratory <b>ascending arpeggio flourish</b> on the compose CTAs. Rising / falling single notes on panel float in / out. A victory run on closing a loop. And the steel-pan soundtrack under the commit calendar.</div>
       </div>
     </div>
-    <div class="sec-note" style="margin-top:14px;">Every cue gates behind reduced-motion-friendly intent and only starts after a user gesture (browsers block autoplay), so the room stays quiet until you act.</div>
+    <div class="sec-note" style="margin-top:14px;">Every cue only starts after a user gesture (browsers block autoplay), so the room stays quiet until you act. After 20 seconds of silence the audio engine sleeps, and the next note wakes it.</div>
   </section>
 
   <section>
     <div class="sec-label"><span class="num">12</span>Desktop treatment</div>
-    <div class="sec-note">In the Electron app the window is <b>transparent</b>: panels float on your real desktop, beside the terminal. <code>HUD mode</code> keeps Unicorn on top and lets clicks pass through the gaps to the terminal underneath, so Claude Code and Unicorn are usable at once. The preloader, panels, and greeting all soften so the desktop stays visible.</div>
+    <div class="sec-note">In the Electron app the window is <b>transparent</b>: panels float on your real desktop, beside the terminal. <code>HUD mode</code> keeps Unicorn on top and lets clicks pass through the gaps to the terminal underneath, so Claude Code and Unicorn are usable at once. The preloader, panels, and greeting all soften so the desktop stays visible. Unicorn draws its own <b>traffic lights</b> in tomato / peach / lilac, wearing the panels' peach→lilac ring as their edge. The menubar carries two controls: <code>⊞ Panels</code> (show or hide Quest · Mirror · Keep · Commits · Activity · Settings, ⌘1-5 / ⌘,) and <code>⊹ Float</code> (on top, ⌥U). Hold ⌥ and drag anywhere to move the window.</div>
   </section>
 
   <section>
