@@ -621,7 +621,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
   .pl-gate[hidden] { display: none; }
   .pl-gate-blurb {
     font-family: var(--sans);
-    max-width: 320px;
+    max-width: 520px;   /* 10-02 (Ivy): 320 squeezed the subline into a narrow 3-line block under the long lead; 520 = two lines, as wide as the lead + button */
     text-wrap: balance;
   }
   /* Inverted hierarchy: the value-prop subline is the hero (big + bold),
@@ -4360,7 +4360,7 @@ if (window.unicorn && window.unicorn.isDesktop) document.documentElement.classLi
     <div class="pl-gate" id="pl-gate" hidden>
       <div class="pl-gate-blurb">
         <div class="pl-gate-lead" data-text="A Creative OS for designers who work in the terminal">A Creative OS for designers who work in the terminal</div>
-        <div class="pl-gate-subline">Unicorn turns building into something you can see, push, and share.</div>
+        <div class="pl-gate-subline">Unicorn turns building with agents into something you can see and share.</div>
       </div>
       <button class="pl-gate-btn" id="pl-gate-btn"><span class="pl-gate-label">▸ Click to begin</span> <span class="pl-gate-sub">· sound on</span></button>
     </div>
