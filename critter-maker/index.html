@@ -147,9 +147,10 @@
   .steps code{background:var(--field);border-radius:4px;padding:2px 6px;color:var(--text)}
 
   .credit{margin-top:22px;font-size:12px;color:var(--text-mute);text-align:center}
-  .credit b{color:var(--peach-text);font-weight:700}
+  .credit a{color:var(--peach-text);font-weight:700;text-decoration:none}
+  .credit a:hover{text-decoration:underline;text-underline-offset:3px}
   /* light: true peach can't carry text on linen, so it becomes a highlighter band under ink (the site's mark) */
-  html[data-theme="linen"] .credit b,html[data-theme="linen"] .steps b{background:var(--peach-band);padding:0 2px}
+  html[data-theme="linen"] .credit a,html[data-theme="linen"] .steps b{background:var(--peach-band);padding:0 2px}
   /* light: cards sit a step lighter than the page and lift on a warm shadow -- no strokes */
   html[data-theme="linen"] .panel{box-shadow:0 1px 2px rgb(34 28 21 / .06),0 10px 28px -14px rgb(34 28 21 / .22)}
 
@@ -263,7 +264,7 @@
     </div>
   </div>
 
-  <div class="credit">Made for <b>Unicorn</b>, a creative OS for designers who work in the terminal -- Ivy Grzybowski</div>
+  <div class="credit">Made for <a href="https://ivygrzy.com/work/unicorn/">Unicorn</a>, a creative OS for designers who work in the terminal -- Ivy Grzybowski</div>
 
 <script>
   const GLYPH={'0000':' ','1000':'▘','0100':'▝','0010':'▖','0001':'▗','1100':'▀','0011':'▄','1010':'▌','0101':'▐','1001':'▚','0110':'▞','1110':'▛','1101':'▜','1011':'▙','0111':'▟','1111':'█'};
@@ -682,7 +683,7 @@
      Never the same one twice in a row; sometimes it faces the other way. */
   const CRITTERS=[
     {"n":"Cat","g":["L...L.......","LL..LL......","XXXXXX.....D","X.XX.X.....D","XXXXXXXXXXD.",".XXXXXXXXX..",".Q.Q...Q.Q..",".Q.Q...Q.Q.."],"c":{"X":"#BCBCBC","Q":"#808080","L":"#FFAFAF","D":"#585858"}},
-    {"n":"Fox","g":["L...L.........","LL..LL........","XXXXXX........","X.XX.X.....XQQ","QQXXXXXXXXXXQ.","QQXXXXXXXX....",".D.D...D.D....",".D.D...D.D...."],"c":{"X":"#FF875F","Q":"#FFD7AF","L":"#AF5F5F","D":"#875F5F"}},
+    {"n":"Fox","g":[".........L...L","........LL..LL","........XXXXXX","QQX.....X.XX.X",".QXXXXXXXXQQXX","....XXXXXXQQXX","....D.D...D.D.","....D.D...D.D."],"c":{"X":"#FF875F","Q":"#FFD7AF","L":"#AF5F5F","D":"#875F5F"}},
     {"n":"Frog","g":["..LL....LL..",".L..L..L..L.","XXXXXXXXXXXX","X.XXXXXXXX.X","XXDDDDDDDDXX","XXDDDDDDDDXX",".QQ......QQ.","QQQQ....QQQQ"],"c":{"X":"#87AF5F","Q":"#5F875F","L":"#AFD787","D":"#D7D7AF"}},
     {"n":"Bird","g":["....L.....","...LL.....","DDXXXX....",".DX.XX....","..XXLLLLQQ","..XXLLLLQ.","...XXXX...","....XX....","....D.D...","...DD.DD.."],"c":{"X":"#5FAFD7","Q":"#5F87AF","L":"#87D7FF","D":"#FFAF5F"}},
     {"n":"Bunny","g":["...L.L......","..LL.LL.....","..XXXXX.....",".XX.XXXX....","DDXXXXXXXXX.","..XXXXXXXXXX","...XXXXXXX.Q","...XXXXXXX..","...QQ...QQ..","..QQQ..QQQ.."],"c":{"X":"#EEEEEE","Q":"#BCBCBC","L":"#FFAFD7","D":"#FF87AF"}}
