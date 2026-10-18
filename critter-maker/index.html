@@ -1,201 +1,200 @@
 <!doctype html>
-<html><head>
+<html lang="en"><head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#070709">
 <title>Critter Maker ✺ Unicorn</title>
+<style>html,body{background:#070709}html[data-theme="linen"],html[data-theme="linen"] body{background:#E7DDCA}</style>
+<!-- light mode, chosen BEFORE paint (system setting, or the visitor's last choice) -- same pattern as ivygrzy.com -->
+<script>try{var t=localStorage.getItem("critter-maker.theme");if(t==="light"||(!t&&matchMedia("(prefers-color-scheme: light)").matches)){document.documentElement.dataset.theme="linen";document.querySelector('meta[name="color-scheme"]').content="light";document.querySelector('meta[name="theme-color"]').content="#E7DDCA"}}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Ubuntu+Sans+Mono:wght@400;500;700&family=Ubuntu+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu+Sans+Mono:wght@400..700&display=swap" rel="stylesheet">
 <style>
+  /* tokens match the Unicorn portfolio page (ivygrzy.com/work/unicorn, site/theme.css):
+     dark = void + linen text at stone brightness; light = Linen #E7DDCA + warm ink.
+     No strokes on boxes or buttons: fills + spacing do the grouping. */
   :root{
-    --peach:#E8956A; --lilac:#A78BDF; --void:#100F11; --cream:#F1ECE8;
-    --panel:#161519; --stroke:rgba(255,255,255,0.04);
+    --void:#070709; --ink-rgb:231 221 202;
+    --text:rgb(231 221 202 / .84); --text-dim:rgb(231 221 202 / .52); --text-mute:rgb(231 221 202 / .34);
+    --stone:#D5CCBB;
+    --panel:rgb(231 221 202 / .035); --pop:#141318; --field:rgb(0 0 0 / .4);
+    --btn:rgb(231 221 202 / .06); --btn-hover:rgb(231 221 202 / .1); --btn-on:rgb(231 221 202 / .16);
+    --cell:rgb(231 221 202 / .05); --cell-hover:rgb(231 221 202 / .11);
+    --shade:rgb(0 0 0 / .55);
+    --peach:#FFAF5F; --lilac:#c8a2ff; --peach-text:#FFAF5F;
+    --uni-glow:linear-gradient(118deg,#FFAF5F,#E9A2B4 50%,#c8a2ff);
+    --ok:#7FD1A0; --bad:#FF5E71;
     --radius:18px; --radius-sm:6px;
-    --mono:'Ubuntu Sans Mono',Menlo,monospace;
-    --sans:'Ubuntu Sans',-apple-system,system-ui,sans-serif;
+    --edge:clamp(24px,5vw,72px);
+    --f-mono:'Ubuntu Sans Mono',ui-monospace,Menlo,monospace;
+  }
+  html[data-theme="linen"]{
+    color-scheme:light;
+    --void:#E7DDCA; --ink-rgb:34 28 21;
+    --text:rgb(34 28 21 / .94); --text-dim:rgb(34 28 21 / .76); --text-mute:rgb(34 28 21 / .64);
+    --stone:rgb(34 28 21);
+    --panel:#F6F0E5; --pop:#FBF7F0; --field:rgb(34 28 21 / .06);
+    --btn:rgb(34 28 21 / .06); --btn-hover:rgb(34 28 21 / .1); --btn-on:rgb(34 28 21 / .15);
+    --cell:rgb(34 28 21 / .07); --cell-hover:rgb(34 28 21 / .14);
+    --shade:rgb(34 28 21 / .18);
+    --peach-text:rgb(34 28 21); --ok:#2E8A55; --bad:#C4283E;
+    --peach-band:linear-gradient(transparent 52%,color-mix(in srgb,#FFAF5F 75%,transparent) 52%,color-mix(in srgb,#FFAF5F 75%,transparent) 92%,transparent 92%);
   }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--void);color:var(--cream);font-family:var(--sans);
+  body{margin:0;background:var(--void);color:var(--text);font-family:var(--f-mono);
     min-height:100vh;display:flex;flex-direction:column;align-items:center;
-    padding:56px 32px 40px;gap:14px}
-  h1{font-family:var(--mono);font-size:20px;font-weight:700;letter-spacing:.04em;margin:0;
-    background:linear-gradient(90deg,var(--peach),#C890A5,var(--lilac));
-    -webkit-background-clip:text;background-clip:text;
-    -webkit-text-fill-color:transparent;color:transparent}
-  .sub{font-family:var(--mono);font-size:12px;color:rgba(241,236,232,.55);
-    max-width:620px;text-align:center;line-height:1.7;margin-bottom:18px}
-  .main{display:flex;gap:22px;align-items:stretch;flex-wrap:wrap;justify-content:center}
-  .col{display:flex;flex-direction:column;gap:22px;width:400px}
-  .panel{background:var(--panel);border:1px solid var(--stroke);
-    border-radius:var(--radius);padding:22px 24px 24px}
-  .panel h2{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.16em;
-    text-transform:uppercase;color:rgba(241,236,232,.5);margin:0 0 16px}
+    padding:64px 16px 44px;gap:14px}
+  h1{font-size:26px;font-weight:800;letter-spacing:-.025em;margin:0;color:var(--stone)}
+  h1 em{font-style:normal;background:var(--uni-glow);-webkit-background-clip:text;background-clip:text;color:transparent}
+  /* light: the site's highlighter band behind ink type, the same mark as its gradient titles on linen */
+  html[data-theme="linen"] h1 em{-webkit-background-clip:border-box;background-clip:border-box;color:var(--stone);
+    background:linear-gradient(90deg,color-mix(in srgb,#FFAF5F 70%,transparent),color-mix(in srgb,#c8a2ff 58%,transparent)) 0 88%/100% .62em no-repeat}
+  .sub{font-size:13px;color:var(--text-dim);max-width:560px;text-align:center;line-height:1.7;margin:0 0 18px;text-wrap:balance}
+  .main{display:flex;gap:22px;align-items:stretch;flex-wrap:wrap;justify-content:center;max-width:100%}
+  .col{display:flex;flex-direction:column;gap:22px;width:420px;max-width:100%}
+  .panel{background:var(--panel);border-radius:var(--radius);padding:24px 26px 26px}
+  .panel h2{font-size:14px;font-weight:700;color:var(--stone);margin:0 0 16px}
   .panel--term{flex:1;display:flex;flex-direction:column}
+  button{font-family:inherit}
+  /* one quiet button language: a fill, a slightly stronger fill on hover, a stronger one when on */
+  .btn{appearance:none;border:0;cursor:pointer;background:var(--btn);color:var(--text-dim);
+    font-size:12px;border-radius:var(--radius-sm);transition:background .18s,color .18s;user-select:none;-webkit-user-select:none}
+  .btn:hover{background:var(--btn-hover);color:var(--text)}
+  .btn.on{background:var(--btn-on);color:var(--stone)}
+  .btn:focus-visible,.roll:focus-visible,input:focus-visible{outline:1px solid var(--text-mute);outline-offset:2px}
 
   /* ── editor ── */
-  .tools{display:flex;gap:8px;margin-bottom:14px;align-items:center;position:relative}
-  .tool{display:flex;align-items:center;gap:8px;cursor:pointer;
-    background:transparent;color:rgba(241,236,232,.72);
-    font-family:var(--mono);font-size:12px;
-    border:1px solid var(--stroke);border-radius:var(--radius-sm);
-    padding:7px 12px;transition:background .18s;user-select:none;-webkit-user-select:none}
-  .tool:hover{background:rgba(255,255,255,.05)}
-  .tool.on{color:var(--cream);background:rgba(255,255,255,.05)}
-  .tool.on[data-tool="X"]{border-color:rgba(232,149,106,.55)}
-  .tool.on[data-tool="O"]{border-color:rgba(167,139,223,.55)}
-  .tool.on[data-tool="."]{border-color:rgba(241,236,232,.35)}
-  .swx{width:13px;height:13px;border-radius:3px;display:inline-block;cursor:pointer;
-    transition:transform .15s}
-  .swx:hover{transform:scale(1.18)}
-  .sw-erase{width:11px;height:11px;border-radius:3px;display:inline-block;
-    background:transparent;border:1px dashed rgba(241,236,232,.4)}
+  .tools{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;align-items:center;position:relative}
+  .tool{display:flex;align-items:center;gap:7px;padding:7px 10px}
+  .swx{width:13px;height:13px;border-radius:3px;display:inline-block;cursor:pointer}
+  .sw-erase{width:13px;height:13px;border-radius:3px;display:inline-block;
+    background:repeating-conic-gradient(var(--btn-on) 0 25%,transparent 0 50%) 0 0/6px 6px}
 
-  /* ── color popover ── on-brand, no native chrome ── */
+  /* ── color popover ── */
   .pop{position:absolute;top:calc(100% + 8px);left:0;z-index:10;
-    background:#1B1A1F;border:1px solid rgba(255,255,255,.08);
-    border-radius:10px;padding:12px;width:196px;
-    box-shadow:0 10px 32px rgba(0,0,0,.55)}
+    background:var(--pop);border-radius:10px;padding:12px;width:196px;
+    box-shadow:0 2px 6px var(--shade),0 14px 36px -10px var(--shade)}
   .pop[hidden]{display:none}
   .pop-swatches{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
-  .pop-swatches button{appearance:none;border:1px solid rgba(255,255,255,.1);
-    border-radius:var(--radius-sm);width:100%;aspect-ratio:1;cursor:pointer;padding:0;
-    transition:transform .15s}
-  .pop-swatches button:hover{transform:scale(1.12)}
+  .pop-swatches button{appearance:none;border:0;border-radius:var(--radius-sm);width:100%;aspect-ratio:1;cursor:pointer;padding:0}
   .pop-row{display:flex;gap:6px;align-items:center}
-  .pop-hash{font-family:var(--mono);font-size:12px;color:rgba(241,236,232,.4)}
-  .pop-row input{flex:1;min-width:0;background:#100F11;color:var(--cream);
-    font-family:var(--mono);font-size:12px;letter-spacing:.06em;
-    border:1px solid var(--stroke);border-radius:var(--radius-sm);padding:6px 8px;outline:none}
-  .pop-row input:focus{border-color:rgba(167,139,223,.45)}
-  /* the rainbow -- a shade field + hue bar, pure CSS gradients, no OS chrome.
-     No border: a hairline over a gradient reads as color slivers at the
-     rounded edges; the gradients define their own edges cleanly. */
-  .pop-sv{position:relative;width:100%;height:110px;border-radius:var(--radius-sm);
-    margin-bottom:10px;cursor:crosshair;overflow:hidden}
-  .pop-hue{position:relative;width:100%;height:14px;border-radius:7px;
-    margin-bottom:12px;cursor:crosshair;overflow:hidden;
+  .pop-hash{font-size:12px;color:var(--text-mute)}
+  .pop-row input{flex:1;min-width:0;background:var(--field);color:var(--text);
+    font-family:inherit;font-size:12px;letter-spacing:.06em;border:0;border-radius:var(--radius-sm);padding:7px 8px;outline:none}
+  .pop-sv{position:relative;width:100%;height:110px;border-radius:var(--radius-sm);margin-bottom:10px;cursor:crosshair;overflow:hidden}
+  .pop-hue{position:relative;width:100%;height:14px;border-radius:7px;margin-bottom:12px;cursor:crosshair;overflow:hidden;
     background:linear-gradient(to right,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)}
   .pop-thumb{position:absolute;width:14px;height:14px;border-radius:50%;
-    border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.5);
-    transform:translate(-50%,-50%);pointer-events:none}
+    border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.5);transform:translate(-50%,-50%);pointer-events:none}
   .pop-hue .pop-thumb{top:50%}
 
   #critter{display:grid;gap:2px;justify-content:center;touch-action:none;user-select:none;-webkit-user-select:none}
-  .cell{width:24px;height:48px;border-radius:var(--radius-sm);
-    background:rgba(255,255,255,.03);cursor:pointer;transition:background .12s}
-  .cell:hover{background:rgba(255,255,255,.09)}
-  .cell.fill:hover{background:var(--cellc)}
-  .cell.fill{background:var(--cellc)}
+  .cell{width:24px;height:48px;border-radius:var(--radius-sm);background:var(--cell);cursor:pointer;transition:background .12s}
+  .cell:hover{background:var(--cell-hover)}
+  .cell.fill,.cell.fill:hover{background:var(--cellc)}
+  /* the canvas paints on terminal black in both modes, so colors read exactly as they print
+     (a white critter vanished on linen) -- the same dark island as the terminal preview */
+  #critter{background:#000;padding:10px;border-radius:10px;width:max-content;margin:0 auto}
+  html[data-theme="linen"] #critter{--cell:rgb(231 221 202 / .07);--cell-hover:rgb(231 221 202 / .14)}
 
-  .size{display:flex;gap:16px;align-items:center;justify-content:center;margin-top:14px;
-    font-family:var(--mono);font-size:12px;color:rgba(241,236,232,.6)}
-  .size button{cursor:pointer;background:transparent;color:var(--cream);
-    border:1px solid var(--stroke);border-radius:var(--radius-sm);
-    width:24px;height:24px;font-family:var(--mono);font-size:13px;line-height:1;
-    transition:background .18s}
-  .size button:hover{background:rgba(255,255,255,.06)}
-  .size b{color:var(--cream);font-weight:500;min-width:16px;display:inline-block;text-align:center}
-  .resets{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-  .resets button{flex:1 1 45%;cursor:pointer;background:transparent;color:rgba(241,236,232,.65);
-    font-family:var(--mono);font-size:12px;letter-spacing:.04em;
-    border:1px solid var(--stroke);border-radius:var(--radius-sm);padding:8px;
-    transition:background .18s}
-  .resets button:hover{background:rgba(255,255,255,.05);color:var(--cream)}
+  .size{display:flex;gap:18px;align-items:center;justify-content:center;margin-top:16px;font-size:12px;color:var(--text-dim)}
+  .size .btn{width:26px;height:26px;font-size:14px;line-height:1;padding:0;color:var(--text)}
+  .size b{color:var(--text);font-weight:600;min-width:18px;display:inline-block;text-align:center}
+  .resets{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+  .resets .btn{flex:1 1 45%;padding:9px}
   .col--left{width:auto}
-  /* Voice is its own card -- it absorbs whatever height the bento stretch
-     would otherwise leave as dead air under the paint tools */
   .panel--voice{flex:1}
-  .voice-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-  .voice-grid button{cursor:pointer;background:transparent;color:rgba(241,236,232,.6);
-    font-family:var(--mono);font-size:11px;letter-spacing:.04em;
-    border:1px solid var(--stroke);border-radius:var(--radius-sm);padding:7px 4px;
-    transition:background .18s}
-  .voice-grid button:hover{background:rgba(255,255,255,.05);color:var(--cream)}
-  .voice-grid button.on{color:var(--cream);background:rgba(255,255,255,.05);
-    border-color:rgba(167,139,223,.55)}
+  .voice-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .voice-grid .btn{font-size:11.5px;padding:8px 4px}
 
-  /* ── preview ── critter centered in the black, prompt line for scale ── */
+  /* ── preview ── stays a dark terminal in both modes (a dark island) ── */
   .term{background:#000;border-radius:var(--radius-sm);flex:1;min-height:220px;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    gap:16px;padding:24px}
-  /* The preview draws its own pixels (SVG quadrant cells) -- browsers can't
-     tile block GLYPHS cleanly at line-height 1, so no font gets a say. */
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px}
   #blocks{line-height:0}
-  .warn{font-family:var(--mono);font-size:12px;line-height:1.6;margin-top:14px;min-height:18px}
-  .dims{font-family:var(--mono);font-size:11px;color:rgba(241,236,232,.4);margin-top:10px}
+  .warn{font-size:12px;line-height:1.6;margin-top:12px;min-height:18px}
+  .dims{font-size:12px;color:var(--text-mute);margin-top:12px}
 
-  /* ── export ── CTA speaks Unicorn's primary-action language:
-     dark fill + gradient stroke, gradient label; hover floods the fill
-     with the gradient and the label goes void-dark. ── */
+  /* ── export ── */
   .ansi-code{background:#000;border-radius:var(--radius-sm);padding:12px 14px;
-    font-family:var(--mono);font-size:11px;line-height:1.6;color:rgba(241,236,232,.55);
+    font-family:inherit;font-size:11px;line-height:1.6;color:rgb(231 221 202 / .55);
     overflow-x:auto;white-space:pre;margin:0 0 12px}
-  .copy{appearance:none;-webkit-appearance:none;margin:0;font:inherit;
-    position:relative;width:100%;padding:12px 14px;
-    background:linear-gradient(135deg,#151419,#151419) padding-box,
-               linear-gradient(135deg,rgba(232,149,106,.5),rgba(167,139,223,.5)) border-box;
-    border:1px solid transparent;border-radius:10px;
-    font-family:var(--mono);font-size:11px;font-weight:500;
-    letter-spacing:.14em;text-transform:uppercase;
-    cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
-    transition:background .55s cubic-bezier(.4,0,.2,1)}
-  .copy>span{background:linear-gradient(90deg,var(--peach),var(--lilac));
-    -webkit-background-clip:text;background-clip:text;color:transparent}
-  .copy:hover:not(:disabled){
-    background:linear-gradient(135deg,var(--peach),#C890A5,var(--lilac)) border-box}
-  .copy:hover:not(:disabled)>span{background:none;color:#100F11;-webkit-text-fill-color:#100F11}
-  .copy:disabled{cursor:default;
-    background:linear-gradient(135deg,#151419,#151419) padding-box,
-               linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.12)) border-box}
-  .copy:disabled>span{background:none;color:rgba(241,236,232,.35);-webkit-text-fill-color:rgba(241,236,232,.35)}
-  .hint{font-family:var(--mono);font-size:11px;color:rgba(241,236,232,.4);margin-top:10px}
-  .name-row{display:flex;align-items:center;gap:8px;margin-bottom:12px}
-  .name-row .orn{color:var(--peach);font-size:13px}
-  .name-row input{flex:1;min-width:0;background:#100F11;color:var(--cream);
-    font-family:var(--mono);font-size:12px;letter-spacing:.04em;
-    border:1px solid var(--stroke);border-radius:var(--radius-sm);padding:8px 10px;outline:none}
-  .name-row input:focus{border-color:rgba(232,149,106,.45)}
-  .roll{cursor:pointer;background:transparent;color:rgba(241,236,232,.65);flex:none;
-    border:1px solid var(--stroke);border-radius:var(--radius-sm);
-    width:32px;height:32px;font-size:14px;line-height:1;transition:background .18s}
-  .roll:hover{background:rgba(255,255,255,.06);color:var(--cream)}
+  /* the one primary action: the Unicorn gradient as a fill, ink type on it (both modes) */
+  .copy{appearance:none;border:0;margin:0;width:100%;padding:13px 14px;border-radius:10px;
+    background:var(--uni-glow);color:#070709;font-size:13px;font-weight:700;cursor:pointer;
+    transition:filter .25s}
+  .copy:hover:not(:disabled){filter:brightness(1.08) saturate(1.08)}
+  .copy:disabled{cursor:default;background:var(--btn);color:var(--text-mute)}
+  .hint{font-size:11.5px;line-height:1.6;color:var(--text-mute);margin-top:12px}
+  .name-row{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+  .name-row input{flex:1;min-width:0;background:var(--field);color:var(--text);
+    font-family:inherit;font-size:12.5px;border:0;border-radius:var(--radius-sm);padding:9px 11px;outline:none}
+  .name-row input::placeholder{color:var(--text-mute)}
+  .roll{flex:none;width:34px;height:34px;font-size:14px;line-height:1;padding:0;color:var(--text)}
   .term-row{display:flex;align-items:center;gap:18px}
-  .crit-id{font-family:Menlo,Monaco,monospace;font-size:13px;line-height:1.7;
-    color:rgba(241,236,232,.75)}
-  .crit-id .pv-trait{color:rgba(241,236,232,.4)}
-  .chime{display:flex;align-items:center;gap:9px;cursor:pointer;margin-top:12px;
-    font-family:var(--mono);font-size:11px;color:rgba(241,236,232,.6);user-select:none}
+  .crit-id{font-family:Menlo,Monaco,monospace;font-size:13px;line-height:1.7;color:rgb(231 221 202 / .75)}
+  .crit-id .pv-trait{color:rgb(231 221 202 / .4)}
+  .chime{display:flex;align-items:center;gap:9px;cursor:pointer;margin-top:14px;font-size:12px;color:var(--text-dim);user-select:none}
   .chime input{display:none}
-  .chime-box{width:15px;height:15px;border-radius:4px;flex:none;
-    border:1px solid rgba(255,255,255,.15);position:relative;transition:background .2s}
-  .chime input:checked+.chime-box{
-    background:linear-gradient(135deg,var(--peach),#C890A5,var(--lilac));border-color:transparent}
+  .chime-box{width:16px;height:16px;border-radius:4px;flex:none;background:var(--btn-on);position:relative;transition:background .2s}
+  .chime input:checked+.chime-box{background:var(--uni-glow)}
   .chime input:checked+.chime-box::after{content:"✓";position:absolute;inset:0;
-    display:flex;align-items:center;justify-content:center;color:#100F11;font-size:11px;font-weight:700}
-  .chime em{font-style:normal;color:rgba(241,236,232,.35)}
-  .steps{font-family:var(--mono);font-size:11.5px;line-height:2;color:rgba(241,236,232,.6)}
-  .steps b{color:var(--peach);font-weight:500}
-  .steps code{background:#100F11;border:1px solid var(--stroke);border-radius:4px;
-    padding:2px 6px;color:rgba(241,236,232,.85)}
+    display:flex;align-items:center;justify-content:center;color:#070709;font-size:11px;font-weight:700}
+  .chime em{font-style:normal;color:var(--text-mute)}
+  .steps{font-size:12px;line-height:2;color:var(--text-dim)}
+  .steps b{color:var(--peach-text);font-weight:700}
+  .steps code{background:var(--field);border-radius:4px;padding:2px 6px;color:var(--text)}
 
-  .credit{margin-top:22px;font-family:var(--mono);font-size:11px;color:rgba(241,236,232,.4)}
-  .credit b{color:var(--peach);font-weight:500}
+  .credit{margin-top:22px;font-size:12px;color:var(--text-mute);text-align:center}
+  .credit b{color:var(--peach-text);font-weight:700}
+  /* light: true peach can't carry text on linen, so it becomes a highlighter band under ink (the site's mark) */
+  html[data-theme="linen"] .credit b,html[data-theme="linen"] .steps b{background:var(--peach-band);padding:0 2px}
+  /* light: cards sit a step lighter than the page and lift on a warm shadow -- no strokes */
+  html[data-theme="linen"] .panel{box-shadow:0 1px 2px rgb(34 28 21 / .06),0 10px 28px -14px rgb(34 28 21 / .22)}
+
+  /* ── the light / dark toggle: the site's "Sunset" symbol -- the ✺ sets behind an
+     unseen horizon at night. Top-right, full opacity, no hover style. ── */
+  .theme-toggle{position:fixed;z-index:20;
+    /* the exact spot the portfolio puts it (theme.css + theme.js): centered on the 50px nav pill at top 22,
+       on the site's right rail -- so clicking between ivygrzy.com/work/unicorn and here, it doesn't move */
+    top:38px;right:max(var(--edge),calc((100vw - min(1400px,92vw)) / 2));width:18px;height:18px;
+    display:grid;place-items:center;padding:0;border:0;border-radius:50%;background:transparent;
+    color:var(--stone);cursor:pointer;font-family:var(--f-mono);view-transition-name:theme-toggle}
+  .theme-toggle::before{content:"";position:absolute;inset:-12px;border-radius:50%}
+  .theme-toggle:focus-visible{outline:1px solid var(--text-mute);outline-offset:5px}
+  .theme-toggle svg{display:block;width:18px;height:18px;overflow:visible}
+  ::view-transition-old(theme-toggle){display:none}
+  ::view-transition-new(theme-toggle),::view-transition-group(theme-toggle){animation:none}
+  @property --vt-r{syntax:"<length>";inherits:false;initial-value:0px}
+  ::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
+  ::view-transition-new(root){
+    -webkit-mask-image:radial-gradient(circle at var(--vt-x,50%) var(--vt-y,0),#000 calc(var(--vt-r) - 140px),transparent var(--vt-r));
+            mask-image:radial-gradient(circle at var(--vt-x,50%) var(--vt-y,0),#000 calc(var(--vt-r) - 140px),transparent var(--vt-r))}
+  @media (min-width:761px){:root{--edge:clamp(24px,8.33vw,120px)}}
+  @media (max-width:520px){
+    .panel{padding:20px 16px 22px}
+    .cell{width:20px;height:40px}
+    .voice-grid{grid-template-columns:repeat(3,1fr)}
+  }
 </style></head>
 <body>
-  <h1>✺ Critter Maker</h1>
-  <div class="sub">Design your own pixel critter that prints in the terminal, like Unicorn's.
-    Paint the grid -- each cell is a quarter of a terminal character, so the preview is
-    the literal block characters your shell will print. You paint with two colors, body
-    and accent -- a terminal draws each character in a single color, so every 2×2 block
-    commits to one or the other.</div>
+  <button class="theme-toggle" id="themeToggle" type="button"><svg viewBox="0 0 18 18" aria-hidden="true"></svg></button>
+  <h1>Critter <em>Maker</em></h1>
+  <p class="sub">Paint a pixel critter that prints in your terminal, like Unicorn's.
+    Each cell is a quarter of a terminal character, and a character holds one color,
+    so every 2×2 block takes one of the four.</p>
 
   <div class="main">
     <div class="col col--left">
     <div class="panel">
-      <h2>❖ Paint</h2>
+      <h2>Paint</h2>
       <div class="tools">
-        <span class="tool on" data-tool="X"><span class="swx" id="swBody" title="Change body color"></span>Body</span>
-        <span class="tool" data-tool="O"><span class="swx" id="swAcc" title="Change accent color"></span>Accent</span>
-        <span class="tool" data-tool="."><span class="sw-erase"></span>Erase</span>
+        <span class="btn tool on" data-tool="X"><span class="swx" data-slot="X" title="Change this color"></span>Color 1</span>
+        <span class="btn tool" data-tool="Q"><span class="swx" data-slot="Q" title="Change this color"></span>Color 2</span>
+        <span class="btn tool" data-tool="L"><span class="swx" data-slot="L" title="Change this color"></span>Color 3</span>
+        <span class="btn tool" data-tool="D"><span class="swx" data-slot="D" title="Change this color"></span>Color 4</span>
+        <span class="btn tool" data-tool="."><span class="sw-erase"></span>Erase</span>
         <div class="pop" id="pop" hidden>
           <div class="pop-sv" id="popSv"><div class="pop-thumb" id="svThumb"></div></div>
           <div class="pop-hue" id="popHue"><div class="pop-thumb" id="hueThumb"></div></div>
@@ -207,26 +206,26 @@
       </div>
       <div id="critter"></div>
       <div class="size">
-        <span>cols <button data-d="c-">−</button> <b id="nc"></b> <button data-d="c+">+</button></span>
-        <span>rows <button data-d="r-">−</button> <b id="nr"></b> <button data-d="r+">+</button></span>
+        <span>Columns <button class="btn" data-d="c-">−</button> <b id="nc"></b> <button class="btn" data-d="c+">+</button></span>
+        <span>Rows <button class="btn" data-d="r-">−</button> <b id="nr"></b> <button class="btn" data-d="r+">+</button></span>
       </div>
       <div class="resets">
-        <button id="clear">✢ Clear</button>
-        <button id="loadUni">✺ Our unicorn</button>
-        <button id="flip">❁ Flip</button>
-        <button id="surprise">✷ Surprise me</button>
+        <button class="btn" id="clear">Clear</button>
+        <button class="btn" id="loadUni">Our Unicorn</button>
+        <button class="btn" id="flip">Flip</button>
+        <button class="btn" id="surprise">Surprise Me</button>
       </div>
     </div>
     <div class="panel panel--voice">
-      <h2>✧ Voice</h2>
+      <h2>Voice</h2>
       <div class="voice-grid" id="voiceGrid"></div>
-      <div class="hint" id="voiceHint">Tap to hear ✺ It calls this out when it prints</div>
+      <div class="hint" id="voiceHint">Tap to hear it. Your critter calls this out when it prints.</div>
     </div>
     </div>
 
     <div class="col">
       <div class="panel panel--term">
-        <h2>◆ Terminal</h2>
+        <h2>Terminal</h2>
         <div class="term">
           <div class="term-row">
             <div id="blocks"></div>
@@ -238,25 +237,25 @@
         <div class="warn" id="warn"></div>
       </div>
       <div class="panel">
-        <h2>✷ Export</h2>
-        <div class="name-row"><span class="orn">❀</span>
-          <input id="critName" placeholder="Name your critter" maxlength="24" spellcheck="false"></div>
-        <div class="name-row"><span class="orn">✷</span>
-          <input id="critTrait" placeholder="Personality (↻ rolls one)" maxlength="64" spellcheck="false">
-          <button class="roll" id="rollTrait" title="Roll a personality">↻</button></div>
+        <h2>Export</h2>
+        <div class="name-row">
+          <input id="critName" placeholder="Name your critter" maxlength="24" spellcheck="false" aria-label="Critter name"></div>
+        <div class="name-row">
+          <input id="critTrait" placeholder="Personality (↻ rolls one)" maxlength="64" spellcheck="false" aria-label="Personality">
+          <button class="btn roll" id="rollTrait" title="Roll a personality" aria-label="Roll a personality">↻</button></div>
         <pre class="ansi-code" id="ansiCode"></pre>
-        <button class="copy" id="copyBtn"><span id="copyLbl">❋ Copy terminal-ready print</span></button>
+        <button class="copy" id="copyBtn"><span id="copyLbl">Copy Terminal-Ready Print</span></button>
         <label class="chime"><input type="checkbox" id="chime"><span class="chime-box"></span>
           Chime when it prints <em>(macOS)</em></label>
       </div>
       <div class="panel">
-        <h2>❖ Make it permanent</h2>
+        <h2>Make It Permanent</h2>
         <div class="steps">
-          <b>1</b> · Hit <b>❋ Copy terminal-ready print</b> above<br>
+          <b>1</b> · Hit <b>Copy Terminal-Ready Print</b> above<br>
           <b>2</b> · In Terminal, type <code>open -e ~/.zshrc</code> and hit enter -- your
           shell's startup file opens in an editor<br>
           <b>3</b> · Paste at the very bottom, save, close<br>
-          <b>4</b> · Open a fresh terminal ✺ <span id="stepName">your critter</span> says hi
+          <b>4</b> · Open a fresh terminal, and <span id="stepName">your critter</span> says hi
         </div>
         <div class="hint">Just want to see it once? Paste it straight into any terminal.
         Already printing something at startup (a hook, like Unicorn)? Add the same line there instead.</div>
@@ -264,23 +263,42 @@
     </div>
   </div>
 
-  <div class="credit">Built for <b>Unicorn</b> ✺ a creative OS for designers who code -- by Ivy</div>
+  <div class="credit">Made for <b>Unicorn</b>, a creative OS for designers who work in the terminal -- Ivy Grzybowski</div>
 
 <script>
   const GLYPH={'0000':' ','1000':'▘','0100':'▝','0010':'▖','0001':'▗','1100':'▀','0011':'▄','1010':'▌','0101':'▐','1001':'▚','0110':'▞','1110':'▛','1101':'▜','1011':'▙','0111':'▟','1111':'█'};
+  /* four paint slots: X peach (body) · Q dark peach (far legs) · L lilac (mane) · D dark lilac (horn) */
+  const SLOTS=['X','Q','L','D'];
+  const isPaint=ch=>SLOTS.includes(ch);
+  /* our unicorn = the logo, option 7 (protos/gallop/unicorn-7.html, the still):
+     dark horn, light mane + tail, darker-peach lifted front leg + far back leg */
   const UNICORN=[
-    '.O........',
-    '.OO.......',
-    '.XXXO.....',
-    'XXXXOO....',
-    '..XXXXXXOO',
-    '.XXXXXXXOO',
-    '.XXX...XX.',
-    '..XX...XX.',
+    '.D........',
+    '.DLL......',
+    '.XXXLL....',
+    'XXXXLLL...',
+    '..XXXXXXLL',
+    '.QXXXXXXLL',
+    '.QXX...XQ.',
+    '..XX...XQ.',
   ];
-  const DEF_BODY='#E8956A', DEF_ACC='#A78BDF';
-  const KEY='critter-maker.v1';
-  let COL_BODY=DEF_BODY, COL_ACC=DEF_ACC;
+  /* every color snaps to the terminal's own 256-color palette, so the browser shows exactly
+     what prints: many terminals (and chat panes) round truecolor to these 256 anyway, which is
+     why #E8954C / #9A72C4 looked like Colors 1 + 3 here but clearly darker in the terminal.
+     Defaults = the logo's ANSI colors: 215 peach, 173 dark peach, 140 lilac, 97 dark lilac. */
+  const LV=[0,95,135,175,215,255];
+  function snap256(hex){
+    const[r,g,b]=hex2rgb(hex);
+    const ci=v=>LV.reduce((bi,l,i)=>Math.abs(l-v)<Math.abs(LV[bi]-v)?i:bi,0);
+    const cube=[LV[ci(r)],LV[ci(g)],LV[ci(b)]];
+    const gi=Math.max(0,Math.min(23,Math.round(((r+g+b)/3-8)/10))), gv=8+gi*10, grey=[gv,gv,gv];
+    const d=c=>(c[0]-r)**2+(c[1]-g)**2+(c[2]-b)**2;
+    const best=d(grey)<d(cube)?grey:cube;
+    return '#'+best.map(x=>x.toString(16).padStart(2,'0')).join('').toUpperCase();
+  }
+  const DEF={X:'#FFAF5F',Q:'#D7875F',L:'#AF87D7',D:'#875FAF'};
+  const KEY='critter-maker.v2', OLD_KEY='critter-maker.v1';
+  let COL={...DEF};
   let cols=10, rows=8;
   let grid=UNICORN.map(r=>r.split(''));
   let tool='X', painting=false, strokeTool='X';
@@ -288,26 +306,32 @@
   const $=id=>document.getElementById(id);
   const gridEl=$('critter'), blocksEl=$('blocks');
 
-  /* your critter survives a refresh */
+  /* your critter survives a refresh (v1 saves carry over: body -> peach, accent -> lilac) */
   let savedName='',savedChime=false,savedVoice='',savedTrait='';
   try{
-    const s=JSON.parse(localStorage.getItem(KEY));
+    let s=JSON.parse(localStorage.getItem(KEY));
+    if(!s){
+      const o=JSON.parse(localStorage.getItem(OLD_KEY));
+      if(o && o.grid) s={...o, grid:o.grid.map(r=>r.replace(/O/g,'L')),
+        colors:{...DEF, X:o.body||DEF.X, L:o.acc||DEF.L}};
+    }
     if(s && s.grid){ grid=s.grid.map(r=>r.split('')); cols=s.cols; rows=s.rows;
-      COL_BODY=s.body||DEF_BODY; COL_ACC=s.acc||DEF_ACC;
+      COL={...DEF,...(s.colors||{})}; for(const k of SLOTS)COL[k]=snap256(COL[k]);
       savedName=s.name||''; savedChime=!!s.chime; savedVoice=s.voice||'';
       savedTrait=s.trait||''; }
   }catch{}
   function persist(){
     try{localStorage.setItem(KEY,JSON.stringify(
-      {grid:grid.map(r=>r.join('')),cols,rows,body:COL_BODY,acc:COL_ACC,
+      {grid:grid.map(r=>r.join('')),cols,rows,colors:COL,
        name:$('critName').value.trim(),trait:$('critTrait').value.trim(),
        chime:$('chime').checked,voice:VOICE.n}));}catch{}
   }
 
-  function cellColor(ch){return ch==='O'?COL_ACC:ch==='X'?COL_BODY:null;}
+  function cellColor(ch){return isPaint(ch)?COL[ch]:null;}
 
   function buildGrid(){
-    gridEl.style.gridTemplateColumns=`repeat(${cols},24px)`;
+    const w=matchMedia('(max-width:520px)').matches?20:24;
+    gridEl.style.gridTemplateColumns=`repeat(${cols},${w}px)`;
     gridEl.innerHTML='';
     for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
       const d=document.createElement('div');
@@ -323,13 +347,11 @@
     el.style.setProperty('--cellc',col||'');
   }
 
-  /* bounding box of the painted art, snapped to whole characters -- the
-     preview + export crop to THIS, so the critter centers on itself, not
-     on however much empty grid surrounds it */
+  /* bounding box of the painted art, snapped to whole characters */
   function artBounds(){
     let r0=rows,r1=-1,c0=cols,c1=-1;
     for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
-      if(grid[r][c]==='X'||grid[r][c]==='O'){
+      if(isPaint(grid[r][c])){
         if(r<r0)r0=r; if(r>r1)r1=r;
         if(c<c0)c0=c; if(c>c1)c1=c;
       }
@@ -337,6 +359,8 @@
     if(r1<0)return null;
     return{r0:r0-(r0%2), c0:c0-(c0%2), r1, c1};
   }
+  /* one terminal character = a 2×2 quad; returns its four slots ('.' = empty) */
+  const quad=(r,c)=>[grid[r]?.[c],grid[r]?.[c+1],grid[r+1]?.[c],grid[r+1]?.[c+1]].map(x=>isPaint(x)?x:'.');
 
   function renderPreview(){
     const b=artBounds();
@@ -345,17 +369,14 @@
       blocksEl.innerHTML='';
       $('dims').textContent='Nothing painted yet';
     }else{
-      // each character cell is a 2×2 of quadrant rects -- the same shapes
-      // the terminal glyphs encode, drawn crisp instead of typeset
       const CW=14,CH=28,POS=[[0,0],[1,0],[0,1],[1,1]];
       let rects='';
       for(let r=b.r0,ri=0;r<=b.r1;r+=2,ri++){
         for(let c=b.c0,ci=0;c<=b.c1;c+=2,ci++){
-          const q=[grid[r]?.[c],grid[r]?.[c+1],grid[r+1]?.[c],grid[r+1]?.[c+1]]
-            .map(x=>(x==='O'||x==='X')?x:'.');
+          const q=quad(r,c);
           const cset=[...new Set(q.filter(x=>x!=='.'))];
           if(!cset.length)continue;
-          let color=cset[0]==='O'?COL_ACC:COL_BODY;
+          let color=COL[cset[0]];
           if(cset.length>1){conflicts++;color='#FF5E71';}
           q.forEach((bit,i)=>{
             if(bit==='.')return;
@@ -371,22 +392,21 @@
         +(chRows>=5?' · Tall -- chat windows may fold it; terminals show it all':'');
     }
     $('warn').innerHTML=conflicts
-      ? `<span style="color:#FF5E71">✷ ${conflicts} character(s) mix both colors -- a terminal character can only be one. Repaint so each 2×2 block is a single color.</span>`
-      : `<span style="color:#7FD1A0">✓ No color conflicts -- prints cleanly.</span>`;
-    // identity line rides in the terminal preview exactly as it prints
+      ? `<span style="color:var(--bad)">${conflicts>1?conflicts+' characters mix':'1 character mixes'} colors -- a terminal character can only be one. Repaint so each 2×2 block is a single color.</span>`
+      : `<span style="color:var(--ok)">✓ No color conflicts -- prints cleanly.</span>`;
     const nm=$('critName').value.trim(), tr=$('critTrait').value.trim();
     const idEl=$('critId');
     idEl.hidden=!(nm||tr);
     if(nm||tr){
       $('pvName').textContent='✺ '+(nm||'critter');
-      $('pvName').style.color=COL_ACC;
+      $('pvName').style.color=COL.L;
       $('pvTrait').textContent=tr;
     }
     renderExport(conflicts);
     persist();
   }
 
-  /* ── ANSI export ── the grid as a printf with 24-bit color escapes */
+  /* ── ANSI export ── the grid as a printf with 24-bit (truecolor) escapes, one per color run */
   function hex2rgb(h){const n=parseInt(h.slice(1),16);return[(n>>16)&255,(n>>8)&255,n&255];}
   function buildAnsi(){
     const b=artBounds();
@@ -395,51 +415,49 @@
     for(let r=b.r0;r<=b.r1;r+=2){
       let line='',last=null,used=false;
       for(let c=b.c0;c<=b.c1;c+=2){
-        const q=[grid[r]?.[c],grid[r]?.[c+1],grid[r+1]?.[c],grid[r+1]?.[c+1]]
-          .map(x=>(x==='O'||x==='X')?x:'.');
+        const q=quad(r,c);
         const key=q.map(x=>x==='.'?'0':'1').join('');
         if(key==='0000'){line+=' ';continue;}
-        const cset=[...new Set(q.filter(x=>x!=='.'))];
-        const[R,G,B]=hex2rgb(cset[0]==='O'?COL_ACC:COL_BODY);
+        const slot=q.find(x=>x!=='.');
+        const[R,G,B]=hex2rgb(COL[slot]);
         const esc=`\\033[38;2;${R};${G};${B}m`;
         if(esc!==last){line+=esc;last=esc;}
         line+=GLYPH[key];used=true;
       }
-      // keep full width (no trailing trim): the identity text hangs off the
-      // right edge, so every row must measure the same
       lines.push(line+(used?'\\033[0m':''));
     }
     return {lines, w:Math.ceil((b.c1-b.c0+1)/2)};
   }
-  /* ── voice ── each critter picks its call from the macOS sound set.
-     On print it plays via afplay in a detached subshell: no blocked
-     prompt, silently skips on machines without the file. */
-  /* p = what the terminal plays (system path, universal). pv = what the
-     BROWSER previews: Chrome can't decode AIFF, so the 14 classics have
-     tiny m4a copies in critter-sounds/ next to this file. */
+  /* ── voice ── p = what the terminal plays (macOS system path, via afplay).
+     pv = what the BROWSER previews: small m4a copies of the same sounds in
+     critter-sounds/ (Chrome can't decode AIFF, and can't reach file:// paths). */
   const SND='/System/Library/Sounds/';
   const TONE='/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/';
   const AIFF=['Glass','Tink','Pop','Purr','Frog','Ping','Hero','Submarine',
               'Bottle','Blow','Funk','Morse','Sosumi','Basso'];
   const VOICES=[
-    ...AIFF.map(n=>({n, p:SND+n+'.aiff', pv:'critter-sounds/'+n+'.m4a'})),
+    ...AIFF.map(n=>({n, p:SND+n+'.aiff'})),
     {n:'Tweet',p:TONE+'AlertTones/Classic/Tweet.m4r'},
     {n:'Ding',p:TONE+'AlertTones/Classic/Ding.m4r'},
     {n:'Bloom',p:TONE+'AlertTones/Classic/Bloom.m4r'},
     {n:'Fanfare',p:TONE+'AlertTones/Classic/Fanfare.m4r'},
     {n:'Boing',p:TONE+'Ringtones/Boing.m4r'},
     {n:'Bark',p:TONE+'Ringtones/Bark.m4r'},
-  ];
-  let VOICE=VOICES[0];
+  ].map(v=>({...v, pv:'critter-sounds/'+v.n+'.m4a'}));
+  let VOICE=VOICES[0], playing=null;
   VOICES.forEach(v=>{
     const b=document.createElement('button');
+    b.className='btn';
     b.textContent=v.n; b.dataset.v=v.n;
     b.addEventListener('click',()=>{
       VOICE=v;
       syncVoice();
       $('chime').checked=true;              // choosing a voice means it speaks
-      try{new Audio(v.pv||('file://'+encodeURI(v.p))).play()
-        .catch(()=>{$('voiceHint').textContent='Browser kept quiet -- it will still call out in the terminal';});
+      try{
+        if(playing){playing.pause();}
+        playing=new Audio(v.pv);
+        // AbortError = a newer tap interrupted this one, not a silent browser
+        playing.play().catch(e=>{if(e.name!=='AbortError')$('voiceHint').textContent='Browser kept quiet -- it will still call out in the terminal';});
       }catch{}
       renderPreview();
     });
@@ -450,30 +468,20 @@
   }
   /* double quotes around the path: the tone-vault names have spaces */
   function chimeCmd(){return `;(afplay "${VOICE.p}" &)2>/dev/null`;}
-  /* strip characters that break a single-quoted printf: ' ends the string,
-     % is a printf format, \ starts an escape */
   const clean=s=>(s||'').replace(/['%\\]/g,'').trim();
   function exportCmd(){
     const res=buildAnsi();
     if(!res)return null;
-    // typography of the print: two blank lines above (real breathing room
-    // from whatever command came before), a 2-space indent, and the name +
-    // short description riding BESIDE the critter -- fewer lines total, so
-    // collapsed tool output still shows who this is
     const rows=res.lines.map(l=>'  '+l);
     const name=clean($('critName').value), trait=clean($('critTrait').value);
     if(name||trait){
       const gap='   ', padRow='  '+' '.repeat(res.w);
       const nameRow=Math.max(0,Math.floor((rows.length-1)/2));
       if(trait && nameRow+1>=rows.length)rows.push(padRow);
-      const[R,G,B]=hex2rgb(COL_ACC);
+      const[R,G,B]=hex2rgb(COL.L);
       rows[nameRow]+=`${gap}\\033[38;2;${R};${G};${B}m✺ ${name||'critter'}\\033[0m`;
       if(trait)rows[nameRow+1]+=`${gap}\\033[38;2;122;118;128m${trait}\\033[0m`;
     }
-    // chat UIs (Claude Code) collapse tool output to ~4 visible lines and
-    // trim blank edges. The critter owns every one of those lines: margins
-    // are pure blanks (real terminals render them, chat trims them) and
-    // NOTHING prints below the art -- any extra line folds the critter.
     const parts=['','',...rows,''];
     return `printf '${parts.join('\\n')}\\n'`+($('chime').checked?chimeCmd():'');
   }
@@ -483,7 +491,7 @@
     'allergic to beige','dreams in hex','sings to the compiler',
     'steals cursor blinks','naps between keystrokes','flirts with 404s',
     'distrusts light mode','counts your typos lovingly','bites bugs',
-    'unionizing the pixels','saving up for a second color','believes in you, mostly'];
+    'unionizing the pixels','saving up for a fifth color','believes in you, mostly'];
   $('rollTrait').addEventListener('click',()=>{
     const cur=$('critTrait').value.trim();
     let q=cur; while(q===cur)q=QUIRKS[Math.floor(Math.random()*QUIRKS.length)];
@@ -493,9 +501,9 @@
   $('critTrait').addEventListener('input',()=>renderPreview());
   function renderExport(conflicts){
     const code=$('ansiCode'),btn=$('copyBtn');
-    if(conflicts){code.textContent='✷ Resolve the mixed cells first';btn.disabled=true;return;}
+    if(conflicts){code.textContent='Resolve the mixed cells first';btn.disabled=true;return;}
     const cmd=exportCmd();
-    if(!cmd){code.textContent='✢ Paint something first';btn.disabled=true;return;}
+    if(!cmd){code.textContent='Paint something first';btn.disabled=true;return;}
     code.textContent=cmd;btn.disabled=false;
   }
   async function toClipboard(text){
@@ -510,7 +518,7 @@
     await toClipboard(cmd);
     const lbl=$('copyLbl');
     lbl.textContent='✓ Copied';
-    setTimeout(()=>lbl.textContent='❋ Copy terminal-ready print',1400);
+    setTimeout(()=>lbl.textContent='Copy Terminal-Ready Print',1400);
   });
   $('chime').addEventListener('change',()=>renderPreview());
   $('critName').addEventListener('input',()=>{
@@ -538,8 +546,7 @@
     renderPreview();
   }
 
-  /* tools -- click the label to select, click the swatch to recolor
-     (which selects the tool too: pick a color, paint with it) */
+  /* tools -- click the label to select, click the swatch to recolor (selects it too) */
   function selectTool(t){
     document.querySelectorAll('.tool').forEach(x=>x.classList.toggle('on',x.dataset.tool===t));
     tool=t;
@@ -547,16 +554,15 @@
   document.querySelectorAll('.tool').forEach(b=>b.addEventListener('click',()=>selectTool(b.dataset.tool)));
 
   /* ── color popover ── */
-  const PRESETS=['#E8956A','#A78BDF','#DCA0D8','#FF5E71','#7FD1A0','#E8C46A','#F1ECE8','#8A7BC8'];
-  let popSlot=null; // 'X' | 'O'
+  const PRESETS=['#FFAF5F','#D7875F','#AF87D7','#875FAF','#D787D7','#FF5F87','#87D7AF','#EEEEEE'];
+  let popSlot=null; // one of SLOTS
   const pop=$('pop'), popHex=$('popHex');
   PRESETS.forEach(hex=>{
     const b=document.createElement('button');
-    b.style.background=hex; b.title=hex;
+    b.style.background=hex; b.title=hex; b.setAttribute('aria-label',hex);
     b.addEventListener('click',()=>{applyColor(hex);closePop();});
     $('popSw').appendChild(b);
   });
-  /* HSV <-> hex -- the rainbow's math */
   function hsv2hex(h,s,v){
     const f=n=>{const k=(n+h/60)%6;return Math.round((v-v*s*Math.max(0,Math.min(k,4-k,1)))*255);};
     return '#'+[f(5),f(3),f(1)].map(x=>x.toString(16).padStart(2,'0')).join('');
@@ -583,13 +589,13 @@
     hueThumb.style.left=(curH/360*100)+'%';
   }
   function applyColor(hex,fromField){
-    if(popSlot==='X')COL_BODY=hex; else COL_ACC=hex;
+    hex=snap256(hex);
+    if(popSlot)COL[popSlot]=hex;
     if(!fromField){[curH,curS,curV]=hex2hsv(hex);syncPop();}
     popHex.value=hex.slice(1);
     syncSwatches(); reink();
   }
   function applyHsv(){applyColor(hsv2hex(curH,curS,curV),true);syncPop();}
-  /* drag on the shade field / hue bar */
   function track(el,move){
     el.addEventListener('mousedown',e=>{
       const go=ev=>{
@@ -610,31 +616,30 @@
     popSlot=slot;
     selectTool(slot);
     pop.hidden=false;
-    pop.style.left=(anchor.closest('.tool').offsetLeft)+'px';
-    const cur=(slot==='X'?COL_BODY:COL_ACC);
-    [curH,curS,curV]=hex2hsv(cur);
-    popHex.value=cur.slice(1);
+    const t=anchor.closest('.tool'), wrap=t.parentElement;
+    pop.style.left=Math.min(t.offsetLeft, wrap.clientWidth-196)+'px';
+    pop.style.top=(t.offsetTop+t.offsetHeight+8)+'px';
+    [curH,curS,curV]=hex2hsv(COL[slot]);
+    popHex.value=COL[slot].slice(1);
     syncPop();
   }
   function closePop(){pop.hidden=true;popSlot=null;}
-  $('swBody').addEventListener('click',e=>{e.stopPropagation();openPop('X',e.target);});
-  $('swAcc').addEventListener('click',e=>{e.stopPropagation();openPop('O',e.target);});
+  document.querySelectorAll('.swx').forEach(sw=>sw.addEventListener('click',e=>{e.stopPropagation();openPop(sw.dataset.slot,sw);}));
   document.addEventListener('click',e=>{
     if(!pop.hidden && !pop.contains(e.target))closePop();
   });
   document.addEventListener('keydown',e=>{if(e.key==='Escape')closePop();});
   popHex.addEventListener('input',()=>{
     const v=popHex.value.trim().replace(/^#/,'');
-    if(/^[0-9a-f]{6}$/i.test(v)){
-      const hex='#'+v.toLowerCase();
-      if(popSlot==='X')COL_BODY=hex; else COL_ACC=hex;
+    if(/^[0-9a-f]{6}$/i.test(v) && popSlot){
+      const hex=snap256('#'+v);
+      COL[popSlot]=hex;
       [curH,curS,curV]=hex2hsv(hex);syncPop();
       syncSwatches(); reink();
     }
   });
   function syncSwatches(){
-    $('swBody').style.background=COL_BODY;
-    $('swAcc').style.background=COL_ACC;
+    document.querySelectorAll('.swx').forEach(sw=>sw.style.background=COL[sw.dataset.slot]);
   }
   function reink(){
     document.querySelectorAll('.cell').forEach(el=>{
@@ -660,10 +665,10 @@
     grid=Array.from({length:rows},()=>Array(cols).fill('.'));
     buildGrid(); renderPreview();
   });
-  /* our unicorn = the whole original: grid AND the peach/lilac */
+  /* our unicorn = the whole logo: grid AND its four colors */
   $('loadUni').addEventListener('click',()=>{
     cols=10; rows=8; grid=UNICORN.map(r=>r.split(''));
-    COL_BODY=DEF_BODY; COL_ACC=DEF_ACC; syncSwatches();
+    COL={...DEF}; syncSwatches();
     buildGrid(); renderPreview();
   });
   $('flip').addEventListener('click',()=>{
@@ -671,46 +676,26 @@
     buildGrid(); renderPreview();
   });
 
-  /* ── surprise me ── random critter, generated at CHARACTER resolution
-     (each 2×2 quad is one color) so it can never create color conflicts. */
+  /* ── surprise me ── hand-drawn critters, each in its own four-color palette (all four
+     used), drawn so every 2×2 block is one color -- eyes are holes, not pixels, which is
+     how a terminal character can hold them. Fewer, better beats many random blobs.
+     Never the same one twice in a row; sometimes it faces the other way. */
+  const CRITTERS=[
+    {"n":"Cat","g":["L...L.......","LL..LL......","XXXXXX.....D","X.XX.X.....D","XXXXXXXXXXD.",".XXXXXXXXX..",".Q.Q...Q.Q..",".Q.Q...Q.Q.."],"c":{"X":"#BCBCBC","Q":"#808080","L":"#FFAFAF","D":"#585858"}},
+    {"n":"Fox","g":["L...L.........","LL..LL........","XXXXXX........","X.XX.X.....XQQ","QQXXXXXXXXXXQ.","QQXXXXXXXX....",".D.D...D.D....",".D.D...D.D...."],"c":{"X":"#FF875F","Q":"#FFD7AF","L":"#AF5F5F","D":"#875F5F"}},
+    {"n":"Frog","g":["..LL....LL..",".L..L..L..L.","XXXXXXXXXXXX","X.XXXXXXXX.X","XXDDDDDDDDXX","XXDDDDDDDDXX",".QQ......QQ.","QQQQ....QQQQ"],"c":{"X":"#87AF5F","Q":"#5F875F","L":"#AFD787","D":"#D7D7AF"}},
+    {"n":"Bird","g":["....L.....","...LL.....","DDXXXX....",".DX.XX....","..XXLLLLQQ","..XXLLLLQ.","...XXXX...","....XX....","....D.D...","...DD.DD.."],"c":{"X":"#5FAFD7","Q":"#5F87AF","L":"#87D7FF","D":"#FFAF5F"}},
+    {"n":"Bunny","g":["...L.L......","..LL.LL.....","..XXXXX.....",".XX.XXXX....","DDXXXXXXXXX.","..XXXXXXXXXX","...XXXXXXX.Q","...XXXXXXX..","...QQ...QQ..","..QQQ..QQQ.."],"c":{"X":"#EEEEEE","Q":"#BCBCBC","L":"#FFAFD7","D":"#FF87AF"}}
+  ];
+  let lastCritter=-1;
   $('surprise').addEventListener('click',()=>{
-    // fresh palette every roll: random body hue, accent pushed 40-180
-    // degrees around the wheel so the pair always reads as two colors
-    const h=Math.random()*360;
-    COL_BODY=hsv2hex(h,0.42+Math.random()*0.33,0.82+Math.random()*0.18);
-    COL_ACC=hsv2hex((h+40+Math.random()*140)%360,0.5+Math.random()*0.4,0.78+Math.random()*0.22);
-    syncSwatches();
-    const qc=Math.ceil(cols/2), qr=Math.ceil(rows/2);
-    const half=Math.ceil(qc/2);
-    // noise seeded inside a soft ellipse, then smoothed -- blobby, critter-ish
-    let m=Array.from({length:qr},(_,y)=>Array.from({length:half},(_,x)=>{
-      const dx=(x+0.5)/half, dy=(y-qr/2+0.5)/(qr/2);
-      return (Math.random()<0.75-0.45*(dx*dx+dy*dy*0.6))?1:0;
-    }));
-    for(let pass=0;pass<2;pass++){
-      m=m.map((row,y)=>row.map((v,x)=>{
-        let n=0;
-        for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){
-          if(!dx&&!dy)continue;
-          n+=(m[y+dy]?.[x+dx]??0);
-        }
-        return n>=4?1:n<=1?0:v;
-      }));
-    }
-    grid=Array.from({length:rows},()=>Array(cols).fill('.'));
-    for(let y=0;y<qr;y++)for(let x=0;x<half;x++){
-      if(!m[y][x])continue;
-      // accent sprinkles ride the top edge + outer tips
-      const topEdge=!(m[y-1]?.[x]), tip=x===half-1||!m[y][x+1];
-      const ch=(topEdge&&Math.random()<0.5)||(tip&&Math.random()<0.3)?'O':'X';
-      for(const[cx,cy]of[[x*2,y*2],[x*2+1,y*2],[x*2,y*2+1],[x*2+1,y*2+1]]){
-        const mx=cols-1-cx; // mirror
-        if(cy<rows){
-          if(cx<cols)grid[cy][cx]=ch;
-          if(mx>=0&&mx<cols)grid[cy][mx]=ch;
-        }
-      }
-    }
+    let i; do{i=Math.floor(Math.random()*CRITTERS.length);}while(CRITTERS.length>1&&i===lastCritter);
+    lastCritter=i;
+    const cr=CRITTERS[i];
+    cols=cr.g[0].length; rows=cr.g.length;
+    grid=cr.g.map(r=>r.split(''));
+    if(Math.random()<.5)grid=grid.map(r=>r.reverse());
+    COL={...cr.c}; syncSwatches();
     buildGrid(); renderPreview();
   });
 
@@ -721,5 +706,59 @@
   VOICE=VOICES.find(v=>v.n===savedVoice)||VOICES[0];
   syncVoice();
   syncSwatches(); buildGrid(); renderPreview();
+
+  /* ── light / dark toggle ── the site's pattern (ivygrzy.com theme.js, "Sunset, no line"):
+     default = system setting, a click overrides and is remembered. The ✺ sets behind an
+     unseen horizon for dark; the page floods DOWN going dark, UP going light. */
+  (()=>{
+    const root=document.documentElement, KEY_T='critter-maker.theme', LIGHT='linen';
+    const btn=$('themeToggle'), svg=btn.querySelector('svg'), NS='http://www.w3.org/2000/svg';
+    const el=(n,a,p)=>{const x=document.createElementNS(NS,n);for(const k in a)x.setAttribute(k,a[k]);p&&p.appendChild(x);return x;};
+    const cp=el('clipPath',{id:'tt-sky'},el('defs',{},svg));
+    const sky=el('rect',{x:-4,y:-4,width:26},cp);
+    const g=el('g',{'clip-path':'url(#tt-sky)'},svg);
+    const star=el('text',{x:0,y:0,'text-anchor':'middle','dominant-baseline':'central','font-size':21,fill:'currentColor'},g);
+    star.textContent='✺';
+    const lerp=(a,b,k)=>a+(b-a)*k;
+    const draw=k=>{
+      sky.setAttribute('height',lerp(16.4,12.6,k)+4);
+      star.setAttribute('transform',`translate(9 ${lerp(9.5,12,k)}) rotate(${k*45}) translate(0 ${-0.06*21})`);
+    };
+    const isLight=()=>root.dataset.theme===LIGHT;
+    let k=isLight()?0:1; draw(k);
+    const label=()=>{btn.setAttribute('aria-label',isLight()?'Switch to dark mode':'Switch to light mode');
+      btn.setAttribute('aria-pressed',String(isLight()));};
+    label();
+    const quint=x=>x<.5?16*x**5:1-(-2*x+2)**5/2;
+    let raf=0;
+    const morphTo=(target,ms)=>{cancelAnimationFrame(raf);const from=k,t0=performance.now();
+      const step=now=>{const p=Math.min(1,(now-t0)/ms);k=from+(target-from)*quint(p);draw(k);if(p<1)raf=requestAnimationFrame(step);};
+      raf=requestAnimationFrame(step);};
+    const apply=light=>{
+      if(light)root.dataset.theme=LIGHT; else delete root.dataset.theme;
+      document.querySelector('meta[name="color-scheme"]').content=light?'light':'dark';
+      document.querySelector('meta[name="theme-color"]').content=light?'#E7DDCA':'#070709';
+      label();
+    };
+    matchMedia('(prefers-color-scheme: light)').addEventListener('change',e=>{
+      let chosen=null; try{chosen=localStorage.getItem(KEY_T);}catch{}
+      if(!chosen){apply(e.matches);morphTo(e.matches?0:1,1300);}
+    });
+    btn.addEventListener('click',()=>{
+      const next=!isLight();
+      try{localStorage.setItem(KEY_T,next?'light':'dark');}catch{}
+      morphTo(next?0:1,1300);
+      if(!document.startViewTransition||matchMedia('(prefers-reduced-motion: reduce)').matches)return apply(next);
+      const x=innerWidth/2, y=next?2.5*innerHeight:-1.5*innerHeight;
+      const r0=Math.max(0,Math.max(-y,y-innerHeight)-10);
+      const far=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y))+160;
+      root.style.setProperty('--vt-x',x+'px'); root.style.setProperty('--vt-y',y+'px');
+      root.style.colorScheme=isLight()?'light':'dark';
+      const vt=document.startViewTransition(()=>apply(next));
+      vt.finished.finally(()=>{root.style.colorScheme='';});
+      vt.ready.then(()=>root.animate({'--vt-r':[r0+'px',far+'px']},
+        {duration:1300,easing:'cubic-bezier(.45,0,.2,1)',fill:'forwards',pseudoElement:'::view-transition-new(root)'}));
+    });
+  })();
 </script>
 </body></html>
