@@ -4299,6 +4299,56 @@ if (window.unicorn && window.unicorn.isDesktop)
   .pl-uc.pl-gallop { position: relative; width: 136.5px; height: 130px; image-rendering: pixelated; margin: 0 0 18px; animation: plFadeIn 0.6s ease 0.1s forwards !important; }
   .u-taste-uc.u-taste-uc7 { display: block; width: 15px; height: 24px; font-size: 0; line-height: 0; background: none; box-shadow: none; border: 0; }
 </style>
+<style id="r26-align">
+  /* ── alignment pass 10-19 ── */
+  /* focus dot: centered on the title's cap height (13px: cap 9px, so its middle
+     is 4.5px up; the 6px dot sat on the baseline with its middle 3px up) */
+  .p-head .p-dot { vertical-align: 1.5px; }
+
+  /* + Add Experiment reads as the next row: the + sits in the status-dot
+     column, the words start where the experiment names start */
+  .panel--quest .q-add { position: relative; }
+  .panel--quest .q-add::before, .panel--quest .q-add::after {
+    content: ""; position: absolute; left: calc(var(--in) + 8px); top: 50%;
+    width: 10px; height: 1.5px; border-radius: 1px; background: var(--text-mute);
+    transform: translate(-50%, -50%); pointer-events: none; transition: background var(--t) var(--ease);
+  }
+  .panel--quest .q-add::after { transform: translate(-50%, -50%) rotate(90deg); }
+  .panel--quest .q-add-in { padding-left: calc(var(--in) + 26px); }
+  .panel--quest .q-add-in::placeholder { color: var(--text-mute); }
+  .panel--quest .q-add:has(.q-add-in:hover)::before, .panel--quest .q-add:has(.q-add-in:hover)::after { background: var(--cream); }
+  .panel--quest .q-add-in:hover::placeholder { color: var(--cream); }
+
+  /* ONE caret: the Commits month arrow (› in a 22px rounded square, quiet gray,
+     a soft fill + cream on hover), rotated to point. Story sections, the
+     Panels pill and the Quest switcher all use it. */
+  #agent .a-section.collapsible .a-label .nm { position: relative; margin-left: 14px; gap: 0; }
+  #agent .a-section.collapsible .a-label .nm::before {
+    content: '›'; position: absolute; left: -26px; top: 50%; margin-top: -11px;
+    display: grid; place-items: center; width: 22px; height: 22px; border-radius: 6px;
+    font: 400 15px/1 var(--sans); color: var(--text-whisper-2); background: transparent;
+    transition: opacity .6s var(--ease), transform .6s var(--ease), color var(--t) var(--ease), background var(--t) var(--ease);
+  }
+  #agent .a-section.collapsible .a-label:hover .nm::before { color: var(--cream); background: rgba(255,255,255,.05); }
+  #agent .a-section.collapsible.open .a-label .nm::before { color: var(--text-whisper-2); }
+  #agent .a-section.collapsible.open .a-label:hover .nm::before { color: var(--cream); }
+
+  #menubar .mb-car, .panel--quest .q-car {
+    display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 6px;
+    font: 400 15px/1 var(--sans); transform: rotate(90deg);
+    transition: transform var(--t) var(--ease), color var(--t) var(--ease), background var(--t) var(--ease);
+  }
+  #menubar .mb-car { margin: -5px -8px -5px -4px; color: var(--text-whisper-2); }
+  html #menubar .mb-panels-btn:hover .mb-car, html #menubar .mb-panels-btn[aria-expanded="true"] .mb-car { color: var(--cream); background: rgba(255,255,255,.05); }
+  #menubar .mb-panels-btn[aria-expanded="true"] .mb-car { transform: rotate(-90deg); }
+  /* on the gradient the same caret stays dark, and its fill darkens instead */
+  .panel--quest .q-car { margin: 0 -8px 0 -4px; color: var(--void); }
+  .panel--quest .q-menu-btn:hover .q-car, .panel--quest .q-top.open .q-car { background: rgba(16,15,17,.08); }
+  .panel--quest .q-top.open .q-car { transform: rotate(-90deg); }
+
+  /* Keep: Back to Top's right edge on the field / Save edge */
+  .panel--keep .keep-totop { right: 0; }
+</style>
 </head>
 <body>
 
@@ -4371,7 +4421,7 @@ if (window.unicorn && window.unicorn.isDesktop)
     </span>
     
     <span class="mb-panels" id="mb-panels">
-      <button class="mb-panels-btn" id="mb-panels-btn" type="button" aria-haspopup="true" aria-expanded="false" data-tip-own>Panels<span class="mb-car" aria-hidden="true">▾</span></button>
+      <button class="mb-panels-btn" id="mb-panels-btn" type="button" aria-haspopup="true" aria-expanded="false" data-tip-own>Panels<span class="mb-car" aria-hidden="true">›</span></button>
       
       <span class="mb-tip" id="mb-pin-tip" role="tooltip">
         <span class="mb-tip-row"><span>Float on top</span><span class="mb-tip-key">⌥U</span></span>
@@ -4448,7 +4498,7 @@ if (window.unicorn && window.unicorn.isDesktop)
     <div class="p-hair"></div>
     
     <div class="q-top">
-      <div class="q-menu-btn u-fill" id="q-menu-btn" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false" title="Switch Quest"><span class="p-title" id="q-title"></span><span class="q-car" aria-hidden="true">▾</span></div>
+      <div class="q-menu-btn u-fill" id="q-menu-btn" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false" title="Switch Quest"><span class="p-title" id="q-title"></span><span class="q-car" aria-hidden="true">›</span></div>
       <div class="q-pop" id="q-pop" role="menu"><div class="q-switcher" id="q-switcher"></div></div>
     </div>
     <div class="q-sub-row">
@@ -6518,15 +6568,21 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         if (!panel || !handle)
             return;
         let dragging = false;
-        let startX = 0, startY = 0, origLeft = 0, origTop = 0;
+        let startX = 0, startY = 0, origLeft = 0, origTop = 0, moved = false;
         handle.addEventListener('pointerdown', (e) => {
             if (isInteractive(e.target))
                 return;
             if (e.button !== 0)
                 return;
             dragging = true;
+            moved = false;
             startX = e.clientX;
             startY = e.clientY;
+            handle.setPointerCapture(e.pointerId);
+            e.preventDefault();
+        });
+        // a click on the header is not a move: only a real drag (3px+) pins the panel
+        const lock = () => {
             const rect = panel.getBoundingClientRect();
             origLeft = rect.left;
             origTop = rect.top;
@@ -6536,14 +6592,18 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
             panel.style.bottom = 'auto';
             panel.classList.add('dragging');
             handle.classList.add('dragging');
-            handle.setPointerCapture(e.pointerId);
-            e.preventDefault();
-        });
+        };
         handle.addEventListener('pointermove', (e) => {
             if (!dragging)
                 return;
             const dx = e.clientX - startX;
             const dy = e.clientY - startY;
+            if (!moved) {
+                if (Math.hypot(dx, dy) < 3)
+                    return;
+                moved = true;
+                lock();
+            }
             const vw = innerWidth, vh = innerHeight;
             const rect = panel.getBoundingClientRect();
             let nx = origLeft + dx;
@@ -6557,12 +6617,14 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
             if (!dragging)
                 return;
             dragging = false;
-            panel.classList.remove('dragging');
-            handle.classList.remove('dragging');
             try {
                 handle.releasePointerCapture(e.pointerId);
             }
             catch { }
+            if (!moved)
+                return;
+            panel.classList.remove('dragging');
+            handle.classList.remove('dragging');
             const positions = loadPos();
             positions[panelId(panel)] = {
                 left: panel.style.left,
