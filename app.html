@@ -8444,7 +8444,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         if (tempStr)
             bits.push(`<span class="gb-temp">${tempStr}</span>`);
         if (moonPhase)
-            bits.push(`<span class="gb-moon">${MOON_EMOJI[moonPhase] || '🌙'} ${moonPhase}</span>`);
+            bits.push(`<span class="gb-moon">${MOON_EMOJI[moonPhase] || '🌙'}&ensp;${moonPhase}</span>`);
         const dl = daylightPhrase();
         if (dl)
             bits.push(`<span class="gb-day">${dl}</span>`);
