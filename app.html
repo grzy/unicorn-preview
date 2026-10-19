@@ -4363,6 +4363,55 @@ if (window.unicorn && window.unicorn.isDesktop)
   .panel--quest .q-top.open .q-car { transform: rotate(-90deg); }
 
   .panel--keep .keep-totop { right: 0; }
+
+  /* Quest status menu (10-19): the explicit choice that replaced the hidden
+     cycle. App popover look, no stroke, Title Case; the current state checked. */
+  .q-st-menu {
+    position: fixed; z-index: 300; min-width: 176px; padding: 6px; border-radius: 12px;
+    background: var(--panel-bg); -webkit-backdrop-filter: blur(26px) saturate(1.2); backdrop-filter: blur(26px) saturate(1.2);
+    box-shadow: 0 14px 34px rgba(0,0,0,.45);
+    opacity: 0; transform: translateY(-4px); transition: opacity var(--t) var(--ease), transform var(--t) var(--ease);
+  }
+  .q-st-menu.open { opacity: 1; transform: none; }
+  .q-st-opt {
+    display: grid; grid-template-columns: 16px 1fr; gap: 10px; align-items: center; width: 100%;
+    appearance: none; border: 0; background: rgba(255,255,255,0); border-radius: 7px; padding: 8px; cursor: pointer;
+    font: 500 13px/1 var(--sans); letter-spacing: 0; text-transform: none; color: var(--text); text-align: left;
+    transition: background var(--t) var(--ease), color var(--t) var(--ease);
+  }
+  .q-st-opt:hover, .q-st-opt:focus-visible { background: rgba(255,255,255,.06); outline: none; }
+  .q-st-ck { width: 16px; height: 16px; display: grid; place-items: center; }
+  .q-st-opt.on .q-st-ck::before {
+    content: ""; width: 8px; height: 4.5px; border-left: 1.5px solid var(--cream); border-bottom: 1.5px solid var(--cream);
+    transform: rotate(-45deg) translate(1px, -1px);
+  }
+  .q-st-sep { height: 1px; margin: 5px 8px; background: rgba(255,255,255,.07); }
+  .q-st-opt.q-st-del { color: var(--text-mute); }
+  .q-st-opt.q-st-del:hover { color: var(--watermelon); }
+  /* the dot stays lifted while its menu is open */
+  .panel--quest .q-exp .q-status[aria-expanded="true"]::before { transform: scale(1.25); }
+  .panel--quest .q-exp .q-status[data-s="complete"][aria-expanded="true"]::before { transform: rotate(-45deg) translate(1px, -1px) scale(1.2); }
+
+  /* Toasts + banners: panel glass and the edge, quiet text, the filled Undo */
+  html .u-toast {
+    background: var(--panel-bg); -webkit-backdrop-filter: blur(26px) saturate(1.2); backdrop-filter: blur(26px) saturate(1.2);
+    color: var(--text); border-radius: 12px; padding: 12px 16px; gap: 16px;
+    font: 400 13px/1.3 var(--sans); letter-spacing: 0; box-shadow: 0 14px 34px rgba(0,0,0,.45);
+  }
+  html .u-toast:has(.u-toast-undo) { padding: 8px 8px 8px 16px; }
+  html .u-toast::before { display: block; background: linear-gradient(45deg, transparent 8%, rgba(232,149,106,.45) 35%, rgba(167,139,223,.45) 65%, transparent 92%); }
+  html .u-toast .u-toast-text { color: var(--text-mute); }
+  html .u-toast .u-toast-hl { color: var(--text); font-weight: 500; }
+  html .u-toast .u-toast-undo.u-fill, html .u-toast .u-toast-undo.u-fill:hover {
+    font: 500 11.5px/1 var(--sans); letter-spacing: 0; text-transform: none; color: var(--void);
+    padding: 8px 12px; border: 0; background: none;
+  }
+  html .u-glass-toast {
+    background: var(--panel-bg) !important; -webkit-backdrop-filter: blur(26px) saturate(1.2) !important; backdrop-filter: blur(26px) saturate(1.2) !important;
+    color: var(--text) !important; border-radius: 12px !important; padding: 12px 16px !important;
+    font: 400 13px/1.3 var(--sans) !important; letter-spacing: 0 !important; box-shadow: 0 14px 34px rgba(0,0,0,.45);
+  }
+  html .u-glass-toast::before { display: block; background: linear-gradient(45deg, transparent 8%, rgba(232,149,106,.45) 35%, rgba(167,139,223,.45) 65%, transparent 92%); }
 </style>
 </head>
 <body>
@@ -5564,7 +5613,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
                 const row = document.createElement('div');
                 row.className = 'q-exp' + (exp.status === 'complete' ? ' finished' : '') + (exp.template ? ' has-stages' : '');
                 row.innerHTML = `
-        <span class="q-slot"><span class="q-status" data-id="${exp.id}" data-s="${exp.status}" role="button" aria-label="${STATUS_TIP[exp.status] || exp.status}" title="${STATUS_TIP[exp.status] || exp.status} · click to change"></span></span>
+        <span class="q-slot"><span class="q-status" data-id="${exp.id}" data-s="${exp.status}" role="button" aria-label="${STATUS_TIP[exp.status] || exp.status}" title="${STATUS_TIP[exp.status] || exp.status}" aria-haspopup="menu"></span></span>
         <span class="q-name" data-id="${exp.id}">${escapeHtml(exp.name)}</span>
         <span class="q-delete" data-id="${exp.id}" title="Delete experiment" onclick="event.stopPropagation(); window.__unicornDeleteExp('${exp.id}');">×</span>
       `;
@@ -5614,33 +5663,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
                 el.addEventListener('click', () => editName(el.dataset.id));
             });
             listEl.querySelectorAll('.q-status').forEach(el => {
-                el.addEventListener('click', () => {
-                    const cur = el.dataset.s;
-                    if (cur === 'complete' && !el.classList.contains('armed')) {
-                        el.classList.add('armed');
-                        el.setAttribute('data-tip', 'Click again to reopen');
-                        if (window.uTipRefresh)
-                            window.uTipRefresh(el);
-                        clearTimeout(el._disarm);
-                        const disarm = () => {
-                            el.classList.remove('armed');
-                            el.setAttribute('data-tip', 'Finished · click to change');
-                            clearTimeout(el._disarm);
-                        };
-                        el._disarm = setTimeout(disarm, 3000);
-                        el.addEventListener('mouseleave', disarm, { once: true });
-                        return;
-                    }
-                    const crossesGroup = (cur === 'paused' || cur === 'complete');
-                    if (crossesGroup) {
-                        frozenOrder = null;
-                    }
-                    else if (!frozenOrder) {
-                        frozenOrder = [...listEl.querySelectorAll('.q-exp .q-delete')]
-                            .map(d => d.dataset.id);
-                    }
-                    cycleStatus(el.dataset.id);
-                });
+                el.addEventListener('click', (e) => { e.stopPropagation(); openStatusMenu(el); });
             });
         }
         const finishLink = document.getElementById('q-finish-btn');
@@ -5962,8 +5985,8 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         const t = document.createElement('div');
         t.className = 'u-toast';
         t.innerHTML = `
-      <span class="u-toast-text">deleted: <span class="u-toast-hl">${escapeHtml(snapshot.exp.name)}</span></span>
-      <button class="u-toast-undo">undo</button>
+      <span class="u-toast-text">Deleted <span class="u-toast-hl">${escapeHtml(snapshot.exp.name)}</span></span>
+      <button type="button" class="u-toast-undo u-fill">Undo</button>
     `;
         document.body.appendChild(t);
         deleteToastEl = t;
@@ -5995,6 +6018,93 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
             deleteExperiment(del.dataset.id);
         }
     }, true);
+    const setStatus = (expId, next) => {
+        const q = data.quests[activeQ];
+        const exp = q && q.experiments.find(e => e.id === expId);
+        if (!exp)
+            return;
+        const cur = exp.status === 'starting' ? 'active' : exp.status;
+        if (cur === next)
+            return;
+        const wasComplete = exp.status === 'complete';
+        frozenOrder = (wasComplete || next === 'complete') ? null
+            : (frozenOrder || [...listEl.querySelectorAll('.q-exp .q-delete')].map(d => d.dataset.id));
+        exp.status = next;
+        exp.statusAt = isoNow();
+        if (next === 'complete') {
+            exp.completedAt = isoNow();
+            saveApp(data);
+            render();
+            fireLoopCeremony(exp);
+            return;
+        }
+        if (wasComplete) {
+            exp.completedAt = null;
+            if (typeof window.__unicornRemoveEvent === 'function')
+                window.__unicornRemoveEvent(`exp-complete-${exp.id}`);
+        }
+        uiClick(next === 'active' ? 'E5' : 'D5');
+        saveApp(data);
+        render();
+    };
+    let stMenu = null, stFor = null;
+    const stOutside = (e) => { if (stMenu && !stMenu.contains(e.target) && e.target !== stFor)
+        closeStatusMenu(); };
+    const stKey = (e) => { if (e.key === 'Escape') {
+        e.stopPropagation();
+        closeStatusMenu();
+    } };
+    const closeStatusMenu = () => {
+        if (!stMenu)
+            return;
+        stMenu.remove();
+        stMenu = null;
+        if (stFor)
+            stFor.removeAttribute('aria-expanded');
+        stFor = null;
+        document.removeEventListener('pointerdown', stOutside, true);
+        document.removeEventListener('keydown', stKey, true);
+        window.removeEventListener('blur', closeStatusMenu);
+    };
+    const openStatusMenu = (el) => {
+        const again = stFor === el;
+        closeStatusMenu();
+        if (again)
+            return;
+        const id = el.dataset.id;
+        const cur = el.dataset.s === 'starting' ? 'active' : el.dataset.s;
+        const m = document.createElement('div');
+        m.className = 'q-st-menu';
+        m.setAttribute('role', 'menu');
+        m.innerHTML = [['active', 'Started'], ['paused', 'Paused'], ['complete', 'Finished']]
+            .map(([s, l]) => `<button type="button" class="q-st-opt${s === cur ? ' on' : ''}" role="menuitemradio" aria-checked="${s === cur}" data-s="${s}"><span class="q-st-ck" aria-hidden="true"></span>${l}</button>`).join('')
+            + '<div class="q-st-sep"></div><button type="button" class="q-st-opt q-st-del" role="menuitem"><span class="q-st-ck" aria-hidden="true"></span>Delete Experiment</button>';
+        document.body.appendChild(m);
+        stMenu = m;
+        stFor = el;
+        el.setAttribute('aria-expanded', 'true');
+        const r = el.getBoundingClientRect(), w = m.offsetWidth, h = m.offsetHeight;
+        let x = r.left + r.width / 2 - 22, y = r.bottom + 6;
+        if (y + h > innerHeight - 8)
+            y = r.top - h - 6;
+        m.style.left = Math.round(Math.max(8, Math.min(innerWidth - w - 8, x))) + 'px';
+        m.style.top = Math.round(Math.max(8, y)) + 'px';
+        requestAnimationFrame(() => m.classList.add('open'));
+        m.addEventListener('click', (e) => {
+            const b = e.target.closest('.q-st-opt');
+            if (!b)
+                return;
+            e.stopPropagation();
+            closeStatusMenu();
+            if (b.classList.contains('q-st-del'))
+                deleteExperiment(id);
+            else
+                setStatus(id, b.dataset.s);
+        });
+        document.addEventListener('pointerdown', stOutside, true);
+        document.addEventListener('keydown', stKey, true);
+        window.addEventListener('blur', closeStatusMenu);
+    };
     const cycleStatus = (expId) => {
         const q = data.quests[activeQ];
         const exp = q.experiments.find(e => e.id === expId);
@@ -6059,8 +6169,8 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         const t = document.createElement('div');
         t.className = 'u-toast';
         t.innerHTML = `
-      <span class="u-toast-text">✺ git-ty up · closed <span class="u-toast-hl">${escapeHtml(expName)}</span></span>
-      <span class="u-toast-undo">undo</span>
+      <span class="u-toast-text">Closed the loop on <span class="u-toast-hl">${escapeHtml(expName)}</span></span>
+      <button type="button" class="u-toast-undo u-fill">Undo</button>
     `;
         document.body.appendChild(t);
         toastEl = t;
@@ -6156,7 +6266,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         t.className = 'u-toast';
         t.innerHTML = `
       <span class="u-toast-text">Archived <span class="u-toast-hl">${escapeHtml(q.name)}</span></span>
-      <span class="u-toast-undo">Undo</span>
+      <button type="button" class="u-toast-undo u-fill">Undo</button>
     `;
         document.body.appendChild(t);
         toastEl = t;
@@ -6235,7 +6345,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         t.className = 'u-toast';
         t.innerHTML = `
       <span class="u-toast-text">Deleted <span class="u-toast-hl">${escapeHtml(removed.name)}</span></span>
-      <span class="u-toast-undo">Undo</span>
+      <button type="button" class="u-toast-undo u-fill">Undo</button>
     `;
         document.body.appendChild(t);
         toastEl = t;
@@ -12173,7 +12283,7 @@ ${keepsBlock}${emptyBlock}
         ignoring = on;
         window.unicorn.setIgnoreMouseEvents(on, on ? { forward: true } : {});
     };
-    const CHROME = '.panel, #agent, #activity-panel, #menubar, .u-toast, #intro-ribbon, #preloader';
+    const CHROME = '.panel, #agent, #activity-panel, #menubar, .u-toast, .q-st-menu, #intro-ribbon, #preloader';
     const overChrome = (x, y) => {
         if (x <= 88 && y <= 40)
             return true;
@@ -12998,11 +13108,21 @@ ${keepsBlock}${emptyBlock}
             }
             if (!best)
                 continue;
+            const closedSince = new Set();
             for (let i = ev.length - 1; i >= 0; i--) {
                 const e = ev[i];
-                if ((e.quest || '').toLowerCase() !== (best.name || '').toLowerCase() || !/^(started|starting|active|start)$/.test(e.action || ''))
+                if ((e.quest || '').toLowerCase() !== (best.name || '').toLowerCase())
                     continue;
-                const x = (best.experiments || []).find(x => (x.name || '').toLowerCase() === String(e.experiment || '').toLowerCase() && (x.status === 'active' || x.status === 'starting'));
+                const en = String(e.experiment || '').toLowerCase();
+                if (!/^(started|starting|active|start)$/.test(e.action || '')) {
+                    closedSince.add(en);
+                    continue;
+                }
+                if (closedSince.has(en))
+                    continue;
+                const x = (best.experiments || []).find(x => (x.name || '').toLowerCase() === en && (x.status === 'active' || x.status === 'starting'));
+                if (x && x.statusAt && e.ts && Date.parse(e.ts) < Date.parse(x.statusAt))
+                    continue;
                 if (x) {
                     ids.add(x.id);
                     break;
@@ -13032,7 +13152,12 @@ ${keepsBlock}${emptyBlock}
     });
     const paintDots = () => document.querySelectorAll('.panel--quest .q-exp').forEach(row => {
         const st = row.querySelector('.q-status');
-        row.classList.toggle('is-now', !!(st && nowIds.has(st.dataset.id)));
+        const now = !!(st && nowIds.has(st.dataset.id));
+        row.classList.toggle('is-now', now);
+        if (st && st.dataset.s !== 'complete' && st.dataset.s !== 'paused') {
+            st.removeAttribute('title');
+            st.setAttribute('data-tip', now ? 'Now: an agent is on it' : 'Started');
+        }
     });
     const qList = document.getElementById('q-list');
     if (qList)
