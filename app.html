@@ -65,6 +65,10 @@ html:not(.is-desktop) {
     linear-gradient(310deg, rgba(167,139,223,0.09), rgba(232,149,106,0.04) 30%, rgba(255,255,255,0) 52%),
     rgba(21,20,25,0.99);
 }
+
+/* Panels menu: opens below the pill with a small gap; the hover bridge spans the gap */
+html.framed body #menubar .mb-panels-pop { top: 90px; }
+html body #menubar .mb-panels-pop::after { top: -30px; height: 30px; }
 </style>
 <script>
 if (window.unicorn && window.unicorn.isDesktop)
