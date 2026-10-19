@@ -103,7 +103,7 @@
     const now = Date.now(), b = base || '';
     return [
       { id: 'k1', questId: 'q-unicorn', questName: 'Unicorn', ts: now - 0.2 * DAY, image: b + 'demo/keep-week.webp', text: 'Week page, this week' },
-      { id: 'k2', questId: 'q-unicorn', questName: 'Unicorn', ts: now - 1.1 * DAY, text: '✺ The Week page pulls from Keep: whatever lands here is what the story is built from.' },
+      { id: 'k2', questId: 'q-unicorn', questName: 'Unicorn', ts: now - 1.1 * DAY, text: 'Hooks write the agent status on every prompt and every stop. Peach reads it once a second: gallop, think, rest.' },
       { id: 'k3', questId: 'q-unicorn', questName: 'Unicorn', ts: now - 2.4 * DAY, image: b + 'demo/keep-peach.webp', text: 'Peach, the still pose' },
       { id: 'k4', questId: 'q-unicorn', questName: 'Unicorn', ts: now - 4.3 * DAY, image: b + 'demo/keep-system.webp', text: 'Design system: buttons and status' },
       { id: 'k5', questId: 'q-tide', questName: 'Tide Clock', ts: now - 1.6 * DAY, text: 'High tide at 6:12. The moon ring should lead with the phase, not the time.' },
@@ -111,7 +111,7 @@
     ];
   };
 
-  const api = { QUESTS, commits, sessions, agentState, appData, keeps, MSGS, SEED: 'p2' };
+  const api = { QUESTS, commits, sessions, agentState, appData, keeps, MSGS, SEED: 'p3' };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.UnicornDemo = api;
 })(typeof window !== 'undefined' ? window : globalThis);

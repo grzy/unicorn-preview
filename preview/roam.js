@@ -1,6 +1,6 @@
 /* Unicorn public preview: Roaming Unicorns, after src/notch.html.
    Peach wanders the open desktop on gentle curves, rests, picks a new spot.
-   Lilac is a rare surprise: the first visit comes ~25-30s in, then rarely. They
+   Lilac is a rare surprise: the first visit comes ~75-90s in, then rarely. They
    meet nose to nose, small pixel hearts float up, and she gallops off.
    The layer sits under the whole workspace (panels, terminal) and never takes a click. Toggle: Panels ->
    Roaming Unicorns. Off by default when the visitor prefers reduced motion. */
@@ -53,7 +53,7 @@
   const halt = (now) => { if (phase === 'start' || phase === 'run') { phase = 'stop'; t0 = now; } };
 
   // ---- Lilac, the surprise (file: characters/opal.js) ----
-  let O = null, surprise = null, firstAt = performance.now() + rnd(25000, 30000), lastSurprise = -Infinity;
+  let O = null, surprise = null, firstAt = performance.now() + rnd(75000, 90000), lastSurprise = -Infinity;
   if (window.loadUnicornCharacter) window.loadUnicornCharacter('opal').then(c => { if (c && c !== window.UnicornCharacters.peach) O = c; }).catch(() => {});
   const O_SPEED = 104;
   const HEARTS = { xs: ['#.#', '###', '.#.'], s: ['.#.#.', '#####', '.###.', '..#..'], m: ['.##.##.', '#######', '#######', '.#####.', '..###..', '...#...'] };

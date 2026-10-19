@@ -51,6 +51,11 @@ html.framed #guest-term { transform: translate(-50%, -50%) scale(calc(var(--gt-s
 
 /* the greeting band sits under the Panels pill, not on it */
 html.framed #greeting-band { margin-top: 34px; }
+
+/* Keep: every item's date sits below it, and the last item clears Back to Top */
+.panel--keep .keep-item-row { flex-direction: column; align-items: flex-start; gap: 4px; }
+.panel--keep .keep-item-cap:empty { display: none; }
+#panel-keep .keep-list { padding-bottom: 52px !important; }
 </style>
 <script>
 if (window.unicorn && window.unicorn.isDesktop)
@@ -1567,7 +1572,8 @@ if (window.unicorn && window.unicorn.isDesktop)
   
   html.is-desktop.manual-drag #menubar, html.is-desktop.manual-drag #greeting-band,
   html.is-desktop.manual-drag body.hud-off { -webkit-app-region: no-drag !important; }
-  html.is-desktop body.cmd-drag, html.is-desktop body.cmd-drag * { cursor: grab !important; }
+  html.is-desktop body.cmd-drag :is(.panel, #agent, #activity-panel, #menubar),
+  html.is-desktop body.cmd-drag :is(.panel, #agent, #activity-panel, #menubar) * { cursor: grab !important; }
   html.is-desktop body.win-dragging, html.is-desktop body.win-dragging * { cursor: grabbing !important; }
   html:not(.is-desktop) #menubar .mb-panels-btn,
   html:not(.is-desktop) #menubar .mb-panels-btn:hover,
@@ -4097,7 +4103,9 @@ if (window.unicorn && window.unicorn.isDesktop)
     transition: background var(--t) var(--ease);
   }
   .panel--keep .keep-play:hover { background: rgba(16,15,17,.85); }
-  .panel--keep .keep-item-row { display: flex; align-items: baseline; gap: 10px; }
+  .panel--keep .keep-item-row { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; }
+  .panel--keep .keep-item-cap:empty { display: none; }
+  .panel--keep .keep-item-row .keep-item-cap { width: 100%; flex: none; }
   .panel--keep .keep-item-cap { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 400 12px/1.4 var(--sans); color: var(--text-mute); }
   .panel--keep .keep-item-date { font: 400 10.5px/1 var(--sans); color: var(--text-whisper-2); white-space: nowrap; }
   .panel--keep .keep-item-text { font: 400 12px/1.45 var(--sans); color: var(--text-mute); }
@@ -4126,7 +4134,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   .panel--keep .keep-save.u-fill::after { transition: filter var(--t) var(--ease), background var(--t) var(--ease); }
   .panel--keep .keep-save.u-fill { transition: color var(--t) var(--ease); }
   
-  .panel--keep .keep-list { padding-bottom: 20px; -webkit-mask-image: linear-gradient(#000 calc(100% - 24px), transparent); mask-image: linear-gradient(#000 calc(100% - 24px), transparent); }
+  .panel--keep .keep-list { padding-bottom: 52px; -webkit-mask-image: linear-gradient(#000 calc(100% - 24px), transparent); mask-image: linear-gradient(#000 calc(100% - 24px), transparent); }
 </style>
 
 <style id="r26-activity">
@@ -12079,7 +12087,7 @@ ${keepsBlock}${emptyBlock}
             return;
         altDrag = on;
         document.body.classList.toggle(manual ? 'cmd-drag' : 'alt-drag', on);
-        if (on)
+        if (on && !manual)
             setPass(false);
     };
     let dragging = false, dragRaf = 0;
@@ -12089,7 +12097,8 @@ ${keepsBlock}${emptyBlock}
             if (e.button !== 0)
                 return;
             const top = e.clientY <= 50 && !e.target.closest(NO_DRAG);
-            if (!(e.metaKey || top))
+            const own = !!e.target.closest(CHROME);
+            if (!((e.metaKey && own) || top))
                 return;
             e.preventDefault();
             e.stopPropagation();
@@ -12111,7 +12120,7 @@ ${keepsBlock}${emptyBlock}
     }
     window.addEventListener('mousemove', (e) => {
         setAltDrag(e.metaKey);
-        if (altDrag || dragging || !hud)
+        if (dragging || !hud || (altDrag && !manual))
             return;
         setPass(!overChrome(e.clientX, e.clientY));
     });
