@@ -4467,6 +4467,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   html .panel--quest .q-switcher .q-sw-btn:hover, html .panel--quest .q-switcher .q-sw-btn.on:hover { background: rgba(255,255,255,.06); }
   html .panel--quest .q-switcher .q-sw-btn.on::before {
     content: "" !important; position: absolute; left: 12px; top: 50%; width: 8px; height: 4.5px;
+    inset: 50% auto auto 12px; padding: 0; border-radius: 0; background: none; -webkit-mask: none; mask: none;
     border-left: 1.5px solid var(--cream); border-bottom: 1.5px solid var(--cream);
     transform: translate(1px, -75%) rotate(-45deg);
   }
