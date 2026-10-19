@@ -4054,14 +4054,14 @@ if (window.unicorn && window.unicorn.isDesktop)
   .panel--commits .c-meta { font: 400 11px/1.5 var(--sans); letter-spacing: 0; color: var(--text-whisper-2); }
   .panel--commits .c-meta .c-count-inline, .panel--commits .c-meta .c-msg { color: var(--text-mute); }
   html .panel--commits .c-sound {
-    padding: 4px 2px; gap: 7px; background: none; border: 0;
+    padding: 4px 0 4px 2px; gap: 7px; background: none; border: 0;
     font: 500 11px/1 var(--sans); letter-spacing: 0; text-transform: none; color: var(--text-mute);
     transition: color var(--t) var(--ease);
   }
   .panel--commits .c-sound::before { content: none; }
   .panel--commits .c-sound:hover { color: var(--cream); }
   html .panel--commits .c-sound.on { color: var(--peach); }
-  .panel--commits #c-sound-label { min-width: 54px; }
+  .panel--commits #c-sound-label { min-width: 56px; text-align: right; }
 </style>
 
 <style id="r26-keep">
@@ -4490,7 +4490,7 @@ if (window.unicorn && window.unicorn.isDesktop)
     <div class="c-foot">
       <div class="c-meta" id="c-meta">Hover a day to listen</div>
       <button class="c-sound" id="c-sound" aria-label="Sound on or off">
-        <span class="c-dot"></span><span id="c-sound-label">Sound off</span>
+        <span class="c-dot"></span><span id="c-sound-label">Sound Off</span>
       </button>
     </div>
   </section>
@@ -10327,7 +10327,7 @@ ${keepsBlock}${emptyBlock}
             btn.disabled = false;
             audioOn = true;
             btn.classList.add('on');
-            lbl.textContent = 'Sound on';
+            lbl.textContent = 'Sound On';
             masterGain.gain.rampTo(1, 0.5);
             try {
                 const t = Tone.now();
@@ -10338,7 +10338,7 @@ ${keepsBlock}${emptyBlock}
         else {
             audioOn = false;
             btn.classList.remove('on');
-            lbl.textContent = 'Sound off';
+            lbl.textContent = 'Sound Off';
             if (masterGain)
                 masterGain.gain.rampTo(0, 0.5);
             setTimeout(() => {
