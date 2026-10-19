@@ -6,19 +6,23 @@
   if (!window.GUEST_PREVIEW || !window.UnicornDemo) return;
   const D = window.UnicornDemo;
   const VKEY = 'unicorn.preview-demo';
-  const VER = D.SEED + '-' + (window.__srcSeedVersion || '0');
+  const VER = D.SEED + 'b-' + (window.__srcSeedVersion || '0');
   try {
     if (localStorage.getItem(VKEY) !== VER) {
       // a fresh demo: drop whatever an older preview left behind
       Object.keys(localStorage).forEach(k => { if (/^(unicorn|r26)[.-]/.test(k)) localStorage.removeItem(k); });
       localStorage.setItem('unicorn-data', JSON.stringify(D.appData()));
       localStorage.setItem('unicorn.keeps', JSON.stringify(D.keeps()));
-      // the demo opens with Keep showing; Commits sits minimized as its week strip
-      localStorage.setItem('unicorn.minimized', JSON.stringify(['commits']));
       localStorage.setItem('unicorn.guest-seed-version', String(window.__srcSeedVersion || ''));
       localStorage.setItem(VKEY, VER);
     }
   } catch (e) {}
+
+  // framed: the shell (index.html) shows this page as a window on big screens
+  if (window.parent !== window) {
+    try { if (parent.document.documentElement.classList.contains('big')) document.documentElement.classList.add('framed'); } catch (e) {}
+    addEventListener('message', (e) => { if (e.origin === location.origin && e.data && 'framed' in e.data) document.documentElement.classList.toggle('framed', !!e.data.framed); });
+  }
 
   let commits = null;
   const json = (o) => Promise.resolve(new Response(JSON.stringify(o), { status: 200, headers: { 'Content-Type': 'application/json' } }));

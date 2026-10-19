@@ -75,6 +75,28 @@
     sync();
   }
 
+  // ---- the preloader: Peach gallops (the reveal after the gate) ----
+  const U7 = window.Unicorn7, plUc = document.querySelector('#preloader .pl-uc');
+  if (U7 && plUc) {
+    const S = 8, dpr = Math.max(1, Math.round(devicePixelRatio || 1)), s = S * dpr, cv = document.createElement('canvas');
+    cv.width = 21 * s; cv.height = 26 * s; cv.style.width = 21 * S + 'px'; cv.style.height = 26 * S + 'px';
+    cv.setAttribute('aria-hidden', 'true'); plUc.appendChild(cv);
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let t0 = 0;
+    const draw = (now) => {
+      if (!document.body.contains(plUc)) return;
+      if (!t0) t0 = now;
+      const ms = now - t0;
+      const f = still ? { still: true, label: 'logo' } : U7.sustainFrame(ms, 0);   // gallops the whole time
+      U7.render(cv, U7.o7, s, f);
+      if (!still) requestAnimationFrame(draw);
+    };
+    U7.render(cv, U7.o7, s, still ? { still: true, label: 'logo' } : U7.sustainFrame(0, 0));
+    const pre = document.getElementById('preloader');
+    const go = () => { if (!pre.classList.contains('gated')) { mo.disconnect(); requestAnimationFrame(draw); } };
+    const mo = new MutationObserver(go); mo.observe(pre, { attributes: true, attributeFilter: ['class'] }); go();
+  }
+
   const all = () => { meta(); fillTaste(); paintNow(); };
   const qEl = $('a-attached-quest');
   if (qEl) new MutationObserver(all).observe(qEl, { childList: true, characterData: true, subtree: true });

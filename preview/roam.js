@@ -1,6 +1,6 @@
 /* Unicorn public preview: Roaming Unicorns, after src/notch.html.
    Peach wanders the open desktop on gentle curves, rests, picks a new spot.
-   Lilac is a rare surprise: the first visit comes ~50s in, then rarely. They
+   Lilac is a rare surprise: the first visit comes ~25-30s in, then rarely. They
    meet nose to nose, small pixel hearts float up, and she gallops off.
    The layer sits under the whole workspace (panels, terminal) and never takes a click. Toggle: Panels ->
    Roaming Unicorns. Off by default when the visitor prefers reduced motion. */
@@ -35,11 +35,15 @@
     .map(el => el.getBoundingClientRect()).filter(r => r.width > 0);
   const free = (x, y) => panelRects().every(r => x + BW < r.left - 8 || x > r.right + 8 || y + BH < r.top - 8 || y > r.bottom + 8);
 
-  let x = clampX(innerWidth * .62), y = clampY(innerHeight * .66), heading = Math.PI, faceRight = false;
+  // his resting spot: the open field right of the terminal, below the Story panel
+  const HOME = () => [clampX(innerWidth * .66), clampY(innerHeight * .64)];
+  let runs = 0;
+  let x = HOME()[0], y = HOME()[1], heading = Math.PI, faceRight = false;
   let tx = x, ty = y, restUntil = 0, phase = 'still', t0 = 0, p0 = 0, last = 0, raf = 0;
   const speedK = (ph, ms) => ph === 'run' ? 1 : ph === 'start' ? Math.min(1, Math.max(0, (ms - U7.T_LOGO) / (RUN_IN - U7.T_LOGO))) : ph === 'stop' ? Math.max(0, 1 - ms / OUT_MS) : 0;
   const pickSpot = () => {
-    for (let i = 0; i < 40; i++) { const nx = clampX(rnd(0, innerWidth)), ny = clampY(rnd(0, innerHeight)), d = Math.hypot(nx - x, ny - y);
+    if (++runs % 3 === 0) { const [hx, hy] = HOME(); if (Math.hypot(hx - x, hy - y) > 60) { tx = hx; ty = hy; return; } }   // home every third run
+    for (let i = 0; i < 40; i++) { const nx = clampX(rnd(innerWidth * .4, innerWidth * .9)), ny = clampY(rnd(0, innerHeight)), d = Math.hypot(nx - x, ny - y);
       if (d > 110 && d < 380 && free(nx, ny)) { tx = nx; ty = ny; return; } }
     tx = clampX(innerWidth * rnd(.35, .65)); ty = clampY(innerHeight * rnd(.55, .8));
   };
@@ -49,7 +53,7 @@
   const halt = (now) => { if (phase === 'start' || phase === 'run') { phase = 'stop'; t0 = now; } };
 
   // ---- Lilac, the surprise (file: characters/opal.js) ----
-  let O = null, surprise = null, firstAt = performance.now() + rnd(45000, 60000), lastSurprise = -Infinity;
+  let O = null, surprise = null, firstAt = performance.now() + rnd(25000, 30000), lastSurprise = -Infinity;
   if (window.loadUnicornCharacter) window.loadUnicornCharacter('opal').then(c => { if (c && c !== window.UnicornCharacters.peach) O = c; }).catch(() => {});
   const O_SPEED = 104;
   const HEARTS = { xs: ['#.#', '###', '.#.'], s: ['.#.#.', '#####', '.###.', '..#..'], m: ['.##.##.', '#######', '#######', '.#####.', '..###..', '...#...'] };
