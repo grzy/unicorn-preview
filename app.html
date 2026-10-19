@@ -8433,7 +8433,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         if (!sunrise || !sunset)
             return '';
         if (now < sunrise || now > sunset)
-            return `sunrise ${fmtTime(sunrise)}`;
+            return `Sunrise ${fmtTime(sunrise)}`;
         const mins = Math.round((sunset - now) / 60000);
         const h = Math.floor(mins / 60), m = mins % 60;
         return h > 0 ? `${h} hr ${m} min of daylight left` : `${m} min of daylight left`;
@@ -8444,7 +8444,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         if (tempStr)
             bits.push(`<span class="gb-temp">${tempStr}</span>`);
         if (moonPhase)
-            bits.push(`<span class="gb-moon">${MOON_EMOJI[moonPhase] || '🌙'} ${moonPhase.toLowerCase()}</span>`);
+            bits.push(`<span class="gb-moon">${MOON_EMOJI[moonPhase] || '🌙'} ${moonPhase}</span>`);
         const dl = daylightPhrase();
         if (dl)
             bits.push(`<span class="gb-day">${dl}</span>`);
@@ -12103,15 +12103,18 @@ ${keepsBlock}${emptyBlock}
         document.body.classList.toggle(manual ? 'cmd-drag' : 'alt-drag', on);
         if (on && !manual)
             setPass(false);
-        if (window.unicorn.termWatch) {
-            window.unicorn.termWatch(on);
-            if (!on)
-                termWins = null;
-        }
     };
-    let termWins = null;
+    let termWins = null, sysCmd = false, lastMove = null;
     if (window.unicorn.onTermWins)
-        window.unicorn.onTermWins(w => { termWins = Array.isArray(w) ? w : null; });
+        window.unicorn.onTermWins(m => {
+            sysCmd = !!(m && m.cmd);
+            termWins = sysCmd && Array.isArray(m.wins) ? m.wins : null;
+            setAltDrag(sysCmd);
+            if (lastMove)
+                placePass(lastMove, sysCmd);
+        });
+    if (window.unicorn.termWatch)
+        window.unicorn.termWatch(true);
     const gapDraggable = (sx, sy) => {
         if (!termWins)
             return false;
@@ -12126,7 +12129,7 @@ ${keepsBlock}${emptyBlock}
                 return;
             const top = e.clientY <= 50 && !e.target.closest(NO_DRAG);
             const own = !!e.target.closest(CHROME);
-            if (!((e.metaKey && (own || gapDraggable(e.screenX, e.screenY))) || top))
+            if (!(((e.metaKey || sysCmd) && (own || gapDraggable(e.screenX, e.screenY))) || top))
                 return;
             e.preventDefault();
             e.stopPropagation();
@@ -12147,11 +12150,16 @@ ${keepsBlock}${emptyBlock}
         window.addEventListener('blur', endDrag);
     }
     const nearChrome = (x, y) => overChrome(x, y) || [[14, 0], [-14, 0], [0, 14], [0, -14]].some(([a, b]) => { const el = document.elementFromPoint(x + a, y + b); return !!(el && el.closest(CHROME)); });
-    window.addEventListener('mousemove', (e) => {
-        setAltDrag(e.metaKey);
+    function placePass(m, cmd) {
         if (dragging || !hud || (altDrag && !manual))
             return;
-        setPass(!(e.metaKey ? (nearChrome(e.clientX, e.clientY) || gapDraggable(e.screenX, e.screenY)) : overChrome(e.clientX, e.clientY)));
+        setPass(!(cmd ? (nearChrome(m.cx, m.cy) || gapDraggable(m.sx, m.sy)) : overChrome(m.cx, m.cy)));
+    }
+    window.addEventListener('mousemove', (e) => {
+        const cmd = e.metaKey || sysCmd;
+        setAltDrag(cmd);
+        lastMove = { cx: e.clientX, cy: e.clientY, sx: e.screenX, sy: e.screenY };
+        placePass(lastMove, cmd);
     });
     window.addEventListener('keydown', (e) => { if (e.key === 'Meta')
         setAltDrag(true); });
