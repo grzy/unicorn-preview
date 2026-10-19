@@ -26,9 +26,6 @@
     addEventListener('message', (e) => { if (e.origin === location.origin && e.data && 'framed' in e.data) document.documentElement.classList.toggle('framed', !!e.data.framed); });
   }
 
-  // gate variants to compare: ?gate=a (default) / ?gate=b
-  try { const g = new URLSearchParams(location.search).get('gate'); if (g === 'b') document.documentElement.classList.add('gate-b'); } catch (e) {}
-
   let commits = null;
   const json = (o) => Promise.resolve(new Response(JSON.stringify(o), { status: 200, headers: { 'Content-Type': 'application/json' } }));
   const none = () => Promise.resolve(new Response('', { status: 404 }));

@@ -51,10 +51,7 @@
 <script>
 (() => {
   const app = document.getElementById('app'), clock = document.getElementById('mac-clock');
-  // pass ?gate=... (and any other demo switch) through to the app
-  const q = new URLSearchParams(location.search), keep = new URLSearchParams();
-  if (q.get('gate')) keep.set('gate', q.get('gate'));
-  app.src = 'app.html' + (keep.toString() ? '?' + keep : '');
+  app.src = 'app.html';
   const W = 1480, H = 1060, BAR = 26;
   const fit = () => {
     const big = BIG();
