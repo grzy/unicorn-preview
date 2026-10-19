@@ -1,472 +1,453 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
-<title>Unicorn · Living Design System</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Ubuntu+Sans:wght@400;500;600;700&family=Ubuntu+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<title>Unicorn Design System</title>
+<meta name="description" content="The design system behind Unicorn, a creative OS for designers who work in the terminal: tokens, buttons, panels, status and the Unicorn 7 logo.">
 <style>
+  @font-face { font-family: 'Ubuntu Sans'; font-weight: 400; font-display: swap; src: url('../fonts/ubuntu-sans-400.woff2') format('woff2'); }
+  @font-face { font-family: 'Ubuntu Sans'; font-weight: 500; font-display: swap; src: url('../fonts/ubuntu-sans-500.woff2') format('woff2'); }
+  @font-face { font-family: 'Ubuntu Sans'; font-weight: 600; font-display: swap; src: url('../fonts/ubuntu-sans-600.woff2') format('woff2'); }
+  @font-face { font-family: 'Ubuntu Sans Mono'; font-weight: 400; font-display: swap; src: url('../fonts/ubuntu-sans-mono-400.woff2') format('woff2'); }
+  @font-face { font-family: 'Ubuntu Sans Mono'; font-weight: 500; font-display: swap; src: url('../fonts/ubuntu-sans-mono-500.woff2') format('woff2'); }
+  @font-face { font-family: 'Funnel Display'; font-weight: 600; font-display: swap; src: url('../fonts/funnel-display-600.woff2') format('woff2'); }
+
   :root {
-    --peach: #E8956A;   --peach-dark: #D4724A;
-    --lilac: #A78BDF;   --lilac-dark: #9478D0;
-    --cream: #F1ECE8;   --ink: #1A1616;   --bg: #100F11;
-    --tomato: #FF5E71;
-    --text: rgba(241,236,232,0.94);
-    --text-mute: rgba(241,236,232,0.56);
-    --text-whisper: rgba(241,236,232,0.40);
-    --softline: rgba(255,255,255,0.07);
-    --hairline: rgba(255,255,255,0.04);
-    --panel-bg: rgba(22,22,22,0.78);
-    --sans: 'Ubuntu Sans', 'Helvetica Neue', sans-serif;
-    --mono: 'Ubuntu Sans Mono', ui-monospace, monospace;
-    --r-panel: 18px; --r-chip: 6px;
+    /* brand */
+    --peach: #E8956A; --lilac: #A78BDF; --void: #100F11; --cream: #F1ECE8;
+    --tomato: #FF5E71; --watermelon: #FB7185;
+    /* logo */
+    --logo-peach: #FFAF5F; --logo-peach-dark: #E8954C; --logo-lilac: #AF87D7; --logo-lilac-dark: #9A72C4;
+    /* text */
+    --text: rgba(241,236,232,.94); --text-mute: rgba(241,236,232,.56); --text-whisper: rgba(241,236,232,.40); --text-whisper-2: rgba(241,236,232,.48);
+    /* surfaces */
+    --panel-bg: rgba(22,22,22,.78); --box: rgba(0,0,0,.18); --line: rgba(255,255,255,.06);
+    --grad-fill: linear-gradient(135deg, #F59A6B, #D49BC2 50%, #AE8BF5);
+    --grad-text: linear-gradient(90deg, #FFAF5F 0%, #EE9C9C 45%, #AF87D7 100%);
+    --edge: linear-gradient(45deg, transparent 8%, rgba(232,149,106,.45) 35%, rgba(167,139,223,.45) 65%, transparent 92%);
+    /* corners */
+    --r-panel: 18px; --r-box: 10px; --r-btn: 6px;
+    /* motion */
+    --ease: cubic-bezier(.4,0,.2,1); --t: .45s;
+    --sans: 'Ubuntu Sans', 'Helvetica Neue', sans-serif; --mono: 'Ubuntu Sans Mono', ui-monospace, monospace;
   }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { background: var(--bg); color: var(--text); font-family: var(--sans);
-    -webkit-font-smoothing: antialiased; line-height: 1.55; }
-  body {
-    padding: 80px 32px 140px;
-    background:
-      radial-gradient(900px 600px at 12% -5%, rgba(232,149,106,0.10), transparent 60%),
-      radial-gradient(900px 700px at 100% 8%, rgba(167,139,223,0.10), transparent 55%),
-      var(--bg);
-    background-attachment: fixed;
-  }
-  .wrap { max-width: 1080px; margin: 0 auto; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { background: var(--void); color-scheme: dark; }
+  body { background: var(--void); color: var(--text); font: 400 15px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+  body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background: radial-gradient(60vw 50vh at 85% -10%, rgba(167,139,223,.10), transparent 70%), radial-gradient(50vw 40vh at -10% 30%, rgba(232,149,106,.07), transparent 70%); }
+  a { color: inherit; }
+  .wrap { position: relative; z-index: 1; max-width: 1080px; margin: 0 auto; padding: 0 24px 120px; }
 
-  /* ── Header ── */
-  header.lead { margin-bottom: 76px; }
-  .eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: 0.28em;
-    text-transform: uppercase; color: var(--text-whisper); display: block; margin-bottom: 18px; }
-  .eyebrow .acc { color: var(--peach); }
-  h1 { font-family: var(--mono); font-weight: 600; font-size: clamp(36px, 6vw, 68px);
-    line-height: 1.02; letter-spacing: -0.02em; margin-bottom: 22px; }
-  h1 .grad { background: linear-gradient(115deg, var(--peach), var(--lilac));
-    -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .lede { max-width: 60ch; font-size: 16px; line-height: 1.65; color: var(--text-mute); }
-  .lede strong { color: var(--text); font-weight: 600; }
-  .meta-row { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 10px; }
-  .meta-pill { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em;
-    text-transform: uppercase; color: var(--text-mute);
-    padding: 6px 12px; border-radius: 999px; background: rgba(255,255,255,0.03);
-    border: 1px solid var(--hairline); }
-  .meta-pill b { color: var(--peach); font-weight: 600; }
-  a.meta-pill { text-decoration: none; transition: color 0.25s ease-in-out, background 0.25s ease-in-out; }
-  a.meta-pill:hover { color: var(--cream); background: rgba(255,255,255,0.06); }
-  /* the "Open in Figma" CTA gets the fill treatment: peach->lilac gradient
-     stroke + gradient text at rest, fills with the gradient on hover and the
-     text drops to the void so it pops. scoped to just this pill. */
-  a.meta-pill.meta-pill--figma {
-    position: relative; border: 0; background: linear-gradient(135deg, var(--peach), var(--lilac));
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-    transition: color 0.3s ease-in-out; }
-  a.meta-pill.meta-pill--figma b { color: inherit; }
-  a.meta-pill.meta-pill--figma::before {
-    content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px;
-    background: linear-gradient(135deg, var(--peach), var(--lilac));
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
-  a.meta-pill.meta-pill--figma:hover {
-    background: linear-gradient(135deg, var(--peach), var(--lilac));
-    -webkit-background-clip: border-box; background-clip: border-box; color: var(--bg); }
+  /* cover */
+  .cover { min-height: 92vh; display: grid; place-content: center; justify-items: center; text-align: center; padding: 80px 0 60px; gap: 22px; }
+  .cover canvas { image-rendering: pixelated; display: block; }
+  .kicker { font: 500 13px/1 var(--sans); color: var(--text-whisper-2); }
+  h1 { font: 500 clamp(34px, 5vw, 64px)/1.08 var(--mono); letter-spacing: -.03em; max-width: 24ch;
+    background: var(--grad-text); -webkit-background-clip: text; background-clip: text; color: transparent; text-wrap: balance; }
+  .cover p { max-width: 46ch; color: var(--text-mute); text-wrap: pretty; }
+  .cover .acts { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; justify-content: center; margin-top: 6px; }
+  .meta { font: 400 11px/1 var(--mono); color: var(--text-whisper); letter-spacing: .02em; }
 
-  /* ── Sections ── */
-  section { margin-bottom: 64px; }
-  .sec-label { font-family: var(--mono); font-size: 11px; font-weight: 600;
-    letter-spacing: 0.2em; text-transform: uppercase; color: var(--peach);
-    padding-bottom: 12px; margin-bottom: 24px; border-bottom: 1px solid var(--softline); }
-  .sec-label .num { color: var(--text-whisper); margin-right: 10px; }
-  .sec-note { font-size: 13px; line-height: 1.7; color: var(--text-mute); max-width: 64ch; margin-bottom: 22px; }
-  .sec-note code { font-family: var(--mono); font-size: 12px; color: var(--lilac);
-    background: rgba(167,139,223,0.10); padding: 1px 6px; border-radius: 4px; }
+  /* sections */
+  section { padding: 72px 0 0; }
+  .sh { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 40px; align-items: end; margin-bottom: 28px; }
+  h2 { font: 500 30px/1.1 var(--sans); letter-spacing: -.02em; color: var(--cream); }
+  .sh p { color: var(--text-mute); max-width: 56ch; }
+  h3 { font: 500 13px/1 var(--sans); color: var(--text-mute); margin-bottom: 14px; }
+  @media (max-width: 760px) { .sh { grid-template-columns: 1fr; gap: 12px; } section { padding-top: 56px; } }
 
-  .grid { display: grid; gap: 16px; }
-  .g2 { grid-template-columns: repeat(2, 1fr); }
-  .g3 { grid-template-columns: repeat(3, 1fr); }
-  .g4 { grid-template-columns: repeat(4, 1fr); }
-  @media (max-width: 720px) { .g3, .g4 { grid-template-columns: repeat(2, 1fr); } .g2 { grid-template-columns: 1fr; } }
+  .surface { position: relative; background: var(--panel-bg); border-radius: var(--r-panel); padding: 24px; }
+  .surface::before, .panel::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none;
+    background: var(--edge); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+  .row { display: grid; gap: 16px; }
+  .two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .three { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  @media (max-width: 760px) { .two, .three { grid-template-columns: 1fr; } }
+  .note { font: 400 13px/1.55 var(--sans); color: var(--text-mute); }
+  code, .tok { font: 400 12px/1 var(--mono); color: var(--text-whisper-2); }
 
-  /* ── Pixel unicorn ── */
-  /* Fixed visual column so the glyph unicorn + the app icon sit in the same
-     spot and their captions line up across the two rows. */
-  .uc-stage { display: grid; grid-template-columns: 200px 1fr; align-items: center; gap: 40px;
-    padding: 40px; border-radius: var(--r-panel);
-    background: var(--panel-bg); border: 1px solid var(--hairline);
-    -webkit-backdrop-filter: blur(26px); backdrop-filter: blur(26px); }
-  .uc-glyph, .app-icon, .app-icon-img { justify-self: center; }
-  @media (max-width: 560px) { .uc-stage { grid-template-columns: 1fr; } }
-  /* line-height 1 so the block-glyph rows tile seamlessly -- any gap above
-     1.0 leaves thin horizontal slivers through the unicorn. */
-  .uc-glyph { font-family: var(--mono); font-size: 20px; line-height: 1; white-space: pre;
-    letter-spacing: 0; }
-  .uc-glyph .l { color: var(--lilac); }
-  .uc-glyph .p { color: var(--peach); }
-  .uc-cap { font-size: 13px; line-height: 1.7; color: var(--text-mute); max-width: 42ch; }
-  .uc-cap b { color: var(--text); font-weight: 600; }
+  /* buttons, as the app ships them */
+  .u-fill { position: relative; isolation: isolate; appearance: none; border: 0; border-radius: var(--r-btn); padding: 7px 12px; background: none; cursor: pointer;
+    font: 500 12px/1 var(--sans); color: var(--void); white-space: nowrap; text-decoration: none; display: inline-block; }
+  .u-fill::after { content: ""; position: absolute; inset: 0; border-radius: inherit; z-index: -1; background: var(--grad-fill); transition: filter var(--t) var(--ease); }
+  .u-fill:hover::after, .u-fill:focus-visible::after, .u-fill.hov::after { filter: brightness(1.1) saturate(1.05); }
+  .u-fill[disabled] { cursor: default; color: var(--text-whisper-2); } .u-fill[disabled]::after { background: rgba(255,255,255,.06); filter: none; }
+  .u-fill.lg { padding: 10px 16px; font-size: 13px; }
+  .u-quiet { appearance: none; border: 0; background: none; cursor: pointer; padding: 6px 4px; font: 500 12px/1 var(--sans); color: var(--text-mute); text-decoration: none; transition: color var(--t) var(--ease); }
+  .u-quiet:hover, .u-quiet:focus-visible, .u-quiet.hov { color: var(--cream); }
+  .u-quiet.lg { font-size: 13px; }
+  :focus-visible { outline: 1.5px solid var(--lilac); outline-offset: 3px; border-radius: 4px; }
 
-  /* ── Swatches ── */
-  .sw { border-radius: var(--r-chip); overflow: hidden; border: 1px solid var(--hairline); }
-  .sw-chip { height: 84px; }
-  .sw-meta { padding: 10px 12px; background: rgba(255,255,255,0.02); }
-  .sw-name { font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--text); }
-  .sw-hex { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em;
-    text-transform: uppercase; color: var(--text-whisper); margin-top: 2px; }
+  /* logo */
+  .mark { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 36px; align-items: center; }
+  .mark .stage { display: grid; place-items: center; width: 220px; height: 220px; border-radius: var(--r-box); background: var(--box); }
+  @media (max-width: 760px) { .mark { grid-template-columns: 1fr; } .mark .stage { width: 100%; } }
+  .swatches { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+  .sw { display: grid; gap: 6px; font: 400 11px/1.2 var(--mono); color: var(--text-whisper-2); }
+  .sw i { display: block; width: 44px; height: 44px; border-radius: var(--r-btn); }
+  .moods { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
+  .mood { background: var(--box); border-radius: var(--r-box); padding: 18px; display: grid; gap: 10px; justify-items: start; }
+  .mood canvas { image-rendering: pixelated; }
+  .mood b { font: 500 14px/1.2 var(--sans); color: var(--cream); }
+  .mood span { font: 400 12.5px/1.45 var(--sans); color: var(--text-mute); }
+  @media (max-width: 760px) { .moods { grid-template-columns: 1fr; } }
 
-  /* ── Text scale ── */
-  .txt-row { display: flex; align-items: baseline; justify-content: space-between;
-    gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--hairline); }
-  .txt-row:last-child { border-bottom: 0; }
-  .txt-sample { font-family: var(--sans); }
-  .txt-tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
-    text-transform: uppercase; color: var(--text-whisper); white-space: nowrap; }
+  /* color */
+  .chips { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  .chip { border-radius: var(--r-box); overflow: hidden; background: var(--box); }
+  .chip i { display: block; height: 72px; }
+  .chip div { padding: 10px 12px 12px; display: grid; gap: 4px; }
+  .chip b { font: 500 13px/1.2 var(--sans); color: var(--cream); }
+  .chip span { font: 400 11px/1.2 var(--mono); color: var(--text-whisper-2); }
+  .ramp { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+  .ramp i { height: 56px; border-radius: var(--r-btn); display: block; }
+  .ramp-lab { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 8px; font: 400 11px/1.2 var(--mono); color: var(--text-whisper-2); }
+  .legend { display: flex; align-items: center; gap: 6px; margin-top: 18px; font: 400 11px/1 var(--sans); color: var(--text-whisper-2); }
+  .legend i { width: 11px; height: 11px; border-radius: 3px; display: block; }
+  .cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; max-width: 280px; margin-top: 16px; }
+  .cal i { aspect-ratio: 1; border-radius: 4px; display: block; background: rgba(241,236,232,.06); }
+  .gbar { height: 40px; border-radius: var(--r-btn); }
 
-  /* ── Type specimens ── */
-  .spec { padding: 26px; border-radius: var(--r-panel); background: var(--panel-bg);
-    border: 1px solid var(--hairline); }
-  .spec-big-sans { font-family: var(--sans); font-weight: 600; font-size: 34px; letter-spacing: -0.01em; }
-  .spec-big-mono { font-family: var(--mono); font-weight: 600; font-size: 30px; }
-  .spec-scale { margin-top: 18px; display: flex; flex-direction: column; gap: 6px; }
-  .spec-scale span { color: var(--text-mute); }
-  .s-display { font-size: 22px; color: var(--text); }
-  .s-body { font-size: 14px; }
-  .s-meta { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-whisper); }
+  /* type */
+  .spec { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 24px; align-items: baseline; padding: 16px 0; }
+  .spec + .spec { border-top: 1px solid var(--line); }
+  .spec .k { font: 400 11px/1.4 var(--mono); color: var(--text-whisper-2); }
+  @media (max-width: 760px) { .spec { grid-template-columns: 1fr; gap: 6px; } }
+  .nameplate { font: 600 clamp(28px, 8vw, 44px)/.95 'Funnel Display', var(--sans); letter-spacing: -.04em; color: rgba(241,236,232,.42); }
+  .nameplate em { font-style: normal; background: linear-gradient(135deg, #FFAF5F 12%, #EE9C9C 50%, #AF87D7 88%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .rules { list-style: none; display: grid; gap: 10px; }
+  .rules li { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 10px; font: 400 14px/1.45 var(--sans); }
+  .rules li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--lilac); margin-top: 8px; }
+  .rules li.no::before { background: none; border: 1.5px solid var(--text-whisper-2); width: 5px; height: 5px; }
+  .rules s { margin-right: 6px; color: var(--text-whisper); text-decoration-color: rgba(241,236,232,.3); }
 
-  /* ── Glass panel demo ── now wears the signature gradient stroke with the
-        faded TR/BL corners, like the real panels. ── */
-  .panel-demo { position: relative; border-radius: var(--r-panel); padding: 18px;
-    background: var(--panel-bg); border: 0;
-    -webkit-backdrop-filter: blur(26px); backdrop-filter: blur(26px);
-    -webkit-mask: radial-gradient(circle 26px at 100% 0%, transparent 0, #000 100%), radial-gradient(circle 26px at 0% 100%, transparent 0, #000 100%);
-    -webkit-mask-composite: source-in; mask-composite: intersect; }
-  .panel-demo::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
-    background: linear-gradient(135deg, rgba(232,149,106,0.5), rgba(167,139,223,0.5));
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
-  .pd-head { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
-    text-transform: uppercase; color: var(--text-mute); display: flex; align-items: center; gap: 8px; }
-  .pd-dot { width: 7px; height: 7px; border-radius: 50%;
-    background: linear-gradient(135deg, var(--peach), var(--lilac)); }
-  .pd-hair { height: 1px; margin: 12px 0; background: linear-gradient(90deg, var(--peach), var(--lilac)); opacity: 0.4; }
-  .pd-body { font-size: 13px; color: var(--text-mute); line-height: 1.6; }
+  /* corners */
+  .corners { display: grid; grid-template-columns: 1.4fr 1fr .8fr; gap: 16px; align-items: end; }
+  .corner { display: grid; gap: 10px; }
+  .corner .sh1 { height: 150px; border-radius: var(--r-panel); background: var(--panel-bg); position: relative; }
+  .corner .sh2 { height: 96px; border-radius: var(--r-box); background: rgba(255,255,255,.05); }
+  .corner .sh3 { height: 34px; border-radius: var(--r-btn); background: var(--grad-fill); }
+  .corner b { font: 500 13px/1.2 var(--sans); color: var(--cream); } .corner span { font: 400 11px/1.3 var(--mono); color: var(--text-whisper-2); }
+  @media (max-width: 760px) { .corners { grid-template-columns: 1fr; } }
 
-  /* ── Gradient ring (signature) ── */
-  /* Corner fade done with radial masks AT the two corners (not a diagonal
-     gradient) -- so it lands on the actual TR + BL corners regardless of how
-     wide/short the element is. Small radius = gentle, localized to the tip. */
-  .ring-demo { position: relative; padding: 18px 22px; border-radius: 12px;
-    background: rgba(22,22,22,0.6); color: var(--peach); font-family: var(--mono);
-    font-size: 13px; text-align: center;
-    -webkit-mask: radial-gradient(circle 48px at 100% 0%, transparent 0, #000 100%), radial-gradient(circle 48px at 0% 100%, transparent 0, #000 100%);
-    -webkit-mask-composite: source-in; mask-composite: intersect; }
-  .ring-demo::before { content: ""; position: absolute; inset: 0; border-radius: inherit;
-    padding: 1px; background: linear-gradient(135deg, var(--peach), var(--lilac));
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+  /* buttons demo */
+  .btn-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .btn-cell { background: var(--box); border-radius: var(--r-box); padding: 20px; display: grid; gap: 14px; align-content: start; }
+  .btn-cell .line { display: flex; gap: 8px; align-items: center; min-height: 30px; }
+  @media (max-width: 760px) { .btn-grid { grid-template-columns: 1fr; } }
 
-  /* ── Even gradient stroke (small UI) ── no corner fade, no mask cut: the
-     peach→lilac gradient runs the full perimeter at even weight. This is the
-     edge on buttons, chips, labels, tabs, and filters. */
-  .ring-demo-even { position: relative; padding: 18px 22px; border-radius: 8px;
-    background: rgba(22,22,22,0.6); color: var(--lilac); font-family: var(--mono);
-    font-size: 13px; text-align: center; }
-  .ring-demo-even::before { content: ""; position: absolute; inset: 0; border-radius: inherit;
-    padding: 1px; background: linear-gradient(135deg, var(--peach), var(--lilac));
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+  /* status */
+  .status { list-style: none; display: grid; gap: 1px; }
+  .status li { display: flex; align-items: center; gap: 10px; min-height: 34px; padding: 0 8px; border-radius: 7px; font: 400 13px/1.35 var(--sans); transition: background var(--t) var(--ease); }
+  .status li:hover { background: rgba(255,255,255,.04); }
+  .status .d { width: 16px; height: 16px; display: grid; place-items: center; flex: none; }
+  .status .d::before { content: ""; width: 7px; height: 7px; border-radius: 50%; }
+  .status .now .d::before { background: var(--logo-peach); }
+  .status .started .d::before { background: var(--lilac); }
+  .status .paused .d::before { border: 1.5px solid var(--text-whisper-2); width: 5px; height: 5px; }
+  .status .finished .d::before { content: ""; width: 3px; height: 7px; border-radius: 0; border: solid var(--text-whisper-2); border-width: 0 1.5px 1.5px 0; transform: rotate(45deg) translate(-1px, -1px); }
+  .status .finished .n { color: var(--text-whisper); text-decoration: line-through; text-decoration-color: rgba(241,236,232,.25); }
+  .status .w { margin-left: auto; font: 400 11px/1 var(--sans); color: var(--text-whisper-2); }
+  .counts { font: 400 12px/1.3 var(--sans); color: var(--text-whisper-2); margin: 4px 8px 10px; }
 
-  /* The desktop app icon: pixel unicorn on a transparent squircle, gradient
-     stroke faded at the top-right + bottom-left corners. */
-  .app-icon { position: relative; width: 92px; height: 92px; border-radius: 22px;
-    display: grid; place-items: center; flex: 0 0 auto;
-    font-family: var(--mono); font-size: 21px; line-height: 0.92; white-space: pre; }
-  .app-icon .l { color: var(--lilac); } .app-icon .p { color: var(--peach); }
-  .app-icon::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 2px;
-    background: linear-gradient(to top right, transparent 2%, var(--peach) 14%, var(--lilac) 86%, transparent 98%);
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+  /* the panel specimen (Story), drawn with the app's own sizes */
+  .desk { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+  @media (max-width: 760px) { .desk { grid-template-columns: 1fr; } }
+  .panel { position: relative; background: var(--panel-bg); border-radius: var(--r-panel); padding: 20px; box-shadow: 0 6px 16px rgba(0,0,0,.35); }
+  .p-head { display: flex; align-items: center; justify-content: space-between; font: 500 13px/1 var(--sans); color: var(--text-mute); margin-bottom: 16px; min-height: 18px; }
+  .p-head > span:first-child { display: flex; align-items: center; }
+  .p-dot { position: relative; width: 6px; height: 6px; border-radius: 50%; background: var(--peach); margin-right: 8px; display: inline-block; cursor: pointer; }
+  .p-dot.grad { background: linear-gradient(135deg, var(--peach), var(--lilac)); }
+  .p-dot::before { content: ""; position: absolute; inset: -5px; border-radius: 50%; padding: 1.5px; opacity: 0; pointer-events: none;
+    background: linear-gradient(135deg, #E8956A, #c797af 55%, #A78BDF); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+  .p-dot.pulse::before { animation: ripple 1.3s var(--ease) 1; }
+  @keyframes ripple { 0% { opacity: 0; transform: scale(.6); } 35% { opacity: .85; } 100% { opacity: 0; transform: scale(1.25); } }
+  .p-mini { width: 14px; height: 14px; position: relative; color: var(--text-whisper-2); cursor: pointer; }
+  .p-mini::before, .p-mini::after { content: ""; position: absolute; left: 50%; top: 50%; width: 8px; height: 1.5px; background: currentColor; transform: translate(-50%, -50%); }
+  .p-mini::after { transform: translate(-50%, -50%) rotate(0deg); transition: transform .32s cubic-bezier(.2,.8,.2,1); }
+  .panel.min .p-mini::after { transform: translate(-50%, -50%) rotate(90deg); }
+  .panel.min .p-head { margin-bottom: 0; }
+  #min-demo .full { display: none; } #min-demo:not(.min) .full { display: block; } #min-demo:not(.min) .strip { display: none; }
+  .qb { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: var(--r-box); background: rgba(255,255,255,.04); }
+  .qb .t { flex: 1; min-width: 0; } .qb b { display: block; font: 500 14px/1.2 var(--sans); color: var(--lilac); }
+  .qb small { display: block; margin-top: 4px; font: 400 10px/1.3 var(--mono); letter-spacing: .04em; color: var(--lilac); opacity: .85; }
+  .np { padding: 16px 14px 8px; display: grid; grid-template-columns: 1fr auto; align-items: last baseline; }
+  .np .nameplate { grid-column: 1 / -1; font-size: 30px; margin-bottom: 9px; }
+  .np .dt { font: 400 10.5px/1 var(--mono); color: var(--text-whisper); }
+  .lab { font: 500 12px/1 var(--sans); color: var(--text); margin: 18px 0 12px; }
+  .taste { list-style: none; display: grid; gap: 12px; padding: 0 14px; }
+  .taste li { display: flex; align-items: center; gap: 0; min-width: 0; }
+  .taste .k { flex: 0 0 48px; font: 400 11px/1 var(--sans); color: var(--text-whisper-2); }
+  .taste .v { font: 400 12px/1.4 var(--sans); color: var(--text); }
+  .taste .cs { display: flex; gap: 6px; } .taste .cs i { width: 14px; height: 14px; border-radius: 4px; display: block; }
+  .taste .aa { display: flex; align-items: baseline; gap: 10px; } .taste .aa b { font: 400 22px/1 var(--sans); } .taste .aa span { font: 400 12px/1.3 var(--sans); color: var(--text-mute); }
+  .st-box { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: var(--r-box); background: var(--box); }
+  .st-box .t { flex: 1; min-width: 0; } .st-box b { display: block; font: 500 14px/1.2 var(--sans); color: var(--cream); }
+  .st-box small { display: block; margin-top: 2px; font: 400 11px/1.4 var(--sans); color: var(--text-whisper-2); }
+  .st-box .r { display: flex; gap: 6px; align-items: center; }
+  .min-demo { margin-top: 16px; }
+  .wk { display: flex; gap: 6px; align-items: flex-end; height: 34px; margin-top: 2px; }
+  .wk i { flex: 1; border-radius: 3px 3px 0 0; display: block; }
+  .wk-d { display: flex; gap: 6px; margin-top: 6px; font: 400 10px/1 var(--sans); color: var(--text-whisper-2); } .wk-d span { flex: 1; text-align: center; }
 
-  /* ── Buttons ── */
-  .btn-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
-  .btn { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
-    padding: 9px 16px; border-radius: 8px; cursor: pointer; color: var(--text-mute);
-    background: rgba(255,255,255,0.04); border: 1px solid transparent;
-    transition: color 0.2s, background 0.2s; }
-  .btn:hover { color: var(--cream); background: rgba(255,255,255,0.07); }
-  .btn-primary { position: relative; color: var(--peach);
-    background: linear-gradient(135deg, rgba(232,149,106,0.15), rgba(167,139,223,0.15)); }
-  .btn-primary:hover { color: var(--cream); }
+  /* tooltip */
+  .tipd { display: flex; gap: 28px; align-items: center; flex-wrap: wrap; }
+  .tip { display: inline-flex; gap: 8px; align-items: center; padding: 6px 9px; border-radius: 8px; background: rgba(24,22,28,.99); color: rgba(241,236,232,.9); box-shadow: 0 8px 22px rgba(0,0,0,.3); font: 400 11px/1.2 var(--sans); white-space: nowrap; }
+  .tip kbd { font: 400 10.5px/1 var(--mono); color: rgba(241,236,232,.45); }
 
-  /* ── Compose CTA demo ── the real primary-action behavior: void fill +
-     gradient stroke at rest; on hover the whole pill fills with the
-     peach→lilac gradient and the label goes void-dark. Two background
-     layers (padding-box fill + border-box stroke), no pseudo-element. */
-  .cta-demo { position: relative; display: inline-flex; align-items: center; gap: 10px;
-    font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
-    padding: 12px 16px; border-radius: 10px; cursor: pointer;
-    border: 1px solid transparent;
-    background:
-      linear-gradient(135deg, #151419, #151419) padding-box,
-      linear-gradient(135deg, rgba(232,149,106,0.5), rgba(167,139,223,0.5)) border-box;
-    transition: color 0.4s ease, background 0.55s cubic-bezier(0.4,0,0.2,1); }
-  .cta-demo .cta-text { background: linear-gradient(90deg, var(--peach), var(--lilac));
-    -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .cta-demo:hover {
-    background:
-      linear-gradient(135deg, var(--peach), var(--lilac)) padding-box,
-      linear-gradient(135deg, var(--peach), var(--lilac)) border-box; }
-  .cta-demo:hover .cta-text { -webkit-text-fill-color: #100F11; color: #100F11; }
-  /* Static "hover" twin -- shows the filled hover state in the doc without
-     needing a pointer, so the spec reads both rest + hover at a glance. */
-  .cta-demo.is-hover {
-    background:
-      linear-gradient(135deg, var(--peach), var(--lilac)) padding-box,
-      linear-gradient(135deg, var(--peach), var(--lilac)) border-box; }
-  .cta-demo.is-hover .cta-text { -webkit-text-fill-color: #100F11; color: #100F11; }
-  .cta-state { font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em;
-    text-transform: uppercase; color: var(--text-whisper); margin-top: 8px; }
+  /* motion */
+  .ease { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+  .track { height: 44px; border-radius: var(--r-box); background: var(--box); position: relative; overflow: hidden; }
+  .track i { position: absolute; top: 12px; left: 12px; width: 20px; height: 20px; border-radius: var(--r-btn); background: var(--grad-fill); }
+  .track.go i { animation: slide 1.6s var(--ease) infinite alternate; }
+  @keyframes slide { to { left: calc(100% - 32px); } }
+  @media (max-width: 760px) { .ease { grid-template-columns: 1fr; } }
 
-  /* ── Status dots ── */
-  .status-row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
-  /* Mirrors the app's .q-status chip: 9px mono pill (padding tier 1), a
-     1px stroke in the status's own hue, Completed sunk in a recessed well. */
-  .chip { position: relative; font-family: var(--mono); font-size: 9px; line-height: 1;
-    letter-spacing: 0.14em; text-transform: uppercase; padding: 5px 9px; border-radius: 5px; }
-  .chip::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
-    background: var(--chip-stroke, transparent);
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
-  .chip[data-s="starting"] { color: var(--lilac); --chip-stroke: rgba(167,139,223,0.32); }
-  .chip[data-s="active"]   { color: var(--peach); --chip-stroke: rgba(232,149,106,0.32); }
-  .chip[data-s="paused"]   { color: var(--text-mute); --chip-stroke: rgba(255,255,255,0.18); }
-  .chip[data-s="complete"] { color: var(--text-whisper); background: rgba(0,0,0,0.18); }
-  .chip[data-s="armed"]    { color: var(--peach); background: rgba(232,149,106,0.14); }
+  footer { margin-top: 96px; padding-top: 28px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font: 400 12px/1.5 var(--sans); color: var(--text-whisper); }
+  footer a { color: var(--text-mute); text-decoration: none; transition: color var(--t) var(--ease); } footer a:hover { color: var(--cream); }
 
-  /* ── Principle list ── */
-  .principles { list-style: none; display: flex; flex-direction: column; gap: 14px; }
-  .principles li { font-size: 14px; line-height: 1.6; color: var(--text-mute);
-    padding-left: 26px; position: relative; }
-  .principles li::before { content: "✺"; position: absolute; left: 0; top: 1px;
-    color: var(--peach); font-size: 12px; }
-  .principles li b { color: var(--text); font-weight: 600; }
-
-  footer.foot { margin-top: 96px; padding-top: 26px; border-top: 1px solid var(--softline);
-    font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--text-whisper); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-  footer.foot .acc { color: var(--peach); }
-  .app-icon-img { width: 140px; height: 140px; display: block; flex: 0 0 auto; }
+  .rv { opacity: 0; transform: translateY(10px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+  .rv.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .rv { opacity: 1; transform: none; transition: none; } .track.go i, .p-dot.pulse::before { animation: none; } }
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <header class="lead">
-    <span class="eyebrow"><span class="acc">✺</span> Unicorn · Living Design System</span>
-    <h1><span class="grad">The language Unicorn<br>is built in.</span></h1>
-    <p class="lede">A living reference for the colors, type, glass, and motion that make Unicorn feel like itself. <strong>Living</strong> because it updates as the product does, not after. It documents what is true in the build right now, so the app, the briefs, and the case story all speak the same visual language.</p>
-    <div class="meta-row">
-      <span class="meta-pill">Updated <b>2026-10-02</b></span>
-      <span class="meta-pill">Reviewed <b>weekly</b></span>
-      <span class="meta-pill">Surface <b>desktop app + briefs</b></span>
-      <a class="meta-pill meta-pill--figma" href="https://www.figma.com/design/m9JRahV6Do3uHFYJycqby7/Design-System" target="_blank" rel="noopener">Open in <b>Figma</b> ↗</a>
+  <header class="cover">
+    <canvas id="hero-uc" width="210" height="260" aria-label="Unicorn 7, the logo"></canvas>
+    <div class="kicker">Unicorn Design System</div>
+    <h1>A creative OS for designers who work in the terminal.</h1>
+    <p>Unicorn sits next to Claude Code, not in a browser. It tracks your quests and experiments; its Story panel keeps the taste, the Figma canvas and the weekly story behind every build. This page holds its colors, type, corners and components, token for token with the app.</p>
+    <div class="acts">
+      <a class="u-fill lg" href="https://www.figma.com/design/m9JRahV6Do3uHFYJycqby7/Unicorn-design-system" target="_blank" rel="noopener">Open in Figma</a>
+      <a class="u-quiet lg" href="../">Try the Demo</a>
     </div>
+    <div class="meta">Updated Oct 18, 2026 · Desktop App + Story</div>
   </header>
 
-  <section>
-    <div class="sec-label"><span class="num">01</span>The mark</div>
-    <div class="sec-note">The unicorn is built from terminal block glyphs, not an illustration. The exact same pixel sprite -- horn, mane, and tail in lilac, body in peach -- is the <b>single logo across every surface</b>: the terminal hook that prints at the start of each Claude Code session, the desktop app icon, the preloader, and the <code>Logo</code> row in Mirror › Taste. It is rendered as text or solid pixels, never as a smooth vector, so it always reads as <code>made of pixels</code>.</div>
-    <div class="uc-stage">
-      <div class="uc-glyph"><span class="l">▐▖</span>
-<span class="p">▟█</span><span class="l">▙</span>
-<span class="p">▗███</span><span class="l">█</span>
-<span class="p">▝█ ▐▌</span></div>
-      <div class="uc-cap">The pixel unicorn. <b>Lilac horn + mane + tail, peach body.</b> Born in the terminal banner, it carries through every surface as the one consistent character. Hand-made, never scraped, never smoothed.</div>
-    </div>
-    <div class="uc-stage" style="margin-top:18px">
-      <img class="app-icon-img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAFACAYAAADNkKWqAAABVmlDQ1BJQ0MgUHJvZmlsZQAAKJF9kc9LAlEQxz+aFJUEUeGlwx49WKmVP4gOaiZFB9EC67auyxapLetGdPa/6RZ0icCzl05Bp+jWpZMQdLV5a6EVNcO8+ex3Hm+GWfBHdNuuB6LQaLpOqZDVKodH2sQr44wRYpUZ3WjZmWJxD7Gv/N3eH/Gp/LCk3vpd/9cma2bLkNyTcA3bccFXEy5euLbiG+F5R4YS7iq2BvykuDrgnndnv5QDf0A4XB1ha4Qb9XPjs6+aOGg2D8qSKxKLFDgTt6hjskKZU07QhaLkSZOSXeTJiK9LxIiLkiYhX1FyZEnKmWRblJTUYmx5LDf+6Lnm9cxJR5tLHOllcYyLJq/b4moKjR2aGCwTEY5LpzgJ9X9+7n2otZ9hs9Pv9++G2m4HrhMwdTvUwhswG4Tuva07uiepDfnNLLwtyJhXMPcC021RQ6r8AXeyVojTBGSGAAAAOGVYSWZNTQAqAAAACAABh2kABAAAAAEAAAAaAAAAAAACoAIABAAAAAEAAAFAoAMABAAAAAEAAAFAAAAAAEGXBc4AADTjSURBVHgB7Z0JlF1Heeer6i7vvd61b94wtgPyAZIxZ+KD8YBi4yROHIw51oBtCCZOlAzggNlCMjk0Z+YksXEMCAgoOCg4kDDyBMjY2BjsyAyYcWbMISQHAcZ4kWTtWy9vuVvV/Ou+bqlbUqtb1utX9/X7X7v17qtbVV/Vr+p+r5avqoTgRQIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIkQAIk0NUEZFfnvoWZNw9sLI2Op70juroo8IOy8Uw5S0W/54lypo0SmRWW/3PmUtPsDGJKW5aMPCNZM0/2X++4HJ7wXUmTIu0ePoVRxibE2HsbBz49uCF1QmhtPGXvU+FPuHlwE54NDzkK93l4gQ/cww0BjK+zPLyP+yTJPcIN94jS9zK42U/ItXHhsmGabhnihjueG8+bCJOIAG7xhFsA9ziJ4YbPWIjQV8b6jfAl9D1j8CcihPcRF57b76HvmyhqCI3P5jPfhEFq4IQwvjEB3HFv4GbTo1Pf6BD3devmm3KaGt/vTffVq+my5YvTmo4y/+lqslaIVA4PaxuG15kRoAI8TX57Hvpor5/oc7JIvySTCnXRXCSMOE9IsUIYs0gbM6CEDKUUyvc9vFf4Bhl4Y+0/U66JLzO4HXOe2Z856unozRQZU9ysVHzN0zAlBc30HOev6TH31Xwy8Xyat5O75a6n9Afdg+daa3w29ZC9x5V/tZ/2TwoDLdJ0Azu44buEO4KAa2aDIi/5d3sPwJl9Zt0mvmsFNzggLjw3ECJlHs5+Nwb+8KmEyhC5DY/vEv5s/NYf7q0/+yx3a8rUQmkPP2VGK4SxWtRqX5Gp3C/urRzrhvjsf3lcNm7coxpYLZvfW3lSQY7FYMNO+rdu9vuEuxQ2LSpDnlP7h1AphMVGmkhmXl0oU0UGxsJQj6k4qa5dtrYu169v0a8sCHTBZd9NXqcgYBWeiPTL0D65zOjs1Xh5Xg7v5/SUQz8M/Fy5paiFMVocDTQXUKPt73cNL04DL3KMF2uiQqJq4//pV1Ml2ULAizvlsu/fxDXNfcqXKbc24mlfjwaf5joh/zi/Vkzu7Ti/R+U3I5v+FN+mO0z6hvuxBzYklAOupltT1wnoIqgHq1ysurIKAvdNRQXd2IwgV24IB+UgJ+5tuw2qaTJsrtzs8zwW6AQoRKs8bLzWD54jKpsaqzRzefiGKCSCwB/itWnA79QUmbIZfkKJKciH5rXAmumbVG5WGsKi0Zr7twpLSNWMy8qEvDw/uduxdFsFCJ/5M+vHxp0rT9w3P6EgEa/NttYSbvCf61ikFBoTCcY/FoiNwqJWNoZMyyxVUkW4r2VKj5akOBxGPUd+sHJldT0VokU145WDnPFplz7YseWuxUE5uxxtiGvwMr0Gte+CgZ4yXlwp6lEsGlE8DrfnUAWfhONPURN/LozcgTdln/LEYWn8WjXNokqlkUQH8pevS0nOnu3zVhw0T016O3oz6TD75wUrl0BnCLHtVF5neLh21SqE/f60kNO/TXt0wpdLLlqdy5764NFvT/126vvXrl17QvjJEPfi5nr8Pbptm+xftUqOhbu9xV6vJ8fTsGGiUqBKZZnJXl/6PTrQPUmmy+jE+xpqGXo3g5qNvUCNm0QdjkR0sHYgHlk3PIxxAV5TCVABTtDYunXYf8lYz2UYlXkTfpl/oxR4Z1dKAVp1qag1osOoVT/AL/N3PSkeT3W67XCW7r54/TBGe3iRgFsCw8PD6qqBgVJ5yO+LxxpDYckfzEzW50sZ2PFR/EAnqdE1dKkPpqK8/5dvvXUML/6MytdtbtorvesV4M6v/NmSwAuvR+/oZqXkfxzoqYg6urKNKNmJ0btH0Gf6ehD431t6zW3Pt7doKI0EXjiBrcPD5cpQMChUaUkYeoPoyJesLkQTMU6VPxqKeN+hvdVD3d4q7FoFeOC+u9ZglPwWq/h6K+G5mJkUo+P1cQxsfxMD3P/QUw7+efDXbjv0wqsgQ5JAMQg8sWlToKJoSITxMpF6g6nIgkBi6tlLqyIJ9+sw3P/KDRvsZHnXXV2nAHfdd+dST8t3oAfwB32V0ooMQ+D1KHoaYyZ/J33zpeXXfOBnXVcLmOGuIfC9u+6qhJ63DPMrSz2pynZOBaZFdS/L9o2NjOzvthZh1yhAs2U43FfqezvmMT6AGdwXZZi5xfjej2CG8em4ln353Bs/dLhr3gJmtOsJoIvsL10ztASjPSsSoXowtq2DTFUPNxp7X/ve9x7EhF9XjBF2hQLcd/8dlxvt/Xk58C6zdnnVRvQUbCru8pLa3y1fP4wZXV4k0J0Etlx/vXfOZZctFaFY4aWqrHwD63R/xK/Vdr/i/e+vLnQqC1oBHtryF4NJxf9TmAe8q7dSCsdqjSOwpfp4GnmfPHs9x/cWeuVm/uZOwLYIB5csWZ4qtRxGiLDh92KsdNl/ye7de+UCXnWyYBXgrq/dcTlae5/sLYeviGDKkmbZV9Dt/a+rr/vgj+deLeiTBLqLwDObN5d3jY2tKanSYIK1gTLzx/yyfB6TJLWFSGLBKUBrE7XhFT3vU576SH+lVEarbxdMWT606toP3LMQC5B5IoH5IPAvn/rUEuV5q9BwCDVagyWl9kAJHpgPWS7jXFAK0Nr0+V7wV5UwWG+h1qPkvihL333uGz/0tEvIlE0CnUjggY0bS8t8f02SysFMJFon3qG9Zy/btZCW1y0YBbj7a3euhSnfF2Ha8ktYuRGjuD6yKj7vdi4O78RXj2kuEAH5+Mc/t9xOkkjsy5DGcnxERDuvvvVW7H3T+deCUIC7v/rR13q++iLG+9aM16LdWEp+C7q8D3R+8TAHJFAMAo9v3DiACZKzA13BZkhRo1zxdiyEccGOV4C7vnr7tb7v39NbCvvH641/1Sa5cdW1fzzD8vdiVCamggQ6kcDW4c3lnqXJOdhUsaIzHWdltfPVv/M7Y52Yl8k0d7QC3PO1O/6zUt5mLFurjNejh6WIb1rx+j/ZO5k5fpIACbSWwNbhrX7f8mfOiU06AKuKOBR9Oy+99abR1kppX2zN7draJ69lkrZ/5S/ehFmqL2DHlsp4rfG1saD6Riq/luFlRCRwUgLrhtelzyzte06p4EhJBEEs4rMe3/jFgZN67gDHjlSA2//n7deW/eDzPWFQwpjfliT2b7jw6uGO/RXqgHrCJJLAUQJ2Fvihvc9tT5U5gk1/cyX43dv/pv+ohw666bgu8O6v3PEaz/fuR7e3b7Ta+Kcs8d+MVR3YhZkXCZBAOwlYm9vXrDj3HMyKDGpPx72+fq7TJkY6SgHu+srtL/V99XBPubQaBs6PjI/XrrvwJrb82lnpKYsEphLYcv0Wb9W68XNFavqxZ39jVFWf7SQTmY7pAlsjZ6XU3/dWylb5/RuORbiBym9qVeQ9CbSfwPp712fpvhdtxxFg9cSoyqAYOMts2WIPBOyIqyMU4JYt12NZr/+Z/p7SL0L57cGZMW9aed3793UEYSaSBBY4ATsxkvbq7dhlNdHC6/uXPfGqTslyRyjAy7xL3gs7v+trjRgrPLK3c0ODTqleTGe3EFh3882NUe3vwKHKJvbV4q13blraCXkvvAJ8/h/vuAxncgxbmFGSfuTsN/zRg/aeFwmQQLEIXA17wDiO95o08URQWXnfpk09xUrhiakptAI8+MDGAexf+pnecqlSrTe+/rPFjTtOzAJdSIAEikLginf/7j7l+yOeJ8OBRt8au+FqUdJ2snQUWgFGjfqH+3vLLxut1fdgl9p3rFvHc01PVoh0I4GiEIBZiVm8L9iZZTAPlKpv5at+a3lR0naydBRWAeZdX997p93MFCe3vX/1G9/33MkyQDcSIIFiEbh4eH1c6lW7MqOVKHnLHvroPb3FSuGx1BRSAf4M+5AJae5E1zeMouRrq6794JeOJZl3JEACRSfwqlvWHzIyOZJlMpSht9oYU0ib40IqwMqa2tuwr9+lo9X6SCD9D3bLCVVFr9RMHwmcDgF1yDwvlJf6Qgw88umvLj6dsO3yWzgF2DR4ln9sDyrH8VQfW3bde59sFwzKIQESaB2BdcM3NwKd7UPbz1OisdIevNS62FsTU+EUoJTeOwd6yudgne/TPSL8RGuyyVhIgARcELhshbfXaNkw2u+NBl+8zEUaTiWzUApw/z9+bBWOY34HDisXQpk7Fr3hPUdOlXg+IwESKDYBeyRFVirv0UKr0AuWP7FpU1CkFBdKAcYq/r3BvsqysVr0EzXqfbFIoJgWEiCBF0bgqr1vOCC1X8MsSOVQPFCoVmBhFOCR+/98kdDmFuwyK6Q0n1j51oV/Kv0Lq04MRQKdRUAOY58YEe/VxlO+kcuKNBZYGAVYi+R6jP2dNVarP1dP5T90VhEztSRAAqcicMVq/4DwsoYxXm/c+/LCzAgXYlbmiU2/FxghblGY+cX1ty9e/0cjp4LJZ2dGYPPmZ8r+oeSdCjt3aJ2eMjJsQWYN0RthZdGn1r9j+fgpPfMhCcxAwI4FfusTWw5IKc4NQ7HcCLNfwth3Bu9tcy6EAly94oJLAyn/A+z+xjPl/V3bct+lgup7VKU/NH9aKlUGtM5OSUFJJWrRWOLFtS/AIxXgKWnx4akIHM527l8cnrVGZ9nAgxu/1C9uFc6PsShGFzjTN8LwWWljvnXOGz7w81NB5LMzJ1Apg7QxtSiuibn8CSGrWWKc/1qfec4Zg0sC62/D0RVajGCBXBj6lUJsl+VcAT7z1eEhNId/sxEnmPxQnPl1WUMpmwTmmYBXqmAjY3Q8Y7GkCJMhzhVgqCv/qacUrqlG8a6KDP95nvkzehIgAZcELuo7AiuPyBjVGw1c6vw4TecKELvn/BbO9rVF8jANn13WTMomgfknsG7duhRL445oaQLf1Jx3g50qwF33DfdgLGqd7f5CEd43//gpgQRIwDUBjAEetLukZp5ahPffqQ5yKjyLwpeFvjpvvB7hlHnzmOuCoXwSIIH5J5Al5RHsjpWgK9z34Ccf7Jt/iTNLcKoAlRGX29lfJO8Hy974J7tnTiafkAAJLBQCV996dWR8NW6UFwalbMhlvpwqQCx6ezWMIfGf+I5LCJRNAiTQXgLoBh8RWeplkVjUXsnTpTlTgHb8T0nz8noUYwmweXx6sviNBEhgIRPQWTSCFiBsS+XAluvdHaTuTAEm9fA8JdRZtUZS9Yz3o4Vc2MwbCZDAdAJDqRg32tgZ4R5xsahMf9q+b84UIJb9vqRSDgIsNX1m1eFFHP9rX5lTEgk4J/DN0W2Rp1QD276XFg+VnB2a5EwBelK+tBR4ItPmZ3LDBmsHw4sESKBLCAwPD2vsfFcTSvipFv2usu1MAWojLrKZVsr81FXmKZcESMAdgUD5VawN9qALuk8BSqPPs5ufaiO5+YG7OkjJJOCMQJLJmpRaSl91Vxf4Zw9sLGH6Z2WU4NBzLXY4KwEKJgEScEYgkHFdCA+NIF0xw25WhDjpApfHD1mNvwgK0Ggvw+4QvEiABLqNgGcGsCmC3WbNL90r7nWyN6kTBRh6JVh/m36c/tYoecHhbit45pcESAA7YqUxdplUBruOh4PnDzo5Lc6JAsS4H+x+ZAmVoCbHohorAwmQQPcRCKu7MulJ9IBNkB3J7P4Ibb+cKEBkuAw7QKyAk/VquRy1PdcUSAIk4JxA/6qXZQK7IRupPJWq7ukCZzLt9z0POTdJpdKgDaDzqsgEkED7CYztHsuPWYBFiC8rsnsUoGf8stdsAmbRAVgC8So8AT8N+ENV+FLqrATuX7vf2GPAbQtQpm4UoBOtm5kU6i9E65e6ryOqLA5zrYe1i+/52JP7Z0tviDMPTSMdf/N7L6B502yw+BwLQTALoqUXZV5+Jm67kThRgDaTedu33bmlvNMmgBFqHFYl+2Gy/ojMZj/HVeKY4cSkD0LQ609bGAN0HQHMAiuD09A8P+ouBegkt11XvVqXYdTROf1YQlni181Nd6Z1uWVM7SIgcSC40Dh82tGGMHOq1PMBA5M/bAbOB9h5ijO3V51D3Lk/yQb+HFDRCwiYVKIFaFSSxk7aRE7MYFjyJEACJGAJaIwB4ufS83xMCzi43ClADgI6KG6KJIFiEVAKLUBMA7tKlbMucDPD1IKuCp5ySaAIBAw2xMM0iBJJt7UALX3qvyLUQaaBBBwRuF6YDGYwAi3AspskOGl6ZilWwNhNIHiRAAl0LYFt2x6F0YAH2yql4m5qAdpVz3bEkyqwa+s+M04C4jVWB9jurzae52gW2MkYYDZR+E6mfVjxSIAECkMg7/4qnBIcuOkDO1GAlr5t/eW2gIUpCiaEBEig3QRgMophOKlkmjhpDzlTgOwAt7uqUR4JFI+AyTABgv/SJB8Va3sCnUyC5LnkAGDbC5sCSaBoBPIxQHswiJseMHQvLxIgARJwRKA5CywVNkR10gV2qADRBORuWI6qHcWSQDEIHLUDdJQch2OANse2H+xE8TvCTbEkQAJTCWD6A00//Hl2G6H2X44VYPszTIkkQALFIZBpY/u+nsa2MC5S5UwBciGIi+KmTBIoFoGmHaBUJd8eEtn+y5kCtOqeE8HtL3BKJIEiEfDQ+4UeUGnqpgvsdBJEshlYpLrItJBA2wnYU9HtdliJI0NoNwowS9n6a3tVo0ASKCCBDMvg7G4wwk0X2I0CtOWAdi+7wAWskEwSCbSRgB0DxHCYUl7XLYVrI2WKOoEAdiHHD5Ddjby1P0M2Ti2wxRsvEpgDAdQ/dIGNJ2Q4B9+t9+JsEqTZ/uN70voinT3GXxz6mshqmfA9JWCGMHuA0/ABsy6hwsalT332PY/MJRhSIX5Yu1409CJYhE7uEzRTyNxSIoozc8vvfPAlu2byRffOIPDkqifl0vG1dld8JbNubAG29t3rjFIvQCqHxHPCeBon0UABzn7U72mnGPV5qe8FvzJ7QJw2DAUYxiUo4hIU4KmXBtkjN+OkYcLA75k9bvooPoFLhPQadi5UybDbWoBUfk7rp1U8sMCHypmHgoAeyzROSJ/1MpAvBY5EFImO5qQAMWDeyFKaD8yKtkM8GJwJjB82mMG4MYR2NwnSIQXEZJIACcwfATsBgt9gT2VdZgfY6sH3+SsixkwCJDB/BHAsplWCjrrAzlqA2AkWTE895jN/0BkzCZBAEQhgBlgJdIGVo0kQZwrQ6j+O5BShCjINJOCOQNMOEGOAmAh2kQpnCnAeht5d8KNMEiCBMyCAxp/U1g7Q0eVMAdr8OlH5jkBTLAmQwIkEckNorAZJu20SxBpCsxV4YoWgCwl0F4HmUjg3VoB29oUXCZAACTggcAlk2p1g7CQIjgRx0iF0owDtiifb/GMT0EG1o0gSKBIBqbAa01O6mxTg0TWf1IBFqopMCwm0m4AdA8yNodsteEKew80QHOWYYkmABApDwJ6JhGaQsy6wMwXIKZDC1EEmhARcEsh3hFa6i9YC2yHAfMSTPWCXFY+yScApgad3P42dYLASxP4nAidpcTIJkls95sqPGtBJqVMoCRSGAGaBMQmSqS5rAbILXJgayISQgCMCF0P32fNAhAoctQCdjQE6Ik6xJEACBSJgJ0AEbAFT48YMhgqwQJWBSSGBbiNg1wJbBQgV6MQQ2p0C5PBft9V15pcETiDQ3A5LeLI7u8DUgifUCDqQQFcRsBuiYjVI5qYF6GQWuFm+UH7cD9VJVT+vd6gGwR3765OZrO4EHIW2nAAqoZ0FViJwYwbjrgsMlFb/Oen4t7wY3Uf4zF+/5zVBUHpRI4lnTczTR0Z6sAC9p0M3pPUCT930pb98ct9sGVWYW8yyeO9N7/uFB2fzy+duCNgxwPxUuMyNKnCmAO3LZ5ufHdsMcVNfZpSaGfnugdC7di5jKdYEKUpSgY0oZ4yviA8wXmSTFZaC0u1N64lTpzL0QzFei/8ffFEBnhqVw6cwhLZdYJ05aQs5UoD2yEQfLUD0/h2iX2Cio3qciEY8l+MoOzvncRLNKQNGY82RFI05eaYnJwTs+B9+2Dzfd6OKnI0BNg9FcsKcQkmABIpCwI7/2TORHLUAnSnAvDPTWT2wolQZpoMEFgyBvAWYj2d0WQtwwZQgM0ICJPDCCKzNg+X7AeJQOCejYW5agHaYiq2/F1ZpGIoEFhAB2wJEdlTWlXaA1IILqCozKyRw+gSaZjASG0S5sQN00wI8fU4MQQIksMAI7NnzXG4DiM4g1gK7MQhxqwDZDV5gVZrZIYHTJYAzQdAMPN1QrfLvTHCrMsB4SIAEOpXAhdYS2OogGEJ30ySILS9Y9RsuBu7Umst0k0CrCNgzQTxX22E5awHa3q+Tee9WFRvjIQESaAEBuxuMXRXbZZMgVvlxCLAF9YdRkEBHE8i7vjCDcdMecmN+jQLL17XnGvDZji4+Jp4ESOCMCGASxJpBd9sYINt/Z1RrGJgEFgKByc0QXOXF0RigPRmYFwmQQDcTuMBm3m6GgJngTHdZF7hZ8BwF7OYXgHknAav87CSIo92w8j1JWQokQAIk4IQA5gJsL7S77AA9I5vnorMB6KTSUSgJFIWAnf+wdoBZNxlC281g7Hbs1H9FqYZMBwm4ITBxLGZ3dYE9pYzW+agnz4VzU+8olQQKQsCejI4ucFfZAWptdHP7ByrAglRDl8mAKQR6A9Y0vrVrg/I4jR1j51VcAs1DkaSjLfGdGELnRyKhBYhusMFGYLxaQADDquWeUoB9hVqrRGzSMt08Ra4FyTxpFIFsiEzWof5a+3voy1Qo1Qh/uum9S08q+Awc+xF2TKwS3x+75gximTmof85Fh9evlwveXszYDQHtUjhH08BOFKBn0ALMf+2NTlf08xd65vdg7k+02FyPkv/TwHGXrb5QWC/xPPW2DD9arb0kan4mXlr5+kQLsNWx2x+D7BJPmB+3NmYhalDWdQ3FnY9kt+5Hxy6IQLsgSXb85LVI85OtTneR4tt7aKf0+9dgGgS1QJvWQTyNTDpRgPZnDR0TvE1Si6dOI7X0OiOBC3//Y/+Eh/av5ddPP3vrFaEqQQG2POo8QtsCnLcLByWjkdHyFqDED7gH9a2UteJo3btrFWCWYU5UeV3QOToP5FI0AZFVv/U/3HOpU04UoMG4DOaA7cQ3Ole8ik4ACqQ8n2lsjv/NkwRUMLSoWh65HbXEUDb+7K9CaxUgIlzwXd/JAkHJoAGoBIYAWwdxMvI5fDpZCucpjP41ld88tSnmkHN6IQEScE4AWi/vAruaBHGiAC11ZLzZBXZeBEwACZCASwLoYQjhqMfvRgFqexaKzNA1aX3fxGVJUjYJkMBpE7CdX9lNK0GMl9tmsQV42lWFAUhgYRFoDvw1/3WRMyeTIMJO+EjMANtZYF4kQALdS8DN3MdR3m66wFgKhxTAFBAWZrxIgAS6moC79p+1wHZwpWgCwgI8w044VIAO+FMkCZBAk4ATBehptACbZ2JSAbImkkBXE3DZ/nPUAhSenQW2ZjD5OqKuLn5mngS6mUDeAnM4DuikBZhPghhptwRkC7Cbaz/zTgKOCThRgAaTIFD6WO7DWWDH5U/xJOCWAHrALjvBbhQg7ACNzCdA2AJ0W/0onQQKQMCdCnSiAIXdsslgMwTOAheg8jEJJNC9BNwowImVINjEU8crl3A5XPfWP+a86wlM9IHdLMlwZAdoG4BCYS0wTofjRQIkQAKOCDhpAdpDkZBfzgI7KnSKJYGiELCjf+5GAB3ZAdrNEKwdIHbV5SRIUWoi00ECLgjk2k8KRz1gN11gkYA07ACh+qkAXVQ6yiQBEsgJOOkCCy/fCd/+QwXIikgCXU0AKihvBbo5AsWNAkSBwxKaZjCdUvGljDolqUxnZxFwPQbopOttsBkCTr/K8A9ngR3U112bfq+nZnr/DJNRg/bM31kvY85KW34k5qxS6aFrCLibBnGiAH1MguDFw6vH/QBd1PEk80rYkOJtlVIwJwVozwOO0645qMxFkXSvTGd90CZyJwrQzoGgBYjxPypAFzVfV0pGRKJej5M5KUAXaaRMEmgHASf619ee7XehBYj1wNvakU3KIAESKCoBdx1gR3aAaW4HIzOMAHIWuKi1kukigTYQyCdBum0/QDsJArZacylcG6oYRZBAkQm4bP85agH6HrrAMISG4mcLsMh1k2kjgQVOwMkYoJ0Egeazyo8KcIFXMGaPBIpMwIkC9NEFVsKeCse1wEWuHEwbCbSHgLtusBMFmGASBAuBtT0Zbu2qVXOwxG1PMVAKCZBAewlgQxSYxLVX5lRpThTgpBmMVEp/f2pqeE8CJEACbSTgRAHm22Gh9YdpYLb+2ljYFEUChSMw0fpzsxWCo1lgOwmCi7vBNDnwXxIgAUcEnLQAAzT9hIIhNA9FclTsFEsCxSFgxwGFcNMGdKIAbRcYsyDcELU4dZApIQEnBJrKz4noXKgTBWglN/cDpB2gu6KnZBIoCAF3DUA3W+IbuxkCWoCYAaEhdEHqIJNBAk4I5JMgEzMhDhLgZDusPJ8YA4QG5Cywg0KnSBIoCoGutAM0GRaB2FlgrgUuSj1kOkigKwk4GQP0fc/AAlAr/NeV1JlpEiCBQhBwogCP2gHmLUCuBSlETWAiSKALCThRgCbzmocicRKkC6scs0wC0wm4NIVxMgkS+NqkBh1gngkyvSbwW4cRsF0Ya8A7t1lM60sKHi41vZDnxm56mNZ9c6IA7SGz1hSaO0K3riA7OSaF7UBc7ggyld2cjgnNA0gcrBeLRd52fJvbS5yJUNTMilP6x2FhIstSN8sipoJo5/3c8M1LipwowABd4Exa/Sf1JRetpinMvBRtZ0RaCnwRxemdePH/yXWKsTsRNHH2eV+qC2Y7Bxl7WYqyHBUX99w3p2TjKFgRZf5T36/+9tsT7c9Y5+0LKbFJSG187Lk5RdzhnkDc6eVEAcbIsgc7QMwBcxbYafG7F25bfzAH/ckFG+76rvvUCPHzTe8Zl6fxVmJR+9ySLT2ozGT8zbdd/J25BegmX1I4UURAPMfSa21hBD7sALkSpLVQOzg2tP5c1f9p1MzwMN6H+eyMS9mUMU1s139x2Qh0ogDtLLA1gpZS6Ue7vvgJgARIwBUBJwqwmVnVXAv8bVdZp1wSIAH3BCZVkJtOwKT0tnIwvo9DMdEJtutBeJEACXQngXOb8+d25tvV5UQBijgSGWaAjfQ4CeKq5CmXBIpAwJ3uy3PvRAHaFiBGATkLXIQKyDSQQBcTcNLx1hnsoGAHmO8L3cXwmXUSIAG3BJy0AG2W0fLldlhuy57SSaAgBKANnDTFHNkBhn6a2wFmBm1AXiRAAl1LwA4BuhwGdNICjPLFwAqnwnElSNfWfGacBHIC0AIONaATBWj8wLb8cCqc5iwwXwMS6GYCDpWfxe5EAYaYBDGwA8R+GlSA3Vz5mXcScEzAiQJsiAaOxeSpcI7LnuJJoBAEXG6I6kQBhnYliFQZNt1gC7AQVZCJIAE3BFwqP5tjJwrQZEF+KFKaGvPatWs5E+ym7lEqCRSGgKsdYJ0oQGG7wJgEUVwKV5gKyISQgBMCVgN121pgHaAFaPe9pRmMkzpHoSRQJAIuJ4LdtAAb6HvbDVGxIUKRCoJpIQESaDeBSfXnphPsZAGKtitBhAdDaCrAdlc3yiOBIhGYVH+u0uSkBajDwOAsCHSBqQBdFTzlkkBxCLhTg05agKIuhFHWCDoz9xanFLomJaoeyVSVeyqlEEcwzj4Jr2G1HiU8z7ZrKkibM+pwDsTNHgx2EkRmMccA21zRJsWppeWGPCw/W4+SATsTNduFZTvnKqV+HQeZzuaVz0mgowg4aQGWYQCYetgMwWAqhFfbCZy9/mNog4sPzlXwTz972xUhFGCs2QqcKzP6m53AefBSndgJQTlaFutkDNDzMQuCHaHxZ5Zt2+ZuAGD2MqIPEMBwbZkgSKDVBMbj86z+8TR+WDHMAtuQ9l9OFGC1Xk/xVqU2u/2rVlEBtr/cKZEEnBOoi8MBDkQK0gzqwBdjLhLkRAEqtACh9HEukpRjYejGAMgFbcokARI4SsDXcQkrIioYYza+Ud3TAqwMDWWeUgkGANViz6MCPFoleEMC3UOgIko9sAexf1Hqe3Zcuu2XkxbgT59+OsEgYGxbgPpgFrQ91xRIAiTgnIARySJPeXZ8eczX8oiLBDlRgNcLkUJwpLWUUV9acpFxyiQBEnBLQHtmeRCUMQcgD+vavqqL1DhRgHJ4WGMEMG/ymjStuMg4ZZIACbglADO4s8MgxHyo3HP1rRfak4LafjlRgDaXWqqqNYNB5jEGwIsESKDrCCj5YnSBkW35rKu8OzGEzjPr6TGcCZJhX+heV5mnXBIgAXcEpBG/MLG26ElXqXDWAlRhOCakSlMpeoaHh52lwxV4yiWBbiawaZMJ0Pe9ME0TnIuhf+yKhTPFU4/jqspEJDJRvmpgLSdCXNUAyiUBBwTOF4dXwfzlRY2ommBR7E8cJCEX6UwB7n90WT0xsmY846f+eJ8rAJRLAiTQfgKJFBeXw95eTAPsXC4XP9v+FDQlOlOA6+9dDwPAbFTCFAYmgUOuAFAuCZCAAwLKXFoK8yXm//bKDbLmIAW5SGcK0Er3StiUyQisCgkGXQGgXBIggfYTwHbIl2MZHM4HN99tv/RjEp0qwDTqPWKkij2h+x7YuJHjgMfKhXcksGAJfGNTdRXe+1+qN8a1UeY7LjPqVAH+8rtuHM+EGsfhIMFgMMRWoMuaQNkk0CYCWjUu6yn3DiVZ8qxOlvx7m8SeVIxTBWiXAmNV3GGbMqWjJSdNIR1JgAQWGAF5Tb4CRMit1zgc/7NQnSpAmwCvrA5gLCBBW3ho69at7gyzbWJ4kQAJzCuBrZsPD0HpXBnFWPmmxP+aV2FziNy5Aox27hxVyq9CAZb6n9zN2eA5FBq9kECnEsCmf79SLveubkT158tK/G/X+XCuANcND6damoMWRC1qLHcNhPJJgATmkUCqb7LdXyXN/etuXuRkC6ypuStEl3MsDQ8MefFKY7zBLXfdVVl/221ONkecCob3xwjAUtPrKQXC91r/e1kJA4FVQcXZE1KKis1rkrU2r4HvIc6sq3c+emDTEWx+IF5Xa9Q0hr2+dKyGubsrhAL89VtvGvveJ+4ZxVmZixZ5vcuAY7s7JJR8PIFUeD+pR+lH4jQ/xuX4x2f0HfsBCdiCPn5GkbQq8Ic/bMRfv/fjtThdkbY4rwnOX8ZLv1dYGcPDrUpxR8UjlXlLb89Q32j1yBPb9dOFKPPCHEj02GfuWY6+8AV4GRqXLy/9UK5fzzMYO6p6M7EkMDOBb206NJh68od9PQPn1mtjv3/VLUObZvbdvietbeefQbrjvU8fwuYIVTQIyv+yK116BlExKAmQQMEIZL54c1+l/9xqbXRnpSK2FCV5hVGAdjJEyni/B9vAOExWGG6RVZQ6wnSQwBkReOiePb1SqD9U2PxUSnH35TcO5ba/ZxRpiwIXRgHa/JTDdL9JTT1LvZ7vrTifrcAWFTKjIQGXBGRcvqlS6nvJeG0U73f61y7TcrzsQinAV27YkJhM7MPvhM6Mv9Js2cIjM48vMX4ngQ4iYA2fMaz1gYnTbz/9axuW7S5S8gulAC2YbOTn+5WSVZGa8mN7sxVFgsW0kAAJnB6BWIs/7K0MnF+tj2z3fPmp0ws9/74LpwDtWGBDJHtSbJOVKL186/DmfNOw+UdBCSRAAq0k8PAXRi9S0nuPNljyr8WfXfnbA/mCh1bKONO4CqcAbYaueMdbD6UiHhVa+XqxXHOmmWR4EiCB9hKwBz5mib69t6d/sF4ffzyt7f/b9qZgbtIKqQCxSww2ifZ2eZ6JpQmGvnH3lsVzyw59kQAJFIHAtzaP3hiG5Wux6iPGDPD7XJ37OxuLQipAm+hfff9bqyLKYBajdKmqV/9oeEs4W2b4nARIwD2BR+4+fC7W93w0DEoizdJPXXXLwGPuU3XyFBRWAdrk7vleaZ8welxrER4aTM6CU2FWrpwcJ11JoLsJbB3e6uPAo0+j67uyWh/796HSwEeKTKTQCtAenDRaHnheKRE3PDX48Mf/nrvFFLk2MW1dTyA6+xUf6Cn3/wa2u6pj4uMPLr1JjhYZSqEVoAV3zYZratgudU/JDzIRhise2PjFgSIDZdpIoFsJPPQ3h3498Msftt20OImHi9z1nSyjwitAm9B177vhQJbKQypVspyWz966maYxkwXITxIoAoH7P3fgpTjd8fOVUiWsR7V7Rwe++ZdFSNdsaegIBWgzsX9lttuIeDyVOsiqg+fYsYbZMsfnJEAC80/goc+MLS+p8Ms9lT6M+43/q6qN/sH6DtnNqWMUoAUaiYGdOEGurrSoZMsPnbPlei6Vm//qTQkkMDOBBzYeHFBl8feY9Hh5vVHdJVJxw5XvPKtwBs8z5aBjFKDNwNW3Xh2llcqOLBOxSmV//6uCs4e5a8xMZUt3EphXAlu27Kh4ff49PeW+K9DtHc90csPrfrf/x/MqtMWRd5QCtHm3kyK12NupRZqUPDN4+dKXUQm2uFIwOhKYjcD3oPwWjQ/8bV9l4PVRXK+nafyWq96+6NuzhSva8461q7OzwaHoOysVOjCZHBlbk+zolHGHolUCpocEToeA7faG/cEXKuX+a6OoHiVp422/esviL59OHEXx27EK0AJ8YOMDAyKOzzKeCUulYNTb17t93fC61h9cUZTSYjpIwDGBhz83vkIE5os9pb4rG2j56Sy++cq3D/0Px8l6weI7rgs8NacYExxNMrkDx81EaWr6s6WHz+fuMVMJ8Z4EWkfg4c8fXCsC8Q2M+VnlN5Yk0Q2drPwsmY5uAU4W7X2b7uvx6/rsklLlODWp9v0dVjlOPucnCZDAmRH45uaRq7G11d295d5VmPB4PtPxTa+7edGjZxar+9ALQgFajOgOl4SIzlLC7/O1b2CLvvfKd79+Hx7hnhcJkMALIbBli/GGqiMf9FT4YWvkXGtUfyC0uenKt/dveyHxFS3MglGAFuwWbKE/uCNcbYS3WAdahZk3EnvqeWs+UzTwTA8JFJ3A/X+19/xypffjpbB8jU1rHNWhDs1/KeLGpi+U5YJSgJMQ7rvzvqUykCt9bUKpZFytxruv++PrOsY4czIf/CQBVwS+9Tcjb5XK+/PeSu9q7OnXMDr78He39985PCyxvfPCuRakArTF8wTGBXc3xJpAi36BkVvt6ZFKf+X5dTevayyc4mNOSKC1BL71ubGXKl/8d88PrrP7+dXr1R8aod915c0D32mtpGLEtmAVoMVrho16aPChFUaaZdrzQizTSQNf7AsOBvtoLlOMCshUFIPAN+4eWRx46l0YMH93b6VvqBbVY+zF+Ukdxf/tdRsWjxQjla1PxYJWgJO4HvroQ72mx6xKUzloMuP5yjRiTJJEj0UH7J6Dk/74SQLdRmDrp/f1YXnpW4QSt8G27wKtsc40iR4zJvvQQm31TS3jrlCANsP2kJb7//L+JYEKViS+6DUJNu/xZC0QYq93xDvIFuHUasH7hU7g/r86sqhU9t4kpXhHKey52MOuw42o9owx+o6DvX2fX79exgudgc1f1yjAycK022hFg9GyxBPLPeFVtFEKp/Y1hNIH6lnv/vW3vao+6ZefJLDQCMCe70IcUnQj8vWWSqnnfAXFV6uP74XbZ1Qp+/S6GwYOLLQ8nyo/XacAJ2E8semJ4Pn40DIV+8ukb3qzJPWV5yWZJ0ZCEe7fUeo5smHDK5NJ//wkgU4l8I27zWKpRn5FCfVm9IWu6u0Z6NPa2Bbfczi8aLNQ8u4rfrvn+U7N35mku2sV4CQ02yKMe+PFSRjivBE9YGA+2HwmoyxLR6QvDh464o3cPMzZ40lm/Cw+gUe+UFuD1RqvEkb9BlJ7BWz5zioFgajWqxgOEv9XC7MZfZ97F5JN3wspla5XgMegGfnAxgf7I1FahtniJb5UPVpKDBFCLRqTKCPGMWw40iPlkfHUH982+s0IexEuKJuoYyx410kEtgz/KOw9a/Uq1Nm10ohL0aJ7NUxXfqkc9i4qwewhihM7sbED3d2vZ1p/Odj+xGMc826WMBXgSWq6bRUeXpoNlkRpSZImi0wm+oRSodHG85SHCTKR6lA0fO3VYm1qnvSqSdJoJJkfLfUH4l3VQ9nLVvVnY7vHzP61+49binf9CRK3bXt0Wjm85gQfJ3N47VHHJ3d9X4pLjn6d480lR4M8vXvbNPmzRrB20sdasWfPUzOGvWDS24yfF4i9h56dMfyMwdr14Nwpgp7D/dTvUx7N1+15iHg8LmHD5XKgdVDS5bQHdW+RVGq51OZsI8WLlTC/gDHsizCZcW4YVvrKYSlf+1mtjdnPp/DPt/Hsvkyb7/zaLYOH5iutnRpvcStfQYja5XV9e87pzUw6lEizCDtRD0AZ9mRCl/Br66N56ElcNrl2PsVeGFBGoxEdDVxoRcIbqqwxCpb1Es5oTMrmH/rbCvc2fNMNz4x9BgmITUrrv+kXMeVhmm7NeyvR+pWZxK4++PPspBb8a/sdfhBW4n8bd9MvorVhDMJYf3g2GYdNh3XPg8APko77ZrrhO/cn87TAYMI+gx9kSOIFw9AS/OOZdbd/Nj/5vZWD/5rymnFCjM0s/DU5wCdE2wBH40DQPDQyY6M52YUnJ300JcSU51Ncp0QGwVP8HHuA5NgvJzw7Lpajz5s3R7/asJYCruNCNB0nXacFaPqeCDZFtk0LFp8ZEYJQGcx7gLMCRSdCPxSeh6eoAEmaikajmsLPdsj8N+mp7+JX+jHtDfz7r75VVicE8+MkBE4ohpP4odMUAlYhiv3LKqIq+kp+qS8xSb8yXi+8VPByl/BWhXjBfYyxoEdiFaTy8OuLhqNVBPiDJ6s0rTq091bxoNLimBO4TXy3Sg2HwSOEfZXwzEDJWgVj1Qme5XFMKCMtETf85MrOPoNfrIWe8NeME2nLZeBtQlzQqvhu47XuNi68WHBrKsfcHYoPb5ZVp81weZy4t+55XM17KwtfIR65se54jhcyD2f94S+XlSvppj/PKkyr9KxcG0YpDw42B3n2oNhwj4DNf5o3+Xd7O3FBzuTtpMtxYaxz088xr8fCHL079vCYuMk7eDrqbzKuSalHH5xExSHOo48n/cNliqhjaZt8ngdohjo+rLbdDSg4lBGqiI6BbhSRHcYPyF7E+SzunwT+bVj6+RMt+rZT4U1Cndvn8bznFoq+TiBgV53cK7b5g71pkJXq3rjdlKvS63vpmB8l2EgIf1CRGIs5dp+7la0b2nUp6na5LOxngu9WgPKbnxh7xPMJN7Q30zTB81Aor/mZZlAh1i0MRIrzQ8P8U0pM4mAQMxAZmq2Tn6kWErPc8JdIBMsHObMMcWOAXOkUbgLzPkJYtwBuNo4MYTCUJDI0Z/NnVl/lYaAk7CcuDTepcWQVdD5SKLX16/sIkyIMPiFL23vPuqHJijjhLCT8oSmDzywPg8cCyj+P08Z7qgvad8qFb9Mdpjw79a3N07Fr+rdj7hN3p3g8Xfz0byfEczKHiSBNEZYjBl2MbigRjKFF19AmbSivfFivHqhefbXkBh8nY0g3EiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEjgdAv8fWTinFKY8F/UAAAAASUVORK5CYII=" alt="Unicorn desktop app icon" width="140" height="140">
-      <div class="uc-cap">The <b>desktop app icon</b>. The same pixel unicorn on a transparent squircle, wrapped in the signature gradient stroke that fades to nothing at the top-right and bottom-left corners. The mark and the chrome speak one language.</div>
-    </div>
-  </section>
-
-  <section>
-    <div class="sec-label"><span class="num">02</span>Core palette</div>
-    <div class="sec-note">Two signature colors carry everything: <code>peach</code> and <code>lilac</code>. Cream is the text; near-black is the void. Tomato is a rare accent for destructive or urgent moments only.</div>
-    <div class="grid g4">
-      <div class="sw"><div class="sw-chip" style="background:#E8956A"></div><div class="sw-meta"><div class="sw-name">Peach</div><div class="sw-hex">#E8956A</div></div></div>
-      <div class="sw"><div class="sw-chip" style="background:#A78BDF"></div><div class="sw-meta"><div class="sw-name">Lilac</div><div class="sw-hex">#A78BDF</div></div></div>
-      <div class="sw"><div class="sw-chip" style="background:#F1ECE8"></div><div class="sw-meta"><div class="sw-name">Cream</div><div class="sw-hex">#F1ECE8</div></div></div>
-      <div class="sw"><div class="sw-chip" style="background:#100F11"></div><div class="sw-meta"><div class="sw-name">Void</div><div class="sw-hex">#100F11</div></div></div>
-      <div class="sw"><div class="sw-chip" style="background:#D4724A"></div><div class="sw-meta"><div class="sw-name">Peach dark</div><div class="sw-hex">#D4724A</div></div></div>
-      <div class="sw"><div class="sw-chip" style="background:#9478D0"></div><div class="sw-meta"><div class="sw-name">Lilac dark</div><div class="sw-hex">#9478D0</div></div></div>
-      <div class="sw"><div class="sw-chip" style="background:#1A1616"></div><div class="sw-meta"><div class="sw-name">Ink</div><div class="sw-hex">#1A1616</div></div></div>
-      <div class="sw"><div class="sw-chip" style="background:#FF5E71"></div><div class="sw-meta"><div class="sw-name">Tomato</div><div class="sw-hex">#FF5E71</div></div></div>
-    </div>
-  </section>
-
-  <section>
-    <div class="sec-label"><span class="num">03</span>The signature move · two gradient strokes</div>
-    <div class="sec-note">Peach to lilac is the one gesture that signals Unicorn, and it shows up as a 1px gradient stroke in <b>two forms</b>, matched to scale. Both are drawn with the same <code>mask-composite</code> technique so the gradient sits on the edge, not the fill -- light does the work, fills are avoided.</div>
-    <div class="grid g2">
-      <div>
-        <div class="ring-demo-even">Even stroke</div>
-        <div class="sec-note" style="margin:12px 0 0;">① <b>Even</b> -- peach→lilac runs the full perimeter at even weight, no corner fade. On the <b>small UI</b>: buttons, chips, labels, tabs, filters.</div>
-      </div>
-      <div>
-        <div class="ring-demo">Faded corners</div>
-        <div class="sec-note" style="margin:12px 0 0;">② <b>Faded corners</b> -- the gradient runs bottom-left→top-right and whispers off to transparent at the top-right + bottom-left tips. On the <b>large chrome</b>: panels, the window's glass edge, the preloader, and the two compose CTAs.</div>
-      </div>
-    </div>
-    <div style="margin-top:16px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:22px;font-weight:600;background:linear-gradient(90deg,var(--peach) 0%,var(--peach) 30%,var(--lilac) 70%,var(--lilac) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;border:1px solid var(--hairline);border-radius:12px;padding:14px;">Gradient text</div>
-
-    <div class="sec-note" style="margin-top:24px;"><b>Where each form lands.</b> The signature shows up two ways depending on the surface -- and the banners break from both: they are <b>filled</b>, not stroked.</div>
-    <div class="grid g2" style="margin-top:8px;">
-      <div>
-        <div class="ring-demo">Preloader card · window edge</div>
-        <div class="sec-note" style="margin:12px 0 0;"><b>Preloader card + the app window edge</b> -- the <b>faded-corner gradient stroke</b> over the glass / void, same edge language as the panels and the icon. The peach→lilac rides the stroke here, never a fill.</div>
-      </div>
-      <div>
-        <div style="display:flex;align-items:center;justify-content:center;font-family:var(--sans);font-size:12px;letter-spacing:-0.005em;color:#100F11;background:linear-gradient(135deg,var(--peach),var(--lilac));border-radius:8px;padding:6px 14px;">San Francisco &nbsp;·&nbsp; 64° &nbsp;·&nbsp; waning gibbous &nbsp;·&nbsp; 2 hr 10 min of daylight left</div>
-        <div class="sec-note" style="margin:12px 0 0;"><b>Banners</b> (the welcome strip -- place · temperature · moon phase · daylight left -- plus the experiment toasts) -- <b>not glass</b>. They are <b>filled</b> with the peach→lilac gradient, carry <b>dark void text</b> (<code>#100F11</code>), and have <b>no corner fade</b>. A saturated fill on a panel browned at the midpoint and read too heavy -- so the fill is reserved for these small, transient bands where it pops on purpose.</div>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <div class="sec-label"><span class="num">04</span>Typography</div>
-    <div class="sec-note">Two families. <code>Ubuntu Sans</code> for body and reading; <code>Ubuntu Sans Mono</code> for display, labels, and anything that should feel like the terminal. Three sizes only: meta, body, display. Restraint over a type ramp.</div>
-    <div class="grid g2">
-      <div class="spec">
-        <div class="spec-big-sans">Ubuntu Sans</div>
-        <div class="spec-scale">
-          <span class="s-display">Display · 22px · the work compounds</span>
-          <span class="s-body">Body · 14px · capture what your agent can't, then keep what's worth keeping.</span>
-          <span class="s-meta">Meta · 10px · saved to disk</span>
+  <section class="rv">
+    <div class="sh"><h2>Unicorn 7</h2><p>The logo since October 18, 2026, and the status unicorn in the app. We call him Peach. A dark horn, a lilac mane and tail, a peach body, darker-peach legs on the still pose. Every pixel is one terminal half-block: 1 wide, 2 tall. Scale him in whole multiples so he stays crisp.</p></div>
+    <div class="surface">
+      <div class="mark">
+        <div class="stage"><svg width="80" height="128" viewBox="0 0 10 16" shape-rendering="crispEdges" role="img" aria-label="Unicorn 7"><path fill="#9A72C4" d="M1 0h1v2h-1zM1 2h1v2h-1z"/><path fill="#AF87D7" d="M2 2h2v2h-2zM4 4h2v2h-2zM4 6h3v2h-3zM8 8h2v2h-2zM8 10h2v2h-2z"/><path fill="#FFAF5F" d="M1 4h3v2h-3zM0 6h4v2h-4zM2 8h6v2h-6zM2 10h6v2h-6zM2 12h2v2h-2zM7 12h1v2h-1zM2 14h2v2h-2zM7 14h1v2h-1z"/><path fill="#E8954C" d="M1 10h1v2h-1zM1 12h1v2h-1zM8 12h1v2h-1zM8 14h1v2h-1z"/></svg></div>
+        <div>
+          <h3>Logo Colors</h3>
+          <p class="note">Exactly two purples and two peaches. The logo colors are brighter than the UI's peach and lilac, so he reads at 15px in the Story panel and in the terminal.</p>
+          <div class="swatches">
+            <div class="sw"><i style="background:#FFAF5F"></i>#FFAF5F<br>Peach</div>
+            <div class="sw"><i style="background:#E8954C"></i>#E8954C<br>Peach Dark</div>
+            <div class="sw"><i style="background:#AF87D7"></i>#AF87D7<br>Lilac</div>
+            <div class="sw"><i style="background:#9A72C4"></i>#9A72C4<br>Lilac Dark</div>
+          </div>
         </div>
       </div>
-      <div class="spec">
-        <div class="spec-big-mono">Ubuntu Sans Mono</div>
-        <div class="spec-scale">
-          <span class="s-display" style="font-family:var(--mono)">Display · Compose weekly brief</span>
-          <span class="s-body" style="font-family:var(--mono)">Body · ~/unicorn/briefs/unicorn/2026-W40-unicorn.html</span>
-          <span class="s-meta">Meta · quest · mirror · keep · commits</span>
+      <div class="moods">
+        <div class="mood"><canvas class="uc" data-mode="still" width="84" height="104"></canvas><b>Still</b><span>No agent running.</span></div>
+        <div class="mood"><canvas class="uc" data-mode="working" width="84" height="104"></canvas><b>Galloping</b><span>An agent is working, in any project.</span></div>
+        <div class="mood"><canvas class="uc" data-mode="waiting" width="84" height="104"></canvas><b>Thinking</b><span>An agent stopped and needs your reply. Click him to go there.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="rv">
+    <div class="sh"><h2>Color</h2><p>Peach and lilac on a dark void. Peach is for fills and the thing happening now; lilac is for links and what has started. Tomato is the one red, kept for delete.</p></div>
+    <div class="chips">
+      <div class="chip"><i style="background:#E8956A"></i><div><b>Peach</b><span>--peach #E8956A</span></div></div>
+      <div class="chip"><i style="background:#A78BDF"></i><div><b>Lilac</b><span>--lilac #A78BDF</span></div></div>
+      <div class="chip"><i style="background:#100F11;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)"></i><div><b>Void</b><span>--void #100F11</span></div></div>
+      <div class="chip"><i style="background:#F1ECE8"></i><div><b>Cream</b><span>--cream #F1ECE8</span></div></div>
+      <div class="chip"><i style="background:#FB7185"></i><div><b>Watermelon</b><span>--watermelon #FB7185</span></div></div>
+      <div class="chip"><i style="background:#FF5E71"></i><div><b>Tomato</b><span>--tomato #FF5E71</span></div></div>
+    </div>
+    <div class="two" style="margin-top:16px">
+      <div class="surface">
+        <h3>The Fill</h3>
+        <div class="gbar" style="background:var(--grad-fill)"></div>
+        <p class="note" style="margin-top:12px">Three stops, so the middle never goes muddy: <code>#F59A6B → #D49BC2 → #AE8BF5</code>. Every filled button wears it.</p>
+      </div>
+      <div class="surface">
+        <h3>Text</h3>
+        <div class="row" style="gap:8px">
+          <div style="color:var(--text)">Text, 94%</div>
+          <div style="color:var(--text-mute)">Mute, 56%</div>
+          <div style="color:var(--text-whisper-2)">Whisper, 48%</div>
+          <div style="color:var(--text-whisper)">Whisper, 40%</div>
         </div>
       </div>
     </div>
-  </section>
-
-  <section>
-    <div class="sec-label"><span class="num">05</span>Text hierarchy</div>
-    <div class="sec-note">Three levels of cream, by opacity. Loud enough to read, quiet enough to layer over the desktop.</div>
-    <div class="spec">
-      <div class="txt-row"><span class="txt-sample" style="color:var(--text);font-size:16px">Text · primary content you read</span><span class="txt-tag">rgba .94</span></div>
-      <div class="txt-row"><span class="txt-sample" style="color:var(--text-mute);font-size:15px">Mute · supporting, secondary lines</span><span class="txt-tag">rgba .56</span></div>
-      <div class="txt-row"><span class="txt-sample" style="color:var(--text-whisper);font-size:14px">Whisper · labels, timestamps, hints</span><span class="txt-tag">rgba .40</span></div>
+    <div class="surface" style="margin-top:16px">
+      <h3>Commits</h3>
+      <div class="ramp"><i style="background:#FFAF5F"></i><i style="background:#FF9A7A"></i><i style="background:#F28DA6"></i><i style="background:#D58BC6"></i><i style="background:#AF87D7"></i></div>
+      <div class="ramp-lab"><span>#FFAF5F</span><span>#FF9A7A</span><span>#F28DA6</span><span>#D58BC6</span><span>#AF87D7</span></div>
+      <p class="note" style="margin-top:14px">Fewer to more, from the logo's peach to the logo's lilac through coral, rose and orchid. Locked by hex: never mixed with white, never blended in RGB, so every step reads.</p>
+      <div class="cal" id="cal" aria-hidden="true"></div>
+      <div class="legend"><span>Fewer</span><i style="background:#FFAF5F"></i><i style="background:#FF9A7A"></i><i style="background:#F28DA6"></i><i style="background:#D58BC6"></i><i style="background:#AF87D7"></i><span>More</span></div>
     </div>
   </section>
 
-  <section>
-    <div class="sec-label"><span class="num">06</span>Glass &amp; geometry</div>
-    <div class="sec-note">On the desktop the glass is <b>painted, not sampled</b>: a near-opaque base (<code>rgba(21,20,25,0.99)</code>) under two crossing gradients -- a soft top-left light sheen and a faint lilac→peach wash from the bottom-right -- so panels stay legible over a busy terminal. The web preview uses the translucent fill (<code>rgba(22,22,22,0.78)</code>) with a <b>26px backdrop blur</b>. Both carry a <b>soft drop shadow</b> (<code>0 6px 16px rgba(0,0,0,0.35)</code>) and the signature peach→lilac stroke that <b>fades at the top-right and bottom-left corners</b>. Only two lines survive inside a panel: the <b>2px peach→lilac hairline</b> under each title (it ends on lilac, no fade) and the quest progress fill. Recessed wells (the Currently card, the archived pill, Completed chips) sink with <code>rgba(0,0,0,0.18)</code>, never a white wash. Radii: <code>18px</code> for panels, <code>6px</code> for chips and inputs.</div>
-    <div class="grid g2">
-      <div class="panel-demo">
-        <div class="pd-head"><span class="pd-dot"></span>Panel</div>
-        <div class="pd-hair"></div>
-        <div class="pd-body">Painted glass, soft drop shadow, 18px radius. The gradient stroke wraps the edge and fades at the top-right + bottom-left corners. On the desktop app these panels float on a transparent window over the real desktop.</div>
+  <section class="rv">
+    <div class="sh"><h2>Type</h2><p>Ubuntu Sans for everything you read, Ubuntu Sans Mono for paths, dates and anything that came from the terminal. Funnel Display only for the paper's nameplate.</p></div>
+    <div class="surface">
+      <div class="spec"><span class="k">Panel Title<br>Sans 500 · 13</span><span style="font:500 13px/1 var(--sans);color:var(--text-mute)">Quest</span></div>
+      <div class="spec"><span class="k">Quest Name<br>Sans 500 · 19</span><span style="font:500 19px/1.2 var(--sans)">Tide Clock</span></div>
+      <div class="spec"><span class="k">Body<br>Sans 400 · 13</span><span style="font:400 13px/1.4 var(--sans)">Moths drift toward the cursor</span></div>
+      <div class="spec"><span class="k">Path + Date<br>Mono 400 · 10.5</span><span style="font:400 10.5px/1 var(--mono);color:var(--text-whisper)">Sunday, October 18</span></div>
+      <div class="spec"><span class="k">Nameplate<br>Funnel Display 600</span><span class="nameplate">Creative OS <em>&amp;</em> Tech</span></div>
+    </div>
+    <div class="two" style="margin-top:16px">
+      <div class="surface">
+        <h3>Title Case</h3>
+        <ul class="rules">
+          <li><span>Titles, buttons, menus and counts: Complete This Quest, Hold ⌘ and Drag, 27 Finished.</span></li>
+          <li><span>Small words stay lowercase: a, an, and, as, at, by, for, in, of, on, or, the, to.</span></li>
+          <li><span>Tooltips that are phrases use sentence case: Open this build’s folder.</span></li>
+          <li><span>“&amp;” is a house signature: Backup &amp; Restore.</span></li>
+        </ul>
       </div>
-      <div style="display:flex;flex-direction:column;gap:12px;justify-content:center">
-        <div style="background:var(--panel-bg);border:1px solid var(--hairline);border-radius:18px;padding:14px 16px;font-family:var(--mono);font-size:11px;color:var(--text-mute)">radius 18px · panel chrome</div>
-        <div style="background:var(--panel-bg);border:1px solid var(--hairline);border-radius:6px;padding:10px 14px;font-family:var(--mono);font-size:11px;color:var(--text-mute)">radius 6px · chip / input</div>
+      <div class="surface">
+        <h3>Never</h3>
+        <ul class="rules">
+          <li class="no"><span><s>ALL CAPS LABELS</s> Labels are words, in Title Case.</span></li>
+          <li class="no"><span><s>Mute</s> Sound On and Sound Off.</span></li>
+          <li class="no"><span><s>Day 140</s> Weeks are calendar weeks: Week 42.</span></li>
+          <li class="no"><span>Em dashes, process notes in the UI, symbols on section labels.</span></li>
+        </ul>
       </div>
     </div>
   </section>
 
-  <section>
-    <div class="sec-label"><span class="num">07</span>Buttons &amp; the compose CTA</div>
-    <div class="sec-note">Neutral buttons stay calm: a background tint shifts on hover, with no border-color swap. The <b>primary action -- the compose CTA</b> is the showpiece: it rests as a <b>void fill with a peach→lilac gradient stroke</b>, and on hover the whole pill <b>fills with the gradient while the label goes void-dark</b> (<code>#100F11</code>). Reserved for the two compose buttons, <b>Compose weekly brief</b> and <b>Tell the case story</b> -- making an artifact earns more than a tap (it even gets its own ascending arpeggio -- see Sound). The label stands alone, no symbol in front. Padding runs on a three-tier scale: <code>9px</code> pills, <code>10px</code> buttons, <code>11px</code> CTAs.</div>
-    <div class="panel-demo"><div class="btn-row">
-      <span class="btn">Secondary</span>
-      <span class="btn" style="color:var(--text-whisper)">Quiet link</span>
-    </div>
-    <div class="btn-row" style="margin-top:16px;align-items:flex-start;gap:64px;">
-      <div style="display:flex;flex-direction:column;align-items:flex-start;gap:10px;">
-        <span class="cta-demo"><span class="cta-text">Compose weekly brief</span></span>
-        <span class="cta-state">rest · void fill + gradient stroke</span>
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:flex-start;gap:10px;margin-left:48px;">
-        <span class="cta-demo is-hover"><span class="cta-text">Compose weekly brief</span></span>
-        <span class="cta-state">hover · gradient fill + void-dark label</span>
-      </div>
-    </div>
-    <div class="sec-note" style="margin:14px 0 0;">On hover the whole pill <b>fills with the peach→lilac gradient</b> and the label goes <b>void-dark</b> (<code>#100F11</code>). Hover the left CTA to watch the fill bloom in; the right one is pinned to its hover state for reference.</div></div>
-  </section>
-
-  <section>
-    <div class="sec-label"><span class="num">08</span>Experiment status</div>
-    <div class="sec-note">Each experiment row is <code>[chip] name ... ×</code>: the status chip sits hard left in a fixed slot, the × in a reserved slot on the right, so nothing moves under the cursor. The chip is the only action -- click to cycle. Color carries the signal: <b>lilac</b> is just starting, <b>peach</b> is in motion, <b>muted</b> is paused (doesn't count toward active work). Live states are drawn in light (a faded-corner stroke in their own hue); a closed loop is drawn in shadow -- <b>Completed</b>, whisper label in a recessed well. Reopening one arms first (<b>Reopen?</b>), the same two-click confirm as Delete quest.</div>
-    <div class="panel-demo"><div class="status-row">
-      <span class="chip" data-s="starting">Starting</span>
-      <span class="chip" data-s="active">Active</span>
-      <span class="chip" data-s="paused">Paused</span>
-      <span class="chip" data-s="complete">Completed</span>
-      <span class="chip" data-s="armed">Reopen?</span>
-    </div></div>
-  </section>
-
-  <section>
-    <div class="sec-label"><span class="num">09</span>The brief</div>
-    <div class="sec-note">Unicorn composes a <b>creative brief</b>, not a recap. Structured as <code>Direction</code> (where the quest is heading), <code>Signal</code> (the tools, themes, and links your work revealed), and <code>Work</code> (the kept moments, experiments, and commits). It opens with a one-line read of what you're becoming and closes on a gradient line: <em style="color:var(--peach);font-style:normal">Make something this week.</em> Self-contained HTML, shareable.</div>
-    <div class="panel-demo" style="text-align:center;padding:30px">
-      <div style="font-family:var(--mono);font-size:clamp(18px,2.6vw,26px);font-weight:600;background:linear-gradient(90deg,var(--peach) 0%,var(--peach) 30%,var(--lilac) 70%,var(--lilac) 100%);-webkit-background-clip:text;background-clip:text;color:transparent">✺ Make something this week.</div>
+  <section class="rv">
+    <div class="sh"><h2>Corners</h2><p>Three radii, one per size of thing. Panels are 18, the boxes inside them 10, buttons and chips 6. Nothing is a pill.</p></div>
+    <div class="corners">
+      <div class="corner"><div class="sh1 surface"></div><b>Panel</b><span>--r-panel 18px</span></div>
+      <div class="corner"><div class="sh2"></div><b>Box</b><span>--r-box 10px</span></div>
+      <div class="corner"><div class="sh3"></div><b>Button</b><span>--r-btn 6px</span></div>
     </div>
   </section>
 
-  <section>
-    <div class="sec-label"><span class="num">10</span>Motion principles</div>
-    <ul class="principles">
-      <li><b>No AI lift.</b> Photos and cards don't scale or brighten on hover. Static is the goal; the lift is the tell.</li>
-      <li><b>Delicate arrival, decisive exit.</b> Hover effects ease in slower than they ease out, so nothing lingers.</li>
-      <li><b>Ramp both ways.</b> Nothing pops in or cuts out. Everything fades, with generous easing.</li>
-      <li><b>Depth from light + edge.</b> Surface comes from gradient, blur, and glass; the only line is the signature peach→lilac gradient stroke. No flat outlines.</li>
-      <li><b>The macOS grow-out.</b> The preview terminal genie-opens from its bottom-center -- a small scale with a touch of back-ease overshoot -- so it reads like a real window waking up, then holds open and auto-types.</li>
-      <li><b>Respect reduced-motion.</b> Every animation gates behind the OS preference.</li>
-    </ul>
+  <section class="rv">
+    <div class="sh"><h2>Buttons</h2><p>One filled button, one quiet one. The fill is the action that needs you; the quiet one is text, no box. Hover is a touch brighter and stays filled, eased in and out. No strokes, no lift.</p></div>
+    <div class="btn-grid">
+      <div class="btn-cell"><h3>Fill</h3><div class="line"><button class="u-fill">Week</button><button class="u-fill hov">Hover</button></div><span class="note">Canvas Open, Story Week, Save, Reset Layout.</span></div>
+      <div class="btn-cell"><h3>Quiet</h3><div class="line"><button class="u-quiet">Directory</button><button class="u-quiet hov">Hover</button></div><span class="note">The second action. Update, Directory, Show All.</span></div>
+      <div class="btn-cell"><h3>A Pair</h3><div class="line"><button class="u-quiet">Update</button><button class="u-fill">Open</button></div><span class="note">Opposite states, so one gets the eye.</span></div>
+      <div class="btn-cell"><h3>Disabled</h3><div class="line"><button class="u-fill" disabled>Save</button></div><span class="note">Keep's Save until there's something to keep.</span></div>
+      <div class="btn-cell"><h3>The Big Moment</h3><div class="line"><button class="u-fill lg">Complete This Quest</button></div><span class="note">Shows only when every experiment is finished.</span></div>
+      <div class="btn-cell"><h3>Delete</h3><div class="line"><button class="u-quiet" style="color:var(--watermelon)">Delete Quest</button></div><span class="note">Watermelon at rest, tomato when armed. Undo, always.</span></div>
+    </div>
   </section>
 
-  <section>
-    <div class="sec-label"><span class="num">11</span>Sound · a first-class material</div>
-    <div class="sec-note">Sound is designed, not decorated. A single warm <b>steel-pan voice</b> (Tone.js <code>AMSynth</code>, a sine through chorus + reverb) speaks for the whole app, so every cue feels like one instrument in one room. Each gesture earns its own phrase -- never a generic system beep.</div>
-    <div class="grid g2">
-      <div class="panel-demo">
-        <div class="pd-head"><span class="pd-dot"></span>The voice</div>
-        <div class="pd-hair"></div>
-        <div class="pd-body">Warm steel-pan AMSynth, sine oscillator, pulled-in envelope so a tap blooms and rings briefly instead of sustaining. The same voice that plays the Commits calendar's ambient music powers the UI.</div>
+  <section class="rv">
+    <div class="sh"><h2>Status</h2><p>Four states for an experiment. Peach is now, lilac has started, hollow is paused, a quiet check is finished. The counts say it in words.</p></div>
+    <div class="two">
+      <div class="surface">
+        <div class="counts">2 Started · 1 Paused · 2 Finished</div>
+        <ul class="status">
+          <li class="now"><span class="d"></span><span class="n">Bloom on click</span><span class="w">Now</span></li>
+          <li class="started"><span class="d"></span><span class="n">Moon phase ring</span><span class="w">Started</span></li>
+          <li class="paused"><span class="d"></span><span class="n">Desk widget</span><span class="w">Paused</span></li>
+          <li class="finished"><span class="d"></span><span class="n">Night palette</span><span class="w">Finished</span></li>
+          <li class="finished"><span class="d"></span><span class="n">Read the tide table</span><span class="w">Finished</span></li>
+        </ul>
       </div>
-      <div class="panel-demo">
-        <div class="pd-head"><span class="pd-dot"></span>The phrases</div>
-        <div class="pd-hair"></div>
-        <div class="pd-body">A soft tap on clicks. A <b>launch bloom</b> -- a slow ascending pentatonic run -- as the preloader wakes. A celebratory <b>ascending arpeggio flourish</b> on the compose CTAs. Rising / falling single notes on panel float in / out. A victory run on closing a loop. And the steel-pan soundtrack under the commit calendar.</div>
+      <div class="surface">
+        <h3>Where They Come From</h3>
+        <p class="note">Claude Code hooks write a tiny status file while an agent works. Unicorn watches it: the experiment that agent is on turns peach, and Peach gallops in the Story header. Nobody logs it by hand.</p>
+        <h3 style="margin-top:22px">Now Dot</h3>
+        <ul class="status"><li class="now"><span class="d"></span><span class="n">Weekly Story page</span></li></ul>
       </div>
     </div>
-    <div class="sec-note" style="margin-top:14px;">Every cue only starts after a user gesture (browsers block autoplay), so the room stays quiet until you act. After 20 seconds of silence the audio engine sleeps, and the next note wakes it.</div>
   </section>
 
-  <section>
-    <div class="sec-label"><span class="num">12</span>Desktop treatment</div>
-    <div class="sec-note">In the Electron app the window is <b>transparent</b>: panels float on your real desktop, beside the terminal. <code>HUD mode</code> keeps Unicorn on top and lets clicks pass through the gaps to the terminal underneath, so Claude Code and Unicorn are usable at once. The preloader, panels, and greeting all soften so the desktop stays visible. Unicorn draws its own <b>traffic lights</b> in tomato / peach / lilac, wearing the panels' peach→lilac ring as their edge. The menubar carries two controls: <code>⊞ Panels</code> (show or hide Quest · Mirror · Keep · Commits · Activity · Settings, ⌘1-5 / ⌘,) and <code>⊹ Float</code> (on top, ⌥U). Hold ⌥ and drag anywhere to move the window.</div>
+  <section class="rv">
+    <div class="sh"><h2>Panels</h2><p>Dark glass with a faint peach-to-lilac edge that fades out at two corners. A dot and a Title Case name; no rule under it. Click the dot to focus a panel. Minimize keeps the bar; nothing disappears.</p></div>
+    <div class="desk">
+      <div class="panel">
+        <div class="p-head"><span><span class="p-dot grad" id="story-dot" role="button" tabindex="0" aria-label="Focus this panel"></span>Story</span></div>
+        <div class="p-body">
+          <div class="qb"><div class="t"><b>Unicorn</b><small>projects/unicorn</small></div><canvas class="uc" data-mode="working" data-scale="2" width="42" height="52"></canvas></div>
+          <div class="np"><span class="nameplate">Creative OS <em>&amp;</em> Tech</span><span class="dt">Sunday, October 18</span><a class="u-quiet" href="#" onclick="return false">Directory</a></div>
+          <div class="lab">Taste</div>
+          <ul class="taste">
+            <li><span class="k">Palette</span><span class="cs"><i style="background:#E8956A"></i><i style="background:#A78BDF"></i><i style="background:#100F11;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)"></i></span></li>
+            <li><span class="k">Type</span><span class="aa"><b>Aa</b><span>Ubuntu Sans, Ubuntu Mono</span></span></li>
+            <li><span class="k">Sound</span><span class="v">Commits have a soundtrack</span></li>
+          </ul>
+          <div class="lab">Canvas</div>
+          <div class="st-box"><div class="t"><b>Figma</b><small>Unicorn design system</small></div><div class="r"><button class="u-quiet">Update</button><button class="u-fill">Open</button></div></div>
+          <div class="lab">Story</div>
+          <div class="st-box"><div class="t"><b>HTML</b><small>This Week</small></div><div class="r"><button class="u-quiet">Directory</button><button class="u-fill">Week</button></div></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="panel min" id="min-demo">
+          <div class="p-head"><span><span class="p-dot"></span>Commits</span><span style="display:flex;gap:14px;align-items:center"><span style="font:400 12px/1 var(--sans);color:var(--text-whisper-2)">48 This Week</span><span class="p-mini" role="button" tabindex="0" aria-label="Expand"></span></span></div>
+          <div class="strip" style="margin-top:14px">
+            <div class="wk"><i style="height:30%;background:#FF9A7A"></i><i style="height:70%;background:#D58BC6"></i><i style="height:45%;background:#F28DA6"></i><i style="height:100%;background:#AF87D7"></i><i style="height:20%;background:#FFAF5F"></i><i style="height:4%;background:rgba(241,236,232,.12)"></i><i style="height:55%;background:#F28DA6"></i></div>
+            <div class="wk-d"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+          </div>
+          <div class="full"><div class="cal" id="cal2" aria-hidden="true" style="max-width:none;margin-top:0"></div><p class="note" style="margin-top:12px">Minimized, the week. Expanded, the month.</p></div>
+        </div>
+        <div class="surface">
+          <h3>Tooltips</h3>
+          <div class="tipd"><span class="tip">Focus this panel</span><span class="tip">Story <kbd>⌘2</kbd></span></div>
+          <p class="note" style="margin-top:14px">A soft, opaque pop. No stroke. Phrases in sentence case, keys in mono.</p>
+        </div>
+        <div class="surface">
+          <h3>Motion</h3>
+          <div class="ease"><div class="track go"><i></i></div><div><code>cubic-bezier(.4, 0, .2, 1)</code><p class="note" style="margin-top:6px">.45s, in and out. Color and opacity move; layout never jumps under the cursor.</p></div></div>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <section>
-    <div class="sec-label"><span class="num">13</span>Voice · git-ty up</div>
-    <div class="sec-note">The rally cry is <b>"git-ty up"</b> -- a mash of <b>git</b> + <b>giddy up</b> -- the one phrase that carries Unicorn's personality. It prints beside the mark in the terminal hook (<code>✺ Unicorn · git-ty up</code>) and surfaces when you close a loop (<code>✺ git-ty up — closed ...</code>). Used <b>sparingly</b>, as a signature delight, never a slogan plastered everywhere. Voice notes that ride alongside it: <em style="color:var(--peach);font-style:normal">Ships at midnight Pacific.</em></div>
-    <div class="ring-demo-even" style="color:var(--cream);"><span style="color:var(--peach)">✺</span> <span style="background:linear-gradient(90deg,var(--peach),var(--lilac));-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:600">Unicorn</span> <span style="color:var(--text-whisper)">· git-ty up</span></div>
-  </section>
-
-  <footer class="foot">
-    <span><span class="acc">✺</span> Unicorn · Living Design System</span>
-    <span>A Creative OS for designers who work in the terminal</span>
+  <footer>
+    <span>Unicorn · a creative OS for designers who work in the terminal</span>
+    <span><a href="../">Demo</a> · <a href="https://www.figma.com/design/m9JRahV6Do3uHFYJycqby7/Unicorn-design-system" target="_blank" rel="noopener">Figma</a> · <a href="../critter-maker/">Critter Maker</a></span>
   </footer>
-
 </div>
+
+<script src="../unicorn7.js"></script>
+<script>
+(() => {
+  const U = window.Unicorn7, reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const dpr = Math.max(1, Math.round(devicePixelRatio || 1));
+  const units = [];
+  const setup = (cv, S, mode) => { const s = S * dpr; cv.width = 21 * s; cv.height = 26 * s; cv.style.width = 21 * S + 'px'; cv.style.height = 26 * S + 'px'; units.push({ cv, s, mode, t0: performance.now() - Math.random() * 600 }); };
+  if (U) {
+    setup(document.getElementById('hero-uc'), 6, 'loop');
+    document.querySelectorAll('canvas.uc').forEach(cv => setup(cv, +(cv.dataset.scale || 4), cv.dataset.mode));
+    const draw = (now) => {
+      units.forEach(u => {
+        let f = { still: true, label: 'logo' };
+        if (!reduced && u.mode === 'working') f = U.sustainFrame(now - u.t0, 0);
+        if (!reduced && u.mode === 'loop') { const ms = (now - u.t0) % (U.TOTAL + 2600); f = ms < U.TOTAL ? U.frameAt(ms) : f; }
+        U.render(u.cv, U.o7, u.s, f);
+        if (u.mode === 'waiting') U.drawThinking(u.cv, u.s, now, reduced);
+      });
+      if (!reduced) requestAnimationFrame(draw);
+    };
+    requestAnimationFrame(draw);
+  }
+  // a month of commits in the locked ramp
+  const C = ['#FFAF5F', '#FF9A7A', '#F28DA6', '#D58BC6', '#AF87D7'];
+  ['cal', 'cal2'].forEach((id, n) => { const cal = document.getElementById(id); if (!cal) return; let seed = 7 + n * 11; const r = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    for (let i = 0; i < 28; i++) { const v = r(), el = document.createElement('i'); if (v > .18) el.style.background = C[Math.min(4, Math.floor((v - .18) / .82 * 5))]; cal.appendChild(el); } });
+  // focus dot ripple + minimize
+  const dot = document.getElementById('story-dot');
+  if (dot) { const go = () => { dot.classList.remove('pulse'); void dot.offsetWidth; dot.classList.add('pulse'); };
+    dot.addEventListener('click', go); dot.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } }); setTimeout(go, 900); }
+  const mini = document.querySelector('#min-demo .p-mini');
+  if (mini) { const t = () => { const p = document.getElementById('min-demo'); p.classList.toggle('min'); mini.setAttribute('aria-label', p.classList.contains('min') ? 'Expand' : 'Minimize'); };
+    mini.addEventListener('click', t); mini.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); t(); } }); }
+  // sections ease in once
+  const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' }) : null;
+  document.querySelectorAll('.rv').forEach(el => io ? io.observe(el) : el.classList.add('in'));
+})();
+</script>
 </body>
 </html>

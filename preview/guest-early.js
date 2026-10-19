@@ -1,0 +1,34 @@
+/* Unicorn public preview: runs before the app. Seeds the sample data once per
+   demo version and answers the app's local-file reads (commits, agent status)
+   from demo-data.js, so the browser never asks for files that only exist on
+   a real desktop. */
+(function () {
+  if (!window.GUEST_PREVIEW || !window.UnicornDemo) return;
+  const D = window.UnicornDemo;
+  const VKEY = 'unicorn.preview-demo';
+  const VER = D.SEED + '-' + (window.__srcSeedVersion || '0');
+  try {
+    if (localStorage.getItem(VKEY) !== VER) {
+      // a fresh demo: drop whatever an older preview left behind
+      Object.keys(localStorage).forEach(k => { if (/^(unicorn|r26)[.-]/.test(k)) localStorage.removeItem(k); });
+      localStorage.setItem('unicorn-data', JSON.stringify(D.appData()));
+      localStorage.setItem('unicorn.keeps', JSON.stringify(D.keeps()));
+      // the demo opens with Keep showing; Commits sits minimized as its week strip
+      localStorage.setItem('unicorn.minimized', JSON.stringify(['commits']));
+      localStorage.setItem('unicorn.guest-seed-version', String(window.__srcSeedVersion || ''));
+      localStorage.setItem(VKEY, VER);
+    }
+  } catch (e) {}
+
+  let commits = null;
+  const json = (o) => Promise.resolve(new Response(JSON.stringify(o), { status: 200, headers: { 'Content-Type': 'application/json' } }));
+  const none = () => Promise.resolve(new Response('', { status: 404 }));
+  const realFetch = window.fetch.bind(window);
+  window.fetch = function (input, init) {
+    const u = String((input && input.url) || input || '');
+    if (/(^|\/)commits\.json(\?|$)/.test(u)) return json({ commits: commits || (commits = D.commits()) });
+    if (/agent-status\.json/.test(u)) return json({ sessions: D.sessions() });
+    if (/agent-events\.jsonl|\.\.\/briefs\/|\.\.\/data\//.test(u)) return none();
+    return realFetch(input, init);
+  };
+})();
