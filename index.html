@@ -21,6 +21,10 @@
     transform-origin: 0 0; border-radius: 12px;
     box-shadow: 0 0 0 .5px rgba(0,0,0,.5), 0 30px 90px rgba(0,0,0,.45), 0 10px 30px rgba(0,0,0,.25);
   }
+  /* before the click: only the painting and the gate */
+  html.big:not(.revealed) #mac-bar { opacity: 0; }
+  html.big:not(.revealed) #app { box-shadow: none; }
+  html.big #mac-bar, html.big #app { transition: opacity .6s cubic-bezier(.4,0,.2,1), box-shadow .6s cubic-bezier(.4,0,.2,1); }
   html.big #mac-bar {
     display: flex; align-items: center; gap: 20px; position: fixed; top: 0; left: 0; right: 0; height: 26px; padding: 0 18px;
     background: rgba(26,24,28,.42); -webkit-backdrop-filter: blur(30px) saturate(1.4); backdrop-filter: blur(30px) saturate(1.4);
@@ -53,13 +57,14 @@
     document.documentElement.classList.toggle('big', big);
     if (big) {
       // about 1600px wide on a 27" screen; never touching the menu bar or the edges
-      const s = Math.min(1.1, (innerWidth - 160) / W, (innerHeight - BAR - 72) / H);
+      const s = Math.min(1, (innerWidth - 160) / W, (innerHeight - BAR - 72) / H);
       const x = Math.round((innerWidth - W * s) / 2), y = Math.round(BAR + (innerHeight - BAR - H * s) / 2);
       app.style.transform = `translate(${x}px, ${y}px) scale(${s})`;
     } else app.style.transform = '';
     try { app.contentDocument.documentElement.classList.toggle('framed', big); } catch (e) {}
     try { app.contentWindow.postMessage({ framed: big }, location.origin); } catch (e) {}
   };
+  addEventListener('message', (e) => { if (e.origin === location.origin && e.data && 'revealed' in e.data) document.documentElement.classList.toggle('revealed', !!e.data.revealed); });
   addEventListener('resize', fit); app.addEventListener('load', fit); fit();
   const tick = () => {
     const d = new Date();

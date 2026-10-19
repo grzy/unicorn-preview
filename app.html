@@ -20,24 +20,21 @@ window.GUEST_PREVIEW = true;
    wallpaper and menu bar are the desktop. */
 html.framed, html.framed body { background: transparent !important; }
 html.framed #wallpaper { display: none !important; }
-html.framed #preloader { background: rgba(16,15,17,.16) !important; }
+html.framed #preloader { background: transparent !important; }
+/* before the click: only the painting and the gate, no app behind it */
+html.framed:not(.revealed) #workspace, html.framed:not(.revealed) #glass-edge, html.framed:not(.revealed) #ambient-tint { opacity: 0; visibility: hidden; }
+html.framed #workspace, html.framed #glass-edge { transition: opacity .6s var(--ease), visibility 0s; }
+html.framed #ambient-tint { display: none !important; }
+/* the Panels pill lines up with the tops of Quest and Story */
+html.framed #menubar { top: 52px; background: none; }
+html.framed .mb-lights { position: fixed; left: 14px; top: 12px; }
 html.framed #glass-edge, html.framed #glass-edge::before { border-radius: 12px; }
+html.framed #glass-edge { box-shadow: none !important; }
 html.framed #guest-menuclock { display: none !important; }
-html.framed .mb-lights { display: inline-flex; position: absolute; left: 14px; top: 8px; }
+html.framed .mb-lights { display: inline-flex; }
 html.framed .mb-light { cursor: default; }
 /* the terminal reads at a real size in the window */
-html.framed #guest-term { transform: translate(-50%, -50%) scale(calc(var(--gt-scale) * 1.3)); }
-
-/* The preloader: Peach gallops instead of the bob */
-.pl-uc.pl-uc7 { width: auto !important; height: auto !important; animation: plFadeIn .6s ease .1s forwards !important; }
-.pl-uc.pl-uc7 svg { display: none; }
-.pl-uc.pl-uc7 canvas { display: block; image-rendering: pixelated; transform: translateX(8px); } /* optical center while galloping */
-
-/* Quest rows: the hidden "+ stages" row no longer wraps under the name, so
-   the dot, name and x sit centered in the hover fill */
-.panel--quest .q-exp > .q-substage-row:has(> .q-add-stages:only-child) { display: none !important; }
-/* even-sized dots center exactly in their 16px slot */
-.panel--quest .q-exp .q-status::before { width: 8px; height: 8px; }
+html.framed #guest-term { transform: translate(-50%, -50%) scale(calc(var(--gt-scale) * 1.15)); }
 
 /* Keep: Career. The text holds one color; on = a clean gradient fill that fades in */
 .panel--keep .keep-pull { position: relative; isolation: isolate; color: var(--text) !important; background: rgba(255,255,255,.05) !important; transition: background var(--t) var(--ease) !important; }
@@ -51,6 +48,9 @@ html.framed #guest-term { transform: translate(-50%, -50%) scale(calc(var(--gt-s
 
 /* the on-hold character switch stays hidden */
 #panel-appearance [hidden] { display: none !important; }
+
+/* the greeting band sits under the Panels pill, not on it */
+html.framed #greeting-band { margin-top: 34px; }
 </style>
 <script>
 if (window.unicorn && window.unicorn.isDesktop)
@@ -3923,6 +3923,10 @@ if (window.unicorn && window.unicorn.isDesktop)
     transform: rotate(-45deg) translate(1px, -1px);
   }
   .panel--quest .q-exp .q-status[data-s="complete"]:hover::before { transform: rotate(-45deg) translate(1px, -1px) scale(1.2); }
+  
+  .panel--quest .q-exp > .q-substage-row:has(> .q-add-stages:only-child) { display: none !important; }
+  
+  .panel--quest .q-exp .q-status:not([data-s="complete"])::before { width: 8px; height: 8px; }
   .panel--quest .q-exp .q-status[data-s="complete"].armed::before { border-color: var(--peach); }
   .panel--quest .q-exp .q-name {
     font: 400 13px/1.35 var(--sans); letter-spacing: 0; color: var(--text);
@@ -4266,7 +4270,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   
   .pl-uc.pl-uc7 { width: 64px; height: 102px; font-size: 0; line-height: 0; }
   
-  .pl-uc.pl-gallop { width: 168px; height: 208px; image-rendering: pixelated; margin: -24px 0 6px; animation: plFadeIn 0.6s ease 0.1s forwards !important; }
+  .pl-uc.pl-gallop { position: relative; width: 136.5px; height: 130px; image-rendering: pixelated; margin: 0 0 18px; animation: plFadeIn 0.6s ease 0.1s forwards !important; }
   .u-taste-uc.u-taste-uc7 { display: block; width: 15px; height: 24px; font-size: 0; line-height: 0; background: none; box-shadow: none; border: 0; }
 </style>
 </head>
@@ -4285,11 +4289,12 @@ if (window.unicorn && window.unicorn.isDesktop)
     const cv = document.getElementById('pl-gallop'), U7 = window.Unicorn7;
     if (!cv || !U7)
         return;
-    const S = 8, dpr = Math.max(1, Math.round(devicePixelRatio || 1)), s = S * dpr;
+    const S = 6.5, dpr = Math.max(1, Math.round(devicePixelRatio || 1)), s = Math.round(S * dpr), cell = s / dpr;
     cv.width = 21 * s;
-    cv.height = 26 * s;
-    cv.style.width = 21 * S + 'px';
-    cv.style.height = 26 * S + 'px';
+    cv.height = 20 * s;
+    cv.style.width = 21 * cell + 'px';
+    cv.style.height = 20 * cell + 'px';
+    cv.style.left = (Math.round((10.5 - 9.42) * cell) + 3.5) + 'px';
     const still = matchMedia('(prefers-reduced-motion: reduce)').matches, RUN_IN = U7.T_LOGO + .42 * U7.T_RUN, t0 = performance.now();
     let p0 = null, tRun = 0;
     const tick = (now) => {
