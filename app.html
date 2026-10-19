@@ -4045,6 +4045,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   .panel--commits .c-legend { display: flex; justify-content: flex-end; align-items: center; gap: 3px; margin-top: 4px; font: 400 10px/1 var(--sans); color: var(--text-whisper-2); }
   .panel--commits .c-legend i { width: 9px; height: 9px; border-radius: 2px; }
   .panel--commits .c-legend span { margin: 0 3px; }
+  .panel--commits .c-legend span:last-child { margin-right: 0; }   /* "More" ends on the grid's right edge, like Sound On/Off */
   .panel--commits .c-legend i[data-l="1"] { background: linear-gradient(135deg, #FF9A7A, #FFB59A); }
   .panel--commits .c-legend i[data-l="2"] { background: linear-gradient(135deg, #F28DA6, #FF9A7A); }
   .panel--commits .c-legend i[data-l="3"] { background: linear-gradient(135deg, #D58BC6, #F28DA6); }
@@ -4061,7 +4062,10 @@ if (window.unicorn && window.unicorn.isDesktop)
   .panel--commits .c-sound::before { content: none; }
   .panel--commits .c-sound:hover { color: var(--cream); }
   html .panel--commits .c-sound.on { color: var(--peach); }
-  .panel--commits #c-sound-label { min-width: 56px; text-align: right; }
+  /* the dot is the text's color: gray at rest, white on hover, peach when on */
+  .panel--commits .c-sound:hover .c-dot, html .panel--commits .c-sound.on .c-dot { opacity: 1; }
+  /* no fixed label box: the button hugs "Sound On" / "Sound Off" */
+  .panel--commits #c-sound-label { min-width: 0; }
 </style>
 
 <style id="r26-keep">
