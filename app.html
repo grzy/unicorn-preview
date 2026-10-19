@@ -4490,6 +4490,30 @@ if (window.unicorn && window.unicorn.isDesktop)
   html .panel--quest .q-pause-row > span { padding: 8px 12px; }
   /* opening ··· changes nothing in the flow: keep the closed spacing under the counts */
   html .panel--quest.show-manage .q-sub-row { margin-bottom: 8px; }
+
+  /* ── menu round (10-19 b) ── */
+  /* the stats line starts where the quest name's TEXT starts (the pill's 12px in) */
+  html .panel--quest .q-sub-row { padding-left: 12px; }
+  /* caret chips: the right inset = the top/bottom inset, and the caret's ink
+     centered in its chip (the › sits 0.75px low in its line box; 1.5px of bottom
+     padding lifts it, and it rotates with the chip so every direction stays true) */
+  #menubar .mb-car, .panel--quest .q-car { box-sizing: border-box; padding-bottom: 1.5px; }
+  #menubar .mb-car { margin-right: -11.75px; }    /* 16px pad - 4.25px: (30.5 tall - 22) / 2 */
+  .panel--quest .q-car { margin-right: -5.6px; }  /* 12px pad - 6.4px: (34.8 tall - 22) / 2 */
+  /* Paused quests in the switcher: dimmed (still readable), "Paused" at the right */
+  html .panel--quest .q-switcher .q-sw-btn.paused, html.is-desktop .panel--quest .q-switcher .q-sw-btn.paused {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px; color: var(--text-mute);
+  }
+  html .panel--quest .q-switcher .q-sw-btn.paused:hover { color: var(--text); }
+  html .panel--quest .q-switcher .q-sw-btn.paused .q-sw-tag { flex: none; font: 500 11px/16px var(--sans); color: var(--text-whisper); }
+  /* Show All: about 8 rows, the rest scrolls inside, with the Keep list's bottom fade */
+  html .panel--quest .q-archive-box.q-all {
+    max-height: calc(var(--archive-row) * 8 + var(--archive-gap) * 7 + 24px); overflow-y: auto;
+    padding-bottom: 24px; margin-right: -10px; padding-right: 10px;
+    -webkit-mask-image: linear-gradient(#000 calc(100% - 24px), transparent); mask-image: linear-gradient(#000 calc(100% - 24px), transparent);
+  }
+  /* Delete Experiment: an × in the check column, in the row's own color */
+  .q-st-opt.q-st-del .q-st-ck::before { content: "\00d7"; font: 400 16px/1 var(--sans); color: currentColor; }
 </style>
 </head>
 <body>
@@ -5439,6 +5463,16 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     const listEl = document.getElementById('q-list');
     const switcherEl = document.getElementById('q-switcher');
     const mbQ = document.getElementById('mb-quest');
+    /* 10-19: menus close on hover-out, like the Panels popover: leave the trigger +
+       menu (and the gap between them) for 250ms and it closes; re-entering cancels.
+       hold() can keep it open (a focused New Quest input). */
+    const hoverAway = (els, close, hold) => {
+      let t = null;
+      const cancel = () => { if (t) { clearTimeout(t); t = null; } };
+      const leave = () => { cancel(); t = setTimeout(() => { t = null; if (!(hold && hold())) close(); }, 250); };
+      els.forEach(el => { if (el) { el.addEventListener('mouseenter', cancel); el.addEventListener('mouseleave', leave); } });
+      return () => { cancel(); els.forEach(el => { if (el) { el.removeEventListener('mouseenter', cancel); el.removeEventListener('mouseleave', leave); } }); };
+    };
     const renderSwitcher = () => {
         switcherEl.innerHTML = '';
         data.quests.forEach((q, i) => {
@@ -5448,6 +5482,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
             b.className = 'q-sw-btn' + (i === activeQ ? ' on' : '') + (q.paused ? ' paused' : '');
             b.setAttribute('role', 'menuitem');
             b.textContent = q.name;
+            if (q.paused) { const tag = document.createElement('span'); tag.className = 'q-sw-tag'; tag.textContent = 'Paused'; b.appendChild(tag); }
             b.addEventListener('click', (e) => {
                 e.stopPropagation();
                 closeQuestMenu();
@@ -5495,7 +5530,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         if (done.length) {
             const rev = document.createElement('div');
             rev.className = 'q-sw-archived';
-            rev.textContent = showArchivedQuests ? 'Hide Archived' : `${done.length} Archived`;
+            rev.textContent = showArchivedQuests ? 'Hide Finished' : `${done.length} Finished`;
             rev.addEventListener('click', (e) => { e.stopPropagation(); showArchivedQuests = !showArchivedQuests; renderSwitcher(); });
             foot.appendChild(rev);
         }
@@ -5541,6 +5576,8 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape')
             closeQuestMenu(); });
     }
+    // 10-19: the switcher closes on hover-out too (not while New Quest is being typed)
+    if (qTop) hoverAway([qTop], closeQuestMenu, () => !!(qTop.querySelector('.q-sw-input') && qTop.querySelector('.q-sw-input') === document.activeElement));
     const startNewQuest = (pill) => {
         const inp = document.createElement('input');
         inp.className = 'q-sw-input';
@@ -5762,6 +5799,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         if (archived > 0) {
             const box = document.createElement('div');
             box.className = 'q-archive-box u-scrollbox';
+            if (showAllDone) box.classList.add('q-all');   // 10-19: Show All caps at ~8 rows and scrolls
             completedNewestFirst.forEach(e => {
                 const del = listEl.querySelector(`.q-delete[data-id="${e.id}"]`);
                 const row = del ? del.closest('.q-exp') : null;
@@ -6128,7 +6166,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         saveApp(data);
         render();
     };
-    let stMenu = null, stFor = null;
+    let stMenu = null, stFor = null, stHoverOff = null;
     const stOutside = (e) => { if (stMenu && !stMenu.contains(e.target) && e.target !== stFor)
         closeStatusMenu(); };
     const stKey = (e) => { if (e.key === 'Escape') {
@@ -6146,6 +6184,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         document.removeEventListener('pointerdown', stOutside, true);
         document.removeEventListener('keydown', stKey, true);
         window.removeEventListener('blur', closeStatusMenu);
+        if (stHoverOff) { stHoverOff(); stHoverOff = null; }
     };
     const openStatusMenu = (el) => {
         const again = stFor === el;
@@ -6185,6 +6224,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         document.addEventListener('pointerdown', stOutside, true);
         document.addEventListener('keydown', stKey, true);
         window.addEventListener('blur', closeStatusMenu);
+        stHoverOff = hoverAway([el, m], closeStatusMenu);   // 10-19: closes on hover-out
     };
     const cycleStatus = (expId) => {
         const q = data.quests[activeQ];
@@ -6523,6 +6563,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape')
         closeManage(); });
     document.getElementById('q-pause-btn')?.addEventListener('click', () => setTimeout(closeManage, 0));
+    hoverAway([manageBtn, document.getElementById('q-pause-row')], closeManage);   // 10-19: closes on hover-out
     const pauseBtn = document.getElementById('q-pause-btn');
     if (pauseBtn) {
         pauseBtn.addEventListener('click', () => {
