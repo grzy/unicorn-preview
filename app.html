@@ -11,8 +11,8 @@ document.documentElement.classList.add('r26-boot');
 window.GUEST_PREVIEW = true;
 </script>
 <script>window.__srcSeedVersion = "6";</script>
-<script src="preview/demo-data.js"></script>
-<script src="preview/guest-early.js"></script>
+<script src="preview/demo-data.js?v=06507cfe"></script>
+<script src="preview/guest-early.js?v=bb8203c3"></script>
 <style>/* Unicorn public preview: guest-only styles, loaded in the head. */
 
 /* Framed: on big screens the shell shows this page as a window on a real
@@ -69,6 +69,29 @@ html:not(.is-desktop) {
 /* Panels menu: opens below the pill with a small gap; the hover bridge spans the gap */
 html.framed body #menubar .mb-panels-pop { top: 90px; }
 html body #menubar .mb-panels-pop::after { top: -30px; height: 30px; }
+
+/* The gate's Click to Begin: the app's filled button (.u-fill), filled by default.
+   Gradient fill, soft rect, no stroke, dark text; hover a touch brighter, no lift. */
+#preloader .pl-gate-btn {
+  position: relative; isolation: isolate; appearance: none; border: 0; border-radius: var(--r-btn, 6px);
+  padding: 10px 16px; background: none !important; box-shadow: none; cursor: pointer; transform: none;
+  font: 500 13px/1 var(--sans); letter-spacing: 0; text-transform: none; color: var(--void); white-space: nowrap; transition: none;
+}
+#preloader .pl-gate-btn::before { content: none !important; animation: none !important; }
+#preloader .pl-gate-btn::after { content: ""; position: absolute; inset: 0; border-radius: inherit; z-index: -1; background: var(--grad-fill); transition: filter var(--t) var(--ease); }
+#preloader .pl-gate-btn:hover::after, #preloader .pl-gate-btn:focus-visible::after { filter: brightness(1.1) saturate(1.05); }
+#preloader .pl-gate-btn .pl-gate-label, #preloader .pl-gate-btn .pl-gate-sub,
+#preloader .pl-gate-btn:hover .pl-gate-label, #preloader .pl-gate-btn:hover .pl-gate-sub {
+  background: none; color: var(--void); -webkit-text-fill-color: var(--void); font: inherit;
+}
+
+/* The gate card hugs its content and grows gently on big screens */
+#preloader.gated .pl-stage { min-height: 0 !important; max-width: none !important; padding: clamp(32px, 2.6vw, 44px) clamp(32px, 2.8vw, 48px) !important; }
+#preloader.gated .pl-gate { gap: clamp(20px, 1.8vw, 32px); }
+#preloader .pl-gate-blurb { max-width: none; }
+#preloader .pl-gate-lead { font-size: clamp(12px, .95vw, 16px); margin-bottom: .6em; }
+#preloader .pl-gate-subline { font-size: clamp(28px, 2.4vw, 44px); line-height: 1.18; letter-spacing: -.01em; max-width: 17.5em; margin-inline: auto; }
+#preloader .pl-gate-btn { font-size: clamp(13px, 1.05vw, 17px); padding: .78em 1.25em; }
 </style>
 <script>
 if (window.unicorn && window.unicorn.isDesktop)
@@ -4045,7 +4068,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   .panel--commits .c-legend { display: flex; justify-content: flex-end; align-items: center; gap: 3px; margin-top: 4px; font: 400 10px/1 var(--sans); color: var(--text-whisper-2); }
   .panel--commits .c-legend i { width: 9px; height: 9px; border-radius: 2px; }
   .panel--commits .c-legend span { margin: 0 3px; }
-  .panel--commits .c-legend span:last-child { margin-right: 0; }   /* "More" ends on the grid's right edge, like Sound On/Off */
+  .panel--commits .c-legend span:last-child { margin-right: 0; }   
   .panel--commits .c-legend i[data-l="1"] { background: linear-gradient(135deg, #FF9A7A, #FFB59A); }
   .panel--commits .c-legend i[data-l="2"] { background: linear-gradient(135deg, #F28DA6, #FF9A7A); }
   .panel--commits .c-legend i[data-l="3"] { background: linear-gradient(135deg, #D58BC6, #F28DA6); }
@@ -4062,9 +4085,9 @@ if (window.unicorn && window.unicorn.isDesktop)
   .panel--commits .c-sound::before { content: none; }
   .panel--commits .c-sound:hover { color: var(--cream); }
   html .panel--commits .c-sound.on { color: var(--peach); }
-  /* the dot is the text's color: gray at rest, white on hover, peach when on */
+  
   .panel--commits .c-sound:hover .c-dot, html .panel--commits .c-sound.on .c-dot { opacity: 1; }
-  /* no fixed label box: the button hugs "Sound On" / "Sound Off" */
+  
   .panel--commits #c-sound-label { min-width: 0; }
 </style>
 
@@ -4289,7 +4312,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   html #menubar .mb-float-note { display: none !important; }
   #menubar .mb-pop-foot { display: block; padding: 8px 8px 8px 34px; font: 400 11px/1.3 var(--sans); color: var(--text-whisper-2); }
 </style>
-<script src="unicorn7.js"></script>
+<script src="unicorn7.js?v=59cf299e"></script>
 
 <style id="r26-logo">
   .uc7 { display: block; width: 100%; height: 100%; }
@@ -4300,13 +4323,9 @@ if (window.unicorn && window.unicorn.isDesktop)
   .u-taste-uc.u-taste-uc7 { display: block; width: 15px; height: 24px; font-size: 0; line-height: 0; background: none; box-shadow: none; border: 0; }
 </style>
 <style id="r26-align">
-  /* ── alignment pass 10-19 ── */
-  /* focus dot: centered on the title's cap height (13px: cap 9px, so its middle
-     is 4.5px up; the 6px dot sat on the baseline with its middle 3px up) */
+
   .p-head .p-dot { vertical-align: 1.5px; }
 
-  /* + Add Experiment reads as the next row: the + sits in the status-dot
-     column, the words start where the experiment names start */
   .panel--quest .q-add { position: relative; }
   .panel--quest .q-add::before, .panel--quest .q-add::after {
     content: ""; position: absolute; left: calc(var(--in) + 8px); top: 50%;
@@ -4319,9 +4338,6 @@ if (window.unicorn && window.unicorn.isDesktop)
   .panel--quest .q-add:has(.q-add-in:hover)::before, .panel--quest .q-add:has(.q-add-in:hover)::after { background: var(--cream); }
   .panel--quest .q-add-in:hover::placeholder { color: var(--cream); }
 
-  /* ONE caret: the Commits month arrow (› in a 22px rounded square, quiet gray,
-     a soft fill + cream on hover), rotated to point. Story sections, the
-     Panels pill and the Quest switcher all use it. */
   #agent .a-section.collapsible .a-label .nm { position: relative; margin-left: 14px; gap: 0; }
   #agent .a-section.collapsible .a-label .nm::before {
     content: '›'; position: absolute; left: -26px; top: 50%; margin-top: -11px;
@@ -4341,12 +4357,11 @@ if (window.unicorn && window.unicorn.isDesktop)
   #menubar .mb-car { margin: -5px -8px -5px -4px; color: var(--text-whisper-2); }
   html #menubar .mb-panels-btn:hover .mb-car, html #menubar .mb-panels-btn[aria-expanded="true"] .mb-car { color: var(--cream); background: rgba(255,255,255,.05); }
   #menubar .mb-panels-btn[aria-expanded="true"] .mb-car { transform: rotate(-90deg); }
-  /* on the gradient the same caret stays dark, and its fill darkens instead */
+  
   .panel--quest .q-car { margin: 0 -8px 0 -4px; color: var(--void); }
   .panel--quest .q-menu-btn:hover .q-car, .panel--quest .q-top.open .q-car { background: rgba(16,15,17,.08); }
   .panel--quest .q-top.open .q-car { transform: rotate(-90deg); }
 
-  /* Keep: Back to Top's right edge on the field / Save edge */
   .panel--keep .keep-totop { right: 0; }
 </style>
 </head>
@@ -4402,9 +4417,9 @@ if (window.unicorn && window.unicorn.isDesktop)
     <div class="pl-gate" id="pl-gate" hidden>
       <div class="pl-gate-blurb">
         <div class="pl-gate-lead" data-text="A creative OS for designers who work in the terminal">A creative OS for designers who work in the terminal</div>
-        <div class="pl-gate-subline">Unicorn turns building with agents into something you can see &amp; share.</div>
+        <div class="pl-gate-subline">Unicorn turns building with agents into something you can see &amp; share</div>
       </div>
-      <button class="pl-gate-btn" id="pl-gate-btn"><span class="pl-gate-label">▸ Click to Begin</span> <span class="pl-gate-sub">· Sound On</span></button>
+      <button class="pl-gate-btn" id="pl-gate-btn"><span class="pl-gate-label">Click to Begin</span> <span class="pl-gate-sub">· Sound On</span></button>
     </div>
   </div>
   <div class="pl-skip">press any key to skip</div>
@@ -6581,7 +6596,6 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
             handle.setPointerCapture(e.pointerId);
             e.preventDefault();
         });
-        // a click on the header is not a move: only a real drag (3px+) pins the panel
         const lock = () => {
             const rect = panel.getBoundingClientRect();
             origLeft = rect.left;
@@ -6660,6 +6674,18 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         catch { }
         try {
             localStorage.setItem('unicorn.layout-reset-v1', '1');
+        }
+        catch { }
+    }
+    if (!localStorage.getItem('unicorn.layout-reset-v2')) {
+        try {
+            const p = loadPos();
+            ['panel--commits', 'commits', 'activity-panel', 'panel--activity'].forEach(k => delete p[k]);
+            savePos(p);
+        }
+        catch { }
+        try {
+            localStorage.setItem('unicorn.layout-reset-v2', '1');
         }
         catch { }
     }
@@ -13170,8 +13196,8 @@ ${keepsBlock}${emptyBlock}
 })();
 </script>
 
-<script src="preview/roam.js"></script>
-<script>window.__previewWeeks = {"unicorn":"2026-W42-unicorn.html","tide-clock":"2026-W42-tide-clock.html","moth-garden":"2026-W42-moth-garden.html","paper-synth":"2026-W42-paper-synth.html"};</script>
-<script src="preview/guest-late.js"></script>
+<script src="preview/roam.js?v=a2f8ce37"></script>
+<script>window.__previewWeeks = {"unicorn":"2026-W43-unicorn.html","tide-clock":"2026-W43-tide-clock.html","moth-garden":"2026-W43-moth-garden.html","paper-synth":"2026-W43-paper-synth.html"};</script>
+<script src="preview/guest-late.js?v=04a467cc"></script>
 </body>
 </html>
