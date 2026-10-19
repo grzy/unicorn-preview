@@ -4034,6 +4034,8 @@ if (window.unicorn && window.unicorn.isDesktop)
   .panel--quest .q-add-in:hover::placeholder { color: var(--text-mute); }
 
   .panel--quest .q-complete-row { margin-top: 14px; }
+  /* 10-19: room below the CTA matches its side inset */
+  .panel--quest .q-complete-row { margin-bottom: var(--in); }
   .panel--quest .q-complete-btn.u-fill {
     width: auto; display: inline-flex; margin-left: var(--in); padding: 10px 14px; border: 0; border-radius: 8px;
     background: none; font: 500 12.5px/1 var(--sans); letter-spacing: 0; text-transform: none;
