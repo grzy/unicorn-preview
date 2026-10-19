@@ -1585,6 +1585,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   
   html.is-desktop.manual-drag #menubar, html.is-desktop.manual-drag #greeting-band,
   html.is-desktop.manual-drag body.hud-off { -webkit-app-region: no-drag !important; }
+  html.is-desktop body.cmd-drag,
   html.is-desktop body.cmd-drag :is(.panel, #agent, #activity-panel, #menubar),
   html.is-desktop body.cmd-drag :is(.panel, #agent, #activity-panel, #menubar) * { cursor: grab !important; }
   html.is-desktop body.win-dragging, html.is-desktop body.win-dragging * { cursor: grabbing !important; }
@@ -12102,6 +12103,20 @@ ${keepsBlock}${emptyBlock}
         document.body.classList.toggle(manual ? 'cmd-drag' : 'alt-drag', on);
         if (on && !manual)
             setPass(false);
+        if (window.unicorn.termWatch) {
+            window.unicorn.termWatch(on);
+            if (!on)
+                termWins = null;
+        }
+    };
+    let termWins = null;
+    if (window.unicorn.onTermWins)
+        window.unicorn.onTermWins(w => { termWins = Array.isArray(w) ? w : null; });
+    const gapDraggable = (sx, sy) => {
+        if (!termWins)
+            return false;
+        const top = termWins.find(([x, y, w, h]) => sx >= x && sx < x + w && sy >= y && sy < y + h);
+        return !(top && top[4]);
     };
     let dragging = false, dragRaf = 0;
     const NO_DRAG = 'button, a, input, textarea, [role="button"], .mb-light, .mb-panels-btn, .mb-panels-pop, .mb-toggle, .mb-float-row, .mb-pin, .panel, #agent, #activity-panel';
@@ -12111,7 +12126,7 @@ ${keepsBlock}${emptyBlock}
                 return;
             const top = e.clientY <= 50 && !e.target.closest(NO_DRAG);
             const own = !!e.target.closest(CHROME);
-            if (!((e.metaKey && own) || top))
+            if (!((e.metaKey && (own || gapDraggable(e.screenX, e.screenY))) || top))
                 return;
             e.preventDefault();
             e.stopPropagation();
@@ -12131,11 +12146,12 @@ ${keepsBlock}${emptyBlock}
         window.addEventListener('pointerup', endDrag, true);
         window.addEventListener('blur', endDrag);
     }
+    const nearChrome = (x, y) => overChrome(x, y) || [[14, 0], [-14, 0], [0, 14], [0, -14]].some(([a, b]) => { const el = document.elementFromPoint(x + a, y + b); return !!(el && el.closest(CHROME)); });
     window.addEventListener('mousemove', (e) => {
         setAltDrag(e.metaKey);
         if (dragging || !hud || (altDrag && !manual))
             return;
-        setPass(!overChrome(e.clientX, e.clientY));
+        setPass(!(e.metaKey ? (nearChrome(e.clientX, e.clientY) || gapDraggable(e.screenX, e.screenY)) : overChrome(e.clientX, e.clientY)));
     });
     window.addEventListener('keydown', (e) => { if (e.key === 'Meta')
         setAltDrag(true); });

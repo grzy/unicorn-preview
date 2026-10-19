@@ -2,7 +2,8 @@
    Peach wanders the open desktop on gentle curves, rests, picks a new spot.
    Lilac is a rare surprise: the first visit comes ~75-90s in, then rarely. They
    meet nose to nose, small pixel hearts float up, and she gallops off.
-   The layer sits under the whole workspace (panels, terminal) and never takes a click. Toggle: Panels ->
+   The layer runs on top of everything (panels, terminal, menus), like the real app,
+   and is click-through everywhere except Peach's own pixels. Toggle: Panels ->
    Roaming Unicorns. Off by default when the visitor prefers reduced motion. */
 (() => {
   if (!window.GUEST_PREVIEW) return;
@@ -16,7 +17,7 @@
   layer.id = 'roam-layer'; layer.setAttribute('aria-hidden', 'true');
   layer.innerHTML = '<canvas id="roam-peach"></canvas><canvas id="roam-lilac"></canvas><canvas id="roam-hearts"></canvas>';
   const st = document.createElement('style');
-  st.textContent = `#roam-layer{position:fixed;inset:0;z-index:5;pointer-events:none;overflow:hidden;opacity:0;transition:opacity .6s cubic-bezier(.4,0,.2,1)}
+  st.textContent = `#roam-layer{position:fixed;inset:0;z-index:2147483000;pointer-events:none;overflow:hidden;opacity:0;transition:opacity .6s cubic-bezier(.4,0,.2,1)}
     #roam-layer.on{opacity:1} #roam-layer canvas{position:absolute;top:0;left:0;image-rendering:pixelated;will-change:transform}
     #roam-lilac,#roam-hearts{display:none}`;
   document.head.appendChild(st); document.body.appendChild(layer);
@@ -27,13 +28,8 @@
   const BW = 15 * cell, BH = 18 * cell, M = 24, SPEED = 58, TURN = 1.5;
   const RUN_IN = U7.T_LOGO + .42 * U7.T_RUN, RUN_OUT = U7.T_LOGO + .58 * U7.T_RUN, OUT_MS = U7.TOTAL - RUN_OUT;
   const rnd = (a, b) => a + Math.random() * (b - a);
-  const clampX = v => Math.max(M, Math.min(innerWidth - M - BW, v)), clampY = v => Math.max(60, Math.min(innerHeight - M - BH, v));
+  const clampX = v => Math.max(M, Math.min(innerWidth - M - BW, v)), clampY = v => Math.max(M, Math.min(innerHeight - M - BH, v));
 
-  // open desktop only: spots that don't sit under a visible panel
-  const panelRects = () => [...document.querySelectorAll('.panel, #agent, #activity-panel, #guest-term')]
-    .filter(el => el.offsetParent !== null && getComputedStyle(el).display !== 'none' && getComputedStyle(el).visibility !== 'hidden')
-    .map(el => el.getBoundingClientRect()).filter(r => r.width > 0);
-  const free = (x, y) => panelRects().every(r => x + BW < r.left - 8 || x > r.right + 8 || y + BH < r.top - 8 || y > r.bottom + 8);
 
   // his resting spot: the open field right of the terminal, below the Story panel
   const HOME = () => [clampX(innerWidth * .66), clampY(innerHeight * .64)];
@@ -42,9 +38,9 @@
   let tx = x, ty = y, restUntil = 0, phase = 'still', t0 = 0, p0 = 0, last = 0, raf = 0;
   const speedK = (ph, ms) => ph === 'run' ? 1 : ph === 'start' ? Math.min(1, Math.max(0, (ms - U7.T_LOGO) / (RUN_IN - U7.T_LOGO))) : ph === 'stop' ? Math.max(0, 1 - ms / OUT_MS) : 0;
   const pickSpot = () => {
-    if (++runs % 3 === 0) { const [hx, hy] = HOME(); if (Math.hypot(hx - x, hy - y) > 60) { tx = hx; ty = hy; return; } }   // home every third run
-    for (let i = 0; i < 40; i++) { const nx = clampX(rnd(innerWidth * .4, innerWidth * .9)), ny = clampY(rnd(0, innerHeight)), d = Math.hypot(nx - x, ny - y);
-      if (d > 110 && d < 380 && free(nx, ny)) { tx = nx; ty = ny; return; } }
+    if (++runs % 6 === 0) { const [hx, hy] = HOME(); if (Math.hypot(hx - x, hy - y) > 60) { tx = hx; ty = hy; return; } }   // home now and then
+    for (let i = 0; i < 40; i++) { const nx = clampX(rnd(0, innerWidth)), ny = clampY(rnd(0, innerHeight)), d = Math.hypot(nx - x, ny - y);
+      if (d > 150 && d < 800) { tx = nx; ty = ny; return; } }   // the whole window is his: over panels, terminal, everything
     tx = clampX(innerWidth * rnd(.35, .65)); ty = clampY(innerHeight * rnd(.55, .8));
   };
   const flipped = () => faceRight !== (U7.faces === 'right');
@@ -131,7 +127,7 @@
     if (k > 0) {
       const want = Math.atan2(ty - y, tx - x); const dA = ((want - heading + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
       heading += Math.max(-TURN * dt, Math.min(TURN * dt, dA));
-      x = clampX(x + Math.cos(heading) * SPEED * k * dt); y = clampY(y + Math.sin(heading) * SPEED * .6 * k * dt);
+      x = clampX(x + Math.cos(heading) * SPEED * k * dt); y = clampY(y + Math.sin(heading) * SPEED * .85 * k * dt);
       const c = Math.cos(heading); if (c > .2) faceRight = true; else if (c < -.2) faceRight = false;
       if (Math.hypot(tx - x, ty - y) < 40 && phase !== 'stop') halt(now);
     }
@@ -143,6 +139,19 @@
   };
   const kick = () => { if (!raf && on) { last = 0; raf = requestAnimationFrame(frame); } };
   document.addEventListener('visibilitychange', kick);
+  // click-through except on Peach's own pixels (pixel-exact, like the real app)
+  let overPeach = false;
+  addEventListener('pointermove', (e) => {
+    let hit = false;
+    if (on) { const r = cv.getBoundingClientRect();
+      if (e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom) {
+        let px = (e.clientX - r.left) * dpr; if (flipped()) px = cv.width - px;
+        try { hit = cv.getContext('2d').getImageData(Math.floor(px), Math.floor((e.clientY - r.top) * dpr), 1, 1).data[3] > 0; } catch {}
+      } }
+    if (hit !== overPeach) { overPeach = hit; cv.style.pointerEvents = hit ? 'auto' : 'none'; }
+  }, { passive: true });
+  // a tap on Peach sends him off to a new spot
+  cv.addEventListener('click', () => { if (phase === 'still' && !surprise) { pickSpot(); begin(performance.now()); kick(); } });
   narrow.addEventListener('change', kick);
   addEventListener('resize', () => { x = clampX(x); y = clampY(y); place(); });
 
