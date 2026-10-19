@@ -4514,6 +4514,28 @@ if (window.unicorn && window.unicorn.isDesktop)
   }
   /* Delete Experiment: an × in the check column, in the row's own color */
   .q-st-opt.q-st-del .q-st-ck::before { content: "\00d7"; font: 400 16px/1 var(--sans); color: currentColor; }
+  /* 10-19 c: Quest actions (···) join the menus' one grid: a symbol in the 16px check
+     column (centered 16px in), words 34px in. Pause = the Paused dot, Resume = the
+     Started dot, Delete = Delete Experiment's x, in the row's own color */
+  html .panel--quest .q-pause-row > span { position: relative; padding: 8px 12px 8px 34px; }
+  html .panel--quest .q-pause-row > .q-pause-btn::before {
+    content: ""; position: absolute; left: 12px; top: 50%; width: 8px; height: 8px; margin-top: -4px;
+    border-radius: 50%; box-sizing: border-box; border: 1.5px solid var(--text-whisper-2); background: none;
+  }
+  html .panel--quest .q-pause-row > .q-pause-btn.is-paused::before { border: 0; background: var(--lilac); }
+  html .panel--quest .q-pause-row > .q-del-btn::before {
+    content: "\00d7"; position: absolute; left: 8px; top: 50%; width: 16px; height: 16px; margin-top: -8px;
+    display: grid; place-items: center; font: 400 16px/1 var(--sans); color: currentColor;
+  }
+  /* 10-19 c: Keep variant chips, two states like .keep-pull. Hover = a soft gray lift,
+     text stays put. On = the gradient faded in on a layer under the text, and the text
+     turns void on the same timing, so fill and black arrive together */
+  .panel--keep .keep-chip { position: relative; isolation: isolate; transition: background var(--t) var(--ease), color var(--t) var(--ease); }
+  .panel--keep .keep-chip::after { content: ""; position: absolute; inset: 0; border-radius: inherit; z-index: -1; background: var(--grad-fill); opacity: 0; transition: opacity var(--t) var(--ease); }
+  .panel--keep .keep-chip:hover { background: rgba(255,255,255,.09); color: var(--text-mute); }
+  .panel--keep .keep-chip.on, .panel--keep .keep-chip.on:hover { color: var(--void); }
+  .panel--keep .keep-chip.on { background: rgba(255,255,255,.05); }
+  .panel--keep .keep-chip.on::after { opacity: 1; }
 </style>
 </head>
 <body>
@@ -5675,8 +5697,10 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         if (mbQ)
             mbQ.textContent = q.name;
         const pauseBtnEl = document.getElementById('q-pause-btn');
-        if (pauseBtnEl)
+        if (pauseBtnEl) {
             pauseBtnEl.textContent = q.paused ? 'Resume Quest' : 'Pause Quest';
+            pauseBtnEl.classList.toggle('is-paused', !!q.paused);
+        }
         window.dispatchEvent(new CustomEvent('unicorn:quest-attached', {
             detail: { name: q.name, id: q.id, paused: !!q.paused }
         }));
