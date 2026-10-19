@@ -77,14 +77,30 @@
     }
     c.globalAlpha = 1; };
   const HEARTS_MS = (HEART_N - 1) * 170 + 140 + HEART_LIFE;
+  // the outermost painted column in the head band (canvas rows 6-9) of a character's still pose
+  // (ported from the real app, src/notch.html: the kiss is measured, nose to nose)
+  const muzzle = (C) => { const t = document.createElement('canvas'); t.width = 21 * s; t.height = 26 * s;
+    C.render(t, C.o7, s, { still: true, label: 'logo' }); const d = t.getContext('2d').getImageData(0, 6 * s, t.width, 4 * s).data;
+    let l = 21, r = -1; for (let yy = 0; yy < 4 * s; yy++) for (let xx = 0; xx < t.width; xx++) if (d[(yy * t.width + xx) * 4 + 3] > 0) { const c = Math.floor(xx / s); if (c < l) l = c; if (c > r) r = c; }
+    return { l, r }; };
+  // the screen x of a character's muzzle edge, given which way it faces and its canvas x
+  const noseEdge = (C, facesRightNow, cx) => { const m = muzzle(C), drawnRight = C.faces === 'right', flip = facesRightNow !== drawnRight;
+    const col = drawnRight ? m.r + 1 : m.l;
+    return cx + (flip ? 21 - col : col) * cell; };
+  // the canvas x that puts a character's muzzle edge exactly at E
+  const placeFor = (C, facesRightNow, E) => E - (noseEdge(C, facesRightNow, 0));
   const maybeSurprise = (now) => {
     if (!O) return false;
     const due = lastSurprise === -Infinity ? now >= firstAt : (now - lastSurprise > 4 * 60000 && Math.random() < .3);
     if (!due) return false;
-    const fromRight = x + BW / 2 > innerWidth / 2;
+    let fromRight = x + BW / 2 > innerWidth / 2;
+    // she needs room to stand beside him: near an edge, she comes from the open side
+    if (fromRight && innerWidth - (x + 21 * cell) < 18 * cell) fromRight = false;
+    else if (!fromRight && x < 18 * cell) fromRight = true;
     lastSurprise = now; faceRight = fromRight;
-    const meetX = fromRight ? x + 16 * cell - 2 : x - 16 * cell + 2;
-    surprise = { step: 'in', fromRight, ox: fromRight ? innerWidth + cell : -21 * cell, oy: y, meetX, ph: 'start', t0: now, p0: 0, dir: fromRight ? -1 : 1 };
+    const E = noseEdge(U7, faceRight, x);                  // his muzzle's outer edge on screen
+    const meetX = placeFor(O, !fromRight, E);              // her canvas x so her muzzle meets it
+    surprise = { step: 'in', fromRight, E, ox: fromRight ? innerWidth + cell : -21 * cell, oy: y, meetX, ph: 'start', t0: now, p0: 0, dir: fromRight ? -1 : 1 };
     cvO.style.display = 'block';
     return true;
   };
@@ -109,7 +125,7 @@
       }
       if (sp.ph === 'still') { sp.ox = sp.meetX; sp.step = 'kiss'; sp.at = now; }
     } else if (sp.step === 'kiss') {
-      const age = now - sp.at, seam = sp.fromRight ? x + 18.5 * cell - 1 : x + 2.5 * cell + 1;
+      const age = now - sp.at, seam = sp.E;
       hc.style.display = 'block'; drawHearts(age);
       hc.style.transform = `translate(${Math.round((seam - SEAM * cell) * dpr) / dpr}px, ${Math.round((y + 2 * cell - HORN * cell) * dpr) / dpr}px)`;
       if (age > HEARTS_MS) { hc.style.display = 'none'; sp.step = 'out'; sp.dir = -sp.dir; sp.ph = 'start'; sp.t0 = now; }
@@ -173,6 +189,7 @@
   // big <-> laptop: only one host roams at a time
   new MutationObserver(() => { show(); if (!active() && surprise) endSurprise(performance.now()); x = clampX(x); y = clampY(y); kick(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
   window.__previewRoam = { set, get: () => on };
+  window.__surprise = () => { lastSurprise = -Infinity; firstAt = 0; };   // for testing the kiss
   // wait for the gate: he arrives once the desktop is revealed
   let started = false;
   const start = () => { if (started) return; started = true; firstAt = performance.now() + rnd(75000, 90000);
