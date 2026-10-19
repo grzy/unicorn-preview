@@ -9973,7 +9973,7 @@ ${keepsBlock}${emptyBlock}
             clearTimeout(closeTimer);
             closeTimer = null;
         } };
-        const scheduleClose = () => { cancelClose(); closeTimer = setTimeout(closePop, 450); };
+        const scheduleClose = () => { cancelClose(); closeTimer = setTimeout(closePop, 250); };
         panelsBtn.addEventListener('click', (e) => { e.stopPropagation(); openPop(e); });
         panelsBtn.addEventListener('mouseenter', openPop);
         panelsBtn.addEventListener('mouseleave', scheduleClose);
