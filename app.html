@@ -12,7 +12,7 @@ window.GUEST_PREVIEW = true;
 </script>
 <script>window.__srcSeedVersion = "6";</script>
 <script src="preview/demo-data.js?v=06507cfe"></script>
-<script src="preview/guest-early.js?v=bb8203c3"></script>
+<script src="preview/guest-early.js?v=deb8f99d"></script>
 <style>/* Unicorn public preview: guest-only styles, loaded in the head. */
 
 /* Framed: on big screens the shell shows this page as a window on a real
@@ -85,13 +85,27 @@ html body #menubar .mb-panels-pop::after { top: -30px; height: 30px; }
   background: none; color: var(--void); -webkit-text-fill-color: var(--void); font: inherit;
 }
 
-/* The gate card hugs its content and grows gently on big screens */
-#preloader.gated .pl-stage { min-height: 0 !important; max-width: none !important; padding: clamp(32px, 2.6vw, 44px) clamp(32px, 2.8vw, 48px) !important; }
-#preloader.gated .pl-gate { gap: clamp(20px, 1.8vw, 32px); }
+/* The gate card, two variants to compare (?gate=a default, ?gate=b).
+   Both: the card hugs its content, the title line carries the contrast, the
+   supporting line is smaller and wraps into short balanced lines. */
+#preloader.gated .pl-stage { min-height: 0 !important; }
 #preloader .pl-gate-blurb { max-width: none; }
-#preloader .pl-gate-lead { font-size: clamp(12px, .95vw, 16px); margin-bottom: .6em; }
-#preloader .pl-gate-subline { font-size: clamp(28px, 2.4vw, 44px); line-height: 1.18; letter-spacing: -.01em; max-width: 17.5em; margin-inline: auto; }
-#preloader .pl-gate-btn { font-size: clamp(13px, 1.05vw, 17px); padding: .78em 1.25em; }
+#preloader .pl-gate-lead { color: var(--cream); font-weight: 500; text-wrap: balance; }
+#preloader .pl-gate-subline { color: var(--text-mute); font-weight: 400; text-wrap: balance; max-width: 32ch; }
+#preloader .pl-gate-btn { font-size: 13px; padding: 9px 14px; }
+
+/* A: the previous centered card, tightened */
+html:not(.gate-b) #preloader.gated .pl-stage { max-width: 400px !important; padding: 28px 32px 30px !important; }
+html:not(.gate-b) #preloader.gated .pl-gate { gap: 20px; }
+html:not(.gate-b) #preloader .pl-gate-lead { font-size: clamp(17px, 1.15vw, 19px); line-height: 1.3; max-width: 24ch; margin: 0 auto 8px; }
+html:not(.gate-b) #preloader .pl-gate-subline { font-size: clamp(13.5px, .9vw, 14.5px); line-height: 1.5; margin: 0 auto; }
+
+/* B: left-aligned, editorial */
+html.gate-b #preloader.gated .pl-stage { align-items: flex-start; text-align: left; max-width: 380px !important; padding: 30px 32px 32px !important; }
+html.gate-b #preloader.gated .pl-gate { align-items: flex-start; gap: 22px; }
+html.gate-b #preloader .pl-gate-blurb { text-align: left !important; }
+html.gate-b #preloader .pl-gate-lead { font-size: clamp(22px, 1.45vw, 25px); line-height: 1.16; letter-spacing: -.015em; max-width: 17ch; margin: 0 0 12px; }
+html.gate-b #preloader .pl-gate-subline { font-size: clamp(13.5px, .9vw, 14.5px); line-height: 1.5; max-width: 30ch; margin: 0; }
 </style>
 <script>
 if (window.unicorn && window.unicorn.isDesktop)
@@ -4364,8 +4378,6 @@ if (window.unicorn && window.unicorn.isDesktop)
 
   .panel--keep .keep-totop { right: 0; }
 
-  /* Quest status menu (10-19): the explicit choice that replaced the hidden
-     cycle. App popover look, no stroke, Title Case; the current state checked. */
   .q-st-menu {
     position: fixed; z-index: 300; min-width: 176px; padding: 6px; border-radius: 12px;
     background: var(--panel-bg); -webkit-backdrop-filter: blur(26px) saturate(1.2); backdrop-filter: blur(26px) saturate(1.2);
@@ -4388,11 +4400,10 @@ if (window.unicorn && window.unicorn.isDesktop)
   .q-st-sep { height: 1px; margin: 5px 8px; background: rgba(255,255,255,.07); }
   .q-st-opt.q-st-del { color: var(--text-mute); }
   .q-st-opt.q-st-del:hover { color: var(--watermelon); }
-  /* the dot stays lifted while its menu is open */
+  
   .panel--quest .q-exp .q-status[aria-expanded="true"]::before { transform: scale(1.25); }
   .panel--quest .q-exp .q-status[data-s="complete"][aria-expanded="true"]::before { transform: rotate(-45deg) translate(1px, -1px) scale(1.2); }
 
-  /* Toasts + banners: panel glass and the edge, quiet text, the filled Undo */
   html .u-toast {
     background: var(--panel-bg); -webkit-backdrop-filter: blur(26px) saturate(1.2); backdrop-filter: blur(26px) saturate(1.2);
     color: var(--text); border-radius: 12px; padding: 12px 16px; gap: 16px;
@@ -4412,6 +4423,41 @@ if (window.unicorn && window.unicorn.isDesktop)
     font: 400 13px/1.3 var(--sans) !important; letter-spacing: 0 !important; box-shadow: 0 14px 34px rgba(0,0,0,.45);
   }
   html .u-glass-toast::before { display: block; background: linear-gradient(45deg, transparent 8%, rgba(232,149,106,.45) 35%, rgba(167,139,223,.45) 65%, transparent 92%); }
+
+  .panel--quest .q-exp .q-delete { display: none !important; }
+
+  .q-st-menu, html .panel--quest .q-pop, html .panel--quest .q-pause-row, html #menubar .mb-panels-pop {
+    background: var(--panel-bg); -webkit-backdrop-filter: blur(26px) saturate(1.2); backdrop-filter: blur(26px) saturate(1.2);
+    border-radius: 12px; padding: 6px; box-shadow: 0 14px 34px rgba(0,0,0,.45);
+  }
+  .q-st-menu::before, html .panel--quest .q-pop::before, html .panel--quest .q-pause-row::before, html #menubar .mb-panels-pop::before {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none;
+    background: linear-gradient(45deg, transparent 8%, rgba(232,149,106,.45) 35%, rgba(167,139,223,.45) 65%, transparent 92%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
+  }
+  
+  .q-st-sep { height: 1px; margin: 5px 0; background: var(--panel-inner-line); }
+
+  html .panel--quest .q-pause-row {
+    position: absolute; z-index: 40; right: 20px; margin: 0; min-width: 176px;   
+    display: grid; grid-template-columns: 1fr; gap: 1px; justify-content: stretch;
+  }
+  html .panel--quest .q-pause-row > span {
+    display: block; text-align: left; white-space: nowrap; padding: 8px 8px 8px 34px; border-radius: 7px;
+    font: 500 13px/16px var(--sans);    letter-spacing: 0; text-transform: none; color: var(--text);
+    background: rgba(255,255,255,0); transition: background var(--t) var(--ease), color var(--t) var(--ease);
+  }
+  html .panel--quest .q-pause-row > .q-pause-btn:hover { color: var(--text); background: rgba(255,255,255,.06); }
+  html .panel--quest .q-pause-row > .q-del-btn { color: var(--text-mute); }
+  html .panel--quest .q-pause-row > .q-del-btn:hover, html .panel--quest .q-pause-row > .q-del-btn.armed { color: var(--watermelon); background: rgba(255,255,255,.06); }
+  html .panel--quest .q-pause-row > .q-finish-btn { display: none !important; }
+
+  html .panel--quest .q-arch-list .q-sw-btn, html.is-desktop .panel--quest .q-arch-list .q-sw-btn { display: flex; justify-content: space-between; gap: 16px; }
+  html .panel--quest .q-pop-foot .q-sw-add { display: inline-flex; align-items: center; gap: 8px; padding: 8px; }
+  html .panel--quest .q-pop-foot .q-sw-archived { padding: 8px; }
+  .panel--quest .q-sw-add .q-plus { font-weight: 400; }
+
+  #greeting-band { background-origin: border-box; }
 </style>
 </head>
 <body>
@@ -4577,7 +4623,7 @@ if (window.unicorn && window.unicorn.isDesktop)
     <div class="q-prog" hidden><span id="q-fill"></span></div>
     <div class="q-exps" id="q-list"></div>
     <div class="q-add" id="q-add-row">
-      <input id="q-add-in" class="q-add-in" placeholder="+ Add Experiment" autocomplete="off" />
+      <input id="q-add-in" class="q-add-in" placeholder="Add Experiment" autocomplete="off" />
     </div>
     <div class="q-complete-row" id="q-complete-row" style="display: none">
       <button class="q-complete-btn u-fill" id="q-complete-btn" title="Every experiment is done">
@@ -4848,22 +4894,22 @@ if (window.unicorn && window.unicorn.isDesktop)
     const hour = parseInt(fmtHour.format(new Date()), 10);
     const timeStr = fmtTime.format(new Date()).toLowerCase().replace(' ', '');
     const GN = window.GUEST_PREVIEW ? '' : ', Ivy';
-    let greeting = `Good evening${GN}.`;
+    let greeting = `Good evening${GN}`;
     let ambient = 'rgba(90,60,90,0.18)';
     if (hour >= 5 && hour < 11) {
-        greeting = `Good morning${GN}.`;
+        greeting = `Good morning${GN}`;
         ambient = 'rgba(232,180,130,0.16)';
     }
     else if (hour >= 11 && hour < 17) {
-        greeting = `Good afternoon${GN}.`;
+        greeting = `Good afternoon${GN}`;
         ambient = 'rgba(255,220,180,0.10)';
     }
     else if (hour >= 17 && hour < 21) {
-        greeting = `Good evening${GN}.`;
+        greeting = `Good evening${GN}`;
         ambient = 'rgba(232,149,106,0.16)';
     }
     else {
-        greeting = `Good evening${GN}.`;
+        greeting = `Good evening${GN}`;
         ambient = 'rgba(70,60,110,0.18)';
     }
     document.getElementById('pl-hello').textContent = greeting;
@@ -5410,7 +5456,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         foot.className = 'q-pop-foot';
         const addPill = document.createElement('div');
         addPill.className = 'q-sw-btn q-sw-add';
-        addPill.textContent = '+ New Quest';
+        addPill.innerHTML = '<span class="q-plus">+</span>New Quest';
         addPill.addEventListener('click', (e) => { e.stopPropagation(); ensureUiAudio().then(() => { if (typeof uiNew === 'function')
             uiNew(); }); startNewQuest(addPill); });
         foot.appendChild(addPill);
@@ -6423,8 +6469,25 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     if (manageBtn)
         manageBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            document.querySelector('.panel--quest')?.classList.toggle('show-manage');
+            const qp = document.querySelector('.panel--quest');
+            if (!qp)
+                return;
+            const open = qp.classList.toggle('show-manage');
+            const row = document.getElementById('q-pause-row'), sub = manageBtn.closest('.q-sub-row');
+            if (open && row && sub)
+                row.style.top = Math.round(sub.offsetTop + sub.offsetHeight + 4) + 'px';
         });
+    const closeManage = () => document.querySelector('.panel--quest')?.classList.remove('show-manage');
+    document.addEventListener('pointerdown', (e) => {
+        if (!document.querySelector('.panel--quest.show-manage'))
+            return;
+        if (e.target.closest('#q-pause-row, #q-manage'))
+            return;
+        closeManage();
+    }, true);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape')
+        closeManage(); });
+    document.getElementById('q-pause-btn')?.addEventListener('click', () => setTimeout(closeManage, 0));
     const pauseBtn = document.getElementById('q-pause-btn');
     if (pauseBtn) {
         pauseBtn.addEventListener('click', () => {
@@ -13321,7 +13384,7 @@ ${keepsBlock}${emptyBlock}
 })();
 </script>
 
-<script src="preview/roam.js?v=a2f8ce37"></script>
+<script src="preview/roam.js?v=140cf753"></script>
 <script>window.__previewWeeks = {"unicorn":"2026-W43-unicorn.html","tide-clock":"2026-W43-tide-clock.html","moth-garden":"2026-W43-moth-garden.html","paper-synth":"2026-W43-paper-synth.html"};</script>
 <script src="preview/guest-late.js?v=04a467cc"></script>
 </body>

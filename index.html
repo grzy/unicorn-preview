@@ -47,10 +47,14 @@
   <b>Unicorn</b><span>File</span><span>Edit</span><span>View</span><span>Window</span><span>Help</span>
   <span class="r"><span id="mac-clock"></span></span>
 </div>
-<iframe id="app" src="app.html" title="Unicorn, a live demo with sample data" allow="autoplay"></iframe>
+<iframe id="app" title="Unicorn, a live demo with sample data" allow="autoplay"></iframe>
 <script>
 (() => {
   const app = document.getElementById('app'), clock = document.getElementById('mac-clock');
+  // pass ?gate=... (and any other demo switch) through to the app
+  const q = new URLSearchParams(location.search), keep = new URLSearchParams();
+  if (q.get('gate')) keep.set('gate', q.get('gate'));
+  app.src = 'app.html' + (keep.toString() ? '?' + keep : '');
   const W = 1480, H = 1060, BAR = 26;
   const fit = () => {
     const big = BIG();
@@ -76,6 +80,6 @@
 <!-- big screens: Peach and Lilac roam the whole viewport, above the app window -->
 <script>window.GUEST_PREVIEW = true; window.ROAM_HOST = 'shell';</script>
 <script src="unicorn7.js?v=59cf299e"></script>
-<script src="preview/roam.js?v=a2f8ce37"></script>
+<script src="preview/roam.js?v=140cf753"></script>
 </body>
 </html>
