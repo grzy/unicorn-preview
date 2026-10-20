@@ -4783,7 +4783,7 @@ if (window.unicorn && window.unicorn.isDesktop)
 
     <div class="keep-actions">
       <span id="keep-folder" class="keep-folder-link" role="button" tabindex="0" hidden title="~/unicorn/keeps/">Folder</span>
-      <button class="keep-pull" data-scope="career" aria-pressed="false" title="Career-wide, not tied to this quest">Career</button>
+      <button class="keep-pull" data-scope="career" aria-pressed="false" title="Save to your Builder's Story, not tied to one quest">Story</button>
       <button class="keep-save u-fill is-empty" id="keep-save" title="Save" data-key="⌘↩">Save</button>
     </div>
 
@@ -9459,7 +9459,14 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
                 const all = load();
                 const removed = all.find(k => k.id === el.dataset.id);
                 save(all.filter(k => k.id !== el.dataset.id));
-                if (removed && removed.imagePath && window.unicorn && window.unicorn.deleteKeepFiles) {
+                const files = removed ? [removed.imagePath, removed.videoPath].concat((removed.variants || []).map(v => v[1])).filter((p, i, a) => typeof p === 'string' && p && a.indexOf(p) === i) : [];
+                if (files.length && window.unicorn && window.unicorn.returnKeepFiles) {
+                    try {
+                        window.unicorn.returnKeepFiles(files);
+                    }
+                    catch { }
+                }
+                else if (removed && removed.imagePath && window.unicorn && window.unicorn.deleteKeepFiles) {
                     try {
                         window.unicorn.deleteKeepFiles([removed.imagePath]);
                     }
@@ -9755,7 +9762,7 @@ ${keepsBlock}${emptyBlock}
         ensureUiAudio().then(() => { if (typeof uiSave === 'function')
             uiSave(); });
         const career = keepScope === 'career';
-        const active = career ? { id: null, name: 'Career' } : getActiveQuest();
+        const active = career ? { id: null, name: 'Story' } : getActiveQuest();
         const img = pendingImage;
         const imgSrcPath = pendingImageSrc;
         const vid = pendingVideo;
@@ -9765,7 +9772,7 @@ ${keepsBlock}${emptyBlock}
         const prev = saveBtn.textContent;
         saveBtn.textContent = 'Kept';
         if (career && typeof window.r26Toast === 'function')
-            window.r26Toast('Saved to Career, across every quest');
+            window.r26Toast("Saved to your Builder's Story");
         setTimeout(() => { saveBtn.classList.remove('done'); saveBtn.textContent = prev; }, 1400);
         if (typeof uiChord === 'function')
             uiChord(['C5', 'E5', 'G5']);
