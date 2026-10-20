@@ -9246,6 +9246,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
 })();
 (function () {
     const STORAGE_KEY = 'unicorn.keeps';
+    const keepSlug = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 32) || 'unsorted';
     (function migrateKeepDirPaths() {
         try {
             if (!(window.unicorn && window.unicorn.isDesktop))
@@ -9338,7 +9339,16 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         keepScope = on ? 'career' : 'quest';
         b.classList.toggle('on', on);
         b.setAttribute('aria-pressed', String(on));
+        render();
     }));
+    const resetScope = () => {
+        if (keepScope === 'quest')
+            return;
+        keepScope = 'quest';
+        panel.querySelectorAll('.keep-pull').forEach(b => { b.classList.remove('on'); b.setAttribute('aria-pressed', 'false'); });
+        render();
+    };
+    const isStoryKeep = (k) => !k.questId && /^(story|career)$/i.test(k.questName || '');
     const syncSave = () => saveBtn.classList.toggle('is-empty', !(input.value.trim() || pendingImage || pendingVideo));
     input.addEventListener('input', syncSave);
     const toTop = document.getElementById('keep-totop');
@@ -9375,7 +9385,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
             const q = (d.quests || []).find(x => /^unicorn$/i.test(x.name || ''));
             if (!q)
                 return;
-            const dir = p.keepsDir + '/Unicorn/2026-10-18-unicorn-7-gallop-';
+            const dir = p.keepsDir + '/unicorn/2026-10-18-unicorn-7-gallop-';
             const arr = load();
             if (!arr.some(k => k.id === 'keep-gallop7')) {
                 arr.push({ id: 'keep-gallop7', ts: Date.parse('2026-10-18T23:00:00Z'), questId: q.id, questName: q.name,
@@ -9401,20 +9411,21 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     const render = () => {
         const all = load().concat(savingKeeps);
         const active = getActiveQuest();
-        const inScope = active
+        const story = keepScope === 'career';
+        const inScope = story ? all.filter(isStoryKeep) : active
             ? all.filter(k => (k.questId && k.questId === active.id) ||
                 (!k.questId && k.questName && k.questName.toLowerCase() === (active.name || '').toLowerCase()))
             : [];
         if (tag) {
-            tag.hidden = !!active;
-            tag.textContent = active ? '' : 'No active quest -- pick one in the Quest panel first.';
+            tag.hidden = !!active || story;
+            tag.textContent = active || story ? '' : 'No active quest -- pick one in the Quest panel first.';
         }
         if (count)
             count.style.display = 'none';
         const folderEl = document.getElementById('keep-folder');
         if (folderEl) {
             folderEl.textContent = 'Folder';
-            folderEl.title = '~/unicorn/keeps/' + (active ? active.name : 'Unsorted') + '/';
+            folderEl.title = '~/unicorn/keeps/' + (story ? 'story' : keepSlug(active && active.name)) + '/';
         }
         list.innerHTML = '';
         if (inScope.length === 0)
@@ -9773,7 +9784,8 @@ ${keepsBlock}${emptyBlock}
         saveBtn.textContent = 'Kept';
         if (career && typeof window.r26Toast === 'function')
             window.r26Toast("Saved to your Builder's Story");
-        setTimeout(() => { saveBtn.classList.remove('done'); saveBtn.textContent = prev; }, 1400);
+        setTimeout(() => { saveBtn.classList.remove('done'); saveBtn.textContent = prev; if (career)
+            resetScope(); }, 1400);
         if (typeof uiChord === 'function')
             uiChord(['C5', 'E5', 'G5']);
         const savingId = 'saving-' + Date.now().toString(36);
@@ -10136,8 +10148,8 @@ ${keepsBlock}${emptyBlock}
                 const q = getActiveQuest();
                 if (!(p && p.keepsDir))
                     return;
-                const name = q && q.name ? String(q.name).replace(/[\/\\:*?"<>|.]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 60) : '';
-                const err = await window.unicorn.openPath(p.keepsDir + '/' + (name || 'Unsorted'));
+                const name = keepScope === 'career' ? 'story' : keepSlug(q && q.name);
+                const err = await window.unicorn.openPath(p.keepsDir + '/' + name);
                 if (err)
                     window.unicorn.openPath(p.keepsDir);
             }
