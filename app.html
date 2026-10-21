@@ -4514,6 +4514,13 @@ if (window.unicorn && window.unicorn.isDesktop)
     padding-bottom: 24px; margin-right: -10px; padding-right: 10px;
     -webkit-mask-image: linear-gradient(#000 calc(100% - 24px), transparent); mask-image: linear-gradient(#000 calc(100% - 24px), transparent);
   }
+  /* 10-20 B1: when, on every row. Whisper mono at the right edge; the name ellipses first */
+  .panel--quest .q-exp .q-when {
+    flex: none; white-space: nowrap; margin-left: auto;
+    font: 400 10.5px/1 var(--mono); letter-spacing: .02em; font-variant-numeric: tabular-nums;
+    color: var(--text-whisper-2); cursor: default;
+  }
+  .panel--quest .q-exp .q-when.started { color: var(--text-mute); }
   /* Delete Experiment: an × in the check column, in the row's own color */
   .q-st-opt.q-st-del .q-st-ck::before { content: "\00d7"; font: 400 16px/1 var(--sans); color: currentColor; }
   /* 10-19 c: Quest actions (···) join the menus' one grid: a symbol in the 16px check
@@ -5379,6 +5386,28 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     const uid = () => 'e-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
     const isoNow = () => new Date().toISOString();
     const escapeHtml = (s) => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    /* 10-20 B1: each experiment row's "when", at the right. Started/paused = age since
+       createdAt (Today, Yesterday, 3 Days, 3 Weeks, 2 Months); finished = the day it
+       landed (Oct 18). Pacific days. No timestamp = nothing, never a made-up date. */
+    const Q_WHEN_DAY = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Los_Angeles', year: 'numeric', month: '2-digit', day: '2-digit' });
+    const Q_WHEN_SHORT = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Los_Angeles', month: 'short', day: 'numeric' });
+    const Q_WHEN_FULL = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Los_Angeles', month: 'short', day: 'numeric', year: 'numeric' });
+    const qWhen = (exp) => {
+      const done = exp.status === 'complete', iso = done ? exp.completedAt : exp.createdAt;
+      const t = iso ? Date.parse(iso) : NaN;
+      if (!isFinite(t)) return '';
+      const d = new Date(t);
+      const tip = (done ? 'Finished ' : 'Started ') + Q_WHEN_FULL.format(d);
+      let txt;
+      if (done) txt = Q_WHEN_SHORT.format(d);
+      else {
+        const days = Math.max(0, Math.round((Date.parse(Q_WHEN_DAY.format(new Date())) - Date.parse(Q_WHEN_DAY.format(d))) / 86400000));
+        const n = (k, w) => k + ' ' + w + (k === 1 ? '' : 's');
+        txt = days === 0 ? 'Today' : days === 1 ? 'Yesterday' : days < 14 ? n(days, 'Day')
+            : days < 60 ? n(Math.floor(days / 7), 'Week') : days < 730 ? n(Math.floor(days / 30), 'Month') : n(Math.floor(days / 365), 'Year');
+      }
+      return `<span class="q-when${done ? '' : ' started'}" data-tip="${tip}">${txt}</span>`;
+    };
     let data = loadApp();
     let migrated = false;
     (data.quests || []).forEach(q => {
@@ -5758,7 +5787,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
                 row.className = 'q-exp' + (exp.status === 'complete' ? ' finished' : '') + (exp.template ? ' has-stages' : '');
                 row.innerHTML = `
         <span class="q-slot"><span class="q-status" data-id="${exp.id}" data-s="${exp.status}" role="button" aria-label="${STATUS_TIP[exp.status] || exp.status}" title="${STATUS_TIP[exp.status] || exp.status}" aria-haspopup="menu"></span></span>
-        <span class="q-name" data-id="${exp.id}">${escapeHtml(exp.name)}</span>
+        <span class="q-name" data-id="${exp.id}">${escapeHtml(exp.name)}</span>${qWhen(exp)}
         <span class="q-delete" data-id="${exp.id}" title="Delete experiment" onclick="event.stopPropagation(); window.__unicornDeleteExp('${exp.id}');">×</span>
       `;
                 if (exp.template && exp.stages && exp.stages.length) {
