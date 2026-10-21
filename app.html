@@ -3845,6 +3845,12 @@ if (window.unicorn && window.unicorn.isDesktop)
   html.r26-boot *, html.r26-boot *::before, html.r26-boot *::after { transition: none !important; }
   #agent .st-uc-hit { flex: none; display: block; padding: 8px; margin: -18px -14px -18px 4px; position: relative; top: 6px; cursor: default; }
   #agent .st-uc-hit .st-uc { margin: 0; top: 0; }
+  /* 10-20: the status in words beside him (no hover needed); the click still jumps to the session */
+  #agent .st-uc-hit { display: inline-flex; align-items: center; gap: 6px; }
+  #agent .st-uc-word { font: 500 11px/1 var(--sans); color: var(--text-whisper-2); white-space: nowrap; transition: color var(--t) var(--ease); }
+  #agent .st-uc-word:empty { display: none; }
+  #agent .st-uc-hit[data-state="working"] .st-uc-word { color: var(--peach); }
+  #agent .st-uc-hit[data-state="waiting"] .st-uc-word { color: var(--lilac); }
   #agent .a-attached-body { min-width: 0; flex: 1; }
   #menubar .mb-float-row[hidden] { display: none !important; }
   
@@ -3867,6 +3873,9 @@ if (window.unicorn && window.unicorn.isDesktop)
   #agent:hover .a-section.collapsible.open .a-label .nm::before, #agent .a-section.collapsible.open .a-label .nm::before { transform: translateX(0) rotate(90deg); }
   
   #mirror-call .nm-slot > * { transform: none !important; transition: opacity .2s var(--ease) !important; transition-delay: 0s !important; }
+  /* 10-20: no "Open today's paper" hint; hover only lights the words (the date stays put) */
+  #mirror-call .nm-go:hover .nm-slot > .nm-rest, #mirror-call .nm-go:focus-visible .nm-slot > .nm-rest { opacity: 1; }
+  #mirror-call .nm-go:hover .nm-slot > .nm-hint, #mirror-call .nm-go:focus-visible .nm-slot > .nm-hint { opacity: 0; }
 </style>
 
 <style id="r26-quest">
@@ -4102,6 +4111,11 @@ if (window.unicorn && window.unicorn.isDesktop)
   .panel--commits .c-sound:hover .c-dot, html .panel--commits .c-sound.on .c-dot { opacity: 1; }
   
   .panel--commits #c-sound-label { min-width: 0; }
+  /* 10-20: ONE calm footer row -- Sound left, a fixed count slot, Fewer/More right. No layout shift on hover. */
+  .panel--commits .c-foot.c-foot--one { display: grid; grid-template-columns: 72px 1fr auto; align-items: center; gap: 8px; margin-top: 12px; }
+  .panel--commits .c-foot--one .c-sound { margin: 0; justify-self: start; white-space: nowrap; }
+  .panel--commits .c-foot--one .c-meta { flex: none; min-width: 0; height: 1.5em; text-align: center; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .panel--commits .c-foot--one .c-legend { margin: 0; }
 </style>
 
 <style id="r26-keep">
@@ -4222,6 +4236,9 @@ if (window.unicorn && window.unicorn.isDesktop)
   #activity-panel .act-search:hover { background: rgba(255,255,255,.07); }
   #activity-panel .act-search:focus { background: rgba(255,255,255,.09); }
   #activity-panel .act-search::placeholder { color: var(--text-whisper-2); }
+  /* 10-20: like Keep -- the scope on the LEFT, the search icon on the RIGHT */
+  #activity-panel .act-filters .act-tabs { order: 1; }
+  #activity-panel .act-filters .act-stog { order: 2; margin-left: auto; margin-right: var(--in); }
   
   #activity-panel .act-list { gap: 1px; padding-right: 0; scrollbar-gutter: auto; max-height: 360px; }
   #activity-panel .act-day { list-style: none; font: 500 11.5px/1 var(--sans); color: var(--text-whisper-2); padding: 12px var(--in) 4px; }
@@ -4737,12 +4754,13 @@ if (window.unicorn && window.unicorn.isDesktop)
       <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
     </div>
     <div class="c-calendar" id="c-calendar"></div>
-    <div class="c-legend" aria-hidden="true"><span>Fewer</span><i data-l="1"></i><i data-l="2"></i><i data-l="3"></i><i data-l="4"></i><span>More</span></div>
-    <div class="c-foot">
-      <div class="c-meta" id="c-meta">Hover a day to listen</div>
+    <!-- 10-20: one calm row. Sound left, the hovered day's count in a fixed slot, Fewer/More right -->
+    <div class="c-foot c-foot--one">
       <button class="c-sound" id="c-sound" aria-label="Sound on or off">
         <span class="c-dot"></span><span id="c-sound-label">Sound Off</span>
       </button>
+      <div class="c-meta" id="c-meta" aria-live="polite"></div>
+      <div class="c-legend" aria-hidden="true"><span>Fewer</span><i data-l="1"></i><i data-l="2"></i><i data-l="3"></i><i data-l="4"></i><span>More</span></div>
     </div>
   </section>
   <script>
@@ -4880,7 +4898,7 @@ if (window.unicorn && window.unicorn.isDesktop)
               <span class="u-open-path" id="a-attached-figma" hidden title="Open in Figma">Figma ↗</span>
             </div>
           </div>
-          <span class="st-uc-hit" id="st-uc-hit"><canvas class="st-uc" id="st-uc" role="img" aria-label="No agent running"></canvas></span>
+          <span class="st-uc-hit" id="st-uc-hit"><span class="st-uc-word" id="st-uc-word" aria-hidden="true"></span><canvas class="st-uc" id="st-uc" role="img" aria-label="No agent running"></canvas></span>
           <div class="st-wk" id="st-wk" hidden><div class="st-wk-bars" id="st-wk-bars"></div><div class="st-wk-lab" id="st-wk-lab"></div></div>
         </div>
       </div>
@@ -10538,7 +10556,7 @@ ${keepsBlock}${emptyBlock}
             meta.innerHTML = `<span class="c-msg">Quiet</span>`;
         }
         else {
-            meta.innerHTML = `<span class="c-count-inline">${n} commit${n !== 1 ? 's' : ''}</span>`;
+            meta.innerHTML = `<span class="c-count-inline">${n} ${n !== 1 ? 'Commits' : 'Commit'}</span>`;
         }
     };
     const today = new Date();
@@ -10547,6 +10565,8 @@ ${keepsBlock}${emptyBlock}
     const cal = document.getElementById('c-calendar');
     const titleEl = document.getElementById('c-month-title');
     const countEl = document.getElementById('c-month-count');
+  // 10-20: the slot empties when the pointer leaves the month, so it never holds a stale day
+  if (cal) cal.addEventListener('mouseleave', () => { meta.textContent = ''; });
     const renderMonth = (year, monthIdx) => {
         cal.innerHTML = '';
         const firstDay = new Date(year, monthIdx, 1);
@@ -11765,7 +11785,7 @@ ${keepsBlock}${emptyBlock}
     .todo li.done .tx{color:var(--faint);text-decoration:line-through;text-decoration-color:#cfc5ba}
     .todo small{display:block;font:400 12px/1.35 'Ubuntu Sans',sans-serif;color:var(--faint);margin-top:2px}
     .kthumbs{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-    .kthumbs img{width:100%;aspect-ratio:4/3;object-fit:cover;object-position:top;border-radius:6px;display:block;background:#e9e4de}
+    .kthumbs img,.kthumbs video{width:100%;aspect-ratio:4/3;object-fit:cover;object-position:top;border-radius:6px;display:block;background:#e9e4de}
     .slots{grid-template-columns:1fr 1fr}
     .agents{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
     @media (max-width:760px){.agents{grid-template-columns:1fr}}
@@ -11794,7 +11814,9 @@ ${keepsBlock}${emptyBlock}
         const when = past ? 'that week' : 'this week';
         const names = (arr) => arr.slice(0, 3).map(e => ESC(e.name)).join(', ') + (arr.length > 3 ? ` and ${arr.length - 3} more` : '');
         const weekKeeps = keeps.filter(k => k.ts >= start.getTime() && k.ts < start.getTime() + 7 * 86400000);
-        const keepImgs = (weekKeeps.length ? weekKeeps : keeps).filter(k => k.image);
+        // 10-20: video keeps count too (they live in keeps/<quest-slug>/, linked from briefs/<quest-slug>/)
+    const keepVid = k => { const m = String(k.videoPath || '').match(/\/keeps\/(.+)$/); return m ? '../../keeps/' + m[1].split('/').map(encodeURIComponent).join('/') : ''; };
+    const keepImgs = (weekKeeps.length ? weekKeeps : keeps).filter(k => k.image || k.thumb || keepVid(k));
         const touched = closedThisWeek.concat(inFlight);
         const stat = (n, lab, tip, w) => `<div class="card ${w || 'w2'} stat"><div><b>${ESC(n)}</b><span class="lab">${ESC(lab)}</span></div>${tip ? `<div class="tip">${tip}</div>` : ''}</div>`;
         let top = stat(closedThisWeek.length, `finished ${when}`, closedThisWeek.length ? names(closedThisWeek) : '');
@@ -11833,7 +11855,7 @@ ${keepsBlock}${emptyBlock}
       <div><h3>To-do</h3>${todo.length ? `<ul class="todo">${todo.map(([t, s], i) => `<li data-t="${i}"><span class="bx" role="checkbox" aria-checked="false" aria-label="${ESC(t)}" tabindex="0"></span><span class="tx">${ESC(t)}${s ? `<small>${ESC(s)}</small>` : ''}</span></li>`).join('')}</ul>` : '<p class="note">Nothing open.</p>'}</div>
     </div></div>`;
         const keep = `<div class="card w2"><h3>Keep${weekKeeps.length ? `<span>${weekKeeps.length}</span>` : ''}</h3>${keepImgs.length
-            ? `<div class="kthumbs">${keepImgs.slice(0, 4).map(k => `<img src="${k.image}" alt="${ESC((k.text || 'Kept').split('\n')[0])}">`).join('')}</div>`
+            ? `<div class="kthumbs">${keepImgs.slice(0, 4).map(k => (k.image || k.thumb) ? `<img src="${k.image || k.thumb}" alt="${ESC((k.text || 'Kept').split('\n')[0])}">` : `<video src="${ESC(keepVid(k))}" muted loop autoplay playsinline preload="metadata" aria-label="${ESC((k.text || 'Kept').split('\n')[0])}"></video>`).join('')}</div>`
             : `<div class="slots"><div class="slot"></div><div class="slot"></div></div>`}<div class="keep-note">${keepImgs.length ? (weekKeeps.length ? `Kept ${when}.` : 'The latest from Keep.') : (past ? 'Nothing kept that week.' : 'Nothing kept yet. Add to Keep in the app; it shows up here.')}</div></div>`;
         const live = past ? [] : agentsNow.map(a => [a.state === 'working' ? 'An agent is working' : 'An agent is waiting for you', a.exp ? a.exp : (a.state === 'working' ? 'In this quest’s folder.' : 'Open the terminal to answer.')]);
         const ag = (Array.isArray(extra.agents) ? extra.agents : []).concat(live);
@@ -13219,6 +13241,12 @@ ${keepsBlock}${emptyBlock}
     let target = 'idle', phase = 'still', t0 = 0, p0 = 0, raf = 0;
     const RUN_IN = U7.T_LOGO + .42 * U7.T_RUN, RUN_OUT = U7.T_LOGO + .58 * U7.T_RUN;
     const TIP = { working: 'An agent is working', waiting: 'An agent is waiting for you', idle: 'No agent running' };
+  // 10-20: ONE unicorn, two views. The words sit beside him; "Thinking" = working, but no
+  // hook has fired for a while (the model is reasoning between tool calls)
+  const wordEl = document.getElementById('st-uc-word');
+  const THINK_AFTER = 15;   // seconds since the last working hook
+  let word = '';
+  const setWord = (w, st) => { if (!wordEl) return; if (w !== word) { word = w; wordEl.textContent = w; } const h = wordEl.parentElement; if (h && h.dataset.state !== st) h.dataset.state = st; };
     const SPARK = [[-1.6, 1.6, '#FFAF5F'], [-1.4, -0.6, '#FF9A7A'], [0.4, -1.8, '#F28DA6'], [2.6, -1.4, '#D58BC6'], [3.6, 0.6, '#AF87D7']];
     const drawSparkle = (now) => {
         const c = cv.getContext('2d');
@@ -13407,7 +13435,10 @@ ${keepsBlock}${emptyBlock}
         const live = sessions.filter(x => x && (x.state === 'working' ? nowS - x.ts < STALE_WORK : x.state === 'waiting' ? nowS - x.ts < STALE_WAIT : false));
         const working = live.filter(x => x.state === 'working');
         lastLive = live;
-        setTarget(working.length ? 'working' : live.some(x => x.state === 'waiting') ? 'waiting' : 'idle');
+        const st = working.length ? 'working' : live.some(x => x.state === 'waiting') ? 'waiting' : 'idle';
+    const lastWork = working.reduce((m, x) => Math.max(m, x.ts || 0), 0);
+    setWord(st === 'working' ? (nowS - lastWork > THINK_AFTER ? 'Thinking' : 'Working') : st === 'waiting' ? 'Waiting for You' : '', st);
+    setTarget(st);
         const ids = await nowExpIds(working);
         if ([...ids].join() !== [...nowIds].join()) {
             nowIds = ids;
