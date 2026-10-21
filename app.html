@@ -10097,7 +10097,7 @@ ${keepsBlock}${emptyBlock}
     window.addEventListener('drop', (e) => e.preventDefault());
     window.addEventListener('unicorn:quests-updated', render);
     window.addEventListener('unicorn:keeps-updated', render);
-    const NICE = { 'unicorn-7-gallop': 'Unicorn 7 gallop', 'opal-kiss': 'Lilac kiss', 'lilac-kiss': 'Lilac kiss', 'opal-run-together': 'Run together', 'run-together': 'Run together', 'lilac-run-together': 'Run together', 'unicorn-gallop': 'Galloping unicorn' };
+    const NICE = { 'unicorn-7-gallop': 'Unicorn 7 gallop', 'lilac-kiss': 'Lilac kiss', 'run-together': 'Run together', 'lilac-run-together': 'Run together', 'unicorn-gallop': 'Galloping unicorn' };
     const niceName = (base) => NICE[base] || (base.replace(/^unicorn-/, '').replace(/-/g, ' ').replace(/^\w/, c => c.toUpperCase()));
     let scanning = false;
     const scanFolder = async () => {
@@ -10123,10 +10123,6 @@ ${keepsBlock}${emptyBlock}
                 g7.text = 'Unicorn 7 gallop';
                 changed = true;
             }
-            all.forEach(k => { if (k.text === 'Opal kiss') {
-                k.text = 'Lilac kiss';
-                changed = true;
-            } });
             const ids = new Set(all.map(k => k.id));
             const used = new Set();
             all.forEach(k => { [k.imagePath, k.videoPath].forEach(p => p && used.add(p)); (k.variants || []).forEach(v => used.add(v[1])); });
@@ -13586,7 +13582,7 @@ ${keepsBlock}${emptyBlock}
 })();
 </script>
 
-<script src="preview/roam.js?v=140cf753"></script>
+<script src="preview/roam.js?v=f484c5a2"></script>
 <script>window.__previewWeeks = {"unicorn":"2026-W43-unicorn.html","tide-clock":"2026-W43-tide-clock.html","moth-garden":"2026-W43-moth-garden.html","paper-synth":"2026-W43-paper-synth.html"};</script>
 <script src="preview/guest-late.js?v=04a467cc"></script>
 </body>

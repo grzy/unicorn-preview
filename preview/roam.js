@@ -53,9 +53,9 @@
   const begin = (now) => { phase = 'start'; t0 = now; };
   const halt = (now) => { if (phase === 'start' || phase === 'run') { phase = 'stop'; t0 = now; } };
 
-  // ---- Lilac, the surprise (file: characters/opal.js) ----
+  // ---- Lilac, the surprise (file: characters/lilac.js) ----
   let O = null, surprise = null, firstAt = performance.now() + rnd(75000, 90000), lastSurprise = -Infinity;
-  if (window.loadUnicornCharacter) window.loadUnicornCharacter('opal').then(c => { if (c && c !== window.UnicornCharacters.peach) O = c; }).catch(() => {});
+  if (window.loadUnicornCharacter) window.loadUnicornCharacter('lilac').then(c => { if (c && c !== window.UnicornCharacters.peach) O = c; }).catch(() => {});
   const O_SPEED = 104;
   const HEARTS = { xs: ['#.#', '###', '.#.'], s: ['.#.#.', '#####', '.###.', '..#..'], m: ['.##.##.', '#######', '#######', '.#####.', '..###..', '...#...'] };
   const HEART_COLS = ['#FF9FC8', '#FFB38A', '#C8A2FF', '#F48FC4', '#FFC2D9', '#B98AF0'];

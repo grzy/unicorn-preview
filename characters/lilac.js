@@ -440,34 +440,34 @@
             });
             c.globalAlpha = 1;
         }
-        const ROWS_OPAL = ['.D........', '.DLL......', '.PPPLL....', 'PPPPLLL...', '..PPPPPPLL', '..PPPPPPLL', '...QP..PQ.', '...QP..PQ.'];
-        const GO = Object.assign(parse(ROWS_OPAL), { mode: 'light', sparkle: { color: 'dark', density: 5, extra: true } });
+        const ROWS_LILAC = ['.D........', '.DLL......', '.PPPLL....', 'PPPPLLL...', '..PPPPPPLL', '..PPPPPPLL', '...QP..PQ.', '...QP..PQ.'];
+        const GO = Object.assign(parse(ROWS_LILAC), { mode: 'light', sparkle: { color: 'dark', density: 5, extra: true } });
         const oO = { ...OPT.V, logo: GO, jitter: 2.0, plant: true, endSettle: true, mane: { ...OPT.V.mane, n: OPT.V.mane.n + Math.max(0, GO.maneX1 - 5) * 2 }, tail: { ...OPT.V.tail, n: OPT.V.tail.n + (GO.tailY0 < 8 ? 2 : 0) } };
-        return { render, frameAt, sustainFrame, oO, ROWS_OPAL, T_LOGO, T_RUN, TOTAL };
+        return { render, frameAt, sustainFrame, oO, ROWS_LILAC, T_LOGO, T_RUN, TOTAL };
     })();
     const W = 21, H = 26;
     const fr = x => x - Math.floor(x);
     const hx = h => [parseInt(h.substr(1, 2), 16), parseInt(h.substr(3, 2), 16), parseInt(h.substr(5, 2), 16)];
     const mixC = (a, b, k) => { const A = hx(a), B = hx(b); return A.map((v, i) => Math.round(v + (B[i] - v) * k)); };
     const KEYS = [[255, 0, 0, 'body'], [128, 0, 0, 'far'], [0, 255, 0, 'hair'], [0, 128, 0, 'hairS'], [0, 0, 255, 'horn'], [0, 255, 255, 'spark'], [255, 0, 255, 'hoof']];
-    const OPAL = { body: ['#EADCFF', '#DCC8FF', '#CFB8FA'], pink: '#F7CBEA', far: '#B9A3EE', hoof: '#B79BF0',
+    const LILAC_COAT = { body: ['#EADCFF', '#DCC8FF', '#CFB8FA'], pink: '#F7CBEA', far: '#B9A3EE', hoof: '#B79BF0',
         hair: '#A274E6', hairHi: '#D48ADB', hairS: '#7A50C6', horn: ['#FFAF5F', '#FFD9B0'], spark: '#FFF4FC' };
     function colorFor(kind, x, y, t) {
         if (kind === 'body') {
             const row = y <= 9 ? 0 : y <= 11 ? 1 : 2;
-            return fr((x * .8 + y * .45) / 13 - t * .11) < .2 ? mixC(OPAL.body[row], OPAL.pink, .55) : hx(OPAL.body[row]);
+            return fr((x * .8 + y * .45) / 13 - t * .11) < .2 ? mixC(LILAC_COAT.body[row], LILAC_COAT.pink, .55) : hx(LILAC_COAT.body[row]);
         }
         if (kind === 'far')
-            return hx(OPAL.far);
+            return hx(LILAC_COAT.far);
         if (kind === 'hoof')
-            return hx(OPAL.hoof);
+            return hx(LILAC_COAT.hoof);
         if (kind === 'hair')
-            return fr(y / 7 - t * .45 + x * .06) < .22 ? hx(OPAL.hairHi) : hx(OPAL.hair);
+            return fr(y / 7 - t * .45 + x * .06) < .22 ? hx(LILAC_COAT.hairHi) : hx(LILAC_COAT.hair);
         if (kind === 'hairS')
-            return hx(OPAL.hairS);
+            return hx(LILAC_COAT.hairS);
         if (kind === 'horn')
-            return Math.floor(fr(t * .35) * 9) === y ? [255, 255, 255] : hx(OPAL.horn[y % 2]);
-        return hx(OPAL.spark);
+            return Math.floor(fr(t * .35) * 9) === y ? [255, 255, 255] : hx(LILAC_COAT.horn[y % 2]);
+        return hx(LILAC_COAT.spark);
     }
     let offA = null, offB = null;
     const mk = () => { const c = document.createElement('canvas'); c.width = W; c.height = H; return c; };
@@ -533,7 +533,7 @@
         });
         c.globalAlpha = 1;
     }
-    const term = { rows: ENGINE.ROWS_OPAL.map(r => [...r].reverse().join('')), pal: { D: '#FFAF5F', L: '#A274E6', P: '#DCC8FF', Q: '#B79BF0' } };
+    const term = { rows: ENGINE.ROWS_LILAC.map(r => [...r].reverse().join('')), pal: { D: '#FFAF5F', L: '#A274E6', P: '#DCC8FF', Q: '#B79BF0' } };
     const QG = ' ▘▝▀▖▌▞▛▗▚▐▜▄▙▟█';
     function termCells() {
         const L = [];
@@ -547,7 +547,7 @@
                     cs.add(ch);
                 } });
                 if (cs.size > 1)
-                    throw new Error('Opal terminal print breaks the 2x2 rule at ' + bx + ',' + by);
+                    throw new Error('Lilac terminal print breaks the 2x2 rule at ' + bx + ',' + by);
                 line.push(m ? { ch: QG[m], color: term.pal[[...cs][0]] } : { ch: ' ', color: null });
             }
             L.push(line);
@@ -557,6 +557,6 @@
     function termHTML() { return termCells().map(l => l.map(c => c.color ? `<span style="color:${c.color}">${c.ch}</span>` : ' ').join('')); }
     function termANSI() { const E = '\x1b'; return termCells().map(l => l.map(c => { if (!c.color)
         return ' '; const [r, g, b] = hx(c.color); return `${E}[38;2;${r};${g};${b}m${c.ch}${E}[0m`; }).join('')); }
-    window.Opal = { render, frameAt: ENGINE.frameAt, sustainFrame: ENGINE.sustainFrame, drawThinking, o7: ENGINE.oO,
+    window.Lilac = { render, frameAt: ENGINE.frameAt, sustainFrame: ENGINE.sustainFrame, drawThinking, o7: ENGINE.oO,
         T_LOGO: ENGINE.T_LOGO, T_RUN: ENGINE.T_RUN, TOTAL: ENGINE.TOTAL, term, termHTML, termANSI, name: 'Lilac', faces: 'right' };
 })();
