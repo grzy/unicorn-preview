@@ -4212,6 +4212,13 @@ if (window.unicorn && window.unicorn.isDesktop)
   .panel--keep .keep-save.u-fill { transition: color var(--t) var(--ease); }
   
   .panel--keep .keep-list { padding-bottom: 52px; -webkit-mask-image: linear-gradient(#000 calc(100% - 24px), transparent); mask-image: linear-gradient(#000 calc(100% - 24px), transparent); }
+  /* 10-21 night: Keep fixes (mirrors src/bloom-preview.html) */
+  .panel--keep .keep-item { grid-template-columns: minmax(0, 1fr); }
+  .panel--keep .keep-list { scrollbar-gutter: stable; }
+  .panel--keep .keep-item > .keep-item-img { aspect-ratio: auto; height: auto; min-height: 48px; max-height: 340px; object-fit: contain; object-position: center; background: rgba(0,0,0,.22); }
+  .panel--keep .keep-item-delete { top: 6px; right: 6px; color: var(--text-mute); }
+  .panel--keep .keep-item-delete:hover { color: var(--tomato); }
+  .panel--keep .keep-item > .keep-item-text { font: 400 12px/1.5 var(--mono); color: var(--text); background: rgba(255,255,255,.04); border-radius: 6px; padding: 10px 32px 10px 12px; white-space: pre-wrap; overflow-wrap: anywhere; max-height: 220px; overflow: auto; }
 </style>
 
 <style id="r26-activity">
@@ -4806,7 +4813,8 @@ if (window.unicorn && window.unicorn.isDesktop)
       <textarea
         class="keep-input"
         id="keep-input"
-        placeholder="Drop screenshots &amp; videos, or paste from your terminal"
+        placeholder="Drop screenshots &amp; videos"
+        title="or paste from your terminal (⌘V)"
         rows="1"></textarea>
     </div>
 
@@ -9822,13 +9830,13 @@ ${keepsBlock}${emptyBlock}
         if (link)
             link.addEventListener('click', () => window.__unicornOpenNorthstar());
     })();
-    const saveCurrent = async () => {
+    const saveCurrent = async (opts) => {
         let text = input.value.trim();
         if (!text && !pendingImage && !pendingVideo)
             return;
         ensureUiAudio().then(() => { if (typeof uiSave === 'function')
             uiSave(); });
-        const career = keepScope === 'career';
+        const career = ((opts && opts.scope) || keepScope) === 'career';
         const active = career ? { id: null, name: 'Story' } : getActiveQuest();
         const img = pendingImage;
         const imgSrcPath = pendingImageSrc;
@@ -9968,7 +9976,7 @@ ${keepsBlock}${emptyBlock}
             saveCurrent();
         }
     });
-    const attachImageFile = (file) => {
+    const attachImageFile = (file, onReady) => {
         if (!file || !file.type || !file.type.startsWith('image/'))
             return false;
         pendingImageSrc = null;
@@ -9992,6 +10000,7 @@ ${keepsBlock}${emptyBlock}
             input.focus();
             ensureUiAudio().then(() => { if (typeof uiClick === 'function')
                 uiClick('E5'); });
+            if (typeof onReady === 'function') onReady();
         };
         reader.readAsDataURL(file);
         return true;
@@ -10064,16 +10073,49 @@ ${keepsBlock}${emptyBlock}
             uiClick('E5'); });
         return true;
     };
+    const attachImage = (file) => new Promise(res => { if (!attachImageFile(file, () => res(true))) res(false); });
+    // 10-21: ⌘V with the Keep panel hovered (or focused) but no field focused -> a keep
+    let pasteDirect = false;
+    const isField = (el) => !!(el && el !== document.body && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName)));
+    const keepPastedText = (t) => {
+        t = String(t || '').replace(/\s+$/, '');
+        if (!t.trim() || input.value.trim()) return false;
+        input.value = t; saveCurrent(); return true;
+    };
+    document.addEventListener('keydown', (e) => {
+        if (!(e.metaKey || e.ctrlKey) || e.altKey || e.shiftKey || String(e.key).toLowerCase() !== 'v') return;
+        const ae = document.activeElement;
+        if (isField(ae) || !(panel.matches(':hover') || (ae && panel.contains(ae)))) return;
+        pasteDirect = true;
+        input.focus();
+        setTimeout(async () => {
+            if (!pasteDirect) return; pasteDirect = false;
+            try {
+                if (navigator.clipboard && navigator.clipboard.read) {
+                    for (const it of await navigator.clipboard.read()) {
+                        const ty = it.types.find(x => x.startsWith('image/'));
+                        if (ty) { const b = await it.getType(ty); attachImageFile(new File([b], 'pasted.png', { type: ty }), () => saveCurrent()); return; }
+                    }
+                }
+                if (navigator.clipboard && navigator.clipboard.readText) keepPastedText(await navigator.clipboard.readText());
+            } catch { }
+        }, 300);
+    }, true);
     input.addEventListener('paste', (e) => {
+        const direct = pasteDirect; pasteDirect = false;
         const items = e.clipboardData && e.clipboardData.items;
         if (!items)
             return;
         for (let i = 0; i < items.length; i++) {
             if (items[i].type && items[i].type.startsWith('image/')) {
                 e.preventDefault();
-                attachImageFile(items[i].getAsFile());
+                attachImageFile(items[i].getAsFile(), direct ? () => saveCurrent() : null);
                 return;
             }
+        }
+        if (direct && !input.value.trim()) {
+            const t = e.clipboardData.getData('text/plain');
+            if (t && t.trim()) { e.preventDefault(); keepPastedText(t); }
         }
     });
     panel.addEventListener('dragover', (e) => {
@@ -10092,6 +10134,18 @@ ${keepsBlock}${emptyBlock}
         const files = e.dataTransfer && e.dataTransfer.files;
         if (!files)
             return;
+        // 10-21: several files at once -> each its own keep
+        const media = Array.from(files).filter(f => f.type && (f.type.startsWith('image/') || f.type.startsWith('video/')));
+        if (media.length > 1) {
+            const scope = keepScope, caption = input.value;
+            clearPending(); input.value = '';
+            for (const f of media) {
+                const ok = f.type.startsWith('video/') ? await attachVideoFile(f) : await attachImage(f);
+                if (ok) { try { await saveCurrent({ scope }); } catch { } }
+            }
+            input.value = caption;
+            return;
+        }
         for (let i = 0; i < files.length; i++) {
             const f = files[i];
             if (f.type && f.type.startsWith('video/')) {
@@ -10412,9 +10466,17 @@ ${keepsBlock}${emptyBlock}
             closeTimer = null;
         } };
         const scheduleClose = () => { cancelClose(); closeTimer = setTimeout(closePop, 250); };
-        panelsBtn.addEventListener('click', (e) => { e.stopPropagation(); openPop(e); });
-        panelsBtn.addEventListener('mouseenter', openPop);
-        panelsBtn.addEventListener('mouseleave', scheduleClose);
+        panelsBtn.addEventListener('click', (e) => { e.stopPropagation(); clearIntent(); openPop(e); });
+        // 10-21: hover intent -- opens after 180ms settled on the button; click opens at once
+        let intentTimer = null, ix = 0, iy = 0;
+        const clearIntent = () => { if (intentTimer) { clearTimeout(intentTimer); intentTimer = null; } };
+        const armIntent = () => { clearIntent(); intentTimer = setTimeout(() => { intentTimer = null; if (panelsBtn.matches(':hover')) openPop(); }, 180); };
+        panelsBtn.addEventListener('mouseenter', (e) => { cancelClose(); ix = e.clientX; iy = e.clientY; armIntent(); });
+        panelsBtn.addEventListener('mousemove', (e) => {
+            if (panelsPop.classList.contains('open')) return;
+            if (Math.abs(e.clientX - ix) + Math.abs(e.clientY - iy) > 3) { ix = e.clientX; iy = e.clientY; armIntent(); }
+        });
+        panelsBtn.addEventListener('mouseleave', () => { clearIntent(); scheduleClose(); });
         panelsPop.addEventListener('mouseenter', cancelClose);
         panelsPop.addEventListener('mouseleave', scheduleClose);
         document.addEventListener('click', (e) => {
