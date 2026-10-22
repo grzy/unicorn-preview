@@ -4105,6 +4105,9 @@ if (window.unicorn && window.unicorn.isDesktop)
   .panel--commits .c-meta { font: 400 11px/1.5 var(--sans); letter-spacing: 0; color: var(--text-whisper-2); }
   .panel--commits .c-meta .c-count-inline, .panel--commits .c-meta .c-msg { color: var(--text-mute); }
   .panel--commits .c-meta .c-count-inline { font-variant-numeric: tabular-nums; white-space: pre; }   /* 10-21: keep the figure space */
+  .panel--commits .c-meta .c-n { display: inline-flex; justify-content: flex-end; width: 2ch; }
+  .panel--commits .c-meta { transition: opacity 180ms var(--ease); }
+  .panel--commits .c-meta.is-out { opacity: 0; transition-duration: 220ms; }
   html .panel--commits .c-sound {
     padding: 4px 0 4px 2px; gap: 7px; background: none; border: 0;
     font: 500 11px/1 var(--sans); letter-spacing: 0; text-transform: none; color: var(--text-mute);
@@ -10552,15 +10555,13 @@ ${keepsBlock}${emptyBlock}
     }
     buckets.forEach(arr => arr.sort((a, b) => new Date(a.date) - new Date(b.date)));
     const meta = document.getElementById('c-meta');
+    const fadeMeta = () => meta.classList.add('is-out');
     const showMeta = (cell) => {
         const n = cell._commits.length;
-        if (n === 0) {
-            meta.textContent = '';   // 10-21: an empty cell already says it; no word
-        }
-        else {
-            const num = n < 10 ? '\u2007' + n : String(n);   // 10-21: fixed 2-digit slot, "Commits" never moves
-            meta.innerHTML = `<span class="c-count-inline">${num} Commit<span class="c-s"${n === 1 ? ' style="visibility:hidden"' : ''}>s</span></span>`;
-        }
+        if (n === 0) { fadeMeta(); return; }   // 10-21 r2: an empty day eases the line out
+        // 2-digit slot (2ch, right-aligned); 100+ grows it leftward, "Commits" holds still
+        meta.innerHTML = `<span class="c-count-inline"><span class="c-n">${n}</span> Commit<span class="c-s"${n === 1 ? ' style="visibility:hidden"' : ''}>s</span></span>`;
+        meta.classList.remove('is-out');
     };
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -10569,7 +10570,7 @@ ${keepsBlock}${emptyBlock}
     const titleEl = document.getElementById('c-month-title');
     const countEl = document.getElementById('c-month-count');
   // 10-20: the slot empties when the pointer leaves the month, so it never holds a stale day
-  if (cal) cal.addEventListener('mouseleave', () => { meta.textContent = ''; });
+  if (cal) cal.addEventListener('mouseleave', fadeMeta);
     const renderMonth = (year, monthIdx) => {
         cal.innerHTML = '';
         const firstDay = new Date(year, monthIdx, 1);
@@ -13444,7 +13445,7 @@ ${keepsBlock}${emptyBlock}
         lastLive = live;
         const st = working.length ? 'working' : live.some(x => x.state === 'waiting') ? 'waiting' : 'idle';
     const lastWork = working.reduce((m, x) => Math.max(m, x.ts || 0), 0);
-    setWord(st === 'working' ? (nowS - lastWork > THINK_AFTER ? 'Thinking' : 'Working') : st === 'waiting' ? 'Waiting for You' : '', st);
+    setWord(st === 'working' ? 'Working' : st === 'waiting' ? 'Waiting for You' : '', st);   // 10-21: no separate Thinking; quiet sessions still gallop
     setTarget(st);
         const ids = await nowExpIds(working);
         if ([...ids].join() !== [...nowIds].join()) {
