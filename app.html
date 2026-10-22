@@ -4218,6 +4218,14 @@ if (window.unicorn && window.unicorn.isDesktop)
   .panel--keep .keep-item > .keep-item-img { aspect-ratio: auto; height: auto; min-height: 48px; max-height: 340px; object-fit: contain; object-position: center; background: rgba(0,0,0,.22); }
   .panel--keep .keep-item-delete { top: 6px; right: 6px; color: var(--text-mute); }
   .panel--keep .keep-item-delete:hover { color: var(--tomato); }
+  .panel--keep .keep-play, .panel--keep .keep-item-delete { width: 24px; height: 24px; padding: 0; display: grid; place-items: center; border-radius: 6px; font-size: 0; line-height: 0; letter-spacing: 0;
+    color: rgba(241,236,232,.48); background: rgba(16,15,17,.66); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+  .panel--keep .keep-play { transition: color var(--t) var(--ease), background var(--t) var(--ease); }
+  .panel--keep .keep-play:hover { color: rgba(241,236,232,.94); background: rgba(16,15,17,.85); }
+  .panel--keep .keep-item-delete:hover { color: #FB7185; background: rgba(16,15,17,.85); }
+  .panel--keep .k-ic { width: 16px; height: 16px; display: block; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; overflow: visible; pointer-events: none; }
+  .p-mini { color: rgba(241,236,232,.48); }
+  .p-mini:hover { color: rgba(241,236,232,.94); }
   .panel--keep .keep-item > .keep-item-text { font: 400 12px/1.5 var(--mono); color: var(--text); background: rgba(255,255,255,.04); border-radius: 6px; padding: 10px 32px 10px 12px; white-space: pre-wrap; overflow-wrap: anywhere; max-height: 220px; overflow: auto; }
 </style>
 
@@ -9396,7 +9404,9 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     let pendingImageSrc = null;
     let pendingVideo = null;
     let savingKeeps = [];
-    const KEEP_PLAY = '<svg viewBox="0 0 10 10" width="10" height="10" aria-hidden="true"><path d="M2 1l7 4-7 4z" fill="currentColor"/></svg>', KEEP_PAUSE = '<svg viewBox="0 0 10 10" width="10" height="10" aria-hidden="true"><path d="M2 1h2v8H2zM6 1h2v8H6z" fill="currentColor"/></svg>';
+    // 10-21 night: the Story R15 icon family (16 grid, 1.5 stroke, round caps, currentColor)
+    const KEEP_ICO = (d) => `<svg class="k-ic" viewBox="0 0 16 16" aria-hidden="true">${d}</svg>`;
+    const KEEP_PLAY = KEEP_ICO('<path d="M5.5 4.6v6.8a.6.6 0 0 0 .92.5l5.2-3.4a.6.6 0 0 0 0-1l-5.2-3.4a.6.6 0 0 0-.92.5z"/>'), KEEP_PAUSE = KEEP_ICO('<path d="M6.25 4.75v6.5"/><path d="M9.75 4.75v6.5"/>'), KEEP_CLOSE = KEEP_ICO('<path d="M4.75 4.75l6.5 6.5"/><path d="M11.25 4.75l-6.5 6.5"/>');
     let keepScope = 'quest';
     panel.querySelectorAll('.keep-pull').forEach(b => b.addEventListener('click', () => {
         const on = !b.classList.contains('on');
@@ -9521,7 +9531,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
             item.innerHTML = `
         ${(window.unicorn && window.unicorn.isDesktop) ? `<span class="keep-item-cs${k.caseStory ? ' on' : ''}" data-id="${k.id}" title="${k.caseStory ? 'In the case story · click to remove' : 'Green-flag for the case story'}">●</span>` : ''}
         ${(window.unicorn && window.unicorn.isDesktop) ? `<span class="keep-item-ns${k.northstar ? ' on' : ''}" data-id="${k.id}" title="${k.northstar ? 'In your North Star · click to remove' : 'Add to your North Star'}">✷</span>` : ''}
-        <span class="keep-item-delete" data-id="${k.id}" title="Remove">×</span>
+        <span class="keep-item-delete" data-id="${k.id}" role="button" aria-label="${k.imagePath || k.videoPath ? 'Back to Desktop' : 'Remove'}" title="${k.imagePath || k.videoPath ? 'Back to Desktop' : 'Remove'}">${KEEP_CLOSE}</span>
         ${imgHtml}
         ${k.text && !imgHtml ? `<div class="keep-item-text">${escapeHtml(displayText)}</div>` : ''}
         ${k.variants && k.variants.length ? `<div class="keep-chips">${k.variants.map((v, j) => `<button class="keep-chip${j === 0 ? ' on' : ''}" data-src="file://${escapeHtml(v[1])}" data-alpha="${/transparent/i.test(v[1]) ? 1 : 0}">${escapeHtml(v[0])}</button>`).join('')}</div>` : ''}
@@ -11862,6 +11872,11 @@ ${keepsBlock}${emptyBlock}
     const weekFoot = `</article></div></body></html>`;
     const lastWordEm = (s) => { const m = String(s || '').match(/^(.*?)(\S+)$/); return m ? `${ESC(m[1])}<em>${ESC(m[2])}</em>` : ESC(s); };
     const dayFmt = (ts) => new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const WEEK_STOP = new Set(['the', 'and', 'for', 'with', 'page', 'pages', 'new', 'index', 'html', 'option', 'options', 'proto', 'protos', 'build', 'final', 'round', 'version']);
+    const weekToks = (s) => String(s || '').toLowerCase().replace(/['’]s\b/g, '').split(/[^a-z]+/).map(w => w.replace(/s$/, '')).filter(w => w.length > 2 && !WEEK_STOP.has(w) && !WEEK_STOP.has(w + 's'));
+    const isoWeekRange = (y, w) => { const jan4 = new Date(y, 0, 4), mon = new Date(jan4); mon.setDate(jan4.getDate() - ((jan4.getDay() + 6) % 7) + (w - 1) * 7);
+        const sun = new Date(mon); sun.setDate(mon.getDate() + 6); const M = d => d.toLocaleDateString('en-US', { month: 'short' });
+        return M(mon) === M(sun) ? `${M(mon)} ${mon.getDate()}-${sun.getDate()}` : `${M(mon)} ${mon.getDate()}-${M(sun)} ${sun.getDate()}`; };
     const buildWeekHTML = ({ quest, keeps, allCommits, closedThisWeek, inFlight, now, weekNum, past, extra, agentsNow }) => {
         extra = extra || {};
         agentsNow = agentsNow || [];
@@ -11899,10 +11914,13 @@ ${keepsBlock}${emptyBlock}
         function weekCommits(w) {
             return `<div class="card ${w}"><h3>${ESC(quest.name)} commits ${when}</h3><div class="wk-tot">${tot}</div><div class="commits">${vals.map(v => v == null ? '<i class="later"></i>' : `<i class="${v ? '' : 'zero'}" style="height:${v ? v / mx * 100 : 3}%"></i>`).join('')}</div><div class="c-lab">${['M', 'T', 'W', 'T', 'F', 'S', 'S'].map(d => `<span>${d}</span>`).join('')}</div>${tot ? '' : `<div class="c-empty">No commits ${when}.</div>`}</div>`;
         }
+        const usedImg = new Set();
         const fallbackImg = (e) => {
             const t0 = Date.parse(e.createdAt) || 0, t1 = Date.parse(e.completedAt) || Date.now();
-            const k = keeps.find(k => k.image && k.ts >= t0 && k.ts <= t1 + 86400000);
-            return k ? k.image : '';
+            // 10-21 night: only a keep whose caption shares a word with the experiment, never one already shown
+            const et = weekToks(e.name);
+            const k = keeps.find(k => k.image && !usedImg.has(k.image) && k.ts >= t0 && k.ts <= t1 + 86400000 && weekToks((k.text || '') + ' ' + String(k.imagePath || '').split('/').pop()).some(t => et.includes(t)));
+            if (k) usedImg.add(k.image); return k ? k.image : '';
         };
         const builds = Array.isArray(extra.builds) && extra.builds.length
             ? extra.builds.map(b => ({ t: b.title, tag: b.tag || '', img: b.img || '', href: b.href || '', vers: b.versions || [] }))
@@ -12012,7 +12030,7 @@ ${keepsBlock}${emptyBlock}
   <div class="eb">${ESC(quest.name)}</div>
   <h1>The <em>directory</em></h1>
   <div class="cards"><div class="card w6"><h3>Every week<span>${files.length}</span></h3>${files.length
-        ? `<ul class="list">${files.map(f => { const m = f.name.match(/^(\d{4})-W(\d{2})/); return `<li><b>Week ${m ? +m[2] : ''}<small style="font-weight:400;color:var(--faint);margin-left:8px">${m ? m[1] : ''}</small></b><a href="${ESC(f.name)}">Open →</a></li>`; }).join('')}</ul>`
+        ? `<ul class="list">${files.map(f => { const m = f.name.match(/^(\d{4})-W(\d{2})/); return `<li><b>Week ${m ? +m[2] : ''}<small style="font-weight:400;color:var(--faint);margin-left:8px">${m ? isoWeekRange(+m[1], +m[2]) + ', ' + m[1] : ''}</small></b><a href="${ESC(f.name)}">Open →</a></li>`; }).join('')}</ul>`
         : '<p class="note">No weeks yet. Press Week in the Story panel.</p>'}</div></div>` + weekFoot;
     const writeMissingWeeks = async (quest, existing) => {
         const qSlug = slug(quest.name), have = new Set(existing.map(f => f.name));
@@ -12139,7 +12157,7 @@ ${keepsBlock}${emptyBlock}
         }
         catch (e) { }
         const exps = quest.experiments || [];
-        const weekAgo = Date.now() - 7 * 86400000;
+        const weekAgo = (() => { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return d.getTime(); })();
         const closedThisWeek = exps.filter(e => e.completedAt && Date.parse(e.completedAt) >= weekAgo);
         const inFlight = exps.filter(e => e.status === 'active' || e.status === 'starting');
         const now = new Date();
