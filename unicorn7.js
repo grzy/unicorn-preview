@@ -458,3 +458,11 @@
         document.head.appendChild(sc);
     });
 })();
+
+/* 10-21: Resting pose A (lying down, tail swish), mirrored from src/unicorn7.js */
+(() => {
+const SHADE={P:'#FFAF5F',L:'#AF87D7',D:'#9A72C4',X:'#9A72C4',Q:'#E8954C'};
+const ext = { restAt, drawRest, KNEEL_MS };
+Object.assign(window.Unicorn7, ext);
+if (window.UnicornCharacters && window.UnicornCharacters.peach) Object.assign(window.UnicornCharacters.peach, ext);
+})();

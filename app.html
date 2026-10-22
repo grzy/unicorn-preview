@@ -4351,7 +4351,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   html #menubar .mb-float-note { display: none !important; }
   #menubar .mb-pop-foot { display: block; padding: 8px 8px 8px 34px; font: 400 11px/1.3 var(--sans); color: var(--text-whisper-2); }
 </style>
-<script src="unicorn7.js?v=59cf299e"></script>
+<script src="unicorn7.js?v=r1021rest"></script>
 
 <style id="r26-logo">
   .uc7 { display: block; width: 100%; height: 100%; }
@@ -13246,13 +13246,12 @@ ${keepsBlock}${emptyBlock}
     cv.style.height = 26 * S + 'px';
     const still = matchMedia('(prefers-reduced-motion: reduce)');
     const STALE_WORK = 15 * 60, STALE_WAIT = 8 * 3600;
-    let target = 'idle', phase = 'still', t0 = 0, p0 = 0, raf = 0;
+    let target = 'idle', phase = 'still', t0 = 0, p0 = 0, raf = 0, restT = null, restTimer = 0, riseTo = 'still';
     const RUN_IN = U7.T_LOGO + .42 * U7.T_RUN, RUN_OUT = U7.T_LOGO + .58 * U7.T_RUN;
     const TIP = { working: 'An agent is working', waiting: 'An agent is waiting for you', idle: 'No agent running' };
-  // 10-20: ONE unicorn, two views. The words sit beside him; "Thinking" = working, but no
-  // hook has fired for a while (the model is reasoning between tool calls)
+  // 10-21: ONE unicorn, two views. The words sit beside him: Working, Waiting for You,
+  // nothing when Resting (he lies down)
   const wordEl = document.getElementById('st-uc-word');
-  const THINK_AFTER = 15;   // seconds since the last working hook
   let word = '';
   const setWord = (w, st) => { if (!wordEl) return; if (w !== word) { word = w; wordEl.textContent = w; } const h = wordEl.parentElement; if (h && h.dataset.state !== st) h.dataset.state = st; };
     const SPARK = [[-1.6, 1.6, '#FFAF5F'], [-1.4, -0.6, '#FF9A7A'], [0.4, -1.8, '#F28DA6'], [2.6, -1.4, '#D58BC6'], [3.6, 0.6, '#AF87D7']];
@@ -13270,7 +13269,8 @@ ${keepsBlock}${emptyBlock}
         raf = 0;
         if (document.visibilityState === 'hidden')
             return;
-        let f = { still: true, label: 'logo' };
+        let f = { still: true, label: 'logo' }, restNext = 0;
+        if (phase === 'rise' && now - t0 >= U7.KNEEL_MS) { phase = riseTo; t0 = now; }   // 10-21: up off the ground, then on
         if (phase === 'start') {
             const ms = now - t0;
             f = U7.frameAt(U7.T_LOGO + ms);
@@ -13289,8 +13289,12 @@ ${keepsBlock}${emptyBlock}
             else
                 f = U7.frameAt(ms);
         }
+        // 10-21 (Ivy picked A): Resting = he lies down (kneel beat, then down), tail swishes now and then
+        const lying = phase === 'still' && target === 'idle' && U7.drawRest;
         try {
-            U7.render(cv, U7.o7, s, f);
+            if (phase === 'rise') { restT = null; U7.drawRest(cv, s, 'kneel'); }
+            else if (lying) { if (restT == null) restT = now; const r = U7.restAt(now - restT, still.matches); U7.drawRest(cv, s, r.key); restNext = r.next; }
+            else { restT = null; U7.render(cv, U7.o7, s, f); }
         }
         catch (e) {
             console.warn('[unicorn] gallop', e);
@@ -13299,8 +13303,10 @@ ${keepsBlock}${emptyBlock}
         if (phase === 'still' && target === 'waiting')
             U7.drawThinking(cv, s, now, still.matches);
         const moving = phase !== 'still' || (target === 'waiting' && !still.matches);
+        clearTimeout(restTimer);
         if (moving)
             raf = requestAnimationFrame(frame);
+        else if (lying && restNext !== Infinity) restTimer = setTimeout(kick, Math.max(16, restNext));   // the swish beats, no 60fps loop
     };
     const kick = () => { if (!raf)
         raf = requestAnimationFrame(frame); };
@@ -13318,6 +13324,8 @@ ${keepsBlock}${emptyBlock}
             return;
         }
         const now = performance.now();
+        if (st !== 'idle' && phase === 'still' && restT != null) { phase = 'rise'; riseTo = st === 'working' ? 'start' : 'still'; t0 = now; kick(); return; }   // lying: get up first
+        if (phase === 'rise') { riseTo = st === 'working' ? 'start' : 'still'; kick(); return; }
         if (st === 'working' && (phase === 'still' || phase === 'stop')) {
             phase = 'start';
             t0 = now;
