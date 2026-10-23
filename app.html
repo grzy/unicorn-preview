@@ -4830,6 +4830,144 @@ if (window.unicorn && window.unicorn.isDesktop)
   html .panel--keep .keep-pending-x { font-size: 0; display: grid; place-items: center; color: var(--ic-rest); }
   html .panel--keep .keep-pending-x:hover { color: var(--ic-danger); }
 </style>
+
+<style id="r18">
+  
+  :root {
+    --text-1: rgba(241,236,232,.94); --text-2: rgba(241,236,232,.56); --text-3: rgba(241,236,232,.40);
+    --text: var(--text-1); --text-mute: var(--text-2); --text-whisper: var(--text-3); --text-whisper-2: var(--text-3);
+    --ic-rest: var(--text-3); --ic-hover: var(--text-1);
+  }
+  
+  html .panel--quest .q-add-in::placeholder, html .panel--quest .q-add .q-show-all, html #mirror-call .mh { color: var(--text-3); }
+  html .gb-text .gb-mute { color: var(--text-2); }
+  html .panel--keep .keep-play { color: var(--ic-rest); }
+  html .panel--keep .keep-play:hover { color: var(--ic-hover); }
+  
+  html .panel, html #agent { --mm-top: 27px; }
+  html .panel .p-head, html #agent .p-head { position: static; }
+  html body .p-mini { position: absolute; top: var(--mm-top); right: 26.5px; left: auto; bottom: auto; margin: 0 !important; order: 0;
+    color: var(--text-3); z-index: 6; }
+  html body .p-mini:hover { color: var(--cream); }
+  
+  html .panel .p-head, html #agent .p-head.p-head-agent > span:first-child { padding-right: 24px; }
+
+  html .panel.panel--commits, html .panel.panel--keep, html .panel.panel--appearance, html #activity-panel { padding: 27px 30px 30px; }
+  html .panel.panel--commits.minimized, html .panel.panel--keep.minimized, html .panel.panel--appearance.minimized, html #activity-panel.minimized { padding: 27px 30px 30px !important; }
+  html .panel--commits .p-head, html .panel--keep .p-head, html .panel--appearance .p-head, html #activity-panel .p-head {
+    display: flex; align-items: center; gap: 8px; height: 16px; min-height: 16px; margin-bottom: 8px;
+    font: 500 13px/16px var(--sans); letter-spacing: 0; text-transform: none; color: var(--text-mute); }
+  html .panel--commits .p-head > span:first-child, html .panel--keep .p-head > span:first-child, html .panel--appearance .p-head > span:first-child, html #activity-panel .p-head > span:first-child { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+  html .panel--commits .p-head .p-dot, html .panel--keep .p-head .p-dot, html .panel--appearance .p-head .p-dot, html #activity-panel .p-head .p-dot { width: 8px; height: 8px; margin: 0; vertical-align: 0; }
+  html .panel--commits .p-head .c-wk-n { margin-left: auto; }
+  html .panel.minimized .p-head { margin-bottom: 0; }
+  html .panel.panel--commits.minimized .p-head { margin-bottom: 12px; }
+
+  html .panel--quest .q-top { display: flex; align-items: center; gap: 6px; min-width: 0; }
+  html .panel--quest .q-top .q-menu-btn { flex: 0 1 auto; min-width: 0; max-width: calc(100% - 28px); }
+  html .panel--quest .q-top .q-menu-btn .p-title { min-width: 0; }
+  html .panel--quest .q-top .q-manage { position: relative; flex: none; display: grid; place-items: center; width: 22px; height: 22px; padding: 0; margin: 0;
+    border-radius: 6px; background: none !important; font-size: 0; color: var(--ic-rest); cursor: pointer;
+    opacity: 0; pointer-events: none; transition: opacity var(--t) var(--ease), color var(--t) var(--ease); }
+  html .panel--quest .q-top .q-manage::after { content: ""; position: absolute; inset: -4px; }
+  html .panel--quest:not(.minimized):hover .q-top .q-manage, html .panel--quest.show-manage .q-top .q-manage, html .panel--quest .q-top .q-manage:focus-visible { opacity: 1; pointer-events: auto; }
+  html .panel--quest .q-top .q-manage:hover, html .panel--quest.show-manage .q-top .q-manage { color: var(--ic-hover); }
+  
+  html body .panel--quest .q-pause-row { top: var(--qm-top, 70px) !important; left: var(--qm-left, 30px) !important; right: auto !important; }
+
+  html #activity-panel.shown { flex-direction: column; }
+  html #activity-panel .act-list { min-height: 0; }
+  html .panel--quest .r17-strip { flex: none; }
+  
+  html #panel-appearance .ap-lead.ap-lead--foot { margin-top: 16px; }
+
+  html #menubar.mb-menu-up { z-index: 100000; }
+  html #menubar .mb-panels-pop.r18-quick { transition: opacity .14s ease-out, visibility 0s linear .14s !important; transform: translate(-50%, 0) !important; }
+
+  html .panel--commits .c-month-head { justify-content: center; gap: 4px; margin: 4px 0 12px; }
+  html .panel--commits .c-month-title { flex: none; width: 112px; text-align: center; }
+  html .panel--commits .c-nav { width: 22px; height: 22px; border-radius: 6px; padding: 0; background: none; }
+  html .panel--commits .c-legend span, html .panel--commits .c-meta { color: var(--text-whisper); }
+  html .panel--commits .c-weekdays { margin-bottom: 8px; }
+
+  html .panel.panel--keep { max-height: none; overflow: hidden; }
+  html .panel--keep .keep-tag-row { margin: 0 0 8px; }
+  .panel--keep .k18-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 24px; }
+  .panel--keep .k18-bar .keep-folder-link { font: 500 12px/1 var(--sans); }
+  html .panel--keep .k18-bar .keep-pull { margin-left: auto; padding: 5px 8px; border-radius: 6px; font: 500 11px/1 var(--sans); }
+  
+  .panel--keep .k18-field { position: relative; display: none; flex: none; height: 148px; margin-top: 12px; place-items: center; align-content: center; gap: 10px;
+    border-radius: 10px; background: rgba(0,0,0,.22); text-align: center; cursor: text; transition: background var(--t) var(--ease); }
+  .panel--keep .k18-field::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none;
+    background: linear-gradient(to top right, transparent 3%, rgba(232,149,106,.28) 28%, rgba(167,139,223,.28) 72%, transparent 97%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; transition: opacity var(--t) var(--ease); }
+  .panel--keep .k18-field:hover { background: rgba(0,0,0,.26); }
+  .panel--keep .k18-arrow { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 6px; background: rgba(255,255,255,.05); color: var(--text-mute); transition: background var(--t) var(--ease), color var(--t) var(--ease); }
+  .panel--keep .k18-ln { font: 400 12px/1.3 var(--sans); color: var(--text-mute); }
+  .panel--keep .k18-dest { display: none; margin-top: -4px; font: 400 11px/1 var(--mono); letter-spacing: .02em; color: var(--lilac); }
+  .panel--keep:not(.k18-has):not(.k18-pending) .k18-field { display: grid; }
+  
+  html .panel.panel--keep.keep-dragover {
+    background: linear-gradient(rgba(232,149,106,.10), rgba(167,139,223,.08)), var(--panel-bg);
+    box-shadow: 0 0 28px rgba(232,149,106,.24), 0 0 46px rgba(167,139,223,.18); }
+  html .panel.panel--keep.keep-dragover::before { background: linear-gradient(45deg, rgba(232,149,106,.35) 0%, rgba(232,149,106,.85) 35%, rgba(167,139,223,.85) 65%, rgba(167,139,223,.35) 100%); }
+  .panel--keep.keep-dragover .k18-field { display: grid; flex: 1 1 auto; height: auto; min-height: 148px; background: rgba(232,149,106,.10); }
+  .panel--keep.keep-dragover .k18-field::before { background: var(--grad-fill); opacity: .85; }
+  .panel--keep.keep-dragover .k18-ln { font-size: 0; }
+  .panel--keep.keep-dragover .k18-ln::after { content: attr(data-hot); font: 500 13px/1.3 var(--sans); color: var(--cream); }
+  .panel--keep.keep-dragover .k18-arrow { background: rgba(255,255,255,.1); color: var(--cream); }
+  .panel--keep.keep-dragover .k18-dest { display: block; }
+  .panel--keep.keep-dragover .k18-sel, .panel--keep.keep-dragover .k18-strip, .panel--keep.keep-dragover .k18-compose, .panel--keep.keep-dragover #keep-pending { display: none !important; }
+  
+  .panel--keep .k18-sel { display: none; }
+  .panel--keep.k18-has:not(.k18-pending) .k18-sel { display: block; }
+  .panel--keep .k18-pv { position: relative; margin-top: 12px; aspect-ratio: 16 / 10; border-radius: 10px; overflow: hidden; background: rgba(0,0,0,.22); }
+  .panel--keep .k18-pv.alpha { background: repeating-conic-gradient(rgba(255,255,255,.07) 0 25%, transparent 0 50%) 0 0 / 14px 14px, rgba(0,0,0,.22); }
+  .panel--keep .k18-pv .k18-md { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: contain; object-position: center; border-radius: 0; cursor: pointer; }
+  .panel--keep .k18-pv.is-saving .k18-md { opacity: .55; cursor: default; }
+  
+  .panel--keep .k18-txt { position: absolute; inset: 0; overflow: auto; padding: 12px 40px 12px 14px; font: 400 12px/1.5 var(--mono); color: var(--text);
+    background: rgba(255,255,255,.04); white-space: pre-wrap; overflow-wrap: anywhere; user-select: text; scrollbar-width: thin; }
+  
+  html .panel--keep .k18-x, html .panel--keep #keep-pending-x { position: absolute; top: 8px; right: 8px; z-index: 2; width: 24px; height: 24px; padding: 0; display: grid; place-items: center;
+    border-radius: 6px; font-size: 0; line-height: 0; color: var(--ic-rest); background: rgba(16,15,17,.66); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); cursor: pointer; opacity: 1;
+    transition: color var(--t) var(--ease), background var(--t) var(--ease); }
+  html .panel--keep .k18-x:hover, html .panel--keep #keep-pending-x:hover { color: var(--ic-danger); background: rgba(16,15,17,.85); }
+  html .panel--keep .k18-pv .keep-play { position: absolute; right: 8px; bottom: 8px; z-index: 2; }
+  html .panel--keep .k18-sel .keep-chips { margin-top: 8px; }
+  
+  .panel--keep .k18-door { display: flex; align-items: baseline; gap: 12px; margin-top: 8px; min-height: 16px; }
+  .panel--keep .k18-cap { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 400 12px/1.3 var(--sans); color: var(--text-mute); }
+  .panel--keep .k18-date { flex: none; margin-left: auto; font: 400 11px/1.3 var(--sans); color: var(--text-whisper-2); white-space: nowrap; }
+  
+  .panel--keep .k18-strip { display: none; gap: 6px; margin-top: 12px; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .panel--keep .k18-strip::-webkit-scrollbar { display: none; }
+  .panel--keep.k18-many .k18-strip { display: flex; }
+  .panel--keep .k18-strip.more { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 22px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 22px), transparent); }
+  .panel--keep .k18-strip.more.end { -webkit-mask-image: linear-gradient(90deg, transparent, #000 22px); mask-image: linear-gradient(90deg, transparent, #000 22px); }
+  .panel--keep .k18-fr { position: relative; flex: none; width: calc((100% - 18px) / 4); aspect-ratio: 16 / 10; border-radius: 6px; overflow: hidden; background: rgba(255,255,255,.04); cursor: pointer; scroll-snap-align: start; transition: filter var(--t) var(--ease); }
+  .panel--keep .k18-fr.alpha { background: repeating-conic-gradient(rgba(255,255,255,.07) 0 25%, transparent 0 50%) 0 0 / 8px 8px; }
+  .panel--keep .k18-fr .k18-md { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover; object-position: top; pointer-events: none; }
+  .panel--keep .k18-fr:not(.on):not(.k18-ghost) { filter: brightness(.82); }
+  .panel--keep .k18-fr:not(.on):not(.k18-ghost):hover { filter: none; }
+  .panel--keep .k18-fr.on::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1.5px rgba(241,236,232,.8); pointer-events: none; }
+  .panel--keep .k18-fr.is-text { background: rgba(255,255,255,.06); }
+  .panel--keep .k18-ttxt { position: absolute; inset: 0; padding: 5px 6px; overflow: hidden; font: 400 7.5px/1.35 var(--mono); color: var(--text-mute); white-space: pre-wrap; overflow-wrap: anywhere; pointer-events: none; }
+  .panel--keep .k18-ghost { cursor: default; background: rgba(255,255,255,.025); box-shadow: inset 0 0 0 1px rgba(255,255,255,.05); }
+  
+  html .panel--keep #keep-pending { margin-top: 12px; }
+  html .panel--keep #keep-pending[hidden] { display: none; }
+  .panel--keep .k18-pv.k18-new::after { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px; pointer-events: none; background: var(--grad-fill);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+  html .panel--keep #keep-pending img { position: absolute; inset: 0; width: 100%; height: 100%; max-height: none; object-fit: contain; object-position: center; border-radius: 0; display: block; }
+  .panel--keep .k18-compose { display: none; align-items: center; gap: 8px; margin-top: 12px; }
+  .panel--keep.k18-compose .k18-compose { display: flex; }
+  .panel--keep .k18-compose .keep-input-wrap { flex: 1; min-width: 0; }
+  html .panel--keep .k18-compose .keep-input { min-height: 30px; max-height: 96px; padding: 7px 10px; font: 400 12px/1.35 var(--sans); }
+  html .panel--keep .k18-compose .keep-save { flex: none; }
+  
+  .panel--keep.k18-typing .k18-field { cursor: default; }
+</style>
 </head>
 <body>
 
@@ -4993,12 +5131,13 @@ if (window.unicorn && window.unicorn.isDesktop)
     <div class="p-head">
       <span><span class="p-dot"></span>Quest</span>
       <span id="q-count"></span>
-      <span class="q-manage" id="q-manage" role="button" tabindex="0" title="Quest Actions" aria-haspopup="menu"><svg class="ic" aria-hidden="true"><use href="#i-more"/></svg></span>
     </div>
     <div class="p-hair"></div>
     
     <div class="q-top">
       <div class="q-menu-btn u-fill" id="q-menu-btn" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false" title="Switch Quest"><span class="p-title" id="q-title"></span><span class="q-car" aria-hidden="true"><svg class="ic" aria-hidden="true"><use href="#i-caret"/></svg></span></div>
+      
+      <span class="q-manage" id="q-manage" role="button" tabindex="0" title="Quest Actions" aria-haspopup="menu"><svg class="ic" aria-hidden="true"><use href="#i-more"/></svg></span>
       <div class="q-pop" id="q-pop" role="menu"><div class="q-switcher" id="q-switcher"></div></div>
     </div>
     <div class="q-sub-row">
@@ -5088,30 +5227,32 @@ if (window.unicorn && window.unicorn.isDesktop)
       <span id="keep-count" class="keep-count" hidden>0</span>
     </div>
 
-    <div class="keep-input-wrap">
-      <textarea
-        class="keep-input"
-        id="keep-input"
-        placeholder="Drop screenshots &amp; videos"
-        title="or paste from your terminal (⌘V)"
-        rows="1"></textarea>
-    </div>
-
-    <div class="keep-pending" id="keep-pending" hidden>
-      <img id="keep-pending-img" alt="attached screenshot" />
-      <span class="keep-pending-x" id="keep-pending-x" title="Remove screenshot"><svg class="ic"><use href="#i-close"/></svg></span>
-    </div>
-
-    <div class="keep-actions">
+    <div class="k18-bar">
       <span id="keep-folder" class="keep-folder-link" role="button" tabindex="0" hidden title="~/unicorn/keeps/">Folder</span>
-      <button class="keep-pull" data-scope="career" aria-pressed="false" title="Save to your Builder's Story, not tied to one quest">Story</button>
+      <button class="keep-pull" data-scope="career" aria-pressed="false" title="Send keeps to your Builder's Story. Resets after Save">Story</button>
+    </div>
+
+    <div class="k18-field" id="k18-field" title="or paste from your terminal (⌘V)">
+      <span class="k18-arrow"><svg class="ic" aria-hidden="true"><use href="#i-drop"/></svg></span>
+      <span class="k18-ln" id="k18-ln">Drop screenshots &amp; videos</span>
+      <span class="k18-dest" id="k18-dest"></span>
+    </div>
+
+    <div class="keep-pending k18-pv k18-new" id="keep-pending" hidden>
+      <img id="keep-pending-img" alt="attached screenshot" />
+      <span class="keep-pending-x k18-x" id="keep-pending-x" role="button" title="Cancel. The file stays where it was"><svg class="ic"><use href="#i-close"/></svg></span>
+    </div>
+
+    <div class="k18-sel" id="k18-sel"></div>
+
+    <div class="k18-compose">
+      <div class="keep-input-wrap">
+        <textarea class="keep-input" id="keep-input" placeholder="Type a note to keep" rows="1"></textarea>
+      </div>
       <button class="keep-save u-fill is-empty" id="keep-save" title="Save" data-key="⌘↩">Save</button>
     </div>
 
-    <div class="keep-fwrap">
-      <div class="keep-list" id="keep-list"></div>
-      <button class="keep-totop" id="keep-totop" aria-label="Back to Top">↑ Back to Top</button>
-    </div>
+    <div class="k18-strip" id="keep-list"></div>
   </section>
 
   <section class="panel panel--appearance" id="panel-appearance">
@@ -5119,11 +5260,6 @@ if (window.unicorn && window.unicorn.isDesktop)
       <span><span class="p-dot"></span>Settings</span>
     </div>
     <div class="p-hair"></div>
-    
-    <div class="ap-lead">
-      <div><div class="ap-row-label">Layout</div><div class="ap-row-sub">Restore original layout</div></div>
-      <button class="u-fill" id="ap-reset-layout" title="Every panel back to its home">Reset Layout</button>
-    </div>
     <div class="ap-lab">Backup &amp; Restore</div>
     <div class="ap-row">
       <div>
@@ -5154,6 +5290,11 @@ if (window.unicorn && window.unicorn.isDesktop)
         <div class="ap-row-sub">Tap, signal, loop close</div>
       </div>
       <button class="ap-btn" id="ap-ui-sounds-toggle">Sound On</button>
+    </div>
+    
+    <div class="ap-lead ap-lead--foot">
+      <div><div class="ap-row-label">Layout</div><div class="ap-row-sub">Restore original layout</div></div>
+      <button class="u-fill" id="ap-reset-layout" title="Every panel back to its home">Reset Layout</button>
     </div>
   </section>
 
@@ -6958,9 +7099,16 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
             if (!qp)
                 return;
             const open = qp.classList.toggle('show-manage');
-            const row = document.getElementById('q-pause-row'), sub = manageBtn.closest('.q-sub-row');
-            if (open && row && sub)
-                row.style.top = Math.round(sub.offsetTop + sub.offsetHeight + 4) + 'px';
+            if (open) {
+                const pr = qp.getBoundingClientRect(), mr = manageBtn.getBoundingClientRect();
+                qp.style.setProperty('--qm-left', Math.round(mr.left - pr.left + (mr.width - 16) / 2 - 8) + 'px');
+                qp.style.setProperty('--qm-top', Math.round(mr.bottom - pr.top + 6) + 'px');
+                const qt = qp.querySelector('.q-top');
+                if (qt && qt.classList.contains('open')) {
+                    qt.classList.remove('open');
+                    document.getElementById('q-menu-btn')?.setAttribute('aria-expanded', 'false');
+                }
+            }
         });
     const closeManage = () => document.querySelector('.panel--quest')?.classList.remove('show-manage');
     document.addEventListener('pointerdown', (e) => {
@@ -9975,6 +10123,142 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         const caption = slugify(k.text, 'capture');
         return [date, quest, caption].filter(Boolean).join('-');
     };
+    const sel = document.getElementById('k18-sel');
+    const field = document.getElementById('k18-field');
+    const fieldLn = document.getElementById('k18-ln');
+    const fieldDest = document.getElementById('k18-dest');
+    let pickId = null, topId = null;
+    const fileUrl = (p) => 'file://' + String(p).split('/').map(encodeURIComponent).join('/');
+    const kSrc = (k) => k.imagePath ? fileUrl(k.imagePath) : (k.image || '');
+    const isAlpha = (p) => /transparent/i.test(p || '');
+    const kDate = (ts) => new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const bigHtml = (k) => {
+        const saving = !!k._saving;
+        const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let media = '';
+        if (k.videoPath) {
+            media = saving
+                ? (k.thumb ? `<img class="k18-md" src="${k.thumb}" alt="" decoding="async" />` : '')
+                : `<video class="k18-md" muted loop playsinline ${still ? '' : 'autoplay'} preload="${still ? 'metadata' : 'auto'}"${k.thumb && !isAlpha(k.videoPath) ? ` poster="${k.thumb}"` : ''} src="${escapeHtml(fileUrl(k.videoPath))}" data-open="${escapeHtml(k.videoPath)}" title="Open Video"></video>`
+                    + `<button class="keep-play" aria-label="${still ? 'Play' : 'Pause'}" title="${still ? 'Play' : 'Pause'}">${still ? KEEP_PLAY : KEEP_PAUSE}</button>`;
+        }
+        else if (kSrc(k)) {
+            media = `<img class="k18-md" src="${escapeHtml(kSrc(k))}" alt="" decoding="async"${k.imagePath && !saving ? ` data-open="${escapeHtml(k.imagePath)}" title="Open Image"` : ''} />`;
+        }
+        const isText = !media && !k.videoPath;
+        const truncated = k.text && k.text.length > TRUNCATE_AT * 4;
+        const body = isText ? `<div class="k18-txt">${escapeHtml(truncated ? k.text.slice(0, TRUNCATE_AT * 4) + '…' : (k.text || ''))}</div>` : media;
+        const files = k.imagePath || k.videoPath;
+        const x = saving ? '' : `<span class="keep-item-delete k18-x" data-id="${k.id}" role="button" aria-label="${files ? 'Back to Desktop' : 'Remove'}" title="${files ? 'Back to Desktop' : 'Remove'}">${KEEP_CLOSE}</span>`;
+        const chips = (!saving && k.variants && k.variants.length)
+            ? `<div class="keep-chips">${k.variants.map((v, j) => `<button class="keep-chip${j === 0 ? ' on' : ''}" data-src="${escapeHtml(fileUrl(v[1]))}" data-path="${escapeHtml(v[1])}" data-alpha="${isAlpha(v[1]) ? 1 : 0}">${escapeHtml(v[0])}</button>`).join('')}</div>` : '';
+        const cap = isText ? '' : escapeHtml((k.text || '').split('\n')[0]);
+        return `<div class="k18-pv${isText ? ' is-text' : ''}${k.videoPath && isAlpha(k.videoPath) ? ' alpha' : ''}${saving ? ' is-saving' : ''}" data-id="${k.id}">${body}${x}</div>`
+            + chips
+            + `<div class="k18-door"><span class="k18-cap">${cap}</span><span class="k18-date">${saving ? 'Saving' : kDate(k.ts)}</span></div>`;
+    };
+    const thumbHtml = (k) => {
+        let m;
+        if (k.videoPath)
+            m = k.thumb ? `<img class="k18-md" src="${k.thumb}" alt="" decoding="async" />`
+                : `<video class="k18-md" muted playsinline preload="metadata" src="${escapeHtml(fileUrl(k.videoPath))}#t=0.1"></video>`;
+        else if (kSrc(k))
+            m = `<img class="k18-md" src="${escapeHtml(kSrc(k))}" alt="" decoding="async" loading="lazy" />`;
+        else
+            m = `<span class="k18-ttxt">${escapeHtml((k.text || '').slice(0, 140))}</span>`;
+        return `<div class="k18-fr${k.id === pickId ? ' on' : ''}${!kSrc(k) && !k.videoPath ? ' is-text' : ''}${k.videoPath && isAlpha(k.videoPath) ? ' alpha' : ''}" data-id="${k.id}" title="${escapeHtml((k.text || '').split('\n')[0] || kDate(k.ts))}">${m}</div>`;
+    };
+    const wireSel = () => {
+        sel.querySelectorAll('.k18-x').forEach(el => el.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const all = load();
+            const removed = all.find(k => k.id === el.dataset.id);
+            save(all.filter(k => k.id !== el.dataset.id));
+            const U = window.unicorn;
+            if (removed && U && U.returnKeepFiles) {
+                const files = [removed.imagePath, removed.videoPath].concat((removed.variants || []).map(v => v[1]))
+                    .filter((p, i, a) => typeof p === 'string' && p && a.indexOf(p) === i);
+                if (files.length) {
+                    try {
+                        U.returnKeepFiles(files);
+                    }
+                    catch { }
+                }
+            }
+            else if (removed && removed.imagePath && U && U.deleteKeepFiles) {
+                try {
+                    U.deleteKeepFiles([removed.imagePath]);
+                }
+                catch { }
+            }
+            pickId = null;
+            render();
+        }));
+        sel.querySelectorAll('.keep-chip').forEach(b => b.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const box = sel.querySelector('.k18-pv'), v = box && box.querySelector('video');
+            if (!v)
+                return;
+            sel.querySelectorAll('.keep-chip').forEach(x => x.classList.toggle('on', x === b));
+            box.classList.toggle('alpha', b.dataset.alpha === '1');
+            v.removeAttribute('poster');
+            v.src = b.dataset.src;
+            v.dataset.open = b.dataset.path;
+            if (!matchMedia('(prefers-reduced-motion: reduce)').matches)
+                v.play().catch(() => { });
+        }));
+        sel.querySelectorAll('.keep-play').forEach(b => b.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const v = b.parentElement.querySelector('video');
+            if (!v)
+                return;
+            if (v.paused) {
+                v.play().catch(() => { });
+                b.innerHTML = KEEP_PAUSE;
+                b.title = 'Pause';
+                b.setAttribute('aria-label', 'Pause');
+            }
+            else {
+                v.pause();
+                b.innerHTML = KEEP_PLAY;
+                b.title = 'Play';
+                b.setAttribute('aria-label', 'Play');
+            }
+        }));
+        sel.querySelectorAll('.k18-md[data-open]').forEach(el => el.addEventListener('click', () => {
+            const p = el.dataset.open;
+            if (p && window.unicorn && window.unicorn.openPath) {
+                try {
+                    window.unicorn.openPath(p);
+                }
+                catch { }
+            }
+        }));
+    };
+    const showPick = (all) => {
+        const k = all.find(x => x.id === pickId);
+        sel.innerHTML = k ? bigHtml(k) : '';
+        list.querySelectorAll('.k18-fr').forEach(f => f.classList.toggle('on', f.dataset.id === pickId));
+        wireSel();
+    };
+    list.addEventListener('click', (e) => {
+        const f = e.target.closest('.k18-fr[data-id]');
+        if (!f || f.dataset.id === pickId)
+            return;
+        pickId = f.dataset.id;
+        showPick(load().concat(savingKeeps));
+    });
+    const syncStripEdges = () => {
+        list.classList.toggle('more', list.scrollWidth > list.clientWidth + 1);
+        list.classList.toggle('end', list.scrollLeft + list.clientWidth >= list.scrollWidth - 2);
+    };
+    list.addEventListener('scroll', syncStripEdges, { passive: true });
+    list.addEventListener('wheel', (e) => {
+        if (Math.abs(e.deltaY) > Math.abs(e.deltaX) && list.scrollWidth > list.clientWidth) {
+            list.scrollLeft += e.deltaY;
+            e.preventDefault();
+        }
+    }, { passive: false });
     const render = () => {
         const all = load().concat(savingKeeps);
         const active = getActiveQuest();
@@ -9989,191 +10273,48 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         }
         if (count)
             count.style.display = 'none';
+        const slug = story ? 'story' : keepSlug(active && active.name);
+        const path = '~/unicorn/keeps/' + slug + '/';
         const folderEl = document.getElementById('keep-folder');
         if (folderEl) {
             folderEl.textContent = 'Folder';
-            folderEl.title = '~/unicorn/keeps/' + (story ? 'story' : keepSlug(active && active.name)) + '/';
+            folderEl.title = path;
         }
-        list.innerHTML = '';
-        if (inScope.length === 0)
-            return;
-        inScope.slice().sort((a, b) => b.ts - a.ts).forEach(k => {
-            const item = document.createElement('div');
-            item.className = 'keep-item';
-            const truncated = k.text && k.text.length > TRUNCATE_AT;
-            const displayText = truncated ? k.text.slice(0, TRUNCATE_AT) + '…' : (k.text || '');
-            const truncTag = truncated ? ' · truncated' : '';
-            const questTag = k.questName ? ` · <em>${escapeHtml(k.questName)}</em>` : '';
-            const imgSrc = k.imagePath ? ('file://' + k.imagePath) : (k.image || '');
-            const saving = !!k._saving;
-            const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-            const imgHtml = k.videoPath
-                ? `<div class="keep-item-video${/transparent/i.test(k.videoPath) ? ' alpha' : ''}"${saving ? '' : ` data-video="${escapeHtml(k.videoPath)}" title="Open video"`}>${saving
-                    ? (k.thumb ? `<img class="keep-item-img" src="${k.thumb}" alt="kept video" decoding="async" />` : '<div class="keep-item-img keep-video-blank"></div>')
-                    : `<video class="keep-item-img" muted loop playsinline ${still ? '' : 'autoplay'} preload="${still ? 'metadata' : 'auto'}"${k.thumb && !/transparent/i.test(k.videoPath) ? ` poster="${k.thumb}"` : ''} src="file://${escapeHtml(k.videoPath)}"></video><button class="keep-play" aria-label="${still ? 'Play' : 'Pause'}" title="${still ? 'Play' : 'Pause'}">${still ? KEEP_PLAY : KEEP_PAUSE}</button>`}</div>`
-                : (imgSrc ? `<img class="keep-item-img" src="${imgSrc}" alt="kept screenshot" decoding="async" loading="lazy"${k.imagePath && !saving ? ` data-open="${escapeHtml(k.imagePath)}" title="Open image"` : ''} />` : '');
-            if (saving) {
-                item.innerHTML = `
-        <div class="keep-item-meta">${fmtWhen(k.ts)}${questTag}</div>
-        ${k.text ? `<div class="keep-item-text">${escapeHtml(displayText)}</div>` : ''}
-        ${imgHtml}
-      `;
-                list.appendChild(item);
-                return;
-            }
-            item.innerHTML = `
-        ${(window.unicorn && window.unicorn.isDesktop) ? `<span class="keep-item-cs${k.caseStory ? ' on' : ''}" data-id="${k.id}" title="${k.caseStory ? 'In the case story · click to remove' : 'Green-flag for the case story'}">●</span>` : ''}
-        ${(window.unicorn && window.unicorn.isDesktop) ? `<span class="keep-item-ns${k.northstar ? ' on' : ''}" data-id="${k.id}" title="${k.northstar ? 'In your North Star · click to remove' : 'Add to your North Star'}">✷</span>` : ''}
-        <span class="keep-item-delete" data-id="${k.id}" role="button" aria-label="${k.imagePath || k.videoPath ? 'Back to Desktop' : 'Remove'}" title="${k.imagePath || k.videoPath ? 'Back to Desktop' : 'Remove'}">${KEEP_CLOSE}</span>
-        ${imgHtml}
-        ${k.text && !imgHtml ? `<div class="keep-item-text">${escapeHtml(displayText)}</div>` : ''}
-        ${k.variants && k.variants.length ? `<div class="keep-chips">${k.variants.map((v, j) => `<button class="keep-chip${j === 0 ? ' on' : ''}" data-src="file://${escapeHtml(v[1])}" data-alpha="${/transparent/i.test(v[1]) ? 1 : 0}">${escapeHtml(v[0])}</button>`).join('')}</div>` : ''}
-        <div class="keep-item-row"><span class="keep-item-cap">${imgHtml ? escapeHtml((k.text || '').split('\n')[0]) : ''}</span><span class="keep-item-date">${new Date(k.ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span></div>
-      `;
-            list.appendChild(item);
-        });
-        list.querySelectorAll('.keep-item-delete').forEach(el => {
-            el.addEventListener('click', () => {
-                const all = load();
-                const removed = all.find(k => k.id === el.dataset.id);
-                save(all.filter(k => k.id !== el.dataset.id));
-                const U = window.unicorn;
-                if (removed && U && U.returnKeepFiles) {
-                    const files = [removed.imagePath, removed.videoPath].concat((removed.variants || []).map(v => v[1]))
-                        .filter((p, i, a) => typeof p === 'string' && p && a.indexOf(p) === i);
-                    if (files.length) {
-                        try {
-                            U.returnKeepFiles(files);
-                        }
-                        catch { }
-                    }
-                }
-                else if (removed && removed.imagePath && U && U.deleteKeepFiles) {
-                    try {
-                        U.deleteKeepFiles([removed.imagePath]);
-                    }
-                    catch { }
-                }
-                render();
-            });
-        });
-        list.querySelectorAll('.keep-chip').forEach(b => b.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const item = b.closest('.keep-item'), box = item.querySelector('.keep-item-video'), v = box && box.querySelector('video');
-            if (!v)
-                return;
-            item.querySelectorAll('.keep-chip').forEach(x => x.classList.toggle('on', x === b));
-            box.classList.toggle('alpha', b.dataset.alpha === '1');
-            v.removeAttribute('poster');
-            v.src = b.dataset.src;
-            box.dataset.video = b.dataset.src.replace(/^file:\/\//, '');
-            if (!matchMedia('(prefers-reduced-motion: reduce)').matches)
-                v.play().catch(() => { });
-        }));
-        list.querySelectorAll('.keep-play').forEach(b => b.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const v = b.parentElement.querySelector('video');
-            if (!v)
-                return;
-            if (v.paused) {
-                v.play().catch(() => { });
-                b.innerHTML = KEEP_PAUSE;
-                b.setAttribute('data-tip', 'Pause');
-                b.setAttribute('aria-label', 'Pause');
-            }
-            else {
-                v.pause();
-                b.innerHTML = KEEP_PLAY;
-                b.setAttribute('data-tip', 'Play');
-                b.setAttribute('aria-label', 'Play');
-            }
-        }));
-        list.querySelectorAll('.keep-item-video').forEach(el => {
-            el.addEventListener('click', () => {
-                const p = el.dataset.video;
-                if (p && window.unicorn && window.unicorn.openPath) {
-                    try {
-                        window.unicorn.openPath(p);
-                    }
-                    catch { }
-                }
-            });
-        });
-        list.querySelectorAll('.keep-item-img[data-open]').forEach(el => {
-            el.addEventListener('click', () => {
-                const p = el.dataset.open;
-                if (p && window.unicorn && window.unicorn.openPath) {
-                    try {
-                        window.unicorn.openPath(p);
-                    }
-                    catch { }
-                }
-            });
-        });
-        list.querySelectorAll('.keep-item-ns').forEach(el => {
-            el.addEventListener('click', () => {
-                const all = load();
-                const k = all.find(x => x.id === el.dataset.id);
-                if (!k)
-                    return;
-                k.northstar = !k.northstar;
-                save(all);
-                el.classList.toggle('on', k.northstar);
-                el.title = k.northstar ? 'In your North Star · click to remove' : 'Add to your North Star';
-                if (typeof ensureUiAudio === 'function' && typeof uiSave === 'function') {
-                    try {
-                        ensureUiAudio().then(() => uiSave());
-                    }
-                    catch { }
-                }
-                const p = k.videoPath || k.imagePath;
-                if (p && window.unicorn && window.unicorn.setFinderTags) {
-                    const tags = [];
-                    if (k.caseStory)
-                        tags.push('Green');
-                    if (k.northstar)
-                        tags.push('Purple');
-                    try {
-                        window.unicorn.setFinderTags(p, tags);
-                    }
-                    catch { }
-                }
-                syncNorthstar(all);
-                updateNorthstarFoot(all);
-            });
-        });
-        list.querySelectorAll('.keep-item-cs').forEach(el => {
-            el.addEventListener('click', () => {
-                const all = load();
-                const k = all.find(x => x.id === el.dataset.id);
-                if (!k)
-                    return;
-                k.caseStory = !k.caseStory;
-                save(all);
-                el.classList.toggle('on', k.caseStory);
-                el.title = k.caseStory ? 'In the case story · click to remove' : 'Green-flag for the case story';
-                if (typeof ensureUiAudio === 'function' && typeof uiSave === 'function') {
-                    try {
-                        ensureUiAudio().then(() => uiSave());
-                    }
-                    catch { }
-                }
-                const p = k.videoPath || k.imagePath;
-                if (p && window.unicorn && window.unicorn.setFinderTags) {
-                    const tags = [];
-                    if (k.caseStory)
-                        tags.push('Green');
-                    if (k.northstar)
-                        tags.push('Purple');
-                    try {
-                        window.unicorn.setFinderTags(p, tags);
-                    }
-                    catch { }
-                }
-            });
-        });
+        if (fieldLn)
+            fieldLn.dataset.hot = 'Into ' + (story ? 'Story' : ((active && active.name) || 'Unicorn'));
+        if (fieldDest)
+            fieldDest.textContent = path;
+        const sorted = inScope.slice().sort((a, b) => b.ts - a.ts);
+        panel.classList.toggle('k18-has', sorted.length > 0);
+        panel.classList.toggle('k18-many', sorted.length > 1);
+        const newest = sorted[0] ? sorted[0].id : null;
+        if (newest !== topId) {
+            topId = newest;
+            pickId = newest;
+        }
+        if (!sorted.some(k => k.id === pickId))
+            pickId = newest;
+        list.innerHTML = sorted.length > 1
+            ? sorted.map(thumbHtml).join('') + '<div class="k18-fr k18-ghost"></div>'.repeat(Math.max(0, 4 - sorted.length))
+            : '';
+        showPick(sorted);
+        requestAnimationFrame(syncStripEdges);
         updateNorthstarFoot(all);
     };
+    const syncCompose = () => {
+        const pend = !!(pendingImage || pendingVideo) || (pendingBox && !pendingBox.hidden);
+        panel.classList.toggle('k18-pending', pend);
+        panel.classList.toggle('k18-compose', pend || !!input.value.trim() || panel.classList.contains('k18-typing'));
+    };
+    input.addEventListener('input', syncCompose);
+    if (pendingBox)
+        new MutationObserver(syncCompose).observe(pendingBox, { attributes: true, attributeFilter: ['hidden'] });
+    if (field)
+        field.addEventListener('click', () => { panel.classList.add('k18-typing'); syncCompose(); input.focus(); });
+    input.addEventListener('blur', () => { setTimeout(() => { if (!input.value.trim() && document.activeElement !== input) {
+        panel.classList.remove('k18-typing');
+        syncCompose();
+    } }, 120); });
     function flaggedKeeps(all) {
         return (all || load()).filter(k => k.northstar).sort((a, b) => b.ts - a.ts);
     }
@@ -10350,6 +10491,8 @@ ${keepsBlock}${emptyBlock}
         const vid = pendingVideo;
         input.value = '';
         clearPending();
+        panel.classList.remove('k18-typing');
+        syncCompose();
         saveBtn.classList.add('done');
         const prev = saveBtn.textContent;
         saveBtn.textContent = 'Kept';
@@ -10499,7 +10642,7 @@ ${keepsBlock}${emptyBlock}
         const reader = new FileReader();
         reader.onload = (ev) => {
             pendingImage = ev.target.result;
-            input.placeholder = 'Add an optional caption, then Save.';
+            input.placeholder = 'Add a caption';
             if (pendingImg)
                 pendingImg.src = ev.target.result;
             if (pendingBox)
@@ -10573,7 +10716,7 @@ ${keepsBlock}${emptyBlock}
         pendingImage = null;
         pendingImageSrc = null;
         pendingVideo = { path, thumb, name: file.name || 'video' };
-        input.placeholder = 'Add an optional caption, then Save.';
+        input.placeholder = 'Add a caption';
         if (pendingImg)
             pendingImg.src = thumb || '';
         if (pendingBox)
@@ -10648,15 +10791,19 @@ ${keepsBlock}${emptyBlock}
         e.preventDefault();
         if (e.dataTransfer)
             e.dataTransfer.dropEffect = 'copy';
+        if (!panel.classList.contains('keep-dragover')) {
+            panel.style.height = Math.round(panel.getBoundingClientRect().height) + 'px';
+        }
         panel.classList.add('keep-dragover');
     });
+    const endDragover = () => { panel.classList.remove('keep-dragover'); panel.style.height = ''; };
     panel.addEventListener('dragleave', (e) => {
         if (!panel.contains(e.relatedTarget))
-            panel.classList.remove('keep-dragover');
+            endDragover();
     });
     panel.addEventListener('drop', async (e) => {
         e.preventDefault();
-        panel.classList.remove('keep-dragover');
+        endDragover();
         const files = e.dataTransfer && e.dataTransfer.files;
         if (!files)
             return;
@@ -10971,6 +11118,8 @@ ${keepsBlock}${emptyBlock}
                 ensureUiAudio().then(() => { if (typeof uiPanelToggle === 'function')
                     uiPanelToggle(on); });
         };
+        const bar = document.getElementById('menubar');
+        let downTimer = null, quickTimer = null;
         const openPop = (e) => {
             if (closeTimer) {
                 clearTimeout(closeTimer);
@@ -10978,21 +11127,34 @@ ${keepsBlock}${emptyBlock}
             }
             if (panelsPop.classList.contains('open'))
                 return;
+            clearTimeout(downTimer);
+            clearTimeout(quickTimer);
+            panelsPop.classList.remove('r18-quick');
+            if (bar)
+                bar.classList.add('mb-menu-up');
             panelsPop.classList.add('open');
             panelsBtn.setAttribute('aria-expanded', 'true');
             if (e && e.type === 'click')
                 panelSound(true);
         };
-        const closePop = () => {
+        const closePop = (quick) => {
             if (closeTimer) {
                 clearTimeout(closeTimer);
                 closeTimer = null;
             }
             if (!panelsPop.classList.contains('open'))
                 return;
+            if (quick === true)
+                panelsPop.classList.add('r18-quick');
             panelsPop.classList.remove('open');
             panelsBtn.setAttribute('aria-expanded', 'false');
+            clearTimeout(downTimer);
+            downTimer = setTimeout(() => { if (bar && !panelsPop.classList.contains('open'))
+                bar.classList.remove('mb-menu-up'); }, 300);
+            clearTimeout(quickTimer);
+            quickTimer = setTimeout(() => panelsPop.classList.remove('r18-quick'), 200);
         };
+        panelsPop.querySelectorAll('.mb-toggle').forEach(el => el.addEventListener('click', () => { clearIntent(); closePop(true); }));
         const cancelClose = () => { if (closeTimer) {
             clearTimeout(closeTimer);
             closeTimer = null;
@@ -13912,11 +14074,54 @@ ${keepsBlock}${emptyBlock}
             panel.style.marginLeft = '';
             panel.style.zIndex = '';
         });
+        if (typeof window.r18FitHome === 'function')
+            window.r18FitHome();
         if (typeof uiClick === 'function')
             uiClick('E5');
         if (typeof window.r26Toast === 'function')
             window.r26Toast('Layout reset');
     });
+})();
+(function () {
+    const GAP = 16, MIN_H = 220;
+    const q = document.querySelector('.panel--quest'), c = document.querySelector('.panel--commits');
+    const st = document.getElementById('agent'), k = document.getElementById('panel-keep');
+    const atHome = (el) => el && !el.style.left && !el.style.top && getComputedStyle(el).display !== 'none';
+    const fitPair = (top, bottom) => {
+        if (!top)
+            return;
+        const set = (v) => { if (top.style.maxHeight !== v)
+            top.style.maxHeight = v; };
+        if (!atHome(top) || !atHome(bottom)) {
+            set('');
+            return;
+        }
+        const room = Math.floor(bottom.getBoundingClientRect().top - GAP - top.getBoundingClientRect().top);
+        set(room >= MIN_H ? room + 'px' : '');
+    };
+    const ap = document.getElementById('panel-appearance'), act = document.getElementById('activity-panel');
+    const fitUnder = (top, bottom) => {
+        if (!bottom)
+            return;
+        const set = (v) => { if (bottom.style.maxHeight !== v)
+            bottom.style.maxHeight = v; };
+        if (!atHome(top) || !atHome(bottom)) {
+            set('');
+            return;
+        }
+        const room = Math.floor(bottom.getBoundingClientRect().bottom - top.getBoundingClientRect().bottom - GAP);
+        set(room >= MIN_H ? room + 'px' : '');
+    };
+    let raf = 0;
+    const fit = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => { fitPair(q, c); fitPair(st, k); fitUnder(ap, act); }); };
+    window.r18FitHome = fit;
+    if (window.ResizeObserver) {
+        const ro = new ResizeObserver(fit);
+        [c, k, ap].forEach(el => el && ro.observe(el));
+    }
+    window.addEventListener('resize', fit);
+    [q, c, st, k, ap, act].forEach(el => el && new MutationObserver(fit).observe(el, { attributes: true, attributeFilter: ['style', 'class'] }));
+    setTimeout(fit, 0);
 })();
 </script>
 <script>
