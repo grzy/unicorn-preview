@@ -90,13 +90,16 @@
     border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.5);transform:translate(-50%,-50%);pointer-events:none}
   .pop-hue .pop-thumb{top:50%}
 
-  #critter{display:grid;gap:2px;justify-content:center;touch-action:none;user-select:none;-webkit-user-select:none}
+  #critter{display:grid;gap:2px;justify-content:center;align-content:end;touch-action:none;user-select:none;-webkit-user-select:none}
   .cell{width:24px;height:48px;border-radius:var(--radius-sm);background:var(--cell);cursor:pointer;transition:background .12s}
   .cell:hover{background:var(--cell-hover)}
   .cell.fill,.cell.fill:hover{background:var(--cellc)}
   /* the canvas paints on terminal black in both modes, so colors read exactly as they print
-     (a white critter vanished on linen) -- the same dark island as the terminal preview */
-  #critter{background:#000;padding:10px;border-radius:10px;width:max-content;margin:0 auto}
+     (a white critter vanished on linen) -- the same dark island as the terminal preview.
+     min-height/min-width sized to the tallest + widest Surprise Me critter (Bird, 10 rows;
+     Fox, 14 cols) so shorter/narrower critters sit bottom + center aligned instead of
+     shrinking the box -- nothing below the Surprise Me button ever moves. */
+  #critter{background:#000;padding:10px;border-radius:10px;width:max-content;min-width:382px;min-height:518px;margin:0 auto}
   html[data-theme="linen"] #critter{--cell:rgb(231 221 202 / .07);--cell-hover:rgb(231 221 202 / .14)}
 
   .size{display:flex;gap:18px;align-items:center;justify-content:center;margin-top:16px;font-size:12px;color:var(--text-dim)}
@@ -176,6 +179,7 @@
   @media (max-width:520px){
     .panel{padding:20px 16px 22px}
     .cell{width:20px;height:40px}
+    #critter{min-width:326px;min-height:438px}
     .voice-grid{grid-template-columns:repeat(3,1fr)}
   }
 </style></head>
@@ -686,7 +690,7 @@
     {"n":"Fox","g":[".........L...L","........LL..LL","........XXXXXX","QQX.....X.XX.X",".QXXXXXXXXQQXX","....XXXXXXQQXX","....D.D...D.D.","....D.D...D.D."],"c":{"X":"#FF875F","Q":"#FFD7AF","L":"#AF5F5F","D":"#875F5F"}},
     {"n":"Frog","g":["..LL....LL..",".L..L..L..L.","XXXXXXXXXXXX","X.XXXXXXXX.X","XXDDDDDDDDXX","XXDDDDDDDDXX",".QQ......QQ.","QQQQ....QQQQ"],"c":{"X":"#87AF5F","Q":"#5F875F","L":"#AFD787","D":"#D7D7AF"}},
     {"n":"Bird","g":["....L.....","...LL.....","DDXXXX....",".DX.XX....","..XXLLLLQQ","..XXLLLLQ.","...XXXX...","....XX....","....D.D...","...DD.DD.."],"c":{"X":"#5FAFD7","Q":"#5F87AF","L":"#87D7FF","D":"#FFAF5F"}},
-    {"n":"Bunny","g":["...L.L......","..LL.LL.....","..XXXXX.....",".XX.XXXX....","DDXXXXXXXXX.","..XXXXXXXXXX","...XXXXXXX.Q","...XXXXXXX..","...QQ...QQ..","..QQQ..QQQ.."],"c":{"X":"#EEEEEE","Q":"#BCBCBC","L":"#FFAFD7","D":"#FF87AF"}}
+    {"n":"Tabby","g":["L...L.......","LL..LL......","XXDDXX.....D","X.DD.X.....D","XXDDXXDDXXD.",".XDDXXDDXX..",".Q.Q...Q.Q..",".Q.Q...Q.Q.."],"c":{"X":"#FF8700","Q":"#D7AF87","L":"#FFAFAF","D":"#875F00"}}
   ];
   let lastCritter=-1;
   $('surprise').addEventListener('click',()=>{
