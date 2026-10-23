@@ -96,8 +96,8 @@
   .cell.fill,.cell.fill:hover{background:var(--cellc)}
   /* the canvas paints on terminal black in both modes, so colors read exactly as they print
      (a white critter vanished on linen) -- the same dark island as the terminal preview.
-     min-height/min-width sized to the tallest + widest Surprise Me critter (Bird, 10 rows;
-     Fox, 14 cols) so shorter/narrower critters sit bottom + center aligned instead of
+     min-height/min-width sized to the tallest + widest Surprise Me critter (Bird + Dragon, 10 rows;
+     Fox, Hummingbird, Whale, Dragon, 14 cols) so shorter/narrower critters sit bottom + center aligned instead of
      shrinking the box -- nothing below the Surprise Me button ever moves. */
   #critter{background:#000;padding:10px;border-radius:10px;width:max-content;min-width:382px;min-height:518px;margin:0 auto}
   html[data-theme="linen"] #critter{--cell:rgb(231 221 202 / .07);--cell-hover:rgb(231 221 202 / .14)}
@@ -689,7 +689,10 @@
     {"n":"Cat","g":["X...X.......","XX..XX......","XXXXXX.....D","X.XX.X.....D","XXLLLLXXXXD.",".XLLLLXXXX..",".Q.Q...Q.Q..",".Q.Q...Q.Q..",".L.L...L.L..",".L.L...L.L.."],"c":{"X":"#444444","Q":"#808080","L":"#D7D7AF","D":"#585858"}},
     {"n":"Fox","g":[".........L...L","........LL..LL","........XXXXXX","QQX.....X.XX.X",".QXXXXXXXXQQXX","....XXXXXXQQXX","....D.D...D.D.","....D.D...D.D."],"c":{"X":"#FF875F","Q":"#FFD7AF","L":"#AF5F5F","D":"#875F5F"}},
     {"n":"Frog","g":["..LL....LL..",".L..L..L..L.","XXXXXXXXXXXX","X.XXXXXXXX.X","XXDDDDDDDDXX","XXDDDDDDDDXX",".QQ......QQ.","QQQQ....QQQQ"],"c":{"X":"#87AF5F","Q":"#5F875F","L":"#AFD787","D":"#D7D7AF"}},
-    {"n":"Bird","g":["....L.....","...LL.....","DDXXXX....",".DX.XX....","..XXLLLLQQ","..XXLLLLQ.","...XXXX...","....XX....","....D.D...","...DD.DD.."],"c":{"X":"#5FAFD7","Q":"#5F87AF","L":"#87D7FF","D":"#FFAF5F"}}
+    {"n":"Bird","g":["....L.....","...LL.....","DDXXXX....",".DX.XX....","..XXLLLLQQ","..XXLLLLQ.","...XXXX...","....XX....","....D.D...","...DD.DD.."],"c":{"X":"#5FAFD7","Q":"#5F87AF","L":"#87D7FF","D":"#FFAF5F"}},
+    {"n":"Hummingbird","g":[".....XX....QQQ","....XXXX..QQQ.","DDDDXX.X.QQQ..","....XXXXQQ....","....LLLLXXXX..",".....LLLXXXXX.","........XXXXQ.","..........X.QQ"],"c":{"X":"#5FD7AF","Q":"#AF87D7","L":"#FF5F87","D":"#FFD7AF"}},
+    {"n":"Whale","g":["..Q.Q.....X..X","...Q......XXXX",".XXXXXX.....XX","XXXXXXXXX..XX.","XX.XDDXXXXXX..","XXXXDDXXXXX...","LLLLLLXXXX....",".LLLLLXXX....."],"c":{"X":"#005FAF","Q":"#D7FFFF","L":"#87AFD7","D":"#FFAF87"}},
+    {"n":"Dragon","g":["...Q......L.L.","..QQ......LLL.","..QQQ...XXXX..","..QQQQ..X.XXXX","...QQQ..XXX.DD","........XXXX..","D..XXXXXXXX...","DDXXXXXXXXX...","....XX...XX...","....XX...XX..."],"c":{"X":"#AF87D7","Q":"#FF87AF","L":"#FFD7AF","D":"#FFAF5F"}}
   ];
   let lastCritter=-1;
   $('surprise').addEventListener('click',()=>{
