@@ -4892,6 +4892,11 @@ if (window.unicorn && window.unicorn.isDesktop)
   html .panel--quest .r17-strip { flex: none; }
   
   html #panel-appearance .ap-lead.ap-lead--foot { margin-top: 16px; }
+  /* ── Settings: the old round-2 .ap-lab margin-top:16px pushed the FIRST label down,
+     making the panel sit 16px deeper than Quest/Story/every other panel. That 16px is
+     only for the gap BETWEEN sections (before "Sound") -- the first label should land
+     the same 8px under the header as everywhere else. ── */
+  html #panel-appearance .p-hair + .ap-lab { margin-top: 0; }
 
   html #menubar.mb-menu-up { z-index: 100000; }
   html #menubar .mb-panels-pop.r18-quick { transition: opacity .14s ease-out, visibility 0s linear .14s !important; transform: translate(-50%, 0) !important; }
@@ -5097,7 +5102,7 @@ if (window.unicorn && window.unicorn.isDesktop)
       <button class="mb-panels-btn" id="mb-panels-btn" type="button" aria-haspopup="true" aria-expanded="false" data-tip-own>Panels<span class="mb-car" aria-hidden="true"><svg class="ic"><use href="#i-caret"/></svg></span></button>
       
       <span class="mb-tip" id="mb-pin-tip" role="tooltip">
-        <span class="mb-tip-row"><span>Float on top</span><span class="mb-tip-key">⌥U</span></span>
+        <span class="mb-tip-row"><span>Float on top</span><span class="mb-tip-key">Option U</span></span>
         <span class="mb-tip-row"><span>Move window</span><span class="mb-tip-key">⌘ drag</span></span>
       </span>
       
@@ -5289,7 +5294,7 @@ if (window.unicorn && window.unicorn.isDesktop)
       <div class="keep-input-wrap">
         <textarea class="keep-input" id="keep-input" placeholder="Type a note to keep" rows="1"></textarea>
       </div>
-      <button class="keep-save u-fill is-empty" id="keep-save" title="Save" data-key="⌘↩">Save</button>
+      <button class="keep-save u-fill is-empty" id="keep-save" title="Save" data-key="⌘ Return">Save</button>
     </div>
 
     <div class="k18-car"><div class="k18-strip" id="keep-list" tabindex="0" aria-label="Recent keeps"></div></div>
