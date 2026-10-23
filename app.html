@@ -3915,7 +3915,7 @@ if (window.unicorn && window.unicorn.isDesktop)
     background: linear-gradient(45deg, transparent 8%, rgba(232,149,106,.45) 35%, rgba(167,139,223,.45) 65%, transparent 92%);
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
   }
-  .panel--quest .q-switcher { display: grid; gap: 1px; margin: 0; }
+  .panel--quest .q-switcher { display: grid; gap: 0; margin: 0; }   /* 10-22: 32px pitch, like the status menu */
   html .panel--quest .q-sw-btn, html.is-desktop .panel--quest .q-sw-btn {
     display: block; border: 0; background: rgba(255,255,255,0); border-radius: 7px;
     padding: 8px var(--in); margin: 0; cursor: pointer; user-select: none;
@@ -4493,7 +4493,7 @@ if (window.unicorn && window.unicorn.isDesktop)
 
   html .panel--quest .q-pause-row {
     position: absolute; z-index: 40; right: 20px; margin: 0; min-width: 176px;   
-    display: grid; grid-template-columns: 1fr; gap: 1px; justify-content: stretch;
+    display: grid; grid-template-columns: 1fr; gap: 0; justify-content: stretch;   /* 10-22: 32px pitch, like the status menu */
   }
   html .panel--quest .q-pause-row > span {
     display: block; text-align: left; white-space: nowrap; padding: 8px 8px 8px 34px; border-radius: 7px;
@@ -4531,7 +4531,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   html .panel--quest .q-pop-foot .q-sw-add .q-plus { width: 16px; text-align: center; }
   html .panel--quest .q-pop-foot .q-sw-archived { font: 500 12px/16px var(--sans); }
   
-  html .panel--quest .q-switcher .q-pop-foot { display: grid; grid-template-columns: 1fr; gap: 1px; margin-top: 0; }
+  html .panel--quest .q-switcher .q-pop-foot { display: grid; grid-template-columns: 1fr; gap: 0; margin-top: 0; }
   html .panel--quest .q-switcher .q-pop-foot .q-sw-add, html.is-desktop .panel--quest .q-switcher .q-pop-foot .q-sw-add,
   html .panel--quest .q-switcher .q-pop-foot .q-sw-archived, html.is-desktop .panel--quest .q-switcher .q-pop-foot .q-sw-archived {
     display: flex; align-items: center; justify-content: flex-start; width: 100%; box-sizing: border-box; font: 500 13px/16px var(--sans); border-radius: 7px; background: rgba(255,255,255,0);
