@@ -11,7 +11,7 @@ document.documentElement.classList.add('r26-boot');
 window.GUEST_PREVIEW = true;
 </script>
 <script>window.__srcSeedVersion = "6";</script>
-<script src="preview/demo-data.js?v=06507cfe"></script>
+<script src="preview/demo-data.js?v=b3f914b2"></script>
 <script src="preview/guest-early.js?v=2532abb9"></script>
 <style>/* Unicorn public preview: guest-only styles, loaded in the head. */
 
@@ -4629,7 +4629,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   html .panel.panel--quest.minimized { padding: 27px 30px 30px !important; }
   html .panel--quest .p-head { display: flex; align-items: center; gap: 0; height: 16px; min-height: 16px; margin-bottom: 8px; font: 500 13px/16px var(--sans); color: var(--text-mute); }
   html .panel--quest .p-head > span:first-child { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
-  html .panel--quest .p-head .p-dot, html #agent .p-head .p-dot { width: 8px; height: 8px; margin: 0; vertical-align: 0; }
+  html .panel--quest .p-head .p-dot, html #agent .p-head .p-dot { width: 6px; height: 6px; margin: 0; vertical-align: 0; }
   html .panel--quest .p-head .p-mini { order: 2; margin-left: auto; margin-right: 0; }
   
   html .panel--quest .p-head .q-manage { order: 3; position: relative; display: grid; place-items: center; width: 16px; height: 16px; margin: 0 -2.75px 0 14px; padding: 0;
@@ -4764,7 +4764,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   .r17-story .hero.sheet .rule { position: absolute; left: var(--hp); right: var(--hp); top: var(--hg); height: 1px; background: rgba(26,22,22,.12); }
   .r17-story .hero.sheet .dek { position: absolute; left: var(--hp); right: var(--hp); top: 73px; font: 400 8.5px/1.4 var(--mono); letter-spacing: .04em; color: rgba(26,22,22,.42); display: flex; justify-content: space-between; }
   
-  .r17-story .hero.week { background: #F7F5F2; }
+  .r17-story .hero.week { background: #EDE8E2; }
   .r17-story .hero.week .wk { position: absolute; display: block; border: 0; pointer-events: none; transform-origin: 0 0; }
   .r17-story .nofile { position: absolute; inset: 0; display: grid; place-items: center; font: 400 12px/1 var(--sans); color: var(--text-whisper-2); text-align: center; padding: 0 24px; }
   .r17-story .nofile::before { content: ""; position: absolute; inset: 16px; border-radius: 6px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.07); }
@@ -4773,6 +4773,15 @@ if (window.unicorn && window.unicorn.isDesktop)
   .r17-story .door .cap { flex: 1; min-width: 0; font: 400 12px/1.3 var(--sans); color: var(--text-mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .r17-story .door .cap b { font-weight: 400; color: var(--text); }
   .r17-story .door .cap.fail { color: #FFAF5F; }
+  /* 10-22: a door per design tool (Figma File, Rive File), stacked. Label + buttons on the
+     first line; the file name · Updated date on its own full-width line under them. */
+  .r17-story .door.file { flex-wrap: wrap; row-gap: 2px; }
+  .r17-story .door.file .cap b { color: var(--text); font-weight: 400; }
+  .r17-story .door.file .fmeta { flex: 0 0 100%; order: 3; min-width: 0; font: 400 11px/1.3 var(--sans); color: var(--text-mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .r17-story .door.file .fmeta a.html { color: var(--text-mute); text-decoration: underline; text-decoration-color: rgba(241,236,232,.22); text-underline-offset: 2.5px; cursor: pointer; }
+  .r17-story .door.file .fmeta a.html:hover { color: var(--cream); text-decoration-color: rgba(241,236,232,.6); }
+  .r17-story .door.file + .door.file { margin-top: 10px; }
+  .r17-story .door[hidden] { display: none; }
   .r17-story .door .cap a.html { color: var(--text-mute); text-decoration: underline; text-decoration-color: rgba(241,236,232,.22); text-underline-offset: 2.5px; cursor: pointer; transition: color var(--t) var(--ease), text-decoration-color var(--t) var(--ease); }
   .r17-story .door .cap a.html:hover { color: var(--cream); text-decoration-color: rgba(241,236,232,.6); }
   .r17-story .acts { display: flex; gap: 8px; align-items: center; flex: none; }
@@ -4861,7 +4870,7 @@ if (window.unicorn && window.unicorn.isDesktop)
     display: flex; align-items: center; gap: 8px; height: 16px; min-height: 16px; margin-bottom: 8px;
     font: 500 13px/16px var(--sans); letter-spacing: 0; text-transform: none; color: var(--text-mute); }
   html .panel--commits .p-head > span:first-child, html .panel--keep .p-head > span:first-child, html .panel--appearance .p-head > span:first-child, html #activity-panel .p-head > span:first-child { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
-  html .panel--commits .p-head .p-dot, html .panel--keep .p-head .p-dot, html .panel--appearance .p-head .p-dot, html #activity-panel .p-head .p-dot { width: 8px; height: 8px; margin: 0; vertical-align: 0; }
+  html .panel--commits .p-head .p-dot, html .panel--keep .p-head .p-dot, html .panel--appearance .p-head .p-dot, html #activity-panel .p-head .p-dot { width: 6px; height: 6px; margin: 0; vertical-align: 0; }
   html .panel--commits .p-head .c-wk-n { margin-left: auto; }
   html .panel.minimized .p-head { margin-bottom: 0; }
   html .panel.panel--commits.minimized .p-head { margin-bottom: 12px; }
@@ -5366,6 +5375,7 @@ if (window.unicorn && window.unicorn.isDesktop)
           <div class="pane" data-pane="design">
             <div class="hero" id="r17-design-hero"></div>
             <div class="door" id="r17-design-door"></div>
+            <div class="door file" id="r17-rive-door" hidden></div>
           </div>
           <div class="pane" data-pane="week">
             <div class="hero week click" id="r17-week-hero" title="Opens this week's page"></div>
@@ -6922,7 +6932,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         if (!armLabels.has(el))
             armLabels.set(el, txtNode.textContent);
         txtNode.textContent = el.classList.contains('q-complete-btn')
-            ? 'Click Again to Archive'
+            ? 'Click Again to Finish'
             : 'Confirm';
         el.classList.add('armed');
         if (typeof uiClick === 'function')
@@ -6958,28 +6968,6 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
             clearTimeout(toastTimer);
             toastTimer = null;
         }
-        const t = document.createElement('div');
-        t.className = 'u-toast';
-        t.innerHTML = `
-      <span class="u-toast-text">Archived <span class="u-toast-hl">${escapeHtml(q.name)}</span></span>
-      <button type="button" class="u-toast-undo u-fill">Undo</button>
-    `;
-        document.body.appendChild(t);
-        toastEl = t;
-        requestAnimationFrame(() => t.classList.add('show'));
-        t.querySelector('.u-toast-undo').addEventListener('click', () => {
-            const cur = data.quests.find(x => x.id === q.id) || q;
-            cur.completed = false;
-            cur.completedAt = null;
-            saveApp(data);
-            const at = data.quests.indexOf(cur);
-            setActiveQ(at >= 0 ? at : idx);
-            render();
-            if (typeof uiClick === 'function')
-                uiClick('F5');
-            dismissToast();
-        });
-        toastTimer = setTimeout(dismissToast, 8000);
     };
     const requestCompleteQuest = (el) => {
         const q = data.quests[activeQ];
@@ -12534,7 +12522,7 @@ ${keepsBlock}${emptyBlock}
     html,body{background:#f1e9db;color:var(--pi);font:400 15px/1.6 'Ubuntu Sans','Helvetica Neue',sans-serif}
     a{color:inherit}
     .page{padding:clamp(20px,3.6vw,44px)}
-    .sheet{max-width:1180px;margin:0 auto;background:#f7f5f2;border-radius:14px;box-shadow:0 18px 44px rgba(60,40,20,.18);padding:34px clamp(18px,3.2vw,44px) 44px}
+    .sheet{max-width:1180px;margin:0 auto;background:#ede8e2;border-radius:14px;box-shadow:0 18px 44px rgba(60,40,20,.18);padding:34px clamp(18px,3.2vw,44px) 44px}
     .eb{display:flex;justify-content:space-between;align-items:center;font:400 13px/1 'Ubuntu Sans',sans-serif;color:var(--faint)}
     .eb a{font-weight:500;text-decoration:none;transition:color var(--t) var(--ease)} .eb a:hover{color:var(--pi)}
     h1{font:500 clamp(30px,3.6vw,44px)/1.04 'Ubuntu Sans',sans-serif;letter-spacing:-.025em;margin:10px 0 0}
@@ -14699,7 +14687,7 @@ ${keepsBlock}${emptyBlock}
         const c = COVERS[i], date = d || new Date();
         const runs = Array.from({ length: c.frames }, (_, j) => `<canvas data-f="${j}"></canvas>`).join('');
         return `<div class="cv ${c.cls}"><div class="run" data-fit="${c.cls === 'cv2' ? 'LR' : 'R'}">${runs}</div><i class="ground"></i>`
-            + `<span class="wm">${esc((q && q.name) || 'Unicorn')}</span><span class="meta">Design System<br>${MONTHS[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}</span></div>`;
+            + `<span class="wm">${esc((q && q.name) || 'Unicorn')}</span><span class="meta">Figma File<br>${MONTHS[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}</span></div>`;
     };
     const drawRuns = (scope) => {
         const u = window.Unicorn7;
@@ -14774,11 +14762,25 @@ ${keepsBlock}${emptyBlock}
     let ds = 'none', pick = 0, failText = '', failT = 0, figmaDate = null, override = null;
     const mode = () => ($('st-cv-update') && $('st-cv-update').dataset.mode) || 'create';
     const baseState = () => { const m = mode(); return m === 'connect' ? 'connect' : m === 'update' ? 'ready' : 'none'; };
-    const capMeta = () => {
-        const lds = document.getElementById('u-taste-lds'), html = lds && !lds.classList.contains('muted') ? ' · <a class="html" data-act="html" title="The same system as an HTML page. Same Update, same code">HTML</a>' : '';
-        const d = fmtShort(figmaDate);
-        return `<span class="cap" title="${d ? 'Figma file, updated ' + d : 'Figma file'}">Figma${d ? ' · ' + d : ''}${html}</span>`;
-    };
+  // 10-22: each design tool gets its own door, labeled by tool + file (Figma File, Rive File)
+  const fileName = (url, re, fb) => { const m = String(url || '').match(re);
+    return m ? decodeURIComponent(m[1]).replace(/^\d+-/, '').replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim() || fb : fb; };
+  const figmaFile = q => fileName(q && q.figma, /figma\.com\/(?:design|file|board|proto|slides)\/[^/]+\/([^/?#]+)/i, 'Figma file');
+  const capMeta = () => {
+    const lds = document.getElementById('u-taste-lds'), html = lds && !lds.classList.contains('muted') ? ' · <a class="html" data-act="html" title="The same system as an HTML page. Same Update, same code">HTML</a>' : '';
+    const d = fmtShort(figmaDate), name = figmaFile(activeQuest());
+    return `<span class="cap"><b>Figma File</b></span><span class="fmeta" title="${esc(name)}${d ? ', updated ' + d : ''}">${esc(name)}${d ? ' · Updated ' + d : ''}${html}</span>`;
+  };
+  const riveUrl = q => (q && q.rive && /^https:\/\/([a-z0-9-]+\.)?rive\.app\//i.test(q.rive)) ? q.rive : '';
+  function renderRive() {
+    const door = $('r17-rive-door'); if (!door) return;
+    const q = activeQuest(), url = riveUrl(q);
+    door.hidden = !url; if (!url) { door.innerHTML = ''; return; }
+    const name = (q.riveName && String(q.riveName)) || fileName(url, /rive\.app\/(?:community\/files|file|s)\/([^/?#]+)/i, 'Rive file');
+    const t = q.riveUpdatedAt ? new Date(q.riveUpdatedAt) : null, d = t && !isNaN(t) ? fmtShort(t) : '';
+    door.innerHTML = `<span class="cap"><b>Rive File</b></span><div class="acts"><button type="button" class="u-fill" data-act="rive-open" title="Opens in Rive">Open</button></div>`
+      + `<span class="fmeta" title="${esc(name)}${d ? ', updated ' + d : ''}">${esc(name)}${d ? ' · Updated ' + d : ''}</span>`;
+  }
     function renderDesign() {
         const hero = $('r17-design-hero'), door = $('r17-design-door');
         if (!hero || !door)
@@ -14822,8 +14824,15 @@ ${keepsBlock}${emptyBlock}
             drawRuns(hero);
         }
         door.innerHTML = dr;
+        door.classList.toggle('file', state === 'ready' && !failText);
+        renderRive();
         refit();
     }
+    $('r17-rive-door').addEventListener('click', (e) => {
+        const b = e.target.closest('[data-act="rive-open"]'); if (!b) return; e.stopPropagation();
+        const url = riveUrl(activeQuest()); if (!url) return;
+        window.open(url, '_blank');
+    });
     $('r17-design-hero').addEventListener('click', (e) => {
         const f = e.target.closest('[data-flip]');
         if (!f)
@@ -15482,6 +15491,36 @@ ${keepsBlock}${emptyBlock}
     const qList = document.getElementById('q-list');
     if (qList)
         new MutationObserver(paintDots).observe(qList, { childList: true, subtree: true });
+    const shownQuest = (d) => { const qs = d.quests || []; return (typeof d.activeQuestIndex === 'number' && qs[d.activeQuestIndex]) || qs.find(x => !x.completed) || null; };
+    const repoLen = (cwd, repo) => {
+        const r = String(expand(repo) || '').replace(/\/+$/, '');
+        if (!cwd || !r || r.startsWith('~'))
+            return -1;
+        if (r.startsWith('/'))
+            return cwd === r || cwd.startsWith(r + '/') ? r.length : -1;
+        return cwd === r || cwd.startsWith(r + '/') || cwd.endsWith('/' + r) || cwd.includes('/' + r + '/') ? r.length : -1;
+    };
+    const sessQuest = (w, quests, ev) => {
+        let best = null, len = -1;
+        for (const q of quests) {
+            const l = repoLen(w.cwd, q.repo || (/^unicorn$/i.test(q.name || '') ? '~/unicorn' : ''));
+            if (l > len) {
+                best = q;
+                len = l;
+            }
+        }
+        if (best)
+            return best;
+        for (let i = ev.length - 1; i >= 0; i--) {
+            const n = String(ev[i].quest || '').toLowerCase();
+            if (!n)
+                continue;
+            const q = quests.find(x => (x.name || '').toLowerCase() === n);
+            if (q)
+                return q;
+        }
+        return null;
+    };
     let lastRes = null;
     const apply = async (res) => {
         if (res)
@@ -15490,7 +15529,18 @@ ${keepsBlock}${emptyBlock}
             res = lastRes;
         if (!res)
             return;
-        const { state: st, live, working } = res;
+        let d;
+        try {
+            d = JSON.parse(localStorage.getItem('unicorn-data')) || {};
+        }
+        catch {
+            d = {};
+        }
+        const quests = d.quests || [], shown = shownQuest(d), ev = res.live.length ? await loadEvents() : [];
+        const shownId = shown && (shown.id || shown.name);
+        const mine = shown ? res.live.filter(w => { if (w.any)
+            return true; const q = sessQuest(w, quests, ev); return q && (q.id || q.name) === shownId; }) : [];
+        const { state: st, live, working } = AS.read(mine);
         lastLive = live;
         const wasLove = love;
         love = loveUntil();
@@ -15533,13 +15583,13 @@ ${keepsBlock}${emptyBlock}
         if (w2El.textContent !== name)
             w2El.textContent = name;
     };
-    window.addEventListener('unicorn:quests-updated', setLine2);
-    window.addEventListener('unicorn:quest-attached', () => setTimeout(setLine2, 0));
+    window.addEventListener('unicorn:quests-updated', () => { setLine2(); apply(); });
+    window.addEventListener('unicorn:quest-attached', () => setTimeout(() => { setLine2(); apply(); }, 0));
     cv.setAttribute('data-tip', TIP.idle);
     cv.dataset.state = 'idle';
     const forced = !window.unicorn && new URLSearchParams(location.search).get('agent');
     if (forced) {
-        const now = Date.now() / 1000, sess = forced === 'idle' ? [] : [{ state: forced, ts: now + 1e6, cwd: '/x', tty: '' }];
+        const now = Date.now() / 1000, sess = forced === 'idle' ? [] : [{ state: forced, ts: now + 1e6, cwd: '/x', tty: '', any: true }];
         kick();
         apply(AS.read(sess, now));
     }

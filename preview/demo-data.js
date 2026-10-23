@@ -84,7 +84,7 @@
   };
   const sessions = () => {
     const s = agentState();
-    return s === 'idle' ? [] : [{ state: s, ts: Date.now() / 1000 - 2, cwd: 'demo' }];
+    return s === 'idle' ? [] : [{ state: s, ts: Date.now() / 1000 - 2, cwd: 'projects/unicorn' }];
   };
 
   const appData = () => {
