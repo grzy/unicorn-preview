@@ -4893,7 +4893,11 @@ if (window.unicorn && window.unicorn.isDesktop)
   html .panel--keep .keep-tag-row { margin: 0 0 8px; }
   .panel--keep .k18-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 24px; }
   .panel--keep .k18-bar .keep-folder-link { font: 500 12px/1 var(--sans); }
-  html .panel--keep .k18-bar .keep-pull { margin-left: auto; padding: 5px 8px; border-radius: 6px; font: 500 11px/1 var(--sans); }
+  html .panel--keep .k18-bar .keep-pull { padding: 5px 8px; border-radius: 6px; font: 500 11px/1 var(--sans); }
+  
+  .panel--keep .k18-seg { display: flex; gap: 4px; flex: none; }
+  html .panel--keep .k18-bar .keep-folder-link { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 400 11px/1.3 var(--sans); color: var(--text-3, rgba(241,236,232,.4)); }
+  html .panel--keep .k18-bar .keep-folder-link:hover { color: var(--ic-hover); }
   
   .panel--keep .k18-field { position: relative; display: none; flex: none; height: 148px; margin-top: 12px; place-items: center; align-content: center; gap: 10px;
     border-radius: 10px; background: rgba(0,0,0,.22); text-align: center; cursor: text; transition: background var(--t) var(--ease); }
@@ -4953,6 +4957,18 @@ if (window.unicorn && window.unicorn.isDesktop)
   .panel--keep .k18-fr.is-text { background: rgba(255,255,255,.06); }
   .panel--keep .k18-ttxt { position: absolute; inset: 0; padding: 5px 6px; overflow: hidden; font: 400 7.5px/1.35 var(--mono); color: var(--text-mute); white-space: pre-wrap; overflow-wrap: anywhere; pointer-events: none; }
   .panel--keep .k18-ghost { cursor: default; background: rgba(255,255,255,.025); box-shadow: inset 0 0 0 1px rgba(255,255,255,.05); }
+  
+  .panel--keep .k18-car { display: none; position: relative; margin-top: 12px; --tw: calc((100% - 18px) / 4); }
+  .panel--keep.k18-many .k18-car { display: block; }
+  html .panel--keep .k18-car .k18-strip { display: flex; margin-top: 0; padding: 0; outline: none;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 22px, #000 calc(100% - 22px), transparent); mask-image: linear-gradient(90deg, transparent, #000 22px, #000 calc(100% - 22px), transparent); }
+  html .panel--keep .k18-car .k18-fr { width: var(--tw); scroll-snap-align: center; }
+  
+  html .panel--keep .k18-car .k18-strip::before, html .panel--keep .k18-car .k18-strip::after { content: ""; flex: none; width: calc(50% - var(--tw) / 2 - 6px); }
+  html .panel--keep .k18-car .k18-fr.on::after { content: none; }
+  .panel--keep .k18-car::after { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: var(--tw); transform: translateX(-50%); border-radius: 6px; padding: 1.5px; pointer-events: none;
+    background: linear-gradient(to top right, transparent 1%, rgba(232,149,106,.95) 18%, rgba(167,139,223,.95) 82%, transparent 99%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
   
   html .panel--keep #keep-pending { margin-top: 12px; }
   html .panel--keep #keep-pending[hidden] { display: none; }
@@ -5227,8 +5243,11 @@ if (window.unicorn && window.unicorn.isDesktop)
     </div>
 
     <div class="k18-bar">
-      <span id="keep-folder" class="keep-folder-link" role="button" tabindex="0" hidden title="~/unicorn/keeps/">Folder</span>
-      <button class="keep-pull" data-scope="career" aria-pressed="false" title="Send keeps to your Builder's Story. Resets after Save">Story</button>
+      <div class="k18-seg" role="group" aria-label="Keep into">
+        <button class="keep-pull on" data-scope="quest" aria-pressed="true">Folder</button>
+        <button class="keep-pull" data-scope="career" aria-pressed="false">Story</button>
+      </div>
+      <span id="keep-folder" class="keep-folder-link" role="button" tabindex="0" hidden aria-label="Open in Finder">~/unicorn/keeps/</span>
     </div>
 
     <div class="k18-field" id="k18-field" title="or paste from your terminal (⌘V)">
@@ -5251,7 +5270,7 @@ if (window.unicorn && window.unicorn.isDesktop)
       <button class="keep-save u-fill is-empty" id="keep-save" title="Save" data-key="⌘↩">Save</button>
     </div>
 
-    <div class="k18-strip" id="keep-list"></div>
+    <div class="k18-car"><div class="k18-strip" id="keep-list" tabindex="0" aria-label="Recent keeps"></div></div>
   </section>
 
   <section class="panel panel--appearance" id="panel-appearance">
@@ -10047,18 +10066,23 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     const KEEP_ICO = (d) => `<svg class="k-ic" viewBox="0 0 16 16" aria-hidden="true">${d}</svg>`;
     const KEEP_PLAY = KEEP_ICO('<path d="M5.5 4.6v6.8a.6.6 0 0 0 .92.5l5.2-3.4a.6.6 0 0 0 0-1l-5.2-3.4a.6.6 0 0 0-.92.5z"/>'), KEEP_PAUSE = KEEP_ICO('<path d="M6.25 4.75v6.5"/><path d="M9.75 4.75v6.5"/>'), KEEP_CLOSE = KEEP_ICO('<path d="M4.75 4.75l6.5 6.5"/><path d="M11.25 4.75l-6.5 6.5"/>');
     let keepScope = 'quest';
-    panel.querySelectorAll('.keep-pull').forEach(b => b.addEventListener('click', () => {
-        const on = !b.classList.contains('on');
-        keepScope = on ? 'career' : 'quest';
+    const syncScopeChips = () => panel.querySelectorAll('.keep-pull').forEach(b => {
+        const on = b.dataset.scope === keepScope;
         b.classList.toggle('on', on);
         b.setAttribute('aria-pressed', String(on));
+    });
+    panel.querySelectorAll('.keep-pull').forEach(b => b.addEventListener('click', () => {
+        if (b.dataset.scope === keepScope)
+            return;
+        keepScope = b.dataset.scope === 'career' ? 'career' : 'quest';
+        syncScopeChips();
         render();
     }));
     const resetScope = () => {
         if (keepScope === 'quest')
             return;
         keepScope = 'quest';
-        panel.querySelectorAll('.keep-pull').forEach(b => { b.classList.remove('on'); b.setAttribute('aria-pressed', 'false'); });
+        syncScopeChips();
         render();
     };
     const isStoryKeep = (k) => !k.questId && /^(story|career)$/i.test(k.questName || '');
@@ -10137,11 +10161,11 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         if (k.videoPath) {
             media = saving
                 ? (k.thumb ? `<img class="k18-md" src="${k.thumb}" alt="" decoding="async" />` : '')
-                : `<video class="k18-md" muted loop playsinline ${still ? '' : 'autoplay'} preload="${still ? 'metadata' : 'auto'}"${k.thumb && !isAlpha(k.videoPath) ? ` poster="${k.thumb}"` : ''} src="${escapeHtml(fileUrl(k.videoPath))}" data-open="${escapeHtml(k.videoPath)}" title="Open Video"></video>`
+                : `<video class="k18-md" muted loop playsinline ${still ? '' : 'autoplay'} preload="${still ? 'metadata' : 'auto'}"${k.thumb && !isAlpha(k.videoPath) ? ` poster="${k.thumb}"` : ''} src="${escapeHtml(fileUrl(k.videoPath))}" data-open="${escapeHtml(k.videoPath)}"></video>`
                     + `<button class="keep-play" aria-label="${still ? 'Play' : 'Pause'}" title="${still ? 'Play' : 'Pause'}">${still ? KEEP_PLAY : KEEP_PAUSE}</button>`;
         }
         else if (kSrc(k)) {
-            media = `<img class="k18-md" src="${escapeHtml(kSrc(k))}" alt="" decoding="async"${k.imagePath && !saving ? ` data-open="${escapeHtml(k.imagePath)}" title="Open Image"` : ''} />`;
+            media = `<img class="k18-md" src="${escapeHtml(kSrc(k))}" alt="" decoding="async"${k.imagePath && !saving ? ` data-open="${escapeHtml(k.imagePath)}"` : ''} />`;
         }
         const isText = !media && !k.videoPath;
         const truncated = k.text && k.text.length > TRUNCATE_AT * 4;
@@ -10164,7 +10188,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
             m = `<img class="k18-md" src="${escapeHtml(kSrc(k))}" alt="" decoding="async" loading="lazy" />`;
         else
             m = `<span class="k18-ttxt">${escapeHtml((k.text || '').slice(0, 140))}</span>`;
-        return `<div class="k18-fr${k.id === pickId ? ' on' : ''}${!kSrc(k) && !k.videoPath ? ' is-text' : ''}${k.videoPath && isAlpha(k.videoPath) ? ' alpha' : ''}" data-id="${k.id}" title="${escapeHtml((k.text || '').split('\n')[0] || kDate(k.ts))}">${m}</div>`;
+        return `<div class="k18-fr${k.id === pickId ? ' on' : ''}${!kSrc(k) && !k.videoPath ? ' is-text' : ''}${k.videoPath && isAlpha(k.videoPath) ? ' alpha' : ''}" data-id="${k.id}">${m}</div>`;
     };
     const wireSel = () => {
         sel.querySelectorAll('.k18-x').forEach(el => el.addEventListener('click', (e) => {
@@ -10239,12 +10263,51 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         list.querySelectorAll('.k18-fr').forEach(f => f.classList.toggle('on', f.dataset.id === pickId));
         wireSel();
     };
+    const centerOf = (f, smooth) => {
+        if (!f)
+            return;
+        const left = f.offsetLeft + f.offsetWidth / 2 - list.clientWidth / 2;
+        list.scrollTo({ left, behavior: smooth && !matchMedia('(prefers-reduced-motion: reduce)').matches ? 'smooth' : 'instant' });
+    };
+    const centered = () => {
+        const mid = list.scrollLeft + list.clientWidth / 2;
+        let best = null, d = Infinity;
+        list.querySelectorAll('.k18-fr[data-id]').forEach(f => { const dd = Math.abs(f.offsetLeft + f.offsetWidth / 2 - mid); if (dd < d) {
+            d = dd;
+            best = f;
+        } });
+        return best;
+    };
+    let pickRaf = 0;
+    list.addEventListener('scroll', () => {
+        if (pickRaf)
+            return;
+        pickRaf = requestAnimationFrame(() => {
+            pickRaf = 0;
+            const f = centered();
+            if (f && f.dataset.id !== pickId) {
+                pickId = f.dataset.id;
+                showPick(load().concat(savingKeeps));
+            }
+        });
+    }, { passive: true });
     list.addEventListener('click', (e) => {
         const f = e.target.closest('.k18-fr[data-id]');
-        if (!f || f.dataset.id === pickId)
+        if (!f)
             return;
-        pickId = f.dataset.id;
-        showPick(load().concat(savingKeeps));
+        list.focus({ preventScroll: true });
+        centerOf(f, true);
+    });
+    list.addEventListener('keydown', (e) => {
+        if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight')
+            return;
+        const cur = list.querySelector('.k18-fr.on') || centered();
+        if (!cur)
+            return;
+        const nx = e.key === 'ArrowRight' ? cur.nextElementSibling : cur.previousElementSibling;
+        e.preventDefault();
+        if (nx && nx.dataset.id)
+            centerOf(nx, true);
     });
     const syncStripEdges = () => {
         list.classList.toggle('more', list.scrollWidth > list.clientWidth + 1);
@@ -10275,8 +10338,8 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         const path = '~/unicorn/keeps/' + slug + '/';
         const folderEl = document.getElementById('keep-folder');
         if (folderEl) {
-            folderEl.textContent = 'Folder';
-            folderEl.title = path;
+            folderEl.textContent = path;
+            folderEl.dataset.tip = 'Open in Finder';
         }
         if (fieldLn)
             fieldLn.dataset.hot = 'Into ' + (story ? 'Story' : ((active && active.name) || 'Unicorn'));
@@ -10293,10 +10356,10 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         if (!sorted.some(k => k.id === pickId))
             pickId = newest;
         list.innerHTML = sorted.length > 1
-            ? sorted.map(thumbHtml).join('') + '<div class="k18-fr k18-ghost"></div>'.repeat(Math.max(0, 4 - sorted.length))
+            ? sorted.map(thumbHtml).join('')
             : '';
         showPick(sorted);
-        requestAnimationFrame(syncStripEdges);
+        requestAnimationFrame(() => { centerOf(list.querySelector('.k18-fr.on'), false); syncStripEdges(); });
         updateNorthstarFoot(all);
     };
     const syncCompose = () => {
