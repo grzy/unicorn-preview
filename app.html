@@ -4914,7 +4914,11 @@ if (window.unicorn && window.unicorn.isDesktop)
   html .panel--keep .k18-bar .keep-folder-link { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 400 11px/1.3 var(--sans); color: var(--text-3, rgba(241,236,232,.4)); }
   html .panel--keep .k18-bar .keep-folder-link:hover { color: var(--ic-hover); }
   
-  .panel--keep .k18-field { position: relative; display: none; flex: none; height: 148px; margin-top: 12px; place-items: center; align-content: center; gap: 10px;
+  /* 10-22: the empty field is exactly as tall as the with-keeps stack below the bar (preview 16:10 + caption
+     row 24 + strip 12 + one 16:10 thumb of (W - 18) / 4), so the panel never jumps between quests:
+     W * (10/16 + 10/64) + 36 - 2.81 = W * 25/32 + 33.19. aspect-ratio carries the W part on the
+     content box, the padding carries the constant. */
+  .panel--keep .k18-field { position: relative; display: none; flex: none; box-sizing: content-box; height: auto; aspect-ratio: 32 / 25; padding: 16.59px 0; margin-top: 12px; place-items: center; align-content: center; gap: 10px;
     border-radius: 10px; background: rgba(0,0,0,.22); text-align: center; cursor: text; transition: background var(--t) var(--ease); }
   .panel--keep .k18-field::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none;
     background: linear-gradient(to top right, transparent 3%, rgba(232,149,106,.28) 28%, rgba(167,139,223,.28) 72%, transparent 97%);
@@ -4935,11 +4939,14 @@ if (window.unicorn && window.unicorn.isDesktop)
   .panel--keep.keep-dragover .k18-ln::after { content: attr(data-hot); font: 500 13px/1.3 var(--sans); color: var(--cream); }
   .panel--keep.keep-dragover .k18-arrow { background: rgba(255,255,255,.1); color: var(--cream); }
   .panel--keep.keep-dragover .k18-dest { display: block; }
-  .panel--keep.keep-dragover .k18-sel, .panel--keep.keep-dragover .k18-strip, .panel--keep.keep-dragover .k18-compose, .panel--keep.keep-dragover #keep-pending { display: none !important; }
+  .panel--keep.keep-dragover .k18-sel, .panel--keep.keep-dragover .k18-strip, .panel--keep.keep-dragover .k18-car, .panel--keep.keep-dragover .k18-compose, .panel--keep.keep-dragover #keep-pending { display: none !important; }
   
   .panel--keep .k18-sel { display: none; }
   .panel--keep.k18-has:not(.k18-pending) .k18-sel { display: block; }
   .panel--keep .k18-pv { position: relative; margin-top: 12px; aspect-ratio: 16 / 10; border-radius: 10px; overflow: hidden; background: rgba(0,0,0,.22); }
+  /* 10-22: one keep (no strip): the preview grows by the strip's height, so one keep, many keeps and the
+     empty field all stand the same height (padding % = the panel's content width, like the thumbs) */
+  .panel--keep.k18-has:not(.k18-many) .k18-sel .k18-pv { box-sizing: content-box; padding-bottom: calc(12px + (100% - 18px) * .15625); }
   .panel--keep .k18-pv.alpha { background: repeating-conic-gradient(rgba(255,255,255,.07) 0 25%, transparent 0 50%) 0 0 / 14px 14px, rgba(0,0,0,.22); }
   .panel--keep .k18-pv .k18-md { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: contain; object-position: center; border-radius: 0; cursor: pointer; }
   .panel--keep .k18-pv.is-saving .k18-md { opacity: .55; cursor: default; }
