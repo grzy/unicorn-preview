@@ -4588,6 +4588,12 @@ if (window.unicorn && window.unicorn.isDesktop)
   .panel--keep .keep-chip.on, .panel--keep .keep-chip.on:hover { color: var(--void); }
   .panel--keep .keep-chip.on { background: rgba(255,255,255,.05); }
   .panel--keep .keep-chip.on::after { opacity: 1; }
+  /* 10-22 r5: video variant chips overlaid inside the bottom edge on a soft scrim (same panel height as an image keep) */
+  html .panel--keep .k18-pv.has-chips::before { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 44px; z-index: 1; pointer-events: none; background: linear-gradient(to top, rgba(8,7,9,.62), rgba(8,7,9,.28) 55%, rgba(8,7,9,0)); }
+  html .panel--keep .k18-sel .k18-pv .keep-chips { position: absolute; left: 8px; bottom: 8px; z-index: 2; margin: 0; gap: 3px; flex-wrap: nowrap; }
+  html .panel--keep .k18-pv .keep-chip { padding: 4px 6px; border-radius: 4px; font-size: 9.5px; color: rgba(241,236,232,.82); background: rgba(16,15,17,.55); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+  html .panel--keep .k18-pv .keep-chip:hover { background: rgba(16,15,17,.78); color: rgba(241,236,232,.96); }
+  html .panel--keep .k18-pv .keep-chip.on, html .panel--keep .k18-pv .keep-chip.on:hover { color: var(--void); }
 </style>
 
 <style id="r17">
@@ -5244,7 +5250,7 @@ if (window.unicorn && window.unicorn.isDesktop)
 
     <div class="k18-bar">
       <div class="k18-seg" role="group" aria-label="Keep into">
-        <button class="keep-pull on" data-scope="quest" aria-pressed="true">Folder</button>
+        <button class="keep-pull on" data-scope="quest" aria-pressed="true">Quest</button>
         <button class="keep-pull" data-scope="career" aria-pressed="false">Story</button>
       </div>
       <span id="keep-folder" class="keep-folder-link" role="button" tabindex="0" hidden aria-label="Open in Finder">~/unicorn/keeps/</span>
@@ -5421,7 +5427,7 @@ if (window.unicorn && window.unicorn.isDesktop)
       <div class="a-section collapsible" data-section="brief" id="u-brief-section" hidden>
         <div class="a-label">Brief</div>
         <div class="a-section-body">
-          <button class="u-brief-cta" id="u-brief-cta" title="Compose an HTML brief from this quest's keeps + commits + experiments. Saves to ~/unicorn/briefs/.">
+          <button class="u-brief-cta" id="u-brief-cta" title="Compose a brief from this quest">
             <span class="u-brief-cta-text">Compose weekly brief</span>
           </button>
           <div class="u-brief-meta">A shareable HTML page, composed from this week's keeps, commits and experiments.</div>
@@ -5432,7 +5438,7 @@ if (window.unicorn && window.unicorn.isDesktop)
       <div class="a-section collapsible" data-section="casestory" id="u-case-section">
         <div class="a-label">Case story</div>
         <div class="a-section-body">
-          <button class="u-brief-cta" id="u-case-cta" title="Compose the case story -- the global workshop view from this quest's experiments, commits, and CASESTORY.md. For you, not shared.">
+          <button class="u-brief-cta" id="u-case-cta" title="Compose this quest's case story">
             <span class="u-brief-cta-text">Tell the case story</span>
           </button>
           <div class="u-brief-meta">Your workshop view of the whole quest, drawn from every experiment and commit.</div>
@@ -10175,8 +10181,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         const chips = (!saving && k.variants && k.variants.length)
             ? `<div class="keep-chips">${k.variants.map((v, j) => `<button class="keep-chip${j === 0 ? ' on' : ''}" data-src="${escapeHtml(fileUrl(v[1]))}" data-path="${escapeHtml(v[1])}" data-alpha="${isAlpha(v[1]) ? 1 : 0}">${escapeHtml(v[0])}</button>`).join('')}</div>` : '';
         const cap = isText ? '' : escapeHtml((k.text || '').split('\n')[0]);
-        return `<div class="k18-pv${isText ? ' is-text' : ''}${k.videoPath && isAlpha(k.videoPath) ? ' alpha' : ''}${saving ? ' is-saving' : ''}" data-id="${k.id}">${body}${x}</div>`
-            + chips
+        return `<div class="k18-pv${isText ? ' is-text' : ''}${k.videoPath && isAlpha(k.videoPath) ? ' alpha' : ''}${saving ? ' is-saving' : ''}${chips ? ' has-chips' : ''}" data-id="${k.id}">${body}${x}${chips}</div>`
             + `<div class="k18-door"><span class="k18-cap">${cap}</span><span class="k18-date">${saving ? 'Saving' : kDate(k.ts)}</span></div>`;
     };
     const thumbHtml = (k) => {
@@ -12460,7 +12465,7 @@ ${keepsBlock}${emptyBlock}
             li.innerHTML = `
         <span class="u-brief-row-name">${ESC(wkText)}</span>
         <span class="u-brief-row-actions">
-          <button class="u-brief-row-act u-brief-publish" data-name="${ESC(b.rel || b.name)}" title="Publish to grzy.github.io/unicorn-preview/briefs and copy the link">Publish</button>
+          <button class="u-brief-row-act u-brief-publish" data-name="${ESC(b.rel || b.name)}" title="Publish the brief and copy its link">Publish</button>
           <span class="u-brief-row-meta">Open</span>
         </span>`;
             li.title = b.path;
@@ -12624,7 +12629,7 @@ ${keepsBlock}${emptyBlock}
     .agents b{display:block;font:500 14px/1.3 'Ubuntu Sans',sans-serif;margin-bottom:4px}
     .agents p{font:400 13px/1.5 'Ubuntu Sans',sans-serif;color:#5f5750}`;
     const weekHead = (title) => `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${ESC(title)}</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Ubuntu+Sans:wght@400;500&display=swap" rel="stylesheet"><style>${WEEK_CSS}</style></head><body><div class="page"><article class="sheet">`;
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Ubuntu+Sans:wght@400;500&family=Ubuntu+Sans+Mono:wght@400&display=swap" rel="stylesheet"><style>${WEEK_CSS}</style></head><body><div class="page"><article class="sheet">`;
     const weekFoot = `</article></div></body></html>`;
     const lastWordEm = (s) => { const m = String(s || '').match(/^(.*?)(\S+)$/); return m ? `${ESC(m[1])}<em>${ESC(m[2])}</em>` : ESC(s); };
     const dayFmt = (ts) => new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
@@ -12971,12 +12976,40 @@ ${keepsBlock}${emptyBlock}
             return [];
         }
     };
-    const buildDirHTML = (quest, files) => weekHead(`${quest.name} · Directory`) + `
-  <div class="eb">${ESC(quest.name)}</div>
-  <h1>The <em>directory</em></h1>
-  <div class="cards"><div class="card w6"><h3>Every week<span>${files.length}</span></h3>${files.length
-        ? `<ul class="list">${files.map(f => { const m = f.name.match(/^(\d{4})-W(\d{2})/); return `<li><b>Week ${m ? +m[2] : ''}<small style="font-weight:400;color:var(--faint);margin-left:8px">${m ? isoWeekRange(+m[1], +m[2]) + ', ' + m[1] : ''}</small></b><a href="${ESC(f.name)}">Open →</a></li>`; }).join('')}</ul>`
-        : '<p class="note">No weeks yet. Press Week in the Story panel.</p>'}</div></div>` + weekFoot;
+  // 10-22 r5: the Directory after the paper's (papers/index.html): an embossed title, month
+  // sections, one tinted row per week, and the WHOLE row is the link (number, dates, anywhere)
+  const DIR_CSS = `
+    h1.dir-title{color:#F3EEE6;text-shadow:-1px -1px 0 #fff,-2px -2px 3px rgba(255,255,255,.9),1px 1px 0 rgba(150,130,140,.45),2px 3px 4px rgba(70,50,60,.26),4px 7px 14px rgba(70,50,60,.12);user-select:none;padding:6px 0 2px}
+    .dsec{display:flex;align-items:baseline;gap:14px;margin:36px 0 12px}
+    .dsec h2{font:500 clamp(22px,2.2vw,28px)/1 'Ubuntu Sans',sans-serif;letter-spacing:-.02em}
+    .dsec span{font:400 12px/1 'Ubuntu Sans Mono',ui-monospace,monospace;color:var(--faint)}
+    .drows{display:grid;gap:6px}
+    a.drow{display:grid;grid-template-columns:minmax(150px,auto) 1fr auto;gap:4px 18px;align-items:baseline;padding:14px 18px;border-radius:8px;background:rgba(29,26,31,.045);text-decoration:none;color:var(--pi);cursor:pointer;transition:background .5s var(--ease)}
+    a.drow:hover{background:linear-gradient(160deg,#FCE4DA,#F3E8F2 60%,#E9E0FA)}
+    a.drow:focus-visible{outline:2px solid var(--lilac);outline-offset:2px}
+    a.drow b{font:500 22px/1.1 'Ubuntu Sans',sans-serif;letter-spacing:-.025em}
+    a.drow b em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+    a.drow time{font:400 13px/1.3 'Ubuntu Sans Mono',ui-monospace,monospace;color:var(--soft)}
+    a.drow i{font:400 12px/1 'Ubuntu Sans Mono',ui-monospace,monospace;font-style:normal;color:var(--faint);transition:color var(--t) var(--ease)}
+    a.drow:hover i{color:var(--pi)}
+    @media (max-width:560px){a.drow{grid-template-columns:1fr auto}a.drow time{grid-column:1/-1;grid-row:2}}`;
+  const buildDirHTML = (quest, files) => {
+    const months = new Map();
+    files.forEach(f => { const m = f.name.match(/^(\d{4})-W(\d{2})/); if (!m) return;
+      const y = +m[1], w = +m[2], jan4 = new Date(y, 0, 4), mon = new Date(jan4); mon.setDate(jan4.getDate() - ((jan4.getDay() + 6) % 7) + (w - 1) * 7);
+      const thu = new Date(mon); thu.setDate(mon.getDate() + 3);
+      const key = thu.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+      if (!months.has(key)) months.set(key, []); months.get(key).push({ f, y, w }); });
+    const n = files.length;
+    const body = n ? [...months].map(([m, ws]) => `<div class="dsec"><h2>${ESC(m)}</h2><span>${ws.length} ${ws.length === 1 ? 'week' : 'weeks'}</span></div><div class="drows">`
+      + ws.map(({ f, y, w }) => `<a class="drow" href="${ESC(f.name)}"><b>Week <em>${w}</em></b><time>${isoWeekRange(y, w)}, ${y}</time><i>Open \u2192</i></a>`).join('') + '</div>').join('')
+      : '<p class="lede">No weeks yet. Press Week in the Story panel.</p>';
+    return weekHead(`${quest.name} \u00b7 Directory`) + `<style>${DIR_CSS}</style>
+  <h1 class="wk-title dir-title">Directory</h1>
+  <p class="wk-sub">${ESC(quest.name)} \u00b7 ${n} ${n === 1 ? 'week' : 'weeks'}, newest first</p>
+  ${body}` + weekFoot;
+  };
+
     const writeMissingWeeks = async (quest, existing) => {
         const qSlug = slug(quest.name), have = new Set(existing.map(f => f.name));
         let allCommits = [];
@@ -14777,11 +14810,11 @@ ${keepsBlock}${emptyBlock}
             dr = `<span class="cap${failText ? ' fail' : ''}">${esc(failText || 'Figma isn’t connected')}</span><div class="acts"><button type="button" class="u-fill" data-act="run" title="Connect Figma to this quest">Connect</button></div>`;
         }
         else if (state === 'none') {
-            dr = `<span class="cap${failText ? ' fail' : ''}">${esc(failText || 'No Figma file yet')}</span><div class="acts"><button type="button" class="u-fill" data-act="run" title="Creates this quest’s Figma file from the build. Uses your Claude plan">Create</button></div>`;
+            dr = `<span class="cap${failText ? ' fail' : ''}">${esc(failText || 'No Figma file yet')}</span><div class="acts"><button type="button" class="u-fill" data-act="run" title="Create this quest’s Figma file from the build">Create</button></div>`;
         }
         else if (state === 'ready') {
             dr = (failText ? `<span class="cap fail">${esc(failText)}</span>` : capMeta())
-                + `<div class="acts"><button type="button" class="u-quiet" data-act="run" title="One pass from the build’s code: refreshes Figma and the HTML page, then offers the current cover and two refinements. Uses your Claude plan">Update</button><button type="button" class="u-fill" data-act="open" title="Opens in Figma">Open</button></div>`;
+                + `<div class="acts"><button type="button" class="u-quiet" data-act="run" title="Sync Figma + HTML from the build">Update</button><button type="button" class="u-fill" data-act="open" title="Opens in Figma">Open</button></div>`;
         }
         if (hero.dataset.sig !== state + '|' + pick + '|' + cur + '|' + (q && q.name) + '|' + fmtShort(figmaDate)) {
             hero.dataset.sig = state + '|' + pick + '|' + cur + '|' + (q && q.name) + '|' + fmtShort(figmaDate);
