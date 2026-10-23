@@ -33,6 +33,19 @@
   own(head, (e) => { if (e.target.closest('#st-uc-hit')) return; toast('Opens this build’s folder on your desktop'); });
   const keepFolder = $('keep-folder'); if (keepFolder) keepFolder.hidden = true;
 
+  // ---- R17 Story: Week shows the sample page; Update demos the real progress, then the cover options ----
+  window.r17WeekSrc = (q) => { const f = q && WEEKS[slug(q.name)]; return f ? `story/${slug(q.name)}/${f}` : ''; };
+  let demoT = 0;
+  own($('st-cv-update'), () => {
+    if (!window.r17Design) return;
+    clearTimeout(demoT);
+    if ($('st-cv-update').dataset.mode === 'update') { window.r17Design('updating'); demoT = setTimeout(() => window.r17Design('choose'), 4800); }
+    else { window.r17Design('creating'); demoT = setTimeout(() => { window.r17Design(null); toast('On your desktop, this creates the Figma file from the build'); }, 4800); }
+  });
+  const door = $('r17-design-door');
+  if (door) door.addEventListener('click', (e) => { if (e.target.closest('[data-act="stop"]')) clearTimeout(demoT); }, true);
+  if (window.r17Story) window.r17Story.refresh();
+
   // ---- Story meta: this week's page exists for the sample quests ----
   const meta = () => { const m = $('st-story-meta'), q = active(); if (m) m.textContent = q && WEEKS[slug(q.name)] ? 'This Week' : 'Not Written Yet'; };
 

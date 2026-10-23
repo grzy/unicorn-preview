@@ -5,10 +5,10 @@
     const HEAD = [[1, 2], [2, 2], [3, 2], [0, 3], [1, 3], [2, 3], [3, 3]];
     const BODY = [[2, 4], [3, 4], [4, 4], [5, 4], [6, 4], [7, 4], [2, 5], [3, 5], [4, 5], [5, 5], [6, 5], [7, 5]];
     const PH = {
-        LF: [[-6, 58], [14, 40], [34, 8], [38, 0], [8, 0], [-26, 4], [-30, 44], [12, 30]],
-        TF: [[-14, 62], [24, 44], [40, 4], [16, 0], [-22, 0], [-38, 16], [-24, 50], [20, 36]],
-        LH: [[34, 40], [30, 18], [14, 0], [-12, 0], [-34, 4], [-40, 22], [-30, 30], [6, 44]],
-        TH: [[28, 36], [20, 10], [-6, 0], [-30, 0], [-40, 12], [-36, 26], [-14, 40], [14, 40]]
+        LF: [[-6, 58], [14, 40], [34, 8], [24, 4], [8, 0], [-26, 4], [-30, 44], [12, 30]],
+        TF: [[-14, 62], [24, 44], [40, 4], [12, 0], [-22, 0], [-38, 16], [-24, 50], [20, 36]],
+        LH: [[34, 40], [30, 18], [14, 0], [2, 0], [-34, 4], [-40, 22], [-30, 30], [6, 44]],
+        TH: [[28, 36], [20, 10], [-6, 0], [-34, 0], [-40, 12], [-36, 26], [-14, 40], [14, 40]]
     };
     for (const n in PH) {
         PH[n] = PH[n].map(([u, f]) => { u *= .9; if (n[1] === 'H')
@@ -439,7 +439,35 @@
         });
         c.globalAlpha = 1;
     }
-    window.Unicorn7 = { render, frameAt, sustainFrame, drawThinking, o7, T_LOGO, T_RUN, TOTAL };
+    const REST = {
+        kneel: ['..........', '.X........', '.XLL......', '.PPPLL....', 'PPPPLLL...', '..PPPPPPLL', '.QPPPPPPLL', '.QPP...PQ.'],
+        rest: ['..........', '..........', '.X........', '.XLL......', '.PPPLL....', 'PPPPLLL...', '..PPPPPPLL', 'QQPPPPPPLL'],
+        swish: ['..........', '..........', '.X........', '.XLL......', '.PPPLL....', 'PPPPLLL...', '..PPPPPPL.', 'QQPPPPPPLLL']
+    };
+    const REST_SEQ = [['rest', 3200], ['swish', 260], ['rest', 180], ['swish', 260]], REST_T = 3900;
+    const KNEEL_MS = 260;
+    function restAt(ms, reduced) {
+        if (reduced)
+            return { key: 'rest', next: Infinity };
+        if (ms < KNEEL_MS)
+            return { key: 'kneel', next: KNEEL_MS - ms };
+        let t = (ms - KNEEL_MS) % REST_T;
+        for (const [k, d] of REST_SEQ) {
+            if (t < d)
+                return { key: k, next: d - t };
+            t -= d;
+        }
+        return { key: 'rest', next: 16 };
+    }
+    function drawRest(cv, s, key) {
+        const c = cv.getContext('2d'), OX = 3 * s, OY = 2 * s;
+        c.clearRect(0, 0, cv.width, cv.height);
+        (REST[key] || REST.rest).forEach((r, y) => [...r].forEach((ch, i) => { const col = SHADE[ch]; if (col) {
+            c.fillStyle = col;
+            c.fillRect(OX + i * s, OY + y * 2 * s, s, 2 * s);
+        } }));
+    }
+    window.Unicorn7 = { render, frameAt, sustainFrame, drawThinking, restAt, drawRest, KNEEL_MS, o7, T_LOGO, T_RUN, TOTAL };
     window.UnicornCharacters = window.UnicornCharacters || {};
     window.UnicornCharacters.peach = Object.assign({ name: 'Peach', faces: 'left' }, window.Unicorn7);
     window.loadUnicornCharacter = (id, base) => new Promise((resolve) => {
@@ -457,12 +485,4 @@
         sc.onerror = () => resolve(C.peach);
         document.head.appendChild(sc);
     });
-})();
-
-/* 10-21: Resting pose A (lying down, tail swish), mirrored from src/unicorn7.js */
-(() => {
-const SHADE={P:'#FFAF5F',L:'#AF87D7',D:'#9A72C4',X:'#9A72C4',Q:'#E8954C'};
-const ext = { restAt, drawRest, KNEEL_MS };
-Object.assign(window.Unicorn7, ext);
-if (window.UnicornCharacters && window.UnicornCharacters.peach) Object.assign(window.UnicornCharacters.peach, ext);
 })();

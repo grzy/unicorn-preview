@@ -12,7 +12,7 @@ window.GUEST_PREVIEW = true;
 </script>
 <script>window.__srcSeedVersion = "6";</script>
 <script src="preview/demo-data.js?v=06507cfe"></script>
-<script src="preview/guest-early.js?v=bb8203c3"></script>
+<script src="preview/guest-early.js?v=2532abb9"></script>
 <style>/* Unicorn public preview: guest-only styles, loaded in the head. */
 
 /* Framed: on big screens the shell shows this page as a window on a real
@@ -3687,7 +3687,7 @@ if (window.unicorn && window.unicorn.isDesktop)
 
   .p-mini { transition: opacity var(--t) var(--ease), color var(--t) var(--ease); }
   .p-mini::before { height: 1.5px; }
-  /* 10-21: measured -- the bars sat 0.9px above the title's x-height center on every panel; 1px down centers them */
+  
   .p-mini::before, .p-mini::after { top: calc(50% + 1px); }
   .p-mini::after {
     width: 1.5px; opacity: 1;
@@ -3806,7 +3806,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   .st-row { display: flex; gap: 6px; align-items: center; flex: none; }
   .st-row .u-quiet { padding: 6px 4px; }
   .st-row .u-fill { padding: 7px 12px; font-size: 11px; }
-  #st-canvas .st-row button { white-space: nowrap; }   /* 10-21: Connect Figma / Create / Update stay one line */
+  #st-canvas .st-row button { white-space: nowrap; }   
 
   #mirror-call { padding: 0 14px; }
   #mirror-call .nameplate { position: relative; display: grid; grid-template-columns: 1fr auto; align-items: last baseline; }
@@ -3838,6 +3838,8 @@ if (window.unicorn && window.unicorn.isDesktop)
   #mirror-call .mh { color: rgba(241,236,232,.42); }
   #mirror-call .nm-go:hover .mh, #mirror-call .nm-go:focus-visible .mh { color: var(--text); }
   
+  html.is-desktop #agent { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+  
   #agent .a-attached { position: relative; }
   #agent .st-uc { flex: none; display: block; margin: -10px -6px -10px 0; image-rendering: pixelated; position: relative; top: var(--uc-drop, 6px); }
   
@@ -3848,9 +3850,9 @@ if (window.unicorn && window.unicorn.isDesktop)
   html.r26-boot *, html.r26-boot *::before, html.r26-boot *::after { transition: none !important; }
   #agent .st-uc-hit { flex: none; display: block; padding: 8px; margin: -18px -14px -18px 4px; position: relative; top: 6px; cursor: default; }
   #agent .st-uc-hit .st-uc { margin: 0; top: 0; }
-  /* 10-20: the status in words beside him (no hover needed); the click still jumps to the session */
+  
   #agent .st-uc-hit { display: inline-flex; align-items: center; gap: 6px; }
-  #agent .st-uc-word { font: 500 11px/1 var(--sans); color: var(--text-whisper-2); white-space: nowrap; transition: color var(--t) var(--ease); }
+  #agent .st-uc-word { font: 500 11px/1 var(--sans); color: var(--text-whisper-2); white-space: nowrap; text-align: right; transition: color var(--t) var(--ease); }
   #agent .st-uc-word:empty { display: none; }
   #agent .st-uc-hit[data-state="working"] .st-uc-word { color: var(--peach); }
   #agent .st-uc-hit[data-state="waiting"] .st-uc-word { color: var(--lilac); }
@@ -3876,7 +3878,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   #agent:hover .a-section.collapsible.open .a-label .nm::before, #agent .a-section.collapsible.open .a-label .nm::before { transform: translateX(0) rotate(90deg); }
   
   #mirror-call .nm-slot > * { transform: none !important; transition: opacity .2s var(--ease) !important; transition-delay: 0s !important; }
-  /* 10-20: no "Open today's paper" hint; hover only lights the words (the date stays put) */
+  
   #mirror-call .nm-go:hover .nm-slot > .nm-rest, #mirror-call .nm-go:focus-visible .nm-slot > .nm-rest { opacity: 1; }
   #mirror-call .nm-go:hover .nm-slot > .nm-hint, #mirror-call .nm-go:focus-visible .nm-slot > .nm-hint { opacity: 0; }
 </style>
@@ -4046,7 +4048,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   .panel--quest .q-add-in:hover::placeholder { color: var(--text-mute); }
 
   .panel--quest .q-complete-row { margin-top: 14px; }
-  /* 10-19: room below the CTA matches its side inset */
+  
   .panel--quest .q-complete-row { margin-bottom: var(--in); }
   .panel--quest .q-complete-btn.u-fill {
     width: auto; display: inline-flex; margin-left: var(--in); padding: 10px 14px; border: 0; border-radius: 8px;
@@ -4060,7 +4062,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   
   .panel--commits .c-wk-n { font: 400 11px/1 var(--sans); color: var(--text-whisper-2); white-space: nowrap; letter-spacing: 0; text-transform: none; opacity: 0; transition: opacity var(--t) var(--ease); }
   .panel--commits .c-wk-n b { font-weight: 500; color: var(--text-mute); }
-  /* 10-21: "137 This Week" (11px) sat 0.8px above the title's baseline; this seats it on the same baseline */
+  
   .panel--commits .c-wk-n { position: relative; top: 1px; }
   .panel--commits.minimized .c-wk-n { opacity: 1; }
   
@@ -4104,8 +4106,10 @@ if (window.unicorn && window.unicorn.isDesktop)
   .panel--commits .c-foot { align-items: center; margin-top: 12px; }
   .panel--commits .c-meta { font: 400 11px/1.5 var(--sans); letter-spacing: 0; color: var(--text-whisper-2); }
   .panel--commits .c-meta .c-count-inline, .panel--commits .c-meta .c-msg { color: var(--text-mute); }
-  .panel--commits .c-meta .c-count-inline { font-variant-numeric: tabular-nums; white-space: pre; }   /* 10-21: keep the figure space */
+  .panel--commits .c-meta .c-count-inline { font-variant-numeric: tabular-nums; white-space: pre; }   
+  
   .panel--commits .c-meta .c-n { display: inline-flex; justify-content: flex-end; width: 2ch; }
+  
   .panel--commits .c-meta { transition: opacity 180ms var(--ease); }
   .panel--commits .c-meta.is-out { opacity: 0; transition-duration: 220ms; }
   html .panel--commits .c-sound {
@@ -4120,7 +4124,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   .panel--commits .c-sound:hover .c-dot, html .panel--commits .c-sound.on .c-dot { opacity: 1; }
   
   .panel--commits #c-sound-label { min-width: 0; }
-  /* 10-20: ONE calm footer row -- Sound left, a fixed count slot, Fewer/More right. No layout shift on hover. */
+  
   .panel--commits .c-foot.c-foot--one { display: grid; grid-template-columns: 72px 1fr auto; align-items: center; gap: 8px; margin-top: 12px; }
   .panel--commits .c-foot--one .c-sound { margin: 0; justify-self: start; white-space: nowrap; }
   .panel--commits .c-foot--one .c-meta { flex: none; min-width: 0; height: 1.5em; text-align: center; white-space: nowrap; font-variant-numeric: tabular-nums; }
@@ -4150,12 +4154,14 @@ if (window.unicorn && window.unicorn.isDesktop)
   .panel--keep .keep-pull {
     appearance: none; border: 0; cursor: pointer; padding: 5px 8px; border-radius: 5px;
     font: 500 10.5px/1 var(--sans); color: var(--text-mute); background: rgba(255,255,255,.05);
-    transition: background var(--t) var(--ease), color var(--t) var(--ease), filter var(--t) var(--ease);
+    position: relative; isolation: isolate;
+    transition: background var(--t) var(--ease), color var(--t) var(--ease);
   }
-  .panel--keep .keep-pull:hover { background: rgba(255,255,255,.09); color: var(--cream); }
   
-  .panel--keep .keep-pull.on { background: linear-gradient(135deg, rgba(232,149,106,.30), rgba(167,139,223,.30)); color: var(--text-mute); }
-  .panel--keep .keep-pull.on:hover { background: linear-gradient(135deg, rgba(232,149,106,.38), rgba(167,139,223,.38)); color: var(--cream); filter: none; }
+  .panel--keep .keep-pull::after { content: ""; position: absolute; inset: 0; border-radius: inherit; z-index: -1; background: var(--grad-fill); opacity: 0; transition: opacity var(--t) var(--ease); }
+  .panel--keep .keep-pull:hover { background: rgba(255,255,255,.09); }
+  .panel--keep .keep-pull.on { color: var(--void); }
+  .panel--keep .keep-pull.on::after { opacity: 1; }
   .panel--keep .keep-hint { margin-left: auto; font: 400 10.5px/1 var(--sans); letter-spacing: 0; color: var(--text-whisper-2); transition: opacity var(--t) var(--ease); }
   html .panel--keep .keep-save.u-fill { padding: 7px 12px; font: 500 11px/1 var(--sans); letter-spacing: 0; text-transform: none; color: var(--void); background: none; border: 0; }
   html .panel--keep .keep-save.u-fill:hover { background: none; color: var(--void); }
@@ -4212,20 +4218,26 @@ if (window.unicorn && window.unicorn.isDesktop)
   .panel--keep .keep-save.u-fill { transition: color var(--t) var(--ease); }
   
   .panel--keep .keep-list { padding-bottom: 52px; -webkit-mask-image: linear-gradient(#000 calc(100% - 24px), transparent); mask-image: linear-gradient(#000 calc(100% - 24px), transparent); }
-  /* 10-21 night: Keep fixes (mirrors src/bloom-preview.html) */
+  
   .panel--keep .keep-item { grid-template-columns: minmax(0, 1fr); }
+  
   .panel--keep .keep-list { scrollbar-gutter: stable; }
+  
   .panel--keep .keep-item > .keep-item-img { aspect-ratio: auto; height: auto; min-height: 48px; max-height: 340px; object-fit: contain; object-position: center; background: rgba(0,0,0,.22); }
+  
   .panel--keep .keep-item-delete { top: 6px; right: 6px; color: var(--text-mute); }
   .panel--keep .keep-item-delete:hover { color: var(--tomato); }
+  
   .panel--keep .keep-play, .panel--keep .keep-item-delete { width: 24px; height: 24px; padding: 0; display: grid; place-items: center; border-radius: 6px; font-size: 0; line-height: 0; letter-spacing: 0;
     color: rgba(241,236,232,.48); background: rgba(16,15,17,.66); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
   .panel--keep .keep-play { transition: color var(--t) var(--ease), background var(--t) var(--ease); }
   .panel--keep .keep-play:hover { color: rgba(241,236,232,.94); background: rgba(16,15,17,.85); }
   .panel--keep .keep-item-delete:hover { color: #FB7185; background: rgba(16,15,17,.85); }
   .panel--keep .k-ic { width: 16px; height: 16px; display: block; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; overflow: visible; pointer-events: none; }
+  
   .p-mini { color: rgba(241,236,232,.48); }
   .p-mini:hover { color: rgba(241,236,232,.94); }
+  
   .panel--keep .keep-item > .keep-item-text { font: 400 12px/1.5 var(--mono); color: var(--text); background: rgba(255,255,255,.04); border-radius: 6px; padding: 10px 32px 10px 12px; white-space: pre-wrap; overflow-wrap: anywhere; max-height: 220px; overflow: auto; }
 </style>
 
@@ -4260,7 +4272,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   #activity-panel .act-search:hover { background: rgba(255,255,255,.07); }
   #activity-panel .act-search:focus { background: rgba(255,255,255,.09); }
   #activity-panel .act-search::placeholder { color: var(--text-whisper-2); }
-  /* 10-20: like Keep -- the scope on the LEFT, the search icon on the RIGHT */
+  
   #activity-panel .act-filters .act-tabs { order: 1; }
   #activity-panel .act-filters .act-stog { order: 2; margin-left: auto; margin-right: var(--in); }
   
@@ -4366,7 +4378,8 @@ if (window.unicorn && window.unicorn.isDesktop)
   html #menubar .mb-float-note { display: none !important; }
   #menubar .mb-pop-foot { display: block; padding: 8px 8px 8px 34px; font: 400 11px/1.3 var(--sans); color: var(--text-whisper-2); }
 </style>
-<script src="unicorn7.js?v=r1021rest"></script>
+<script src="unicorn7.js?v=69c1b1b1"></script>
+<script src="characters/agent-state.js"></script>
 
 <style id="r26-logo">
   .uc7 { display: block; width: 100%; height: 100%; }
@@ -4499,8 +4512,6 @@ if (window.unicorn && window.unicorn.isDesktop)
 
   #greeting-band { background-origin: border-box; }
 
-  
-  
   .q-st-sep, #menubar .mb-hr { height: 1px; border: 0; margin: 6px 8px; background: rgba(255,255,255,.07); }
   
   html .panel--quest .q-switcher .q-sw-btn, html.is-desktop .panel--quest .q-switcher .q-sw-btn {
@@ -4510,7 +4521,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   html .panel--quest .q-switcher .q-sw-btn:hover, html .panel--quest .q-switcher .q-sw-btn.on:hover { background: rgba(255,255,255,.06); }
   html .panel--quest .q-switcher .q-sw-btn.on::before {
     content: "" !important; position: absolute; left: 12px; top: 50%; width: 8px; height: 4.5px;
-    inset: 50% auto auto 12px; padding: 0; border-radius: 0; background: none; -webkit-mask: none; mask: none;
+    inset: 50% auto auto 12px; padding: 0; border-radius: 0; background: none; -webkit-mask: none; mask: none;   
     border-left: 1.5px solid var(--cream); border-bottom: 1.5px solid var(--cream);
     transform: translate(1px, -75%) rotate(-45deg);
   }
@@ -4519,8 +4530,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   html .panel--quest .q-switcher .q-pop-foot .q-sw-archived, html.is-desktop .panel--quest .q-switcher .q-pop-foot .q-sw-archived { padding: 8px; }
   html .panel--quest .q-pop-foot .q-sw-add .q-plus { width: 16px; text-align: center; }
   html .panel--quest .q-pop-foot .q-sw-archived { font: 500 12px/16px var(--sans); }
-  /* 10-19: the switcher foot stacks as menu rows under the divider: + New Quest
-     (the + in the check column), then N Archived, words on the quest names */
+  
   html .panel--quest .q-switcher .q-pop-foot { display: grid; grid-template-columns: 1fr; gap: 1px; margin-top: 0; }
   html .panel--quest .q-switcher .q-pop-foot .q-sw-add, html.is-desktop .panel--quest .q-switcher .q-pop-foot .q-sw-add,
   html .panel--quest .q-switcher .q-pop-foot .q-sw-archived, html.is-desktop .panel--quest .q-switcher .q-pop-foot .q-sw-archived {
@@ -4528,45 +4538,39 @@ if (window.unicorn && window.unicorn.isDesktop)
   }
   html .panel--quest .q-switcher .q-pop-foot .q-sw-archived, html.is-desktop .panel--quest .q-switcher .q-pop-foot .q-sw-archived { padding: 8px 8px 8px 34px; }
   html .panel--quest .q-switcher .q-pop-foot .q-sw-add:hover, html .panel--quest .q-switcher .q-pop-foot .q-sw-archived:hover { background: rgba(255,255,255,.06); color: var(--text); }
-  /* Quest actions (···) has no checks: no 34px check column, 12px in, shrink to fit */
+  
   html .panel--quest .q-pause-row { min-width: 0; }
   html .panel--quest .q-pause-row > span { padding: 8px 12px; }
-  /* opening ··· changes nothing in the flow: keep the closed spacing under the counts */
+  
   html .panel--quest.show-manage .q-sub-row { margin-bottom: 8px; }
 
-  /* ── menu round (10-19 b) ── */
-  /* the stats line starts where the quest name's TEXT starts (the pill's 12px in) */
   html .panel--quest .q-sub-row { padding-left: 12px; }
-  /* caret chips: the right inset = the top/bottom inset, and the caret's ink
-     centered in its chip (the › sits 0.75px low in its line box; 1.5px of bottom
-     padding lifts it, and it rotates with the chip so every direction stays true) */
+  
   #menubar .mb-car, .panel--quest .q-car { box-sizing: border-box; padding-bottom: 1.5px; }
-  #menubar .mb-car { margin-right: -11.75px; }    /* 16px pad - 4.25px: (30.5 tall - 22) / 2 */
-  .panel--quest .q-car { margin-right: -5.6px; }  /* 12px pad - 6.4px: (34.8 tall - 22) / 2 */
-  /* Paused quests in the switcher: dimmed (still readable), "Paused" at the right */
+  #menubar .mb-car { margin-right: -11.75px; }    
+  .panel--quest .q-car { margin-right: -5.6px; }  
+  
   html .panel--quest .q-switcher .q-sw-btn.paused, html.is-desktop .panel--quest .q-switcher .q-sw-btn.paused {
     display: flex; align-items: center; justify-content: space-between; gap: 16px; color: var(--text-mute);
   }
   html .panel--quest .q-switcher .q-sw-btn.paused:hover { color: var(--text); }
   html .panel--quest .q-switcher .q-sw-btn.paused .q-sw-tag { flex: none; font: 500 11px/16px var(--sans); color: var(--text-whisper); }
-  /* Show All: about 8 rows, the rest scrolls inside, with the Keep list's bottom fade */
+  
   html .panel--quest .q-archive-box.q-all {
     max-height: calc(var(--archive-row) * 8 + var(--archive-gap) * 7 + 24px); overflow-y: auto;
     padding-bottom: 24px; margin-right: -10px; padding-right: 10px;
     -webkit-mask-image: linear-gradient(#000 calc(100% - 24px), transparent); mask-image: linear-gradient(#000 calc(100% - 24px), transparent);
   }
-  /* 10-20 B1: when, on every row. Whisper mono at the right edge; the name ellipses first */
+  
   .panel--quest .q-exp .q-when {
     flex: none; white-space: nowrap; margin-left: auto;
     font: 400 10.5px/1 var(--mono); letter-spacing: .02em; font-variant-numeric: tabular-nums;
     color: var(--text-whisper-2); cursor: default;
   }
   .panel--quest .q-exp .q-when.started { color: var(--text-mute); }
-  /* Delete Experiment: an × in the check column, in the row's own color */
+  
   .q-st-opt.q-st-del .q-st-ck::before { content: "\00d7"; font: 400 16px/1 var(--sans); color: currentColor; }
-  /* 10-19 c: Quest actions (···) join the menus' one grid: a symbol in the 16px check
-     column (centered 16px in), words 34px in. Pause = the Paused dot, Resume = the
-     Started dot, Delete = Delete Experiment's x, in the row's own color */
+  
   html .panel--quest .q-pause-row > span { position: relative; padding: 8px 12px 8px 34px; }
   html .panel--quest .q-pause-row > .q-pause-btn::before {
     content: ""; position: absolute; left: 12px; top: 50%; width: 8px; height: 8px; margin-top: -4px;
@@ -4577,9 +4581,7 @@ if (window.unicorn && window.unicorn.isDesktop)
     content: "\00d7"; position: absolute; left: 8px; top: 50%; width: 16px; height: 16px; margin-top: -8px;
     display: grid; place-items: center; font: 400 16px/1 var(--sans); color: currentColor;
   }
-  /* 10-19 c: Keep variant chips, two states like .keep-pull. Hover = a soft gray lift,
-     text stays put. On = the gradient faded in on a layer under the text, and the text
-     turns void on the same timing, so fill and black arrive together */
+  
   .panel--keep .keep-chip { position: relative; isolation: isolate; transition: background var(--t) var(--ease), color var(--t) var(--ease); }
   .panel--keep .keep-chip::after { content: ""; position: absolute; inset: 0; border-radius: inherit; z-index: -1; background: var(--grad-fill); opacity: 0; transition: opacity var(--t) var(--ease); }
   .panel--keep .keep-chip:hover { background: rgba(255,255,255,.09); color: var(--text-mute); }
@@ -4587,8 +4589,266 @@ if (window.unicorn && window.unicorn.isDesktop)
   .panel--keep .keep-chip.on { background: rgba(255,255,255,.05); }
   .panel--keep .keep-chip.on::after { opacity: 1; }
 </style>
+
+<style id="r17">
+  :root {
+    --ic-rest: rgba(241,236,232,.48); --ic-hover: rgba(241,236,232,.94); --ic-danger: #FB7185;
+    
+    --m-close: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M4.75 4.75l6.5 6.5'/><path d='M11.25 4.75l-6.5 6.5'/></svg>");
+    --m-pause: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M6.25 4.75v6.5'/><path d='M9.75 4.75v6.5'/></svg>");
+    --m-play: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M5.5 4.6v6.8a.6.6 0 0 0 .92.5l5.2-3.4a.6.6 0 0 0 0-1l-5.2-3.4a.6.6 0 0 0-.92.5z'/></svg>");
+    --m-check: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M3.75 8.5 6.6 11.25l5.65-6.5'/></svg>");
+    --m-check-s: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M4.75 8.4 6.75 10.25l4.5-5'/></svg>");
+    --m-plus: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M8 3.75v8.5'/><path d='M3.75 8h8.5'/></svg>");
+    --m-pen: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M10.25 3.5 12.5 5.75 6 12.25l-2.75.5.5-2.75z'/></svg>");
+    --m-folder: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M2.75 4.75a1 1 0 0 1 1-1h2.6l1.4 1.5h4.5a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1h-8.5a1 1 0 0 1-1-1z'/></svg>");
+    --m-caret: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M6.5 4.25 10.25 8 6.5 11.75'/></svg>");
+  }
+  .ic { width: 16px; height: 16px; flex: none; display: block; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; overflow: visible; pointer-events: none; }
+  
+  .r17-mask { display: block; width: 16px; height: 16px; flex: none; background: currentColor; -webkit-mask: var(--m) center / 16px 16px no-repeat; mask: var(--m) center / 16px 16px no-repeat; }
+
+  html .p-mini { width: 16px; height: 16px; margin-left: 8px; margin-right: -4.25px; overflow: visible; border-radius: 0;
+    color: var(--ic-rest); opacity: 0; pointer-events: none; transition: opacity var(--t) var(--ease), color var(--t) var(--ease); }
+  html .p-mini::before, html .p-mini::after { content: none !important; display: none !important; }
+  html .p-mini::after { content: "" !important; display: block !important; position: absolute; inset: -6px; background: none; transform: none !important; width: auto; height: auto; }
+  html .p-mini .ic { position: absolute; left: 0; top: 0; }
+  html .p-mini .ic.dn, html .minimized .p-mini .ic.up { display: none; }
+  html .minimized .p-mini .ic.dn { display: block; }
+  html .panel:hover .p-mini, html #agent:hover .p-mini, html #activity-panel:hover .p-mini, html .p-mini:focus-visible { opacity: 1; pointer-events: auto; }
+  html .panel.minimized:not(:hover) .p-mini, html #agent.minimized:not(:hover) .p-mini, html #activity-panel.minimized:not(:hover) .p-mini { opacity: 0; pointer-events: none; }
+  html .p-mini:hover { color: var(--ic-hover); }
+  
+  html .p-head .p-dot { cursor: inherit; }
+  html .p-head .p-dot::before { content: none !important; }
+
+  html .panel.panel--quest { padding: 27px 30px 30px; }
+  html .panel.panel--quest.minimized { padding: 27px 30px 30px !important; }
+  html .panel--quest .p-head { display: flex; align-items: center; gap: 0; height: 16px; min-height: 16px; margin-bottom: 8px; font: 500 13px/16px var(--sans); color: var(--text-mute); }
+  html .panel--quest .p-head > span:first-child { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+  html .panel--quest .p-head .p-dot, html #agent .p-head .p-dot { width: 8px; height: 8px; margin: 0; vertical-align: 0; }
+  html .panel--quest .p-head .p-mini { order: 2; margin-left: auto; margin-right: 0; }
+  
+  html .panel--quest .p-head .q-manage { order: 3; position: relative; display: grid; place-items: center; width: 16px; height: 16px; margin: 0 -2.75px 0 14px; padding: 0;
+    border-radius: 0; background: none !important; font-size: 0; letter-spacing: 0; color: var(--ic-rest); cursor: pointer;
+    opacity: 0; pointer-events: none; visibility: visible; transition: opacity var(--t) var(--ease), color var(--t) var(--ease); }
+  html .panel--quest .p-head .q-manage::after { content: ""; position: absolute; inset: -6px; }
+  html .panel--quest:not(.minimized):hover .p-head .q-manage, html .panel--quest.show-manage .p-head .q-manage, html .panel--quest .p-head .q-manage:focus-visible { opacity: 1; pointer-events: auto; }
+  html .panel--quest .p-head .q-manage:hover, html .panel--quest.show-manage .p-head .q-manage { color: var(--ic-hover); }
+  html .panel--quest.minimized .p-head .q-manage { opacity: 0 !important; pointer-events: none !important; }
+  html .panel--quest .q-sub-row { display: none !important; }
+  
+  html .panel--quest .q-pause-row { top: 55px !important; right: 30px; min-width: 176px; }
+  html .panel--quest .q-pause-row > span { padding: 8px 12px 8px 34px; color: var(--text); }
+  html .panel--quest .q-pause-row > span:hover { background: rgba(255,255,255,.06); }
+  html body .panel--quest .q-pause-row > span[class]::before { content: ""; position: absolute; left: 8px; top: 50%; width: 16px; height: 16px; margin-top: -8px;
+    border: 0; border-radius: 0; background: var(--ic-rest); -webkit-mask: var(--m) center / 16px 16px no-repeat; mask: var(--m) center / 16px 16px no-repeat; transition: background var(--t) var(--ease); }
+  html body .panel--quest .q-pause-row > span[class]:hover::before { background: var(--ic-hover); }
+  .panel--quest .q-act-add { --m: var(--m-plus); }
+  .panel--quest .q-act-rename { --m: var(--m-pen); }
+  .panel--quest .q-act-folder { --m: var(--m-folder); }
+  .panel--quest .q-pause-btn { --m: var(--m-pause); }
+  .panel--quest .q-pause-btn.is-paused { --m: var(--m-play); }
+  .panel--quest .q-del-btn { --m: var(--m-close); }
+  html body .panel--quest .q-pause-row > .q-pause-btn.is-paused::before { background: var(--ic-rest); }
+  html body .panel--quest .q-pause-row > .q-del-btn { color: var(--text-mute); }
+  html body .panel--quest .q-pause-row > .q-del-btn:hover, html body .panel--quest .q-pause-row > .q-del-btn.armed { color: var(--ic-danger); background: rgba(255,255,255,.06); }
+  html body .panel--quest .q-pause-row > span.q-del-btn[class]:hover::before, html body .panel--quest .q-pause-row > span.q-del-btn[class].armed::before { background: var(--ic-danger); }
+  .panel--quest .q-act-sep { height: 1px; margin: 6px 8px; background: rgba(255,255,255,.07); }
+
+  html .panel--quest .q-menu-btn, html.is-desktop .panel--quest .q-menu-btn { padding: 6px 10px 6px 16px; gap: 8px; border-radius: 10px; font: 500 19px/1.2 var(--sans); }
+  html .panel--quest .q-car { width: 16px; height: 16px; margin: 0; padding: 0; display: grid; place-items: center; font-size: 0; background: none !important; color: var(--void); transform: rotate(90deg); }
+  html .panel--quest .q-car .ic { stroke-width: 1.75; }
+  html .panel--quest .q-top.open .q-car { transform: rotate(-90deg); }
+  
+  html .panel--quest .q-switcher .q-sw-btn.on::before { content: "" !important; left: 8px !important; top: 50% !important; inset: 50% auto auto 8px !important; width: 16px !important; height: 16px !important; margin-top: -8px;
+    border: 0 !important; transform: none !important; background: var(--ic-hover) !important; -webkit-mask: var(--m-check) center / 16px 16px no-repeat !important; mask: var(--m-check) center / 16px 16px no-repeat !important; }
+  html .panel--quest .q-pop-foot .q-sw-add .q-plus { width: 16px; height: 16px; font-size: 0; display: block; background: var(--ic-rest); -webkit-mask: var(--m-plus) center / 16px 16px no-repeat; mask: var(--m-plus) center / 16px 16px no-repeat; transition: background var(--t) var(--ease); }
+  html .panel--quest .q-pop-foot .q-sw-add:hover .q-plus { background: var(--ic-hover); }
+
+  html .panel--quest .q-exps { margin: 8px -8px 0; gap: 1px; }
+  html .panel--quest .q-exp { gap: 8px; min-height: 32px; padding: 0 8px; border-radius: 6px; }
+  html .panel--quest .q-slot { flex: 0 0 8px; width: 8px; display: flex; justify-content: center; overflow: visible; }
+  html .panel--quest .q-exp .q-status { flex: none; }
+  html .panel--quest .q-exp .q-status[data-s="active"]::before,
+  html .panel--quest .q-exp .q-status[data-s="starting"]::before { background: var(--lilac) !important; }
+  html .panel--quest .q-exp.is-now .q-status::before { background: #FFAF5F !important; }
+  html .panel--quest .q-exp .q-status[data-s="paused"]::before,
+  html .panel--quest .q-exp .q-status[data-s="complete"]::before,
+  html .panel--quest .q-exp .q-status[data-s="complete"]:hover::before,
+  html .panel--quest .q-exp .q-status[data-s="complete"][aria-expanded="true"]::before {
+    width: 16px; height: 16px; border: 0; border-radius: 0; transform: none; background: var(--ic-rest);
+    -webkit-mask: var(--m-pause) center / 16px 16px no-repeat; mask: var(--m-pause) center / 16px 16px no-repeat; }
+  html .panel--quest .q-exp .q-status[data-s="complete"]::before,
+  html .panel--quest .q-exp .q-status[data-s="complete"]:hover::before,
+  html .panel--quest .q-exp .q-status[data-s="complete"][aria-expanded="true"]::before { -webkit-mask-image: var(--m-check-s); mask-image: var(--m-check-s); }
+  html .panel--quest .q-exp .q-status[data-s="paused"]:hover::before, html .panel--quest .q-exp .q-status[data-s="paused"][aria-expanded="true"]::before,
+  html .panel--quest .q-exp .q-status[data-s="complete"]:hover::before, html .panel--quest .q-exp .q-status[data-s="complete"][aria-expanded="true"]::before { transform: none; background: var(--ic-hover); }
+  html .panel--quest .q-exp.finished .q-name, html .panel--quest .q-exp .q-name { text-decoration: none; }
+  html .panel--quest .q-exp:has(> .q-slot .q-status[data-s="paused"]) .q-name { color: var(--text-mute); }
+  html .panel--quest .q-exp.finished .q-name { color: var(--text-whisper-2); }
+  
+  html .panel--quest .q-exp .q-when { opacity: 0; font: 400 11px/1 var(--mono); letter-spacing: .02em; color: var(--text-whisper-2); transition: opacity var(--t) var(--ease); }
+  html .panel--quest .q-exp:hover .q-when { opacity: 1; }
+  html .panel--quest .q-exp.is-now .q-when { display: none; }
+  html .panel--quest .q-exp.is-now::after { content: "Now"; flex: none; margin-left: auto; font: 400 12px/1 var(--sans); color: #FFAF5F; }
+  
+  html .panel--quest:not(.r17-fin-open) .q-archive-box { display: none !important; }
+  html .panel--quest .q-exp.r17-fin { cursor: pointer; color: var(--text-mute); }
+  html .panel--quest .q-exp.r17-fin .q-name { color: var(--text-mute); cursor: pointer; }
+  html .panel--quest .r17-fin .r17-mark { --m: var(--m-check-s); color: var(--ic-rest); }
+  html .panel--quest .r17-fin .r17-car { flex: none; margin-left: auto; color: var(--ic-rest); transition: transform var(--t) var(--ease), color var(--t) var(--ease); }
+  html .panel--quest .r17-fin:hover .r17-car { color: var(--ic-hover); }
+  html .panel--quest.r17-fin-open .r17-fin .r17-car { transform: rotate(90deg); }
+  html .panel--quest .q-exp.r17-showall { min-height: 28px; }
+  html .panel--quest .r17-showall .q-name { color: var(--text-whisper-2); font-size: 12px; cursor: pointer; transition: color var(--t) var(--ease); }
+  html .panel--quest .r17-showall:hover .q-name { color: var(--text); }
+  
+  html .panel--quest:not(.r17-adding) #q-add-row { display: none !important; }
+  html .panel--quest .q-add { margin: 1px -8px 0; }
+  html .panel--quest .q-add::after { content: none; }
+  html .panel--quest .q-add::before { left: 12px; width: 16px; height: 16px; border-radius: 0; background: var(--ic-rest); transform: translate(-50%, -50%);
+    -webkit-mask: var(--m-plus) center / 16px 16px no-repeat; mask: var(--m-plus) center / 16px 16px no-repeat; }
+  html .panel--quest .q-add-in { padding: 8px 8px 8px 24px; }
+  html .panel--quest #q-add-row .q-show-all { display: none; }   
+  html .panel--quest .q-complete-btn.u-fill { margin-left: 0; }
+  html .panel--quest .q-complete-row { margin: 12px 0 0; }
+
+  .panel--quest .r17-strip { position: relative; display: flex; align-items: center; gap: 12px; width: 100%; margin-top: 12px; padding: 16px; border: 0; border-radius: 10px;
+    background: rgba(0,0,0,.2); color: inherit; font: inherit; text-align: left; cursor: pointer; appearance: none; transition: background var(--t) var(--ease); }
+  .panel--quest .r17-strip:hover { background: rgba(0,0,0,.28); }
+  .panel--quest .r17-strip:focus-visible { outline: 1px solid rgba(241,236,232,.3); outline-offset: 2px; }
+  .r17-strip .t { flex: 1; min-width: 0; position: relative; }
+  .r17-strip .w1 { display: block; font: 500 13px/1.25 var(--sans); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-whisper-2); transition: opacity var(--t) var(--ease), color var(--t) var(--ease); }
+  .r17-strip[data-state="working"] .w1 { color: #FFAF5F; }
+  .r17-strip[data-state="waiting"] .w1 { color: var(--lilac); }
+  .r17-strip[data-state="idle"] .w1 { font-weight: 400; }
+  .r17-strip .w2, .r17-strip .go { display: block; margin-top: 3px; font: 400 12px/1.3 var(--sans); color: var(--text-mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity var(--t) var(--ease); }
+  .r17-strip .w2:empty, .r17-strip[data-state="idle"] .w2 { display: none; }
+  .r17-strip .go { position: absolute; left: 0; bottom: 0; margin: 0; color: var(--cream); font-weight: 500; opacity: 0; }
+  .r17-strip:hover .go { opacity: 1; }
+  .r17-strip:not([data-state="idle"]):hover .w2 { opacity: 0; }
+  .r17-strip[data-state="idle"]:hover .w1 { opacity: 0; }
+  .r17-strip .uc-wrap { position: relative; flex: none; width: 48px; height: 48px; }
+  .r17-strip .uc-wrap canvas { position: absolute; display: block; image-rendering: pixelated; margin: 0; top: 0; }
+  
+  html .panel.panel--quest.minimized > .r17-strip { display: flex !important; margin-top: 12px; padding: 0 0 0 16px; background: none !important; }
+
+  html #agent .p-head.p-head-agent { padding: 27px 30px 0; margin-bottom: 8px; min-height: 16px; height: auto; font: 500 13px/16px var(--sans); }
+  html #agent .p-head.p-head-agent > span:first-child { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+  html #agent.minimized .p-head.p-head-agent { padding: 27px 30px 30px !important; margin-bottom: 0; }
+  html #agent .a-body { padding: 0 30px 30px; gap: 0; }
+  html #agent .a-body > .a-section { display: none !important; }
+  .r17-story { --hp: 22px; --ht: 25px; --hg: 66px; }
+  .r17-story .chips { display: flex; gap: 6px; }
+  .r17-story .chip { position: relative; isolation: isolate; appearance: none; border: 0; cursor: pointer; padding: 6px 8px; border-radius: 6px; background: rgba(255,255,255,.06);
+    font: 500 12px/1 var(--sans); color: var(--text-mute); transition: color var(--t) var(--ease), background var(--t) var(--ease); }
+  .r17-story .chip:hover { color: var(--cream); background: rgba(255,255,255,.09); }
+  .r17-story .chip::after { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: var(--grad-fill); opacity: 0; transition: opacity var(--t) var(--ease); }
+  .r17-story .chip.on { color: var(--void); background: rgba(255,255,255,.06); }
+  .r17-story .chip.on::after { opacity: 1; }
+  .r17-story .panes { display: grid; grid-template-columns: minmax(0, 1fr); margin-top: 12px; }
+  .r17-story .pane { grid-area: 1 / 1; min-width: 0; visibility: hidden; opacity: 0; transition: opacity .3s var(--ease), visibility 0s .3s; }
+  .r17-story .pane.on { visibility: visible; opacity: 1; transition: opacity .3s var(--ease), visibility 0s; }
+  .r17-story .hero { position: relative; aspect-ratio: 16 / 10; border-radius: 10px; overflow: hidden; background: var(--void); box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
+    container-type: inline-size; --hw: calc(100cqw - var(--hp) * 2); }
+  .r17-story .hero.click { cursor: pointer; }
+  
+  .r17-story .hero.sheet { background: #EDE8E2; }
+  .r17-story .hero.sheet img.mast { position: absolute; top: 22px; left: calc(var(--hp) - var(--hw) * 13 / 1137); width: calc(var(--hw) * 1162 / 1137); display: block; }
+  .r17-story .hero.sheet .lead { position: absolute; left: calc(var(--hp) - 1.5px); right: calc(var(--hp) + 40px); bottom: 18px; font: 400 17px/1.12 var(--sans); letter-spacing: -.01em; color: #1A1616; }
+  .r17-story .hero.sheet::after { content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit; box-shadow: inset 0 1px 0 rgba(255,255,255,.6), inset 0 -16px 20px -14px rgba(16,15,17,.25); }
+  .r17-story .hero.sheet .rule { position: absolute; left: var(--hp); right: var(--hp); top: var(--hg); height: 1px; background: rgba(26,22,22,.12); }
+  .r17-story .hero.sheet .dek { position: absolute; left: var(--hp); right: var(--hp); top: 73px; font: 400 8.5px/1.4 var(--mono); letter-spacing: .04em; color: rgba(26,22,22,.42); display: flex; justify-content: space-between; }
+  
+  .r17-story .hero.week { background: #F7F5F2; }
+  .r17-story .hero.week .wk { position: absolute; display: block; border: 0; pointer-events: none; transform-origin: 0 0; }
+  .r17-story .nofile { position: absolute; inset: 0; display: grid; place-items: center; font: 400 12px/1 var(--sans); color: var(--text-whisper-2); text-align: center; padding: 0 24px; }
+  .r17-story .nofile::before { content: ""; position: absolute; inset: 16px; border-radius: 6px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.07); }
+  
+  .r17-story .door { display: flex; align-items: center; gap: 12px; min-height: 26px; margin-top: 12px; padding-left: 16px; }
+  .r17-story .door .cap { flex: 1; min-width: 0; font: 400 12px/1.3 var(--sans); color: var(--text-mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .r17-story .door .cap b { font-weight: 400; color: var(--text); }
+  .r17-story .door .cap.fail { color: #FFAF5F; }
+  .r17-story .door .cap a.html { color: var(--text-mute); text-decoration: underline; text-decoration-color: rgba(241,236,232,.22); text-underline-offset: 2.5px; cursor: pointer; transition: color var(--t) var(--ease), text-decoration-color var(--t) var(--ease); }
+  .r17-story .door .cap a.html:hover { color: var(--cream); text-decoration-color: rgba(241,236,232,.6); }
+  .r17-story .acts { display: flex; gap: 8px; align-items: center; flex: none; }
+  html .r17-story .u-fill { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; font: 500 12px/1 var(--sans); }
+  html .r17-story .u-fill .ic { width: 12px; height: 12px; }
+  html .r17-story .u-quiet { padding: 6px 4px; font: 500 12px/1 var(--sans); }
+  .r17-story .r17-ib { position: relative; display: grid; place-items: center; width: 16px; height: 16px; padding: 0; border: 0; background: none; appearance: none; cursor: pointer; color: var(--ic-rest); transition: color var(--t) var(--ease); }
+  .r17-story .r17-ib::after { content: ""; position: absolute; inset: -6px; }
+  .r17-story .r17-ib:hover { color: var(--ic-hover); }
+  .r17-story .r17-ib.danger:hover { color: var(--ic-danger); }
+  
+  .r17-story .flip { position: absolute; top: 50%; transform: translateY(-50%); z-index: 5; width: 28px; height: 28px; border: 0; padding: 0; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
+    background: rgba(16,15,17,.72); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); color: var(--ic-hover); transition: background var(--t) var(--ease); }
+  .r17-story .flip:hover { background: rgba(16,15,17,.9); }
+  .r17-story .flip.l { left: 8px; } .r17-story .flip.r { right: 8px; }
+  .r17-story .flip.l .ic { transform: rotate(180deg); }
+  .r17-story .pips { position: absolute; left: 50%; top: 6px; transform: translateX(-50%); z-index: 5; display: flex; gap: 5px; padding: 4px 6px; border-radius: 6px; background: rgba(16,15,17,.55); }
+  .r17-story .pips i { width: 5px; height: 5px; border-radius: 50%; background: rgba(241,236,232,.35); }
+  .r17-story .pips i.on { background: var(--cream); }
+  .r17-story .covers { position: absolute; inset: 0; }
+  .r17-story .covers > * { position: absolute; inset: 0; opacity: 0; transition: opacity .35s var(--ease); }
+  .r17-story .covers > .on { opacity: 1; }
+  
+  .r17-story .cv { position: absolute; inset: 0; overflow: hidden; background: #F1ECE8; }
+  .r17-story .cv .run { position: absolute; right: var(--hp); top: 0; display: flex; }
+  .r17-story .cv .run canvas { display: block; image-rendering: pixelated; flex: none; }
+  .r17-story .cv .run canvas + canvas { margin-left: -6px; }
+  .r17-story .cv .ground { position: absolute; left: var(--hp); right: var(--hp); top: var(--hg); height: 1px; background: rgba(26,22,22,.14); }
+  .r17-story .cv .wm { position: absolute; left: var(--hp); bottom: 12px; font: 600 43px/.8 var(--mono); letter-spacing: -.055em; color: #1A1616; white-space: nowrap; }
+  .r17-story .cv .meta { position: absolute; right: var(--hp); bottom: 13px; font: 400 7.5px/1.6 var(--mono); letter-spacing: .14em; color: rgba(26,22,22,.5); text-transform: uppercase; text-align: right; white-space: nowrap; }
+  .r17-story .cv1 .wm { background: linear-gradient(100deg, #E8956A 0%, #D49BC2 50%, #A78BDF 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .r17-story .cv1 .ground { background: linear-gradient(90deg, rgba(232,149,106,.6), rgba(212,155,194,.6) 50%, rgba(167,139,223,.6)); }
+  .r17-story .cv2 .run { left: var(--hp); justify-content: space-between; }
+  .r17-story .cv2 .run canvas + canvas { margin-left: -20px; }
+
+  .r17-story .hero.tint .covers, .r17-story .hero.tint .nofile { filter: grayscale(.9) brightness(.92); }
+  .r17-story .hero.tint::after { content: ""; position: absolute; inset: 0; z-index: 4; pointer-events: none;
+    background: linear-gradient(90deg, #FFAF5F, #D79B9B 33%, #AF87D7 66%, #FFAF5F); background-size: 300% 100%; mix-blend-mode: color; animation: r17tint 3.2s ease-in-out infinite; }
+  .r17-story .hero.tint:has(.nofile)::after { mix-blend-mode: screen; animation-name: r17tintdark; }
+  @keyframes r17tint { 0% { background-position: 0% 0; opacity: .25; } 50% { opacity: .75; } 100% { background-position: -300% 0; opacity: .25; } }
+  @keyframes r17tintdark { 0% { background-position: 0% 0; opacity: .06; } 50% { opacity: .22; } 100% { background-position: -300% 0; opacity: .06; } }
+  .r17-story .sweep { background: linear-gradient(90deg, rgba(241,236,232,.4) 0%, rgba(241,236,232,.4) 35%, rgba(255,175,95,.8) 44%, rgba(215,155,155,.8) 50%, rgba(175,135,215,.8) 56%, rgba(241,236,232,.4) 65%, rgba(241,236,232,.4) 100%);
+    background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: r17sweep 2.6s cubic-bezier(.45,0,.55,1) infinite; }
+  @keyframes r17sweep { from { background-position: 100% 0; } to { background-position: 0% 0; } }
+  @media (prefers-reduced-motion: reduce) { .r17-story .sweep, .r17-story .hero.tint::after { animation: none; } }
+
+  html .q-st-opt.on .q-st-ck::before { content: ""; width: 16px; height: 16px; border: 0; transform: none; background: var(--ic-hover); -webkit-mask: var(--m-check) center / 16px 16px no-repeat; mask: var(--m-check) center / 16px 16px no-repeat; }
+  html .q-st-opt.q-st-del .q-st-ck::before { content: ""; width: 16px; height: 16px; background: var(--ic-rest); -webkit-mask: var(--m-close) center / 16px 16px no-repeat; mask: var(--m-close) center / 16px 16px no-repeat; }
+  html .q-st-opt.q-st-del:hover .q-st-ck::before { background: var(--ic-danger); }
+  html .q-st-opt.q-st-del:hover { color: var(--ic-danger); }
+  
+  html #menubar .mb-car { width: 16px; height: 16px; padding: 0; margin: 0 -4px 0 0; display: grid; place-items: center; font-size: 0; background: none !important; color: var(--ic-rest); transform: rotate(90deg); }
+  html #menubar .mb-panels-btn:hover .mb-car, html #menubar .mb-panels-btn[aria-expanded="true"] .mb-car { color: var(--ic-hover); }
+  html #menubar .mb-panels-btn[aria-expanded="true"] .mb-car { transform: rotate(-90deg); }
+  html .panel--commits .c-nav { font-size: 0; color: var(--ic-rest); display: inline-grid; place-items: center; }
+  html .panel--commits .c-nav:hover { color: var(--ic-hover); }
+  html .panel--commits #c-prev .ic { transform: rotate(180deg); }
+  html .panel--keep .keep-pending-x { font-size: 0; display: grid; place-items: center; color: var(--ic-rest); }
+  html .panel--keep .keep-pending-x:hover { color: var(--ic-danger); }
+</style>
 </head>
 <body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-chev-up" viewBox="0 0 16 16"><path d="M4.25 10.25 8 6.5l3.75 3.75"/></symbol>
+  <symbol id="i-chev-down" viewBox="0 0 16 16"><path d="M4.25 6.25 8 10l3.75-3.75"/></symbol>
+  <symbol id="i-close" viewBox="0 0 16 16"><path d="M4.75 4.75l6.5 6.5"/><path d="M11.25 4.75l-6.5 6.5"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 16 16"><path d="M6.25 4.75v6.5"/><path d="M9.75 4.75v6.5"/></symbol>
+  <symbol id="i-play" viewBox="0 0 16 16"><path d="M5.5 4.6v6.8a.6.6 0 0 0 .92.5l5.2-3.4a.6.6 0 0 0 0-1l-5.2-3.4a.6.6 0 0 0-.92.5z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 16 16"><path d="M3.75 8.5 6.6 11.25l5.65-6.5"/></symbol>
+  <symbol id="i-check-s" viewBox="0 0 16 16"><path d="M4.75 8.4 6.75 10.25l4.5-5"/></symbol>
+  <symbol id="i-caret" viewBox="0 0 16 16"><path d="M6.5 4.25 10.25 8 6.5 11.75"/></symbol>
+  <symbol id="i-ext" viewBox="0 0 16 16"><path d="M9.25 3.25h3.5v3.5"/><path d="M12.75 3.25 7.5 8.5"/><path d="M11.25 9.5v2.25a1 1 0 0 1-1 1h-6a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1H6.5"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 16 16"><path d="M2.75 4.75a1 1 0 0 1 1-1h2.6l1.4 1.5h4.5a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1h-8.5a1 1 0 0 1-1-1z"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 16 16"><path d="M8 3.75v8.5"/><path d="M3.75 8h8.5"/></symbol>
+  <symbol id="i-more" viewBox="0 0 16 16"><path d="M3.5 8h.01"/><path d="M8 8h.01"/><path d="M12.5 8h.01"/></symbol>
+  <symbol id="i-pen" viewBox="0 0 16 16"><path d="M10.25 3.5 12.5 5.75 6 12.25l-2.75.5.5-2.75z"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 16 16"><path d="M8 2.75v7"/><path d="M4.75 6.5 8 9.75l3.25-3.25"/><path d="M3.25 13.25h9.5"/></symbol>
+</svg>
 
 <div id="wallpaper"></div>
 <div id="ambient-tint"></div>
@@ -4659,7 +4919,7 @@ if (window.unicorn && window.unicorn.isDesktop)
     </span>
     
     <span class="mb-panels" id="mb-panels">
-      <button class="mb-panels-btn" id="mb-panels-btn" type="button" aria-haspopup="true" aria-expanded="false" data-tip-own>Panels<span class="mb-car" aria-hidden="true">›</span></button>
+      <button class="mb-panels-btn" id="mb-panels-btn" type="button" aria-haspopup="true" aria-expanded="false" data-tip-own>Panels<span class="mb-car" aria-hidden="true"><svg class="ic"><use href="#i-caret"/></svg></span></button>
       
       <span class="mb-tip" id="mb-pin-tip" role="tooltip">
         <span class="mb-tip-row"><span>Float on top</span><span class="mb-tip-key">⌥U</span></span>
@@ -4729,24 +4989,30 @@ if (window.unicorn && window.unicorn.isDesktop)
   </div>
 
   <section class="panel panel--quest">
+    
     <div class="p-head">
       <span><span class="p-dot"></span>Quest</span>
       <span id="q-count"></span>
+      <span class="q-manage" id="q-manage" role="button" tabindex="0" title="Quest Actions" aria-haspopup="menu"><svg class="ic" aria-hidden="true"><use href="#i-more"/></svg></span>
     </div>
     <div class="p-hair"></div>
     
     <div class="q-top">
-      <div class="q-menu-btn u-fill" id="q-menu-btn" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false" title="Switch Quest"><span class="p-title" id="q-title"></span><span class="q-car" aria-hidden="true">›</span></div>
+      <div class="q-menu-btn u-fill" id="q-menu-btn" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false" title="Switch Quest"><span class="p-title" id="q-title"></span><span class="q-car" aria-hidden="true"><svg class="ic" aria-hidden="true"><use href="#i-caret"/></svg></span></div>
       <div class="q-pop" id="q-pop" role="menu"><div class="q-switcher" id="q-switcher"></div></div>
     </div>
     <div class="q-sub-row">
       <div class="p-sub" id="q-sub"></div>
-      <span class="q-manage" id="q-manage" role="button" tabindex="0" title="Quest Actions">···</span>
     </div>
-    <div class="q-pause-row" id="q-pause-row">
+    
+    <div class="q-pause-row" id="q-pause-row" role="menu">
+      <span class="q-act q-act-add" id="q-act-add" role="menuitem">Add Experiment</span>
+      <span class="q-act q-act-rename" id="q-act-rename" role="menuitem">Rename Quest</span>
+      <span class="q-act q-act-folder" id="q-act-folder" role="menuitem">Open Folder</span>
+      <div class="q-act-sep"></div>
       <span class="q-finish-btn" id="q-finish-btn" hidden>Complete Quest</span>
-      <span class="q-pause-btn" id="q-pause-btn" role="button">Pause Quest</span>
-      <span class="q-del-btn" id="q-del-btn" role="button">Delete Quest</span>
+      <span class="q-pause-btn" id="q-pause-btn" role="menuitem">Pause Quest</span>
+      <span class="q-del-btn" id="q-del-btn" role="menuitem">Delete Quest</span>
     </div>
     <div class="q-prog" hidden><span id="q-fill"></span></div>
     <div class="q-exps" id="q-list"></div>
@@ -4758,6 +5024,11 @@ if (window.unicorn && window.unicorn.isDesktop)
         <span>Complete This Quest</span>
       </button>
     </div>
+    
+    <button type="button" class="r17-strip st-uc-hit" id="st-uc-hit" data-state="idle">
+      <span class="t"><span class="w1 st-uc-word" id="st-uc-word"></span><span class="w2" id="r17-strip-w2"></span><span class="go" id="r17-strip-go"></span></span>
+      <span class="uc-wrap" id="r17-uc-wrap"><canvas class="st-uc" id="st-uc" role="img" aria-label="No agent running"></canvas></span>
+    </button>
   </section>
 
   <section class="panel panel--commits">
@@ -4769,16 +5040,16 @@ if (window.unicorn && window.unicorn.isDesktop)
     
     <div class="c-wk" id="c-wk" aria-hidden="true"><div class="c-wk-bars" id="c-wk-bars"></div><div class="c-wk-days" id="c-wk-days"></div></div>
     <div class="c-month-head">
-      <span class="c-nav" id="c-prev" role="button" title="Previous Month">‹</span>
+      <span class="c-nav" id="c-prev" role="button" title="Previous Month"><svg class="ic"><use href="#i-caret"/></svg></span>
       <span class="c-month-title" id="c-month-title"></span>
-      <span class="c-nav" id="c-next" role="button" title="Next Month">›</span>
+      <span class="c-nav" id="c-next" role="button" title="Next Month"><svg class="ic"><use href="#i-caret"/></svg></span>
       <span class="c-month-count" id="c-month-count"></span>
     </div>
     <div class="c-weekdays">
       <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
     </div>
     <div class="c-calendar" id="c-calendar"></div>
-    <!-- 10-20: one calm row. Sound left, the hovered day's count in a fixed slot, Fewer/More right -->
+    
     <div class="c-foot c-foot--one">
       <button class="c-sound" id="c-sound" aria-label="Sound on or off">
         <span class="c-dot"></span><span id="c-sound-label">Sound Off</span>
@@ -4828,7 +5099,7 @@ if (window.unicorn && window.unicorn.isDesktop)
 
     <div class="keep-pending" id="keep-pending" hidden>
       <img id="keep-pending-img" alt="attached screenshot" />
-      <span class="keep-pending-x" id="keep-pending-x" title="Remove screenshot">×</span>
+      <span class="keep-pending-x" id="keep-pending-x" title="Remove screenshot"><svg class="ic"><use href="#i-close"/></svg></span>
     </div>
 
     <div class="keep-actions">
@@ -4911,6 +5182,33 @@ if (window.unicorn && window.unicorn.isDesktop)
 
     <div class="a-body">
       
+      <div class="r17-story" id="r17-story">
+        <div class="chips" role="tablist">
+          <button type="button" class="chip" data-p="paper" role="tab">Paper</button>
+          <button type="button" class="chip" data-p="design" role="tab">Design</button>
+          <button type="button" class="chip" data-p="week" role="tab">Week</button>
+        </div>
+        <div class="panes">
+          <div class="pane" data-pane="paper">
+            <div class="hero sheet click" id="r17-paper-hero" title="Opens today's paper">
+              <img class="mast" src="story/masthead.png" alt="Creative OS &amp; Tech">
+              <i class="rule"></i>
+              <span class="dek"><span id="r17-paper-date"></span><span id="r17-paper-issue"></span></span>
+              <span class="lead" id="r17-paper-lead"></span>
+            </div>
+            <div class="door"><span class="cap">Today's Paper</span><div class="acts"><button type="button" class="u-quiet" id="r17-paper-dir" title="Previous Issues and the Builder's Story">Directory</button><button type="button" class="u-fill" id="r17-paper-open">Open</button></div></div>
+          </div>
+          <div class="pane" data-pane="design">
+            <div class="hero" id="r17-design-hero"></div>
+            <div class="door" id="r17-design-door"></div>
+          </div>
+          <div class="pane" data-pane="week">
+            <div class="hero week click" id="r17-week-hero" title="Opens this week's page"></div>
+            <div class="door"><span class="cap" id="r17-week-cap">This Week</span><div class="acts"><button type="button" class="u-quiet" id="r17-week-dir" title="Every week of this quest">Directory</button><button type="button" class="u-fill" id="r17-week-open">Open</button></div></div>
+          </div>
+        </div>
+      </div>
+      
       <div class="a-section">
         <div class="a-attached">
           <div class="a-attached-body">
@@ -4923,7 +5221,6 @@ if (window.unicorn && window.unicorn.isDesktop)
               <span class="u-open-path" id="a-attached-figma" hidden title="Open in Figma">Figma ↗</span>
             </div>
           </div>
-          <span class="st-uc-hit" id="st-uc-hit"><span class="st-uc-word" id="st-uc-word" aria-hidden="true"></span><canvas class="st-uc" id="st-uc" role="img" aria-label="No agent running"></canvas></span>
           <div class="st-wk" id="st-wk" hidden><div class="st-wk-bars" id="st-wk-bars"></div><div class="st-wk-lab" id="st-wk-lab"></div></div>
         </div>
       </div>
@@ -5429,27 +5726,26 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     const uid = () => 'e-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
     const isoNow = () => new Date().toISOString();
     const escapeHtml = (s) => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-    /* 10-20 B1: each experiment row's "when", at the right. Started/paused = age since
-       createdAt (Today, Yesterday, 3 Days, 3 Weeks, 2 Months); finished = the day it
-       landed (Oct 18). Pacific days. No timestamp = nothing, never a made-up date. */
     const Q_WHEN_DAY = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Los_Angeles', year: 'numeric', month: '2-digit', day: '2-digit' });
     const Q_WHEN_SHORT = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Los_Angeles', month: 'short', day: 'numeric' });
     const Q_WHEN_FULL = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Los_Angeles', month: 'short', day: 'numeric', year: 'numeric' });
     const qWhen = (exp) => {
-      const done = exp.status === 'complete', iso = done ? exp.completedAt : exp.createdAt;
-      const t = iso ? Date.parse(iso) : NaN;
-      if (!isFinite(t)) return '';
-      const d = new Date(t);
-      const tip = (done ? 'Finished ' : 'Started ') + Q_WHEN_FULL.format(d);
-      let txt;
-      if (done) txt = Q_WHEN_SHORT.format(d);
-      else {
-        const days = Math.max(0, Math.round((Date.parse(Q_WHEN_DAY.format(new Date())) - Date.parse(Q_WHEN_DAY.format(d))) / 86400000));
-        const n = (k, w) => k + ' ' + w + (k === 1 ? '' : 's');
-        txt = days === 0 ? 'Today' : days === 1 ? 'Yesterday' : days < 14 ? n(days, 'Day')
-            : days < 60 ? n(Math.floor(days / 7), 'Week') : days < 730 ? n(Math.floor(days / 30), 'Month') : n(Math.floor(days / 365), 'Year');
-      }
-      return `<span class="q-when${done ? '' : ' started'}" data-tip="${tip}">${txt}</span>`;
+        const done = exp.status === 'complete', iso = done ? exp.completedAt : exp.createdAt;
+        const t = iso ? Date.parse(iso) : NaN;
+        if (!isFinite(t))
+            return '';
+        const d = new Date(t);
+        const tip = (done ? 'Finished ' : 'Started ') + Q_WHEN_FULL.format(d);
+        let txt;
+        if (done)
+            txt = Q_WHEN_SHORT.format(d);
+        else {
+            const days = Math.max(0, Math.round((Date.parse(Q_WHEN_DAY.format(new Date())) - Date.parse(Q_WHEN_DAY.format(d))) / 86400000));
+            const n = (k, w) => k + ' ' + w + (k === 1 ? '' : 's');
+            txt = days === 0 ? 'Today' : days === 1 ? 'Yesterday' : days < 14 ? n(days, 'Day')
+                : days < 60 ? n(Math.floor(days / 7), 'Week') : days < 730 ? n(Math.floor(days / 30), 'Month') : n(Math.floor(days / 365), 'Year');
+        }
+        return `<span class="q-when${done ? '' : ' started'}" data-tip="${tip}">${txt}</span>`;
     };
     let data = loadApp();
     let migrated = false;
@@ -5559,15 +5855,22 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     const listEl = document.getElementById('q-list');
     const switcherEl = document.getElementById('q-switcher');
     const mbQ = document.getElementById('mb-quest');
-    /* 10-19: menus close on hover-out, like the Panels popover: leave the trigger +
-       menu (and the gap between them) for 250ms and it closes; re-entering cancels.
-       hold() can keep it open (a focused New Quest input). */
     const hoverAway = (els, close, hold) => {
-      let t = null;
-      const cancel = () => { if (t) { clearTimeout(t); t = null; } };
-      const leave = () => { cancel(); t = setTimeout(() => { t = null; if (!(hold && hold())) close(); }, 250); };
-      els.forEach(el => { if (el) { el.addEventListener('mouseenter', cancel); el.addEventListener('mouseleave', leave); } });
-      return () => { cancel(); els.forEach(el => { if (el) { el.removeEventListener('mouseenter', cancel); el.removeEventListener('mouseleave', leave); } }); };
+        let t = null;
+        const cancel = () => { if (t) {
+            clearTimeout(t);
+            t = null;
+        } };
+        const leave = () => { cancel(); t = setTimeout(() => { t = null; if (!(hold && hold()))
+            close(); }, 250); };
+        els.forEach(el => { if (el) {
+            el.addEventListener('mouseenter', cancel);
+            el.addEventListener('mouseleave', leave);
+        } });
+        return () => { cancel(); els.forEach(el => { if (el) {
+            el.removeEventListener('mouseenter', cancel);
+            el.removeEventListener('mouseleave', leave);
+        } }); };
     };
     const renderSwitcher = () => {
         switcherEl.innerHTML = '';
@@ -5578,7 +5881,12 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
             b.className = 'q-sw-btn' + (i === activeQ ? ' on' : '') + (q.paused ? ' paused' : '');
             b.setAttribute('role', 'menuitem');
             b.textContent = q.name;
-            if (q.paused) { const tag = document.createElement('span'); tag.className = 'q-sw-tag'; tag.textContent = 'Paused'; b.appendChild(tag); }
+            if (q.paused) {
+                const tag = document.createElement('span');
+                tag.className = 'q-sw-tag';
+                tag.textContent = 'Paused';
+                b.appendChild(tag);
+            }
             b.addEventListener('click', (e) => {
                 e.stopPropagation();
                 closeQuestMenu();
@@ -5672,8 +5980,8 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape')
             closeQuestMenu(); });
     }
-    // 10-19: the switcher closes on hover-out too (not while New Quest is being typed)
-    if (qTop) hoverAway([qTop], closeQuestMenu, () => !!(qTop.querySelector('.q-sw-input') && qTop.querySelector('.q-sw-input') === document.activeElement));
+    if (qTop)
+        hoverAway([qTop], closeQuestMenu, () => !!(qTop.querySelector('.q-sw-input') && qTop.querySelector('.q-sw-input') === document.activeElement));
     const startNewQuest = (pill) => {
         const inp = document.createElement('input');
         inp.className = 'q-sw-input';
@@ -5897,7 +6205,8 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         if (archived > 0) {
             const box = document.createElement('div');
             box.className = 'q-archive-box u-scrollbox';
-            if (showAllDone) box.classList.add('q-all');   // 10-19: Show All caps at ~8 rows and scrolls
+            if (showAllDone)
+                box.classList.add('q-all');
             completedNewestFirst.forEach(e => {
                 const del = listEl.querySelector(`.q-delete[data-id="${e.id}"]`);
                 const row = del ? del.closest('.q-exp') : null;
@@ -6282,7 +6591,10 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         document.removeEventListener('pointerdown', stOutside, true);
         document.removeEventListener('keydown', stKey, true);
         window.removeEventListener('blur', closeStatusMenu);
-        if (stHoverOff) { stHoverOff(); stHoverOff = null; }
+        if (stHoverOff) {
+            stHoverOff();
+            stHoverOff = null;
+        }
     };
     const openStatusMenu = (el) => {
         const again = stFor === el;
@@ -6322,7 +6634,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         document.addEventListener('pointerdown', stOutside, true);
         document.addEventListener('keydown', stKey, true);
         window.addEventListener('blur', closeStatusMenu);
-        stHoverOff = hoverAway([el, m], closeStatusMenu);   // 10-19: closes on hover-out
+        stHoverOff = hoverAway([el, m], closeStatusMenu);
     };
     const cycleStatus = (expId) => {
         const q = data.quests[activeQ];
@@ -6661,7 +6973,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape')
         closeManage(); });
     document.getElementById('q-pause-btn')?.addEventListener('click', () => setTimeout(closeManage, 0));
-    hoverAway([manageBtn, document.getElementById('q-pause-row')], closeManage);   // 10-19: closes on hover-out
+    hoverAway([manageBtn, document.getElementById('q-pause-row')], closeManage);
     const pauseBtn = document.getElementById('q-pause-btn');
     if (pauseBtn) {
         pauseBtn.addEventListener('click', () => {
@@ -6700,6 +7012,122 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         }
         render();
     });
+    const qPanelEl = document.querySelector('.panel--quest');
+    const startAdding = () => {
+        if (!qPanelEl || !data.quests[activeQ] || data.quests[activeQ].completed)
+            return;
+        qPanelEl.classList.add('r17-adding');
+        requestAnimationFrame(() => addIn.focus());
+    };
+    addIn.addEventListener('blur', () => { if (!addIn.value.trim() && qPanelEl)
+        qPanelEl.classList.remove('r17-adding'); });
+    addIn.addEventListener('keydown', (e) => { if (e.key === 'Escape') {
+        e.stopPropagation();
+        addIn.value = '';
+        addIn.blur();
+    } });
+    document.getElementById('q-act-add')?.addEventListener('click', (e) => { e.stopPropagation(); closeManage(); startAdding(); });
+    document.getElementById('q-act-rename')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeManage();
+        closeQuestMenu();
+        const q = data.quests[activeQ];
+        if (q && !q.completed)
+            editQuestName();
+    });
+    document.getElementById('q-act-folder')?.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        closeManage();
+        const q = data.quests[activeQ];
+        if (!q)
+            return;
+        const repo = q.repo || (/unicorn/i.test(q.name || '') ? '~/unicorn' : '');
+        const U = window.unicorn;
+        if (!repo) {
+            if (window.r26Toast)
+                window.r26Toast('No folder for this quest yet');
+            return;
+        }
+        if (!U || !U.openPath) {
+            if (window.r26Toast)
+                window.r26Toast(repo);
+            return;
+        }
+        let abs = repo;
+        if (repo.startsWith('~/') && U.paths) {
+            try {
+                const p = await U.paths();
+                const home = p && p.keepsDir ? p.keepsDir.replace(/\/unicorn\/keeps$/, '') : '';
+                if (home)
+                    abs = home + repo.slice(1);
+            }
+            catch { }
+        }
+        try {
+            await U.openPath(abs);
+        }
+        catch { }
+    });
+    const FIN_KEY = 'r17.fin-open';
+    try {
+        if (qPanelEl && localStorage.getItem(FIN_KEY) === '1')
+            qPanelEl.classList.add('r17-fin-open');
+    }
+    catch { }
+    const foldFinished = () => {
+        const box = listEl.querySelector(':scope > .q-archive-box');
+        const old = listEl.querySelector(':scope > .r17-fin');
+        if (!box) {
+            if (old)
+                old.remove();
+            return;
+        }
+        const n = box.querySelectorAll(':scope > .q-exp:not(.r17-showall)').length;
+        let row = old;
+        if (!row) {
+            row = document.createElement('div');
+            row.className = 'q-exp r17-fin';
+            row.setAttribute('role', 'button');
+            row.tabIndex = 0;
+            row.innerHTML = '<span class="q-slot"><span class="r17-mask r17-mark"></span></span><span class="q-name"></span><span class="r17-car"><svg class="ic" aria-hidden="true"><use href="#i-caret"/></svg></span>';
+            const toggle = () => { const open = qPanelEl.classList.toggle('r17-fin-open'); try {
+                localStorage.setItem(FIN_KEY, open ? '1' : '0');
+            }
+            catch { } if (typeof uiClick === 'function')
+                uiClick(open ? 'E5' : 'C5'); };
+            row.addEventListener('click', (e) => { e.stopPropagation(); toggle(); });
+            row.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggle();
+            } });
+        }
+        const label = n + ' Finished';
+        const nm = row.querySelector('.q-name');
+        if (nm.textContent !== label)
+            nm.textContent = label;
+        if (row.nextElementSibling !== box)
+            listEl.insertBefore(row, box);
+        const more = document.querySelector('#q-add-row .q-show-all');
+        let sa = box.querySelector(':scope > .r17-showall');
+        if (more) {
+            if (!sa) {
+                sa = document.createElement('div');
+                sa.className = 'q-exp r17-showall';
+                sa.setAttribute('role', 'button');
+                sa.innerHTML = '<span class="q-slot"></span><span class="q-name"></span>';
+                sa.addEventListener('click', (e) => { e.stopPropagation(); const m = document.querySelector('#q-add-row .q-show-all'); if (m)
+                    m.click(); });
+            }
+            if (sa.parentNode !== box || sa !== box.lastElementChild)
+                box.appendChild(sa);
+            const t = more.textContent;
+            if (sa.querySelector('.q-name').textContent !== t)
+                sa.querySelector('.q-name').textContent = t;
+        }
+        else if (sa)
+            sa.remove();
+    };
+    new MutationObserver(foldFinished).observe(listEl, { childList: true });
     window.addEventListener('unicorn:quests-updated', (e) => {
         if (e && e.detail && e.detail.local)
             return;
@@ -7245,6 +7673,14 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         return null;
     };
     const apply = (name) => {
+        if (document.getElementById('agent')) {
+            const n = name || '', c = repoFor(name) ? '' : 'rgba(241, 236, 232, 0.32)';
+            if (questEl.textContent !== n)
+                questEl.textContent = n;
+            if (repoEl.style.color !== c)
+                repoEl.style.color = c;
+            return;
+        }
         questEl.textContent = name || '';
         const repo = repoFor(name);
         repoEl.textContent = repo || 'no repo linked';
@@ -8118,8 +8554,10 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         if (u && u.watchTaste)
             u.watchTaste(tastePath);
         const token = ++tasteToken;
+        const put = (html) => { if (list.__html === html)
+            return false; list.__html = html; list.innerHTML = html; return true; };
         const empty = () => {
-            list.innerHTML = `<li class="u-taste-empty">Nothing established yet; your taste for this quest fills in as you build.</li>`;
+            put(`<li class="u-taste-empty">Nothing established yet; your taste for this quest fills in as you build.</li>`);
         };
         if (tastePath && u && u.readTaste) {
             u.readTaste(tastePath).then(md => {
@@ -8135,8 +8573,9 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
                     empty();
                     return;
                 }
-                list.innerHTML = rows.map(tasteRowHtml).join('')
-                    + (ds ? `<li class="u-taste-lds" id="u-taste-lds" title="${escapeHtml(ds)}"><span class="u-taste-k">HTML</span><em>Design system</em></li>` : '');
+                if (!put(rows.map(tasteRowHtml).join('')
+                    + (ds ? `<li class="u-taste-lds" id="u-taste-lds" title="${escapeHtml(ds)}"><span class="u-taste-k">HTML</span><em>Design system</em></li>` : '')))
+                    return;
                 const link = document.getElementById('u-taste-lds');
                 if (link)
                     link.addEventListener('click', () => {
@@ -8154,7 +8593,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
             return;
         }
         const hasLDS = true;
-        list.innerHTML = `
+        if (!put(`
       <li class="u-taste-row"><span class="u-taste-k">Logo</span><span class="u-taste-v"><span class="u-taste-uc u-taste-uc7"><svg class="uc7" viewBox="0 0 10 16" shape-rendering="crispEdges" aria-hidden="true"><path fill="#9A72C4" d="M1 0h1v2h-1zM1 2h1v2h-1z"/><path fill="#AF87D7" d="M2 2h2v2h-2zM4 4h2v2h-2zM4 6h3v2h-3zM8 8h2v2h-2zM8 10h2v2h-2z"/><path fill="#FFAF5F" d="M1 4h3v2h-3zM0 6h4v2h-4zM2 8h6v2h-6zM2 10h6v2h-6zM2 12h2v2h-2zM7 12h1v2h-1zM2 14h2v2h-2zM7 14h1v2h-1z"/><path fill="#E8954C" d="M1 10h1v2h-1zM1 12h1v2h-1zM8 12h1v2h-1zM8 14h1v2h-1z"/></svg></span></span></li>
       <li class="u-taste-row"><span class="u-taste-k">Palette</span><span class="u-taste-chips">
         <i class="u-chip" style="background:#E8956A" title="peach #E8956A"></i>
@@ -8164,7 +8603,8 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
       <li class="u-taste-row"><span class="u-taste-k">Edge</span><span class="u-taste-edge" title="peach→lilac gradient stroke, faded corners"></span></li>
       <li class="u-taste-row"><span class="u-taste-k">Type</span><span class="u-taste-aa"><span class="a">Aa</span><span class="n">Ubuntu Sans, Ubuntu Mono</span></span></li>
       <li class="u-taste-row"><span class="u-taste-k">Sound</span><span class="u-taste-v">Commits have a soundtrack</span></li>
-      <li class="u-taste-lds${hasLDS ? '' : ' muted'}" id="u-taste-lds"><span class="u-taste-k">HTML</span>${hasLDS ? '<em>Design system</em>' : 'Start a design system?'}</li>`;
+      <li class="u-taste-lds${hasLDS ? '' : ' muted'}" id="u-taste-lds"><span class="u-taste-k">HTML</span>${hasLDS ? '<em>Design system</em>' : 'Start a design system?'}</li>`))
+            return;
         const lds = document.getElementById('u-taste-lds');
         if (lds && hasLDS) {
             lds.addEventListener('click', () => window.open('living-ds/', '_blank'));
@@ -8305,9 +8745,12 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         const repo = el && el.dataset.repo;
         if (!el || !repo)
             return;
-        el.title = document.getElementById('agent') ? 'Open this build\u2019s folder' : repo;
+        const tt = document.getElementById('agent') ? 'Open this build\u2019s folder' : repo;
+        if (el.title !== tt)
+            el.title = tt;
         if (document.getElementById('agent')) {
-            el.textContent = repo;
+            if (el.textContent !== repo)
+                el.textContent = repo;
             return;
         }
         const segs = repo.replace(/^~\//, '').split('/').filter(Boolean);
@@ -8323,7 +8766,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     const renderCurrently = () => {
         const { app } = loadAll();
         const q = getActiveQuest(app);
-        const setText = (id, val) => { const e = document.getElementById(id); if (e)
+        const setText = (id, val) => { const e = document.getElementById(id); if (e && e.textContent !== val)
             e.textContent = val; };
         if (q) {
             setText('a-attached-quest', q.name);
@@ -8332,18 +8775,23 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
             setText('a-attached-repo', repo);
             const repoEl = document.getElementById('a-attached-repo');
             if (repoEl) {
-                repoEl.dataset.repo = repo;
-                repoEl.dataset.slug = (q.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+                const sl = (q.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+                if (repoEl.dataset.repo !== repo)
+                    repoEl.dataset.repo = repo;
+                if (repoEl.dataset.slug !== sl)
+                    repoEl.dataset.slug = sl;
             }
         }
         const figUrl = (q && q.figma && /^https:\/\/(www\.)?figma\.com\//i.test(q.figma)) ? q.figma : '';
         const fig = document.getElementById('a-attached-figma');
         const figSep = document.getElementById('a-attached-figma-sep');
         if (fig) {
-            fig.hidden = !figUrl;
-            fig.dataset.url = figUrl;
+            if (fig.hidden !== !figUrl)
+                fig.hidden = !figUrl;
+            if (fig.dataset.url !== figUrl)
+                fig.dataset.url = figUrl;
         }
-        if (figSep)
+        if (figSep && figSep.hidden !== !figUrl)
             figSep.hidden = !figUrl;
         fitRepoLabel();
     };
@@ -9158,6 +9606,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
                 return;
             const btn = document.createElement('span');
             btn.className = 'p-mini';
+            btn.innerHTML = '<svg class="ic up" aria-hidden="true"><use href="#i-chev-up"/></svg><svg class="ic dn" aria-hidden="true"><use href="#i-chev-down"/></svg>';
             btn.title = panel.classList.contains('minimized') || minSet.has(panelKey(panel)) ? 'Expand' : 'Minimize';
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -9224,6 +9673,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
             uiClick(next === 0 ? 'C5' : next === 1 ? 'E5' : 'G5');
     };
     const wireFocusDots = () => {
+        return;
         document.querySelectorAll('.panel, #agent, #activity-panel').forEach(panel => {
             const head = panel.querySelector('.p-head, .a-head');
             if (!head)
@@ -9344,6 +9794,50 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         }
         catch { }
     })();
+    (async function migrateCareerToStory() {
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw)
+                return;
+            let moves = {};
+            try {
+                if (window.unicorn && window.unicorn.paths) {
+                    const p = await window.unicorn.paths();
+                    moves = Object.assign({}, (p && p.storyMoves) || {}, (p && p.keepMoves) || {});
+                }
+            }
+            catch { }
+            const arr = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            let changed = false;
+            const slugSeg = (v) => v.replace(/\/unicorn\/keeps\/([^/]+)\/(?=[^/]+$)/, (m, seg) => '/unicorn/keeps/' + keepSlug(seg) + '/');
+            const heal = (v) => (typeof v === 'string' && v) ? (moves[v] || slugSeg(v.replace(/\/unicorn\/keeps\/(Career|Story)\//, '/unicorn/keeps/story/'))) : v;
+            for (const k of (arr || [])) {
+                if (!k)
+                    continue;
+                if (!k.questId && k.questName === 'Career') {
+                    k.questName = 'Story';
+                    changed = true;
+                }
+                for (const key of ['imagePath', 'videoPath']) {
+                    const n = heal(k[key]);
+                    if (n !== k[key]) {
+                        k[key] = n;
+                        changed = true;
+                    }
+                }
+                if (Array.isArray(k.variants))
+                    k.variants.forEach(v => { const n = heal(v[1]); if (n !== v[1]) {
+                        v[1] = n;
+                        changed = true;
+                    } });
+            }
+            if (changed) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+                window.dispatchEvent(new CustomEvent('unicorn:keeps-updated'));
+            }
+        }
+        catch { }
+    })();
     const TRUNCATE_AT = 400;
     const panel = document.getElementById('panel-keep');
     const input = document.getElementById('keep-input');
@@ -9404,7 +9898,6 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     let pendingImageSrc = null;
     let pendingVideo = null;
     let savingKeeps = [];
-    // 10-21 night: the Story R15 icon family (16 grid, 1.5 stroke, round caps, currentColor)
     const KEEP_ICO = (d) => `<svg class="k-ic" viewBox="0 0 16 16" aria-hidden="true">${d}</svg>`;
     const KEEP_PLAY = KEEP_ICO('<path d="M5.5 4.6v6.8a.6.6 0 0 0 .92.5l5.2-3.4a.6.6 0 0 0 0-1l-5.2-3.4a.6.6 0 0 0-.92.5z"/>'), KEEP_PAUSE = KEEP_ICO('<path d="M6.25 4.75v6.5"/><path d="M9.75 4.75v6.5"/>'), KEEP_CLOSE = KEEP_ICO('<path d="M4.75 4.75l6.5 6.5"/><path d="M11.25 4.75l-6.5 6.5"/>');
     let keepScope = 'quest';
@@ -9544,16 +10037,20 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
                 const all = load();
                 const removed = all.find(k => k.id === el.dataset.id);
                 save(all.filter(k => k.id !== el.dataset.id));
-                const files = removed ? [removed.imagePath, removed.videoPath].concat((removed.variants || []).map(v => v[1])).filter((p, i, a) => typeof p === 'string' && p && a.indexOf(p) === i) : [];
-                if (files.length && window.unicorn && window.unicorn.returnKeepFiles) {
-                    try {
-                        window.unicorn.returnKeepFiles(files);
+                const U = window.unicorn;
+                if (removed && U && U.returnKeepFiles) {
+                    const files = [removed.imagePath, removed.videoPath].concat((removed.variants || []).map(v => v[1]))
+                        .filter((p, i, a) => typeof p === 'string' && p && a.indexOf(p) === i);
+                    if (files.length) {
+                        try {
+                            U.returnKeepFiles(files);
+                        }
+                        catch { }
                     }
-                    catch { }
                 }
-                else if (removed && removed.imagePath && window.unicorn && window.unicorn.deleteKeepFiles) {
+                else if (removed && removed.imagePath && U && U.deleteKeepFiles) {
                     try {
-                        window.unicorn.deleteKeepFiles([removed.imagePath]);
+                        U.deleteKeepFiles([removed.imagePath]);
                     }
                     catch { }
                 }
@@ -10010,11 +10507,14 @@ ${keepsBlock}${emptyBlock}
             input.focus();
             ensureUiAudio().then(() => { if (typeof uiClick === 'function')
                 uiClick('E5'); });
-            if (typeof onReady === 'function') onReady();
+            if (typeof onReady === 'function')
+                onReady();
         };
         reader.readAsDataURL(file);
         return true;
     };
+    const attachImage = (file) => new Promise(res => { if (!attachImageFile(file, () => res(true)))
+        res(false); });
     const makeVideoThumb = (file) => new Promise((resolve) => {
         try {
             const v = document.createElement('video');
@@ -10083,36 +10583,49 @@ ${keepsBlock}${emptyBlock}
             uiClick('E5'); });
         return true;
     };
-    const attachImage = (file) => new Promise(res => { if (!attachImageFile(file, () => res(true))) res(false); });
-    // 10-21: ⌘V with the Keep panel hovered (or focused) but no field focused -> a keep
     let pasteDirect = false;
     const isField = (el) => !!(el && el !== document.body && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName)));
     const keepPastedText = (t) => {
         t = String(t || '').replace(/\s+$/, '');
-        if (!t.trim() || input.value.trim()) return false;
-        input.value = t; saveCurrent(); return true;
+        if (!t.trim() || input.value.trim())
+            return false;
+        input.value = t;
+        syncSave();
+        saveCurrent();
+        return true;
     };
     document.addEventListener('keydown', (e) => {
-        if (!(e.metaKey || e.ctrlKey) || e.altKey || e.shiftKey || String(e.key).toLowerCase() !== 'v') return;
+        if (!(e.metaKey || e.ctrlKey) || e.altKey || e.shiftKey || String(e.key).toLowerCase() !== 'v')
+            return;
         const ae = document.activeElement;
-        if (isField(ae) || !(panel.matches(':hover') || (ae && panel.contains(ae)))) return;
+        if (isField(ae) || !(panel.matches(':hover') || (ae && panel.contains(ae))))
+            return;
         pasteDirect = true;
         input.focus();
         setTimeout(async () => {
-            if (!pasteDirect) return; pasteDirect = false;
+            if (!pasteDirect)
+                return;
+            pasteDirect = false;
             try {
                 if (navigator.clipboard && navigator.clipboard.read) {
                     for (const it of await navigator.clipboard.read()) {
                         const ty = it.types.find(x => x.startsWith('image/'));
-                        if (ty) { const b = await it.getType(ty); attachImageFile(new File([b], 'pasted.png', { type: ty }), () => saveCurrent()); return; }
+                        if (ty) {
+                            const b = await it.getType(ty);
+                            attachImageFile(new File([b], 'pasted.png', { type: ty }), () => saveCurrent());
+                            return;
+                        }
                     }
                 }
-                if (navigator.clipboard && navigator.clipboard.readText) keepPastedText(await navigator.clipboard.readText());
-            } catch { }
+                if (navigator.clipboard && navigator.clipboard.readText)
+                    keepPastedText(await navigator.clipboard.readText());
+            }
+            catch { }
         }, 300);
     }, true);
     input.addEventListener('paste', (e) => {
-        const direct = pasteDirect; pasteDirect = false;
+        const direct = pasteDirect;
+        pasteDirect = false;
         const items = e.clipboardData && e.clipboardData.items;
         if (!items)
             return;
@@ -10125,7 +10638,10 @@ ${keepsBlock}${emptyBlock}
         }
         if (direct && !input.value.trim()) {
             const t = e.clipboardData.getData('text/plain');
-            if (t && t.trim()) { e.preventDefault(); keepPastedText(t); }
+            if (t && t.trim()) {
+                e.preventDefault();
+                keepPastedText(t);
+            }
         }
     });
     panel.addEventListener('dragover', (e) => {
@@ -10144,16 +10660,22 @@ ${keepsBlock}${emptyBlock}
         const files = e.dataTransfer && e.dataTransfer.files;
         if (!files)
             return;
-        // 10-21: several files at once -> each its own keep
         const media = Array.from(files).filter(f => f.type && (f.type.startsWith('image/') || f.type.startsWith('video/')));
         if (media.length > 1) {
             const scope = keepScope, caption = input.value;
-            clearPending(); input.value = '';
+            clearPending();
+            input.value = '';
             for (const f of media) {
                 const ok = f.type.startsWith('video/') ? await attachVideoFile(f) : await attachImage(f);
-                if (ok) { try { await saveCurrent({ scope }); } catch { } }
+                if (ok) {
+                    try {
+                        await saveCurrent({ scope });
+                    }
+                    catch { }
+                }
             }
             input.value = caption;
+            syncSave();
             return;
         }
         for (let i = 0; i < files.length; i++) {
@@ -10477,14 +10999,22 @@ ${keepsBlock}${emptyBlock}
         } };
         const scheduleClose = () => { cancelClose(); closeTimer = setTimeout(closePop, 250); };
         panelsBtn.addEventListener('click', (e) => { e.stopPropagation(); clearIntent(); openPop(e); });
-        // 10-21: hover intent -- opens after 180ms settled on the button; click opens at once
         let intentTimer = null, ix = 0, iy = 0;
-        const clearIntent = () => { if (intentTimer) { clearTimeout(intentTimer); intentTimer = null; } };
-        const armIntent = () => { clearIntent(); intentTimer = setTimeout(() => { intentTimer = null; if (panelsBtn.matches(':hover')) openPop(); }, 180); };
+        const clearIntent = () => { if (intentTimer) {
+            clearTimeout(intentTimer);
+            intentTimer = null;
+        } };
+        const armIntent = () => { clearIntent(); intentTimer = setTimeout(() => { intentTimer = null; if (panelsBtn.matches(':hover'))
+            openPop(); }, 180); };
         panelsBtn.addEventListener('mouseenter', (e) => { cancelClose(); ix = e.clientX; iy = e.clientY; armIntent(); });
         panelsBtn.addEventListener('mousemove', (e) => {
-            if (panelsPop.classList.contains('open')) return;
-            if (Math.abs(e.clientX - ix) + Math.abs(e.clientY - iy) > 3) { ix = e.clientX; iy = e.clientY; armIntent(); }
+            if (panelsPop.classList.contains('open'))
+                return;
+            if (Math.abs(e.clientX - ix) + Math.abs(e.clientY - iy) > 3) {
+                ix = e.clientX;
+                iy = e.clientY;
+                armIntent();
+            }
         });
         panelsBtn.addEventListener('mouseleave', () => { clearIntent(); scheduleClose(); });
         panelsPop.addEventListener('mouseenter', cancelClose);
@@ -10630,8 +11160,10 @@ ${keepsBlock}${emptyBlock}
     const fadeMeta = () => meta.classList.add('is-out');
     const showMeta = (cell) => {
         const n = cell._commits.length;
-        if (n === 0) { fadeMeta(); return; }   // 10-21 r2: an empty day eases the line out
-        // 2-digit slot (2ch, right-aligned); 100+ grows it leftward, "Commits" holds still
+        if (n === 0) {
+            fadeMeta();
+            return;
+        }
         meta.innerHTML = `<span class="c-count-inline"><span class="c-n">${n}</span> Commit<span class="c-s"${n === 1 ? ' style="visibility:hidden"' : ''}>s</span></span>`;
         meta.classList.remove('is-out');
     };
@@ -10641,8 +11173,8 @@ ${keepsBlock}${emptyBlock}
     const cal = document.getElementById('c-calendar');
     const titleEl = document.getElementById('c-month-title');
     const countEl = document.getElementById('c-month-count');
-  // 10-20: the slot empties when the pointer leaves the month, so it never holds a stale day
-  if (cal) cal.addEventListener('mouseleave', fadeMeta);
+    if (cal)
+        cal.addEventListener('mouseleave', fadeMeta);
     const renderMonth = (year, monthIdx) => {
         cal.innerHTML = '';
         const firstDay = new Date(year, monthIdx, 1);
@@ -11810,6 +12342,7 @@ ${keepsBlock}${emptyBlock}
     .slot{background:#f3eee8;border-radius:10px;aspect-ratio:16/9}
     .keep-note{font:400 12px/1.45 'Ubuntu Sans',sans-serif;color:var(--faint);margin-top:10px}
     .note{font:400 13px/1.5 'Ubuntu Sans',sans-serif;color:var(--soft)}
+    .also{margin:14px 0 0;font:400 12px/1.5 'Ubuntu Sans',sans-serif;color:var(--faint)}
     /* Hear the Story (round 5): the app's soft rect, a squircle play button, no pill, no stroke */
     .listen{display:flex;align-items:center;gap:16px;margin:20px 0 4px;padding:10px 20px 10px 10px;background:#fff;border-radius:12px;width:max-content;max-width:100%}
     .listen[hidden]{display:none}
@@ -11874,12 +12407,18 @@ ${keepsBlock}${emptyBlock}
     const dayFmt = (ts) => new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     const WEEK_STOP = new Set(['the', 'and', 'for', 'with', 'page', 'pages', 'new', 'index', 'html', 'option', 'options', 'proto', 'protos', 'build', 'final', 'round', 'version']);
     const weekToks = (s) => String(s || '').toLowerCase().replace(/['’]s\b/g, '').split(/[^a-z]+/).map(w => w.replace(/s$/, '')).filter(w => w.length > 2 && !WEEK_STOP.has(w) && !WEEK_STOP.has(w + 's'));
-    const isoWeekRange = (y, w) => { const jan4 = new Date(y, 0, 4), mon = new Date(jan4); mon.setDate(jan4.getDate() - ((jan4.getDay() + 6) % 7) + (w - 1) * 7);
-        const sun = new Date(mon); sun.setDate(mon.getDate() + 6); const M = d => d.toLocaleDateString('en-US', { month: 'short' });
-        return M(mon) === M(sun) ? `${M(mon)} ${mon.getDate()}-${sun.getDate()}` : `${M(mon)} ${mon.getDate()}-${M(sun)} ${sun.getDate()}`; };
-    const buildWeekHTML = ({ quest, keeps, allCommits, closedThisWeek, inFlight, now, weekNum, past, extra, agentsNow }) => {
+    const isoWeekRange = (y, w) => {
+        const jan4 = new Date(y, 0, 4), mon = new Date(jan4);
+        mon.setDate(jan4.getDate() - ((jan4.getDay() + 6) % 7) + (w - 1) * 7);
+        const sun = new Date(mon);
+        sun.setDate(mon.getDate() + 6);
+        const M = d => d.toLocaleDateString('en-US', { month: 'short' });
+        return M(mon) === M(sun) ? `${M(mon)} ${mon.getDate()}-${sun.getDate()}` : `${M(mon)} ${mon.getDate()}-${M(sun)} ${sun.getDate()}`;
+    };
+    const buildWeekHTML = ({ quest, keeps, allCommits, closedThisWeek, inFlight, now, weekNum, past, extra, agentsNow, weekLive }) => {
         extra = extra || {};
         agentsNow = agentsNow || [];
+        const wl = weekLive || {};
         const base = String(quest.repo || (/unicorn/i.test(quest.name || '') ? '~/unicorn' : '')).replace(/\/+$/, '').split('/').pop();
         const today = new Date(now);
         today.setHours(0, 0, 0, 0);
@@ -11895,10 +12434,9 @@ ${keepsBlock}${emptyBlock}
         const when = past ? 'that week' : 'this week';
         const names = (arr) => arr.slice(0, 3).map(e => ESC(e.name)).join(', ') + (arr.length > 3 ? ` and ${arr.length - 3} more` : '');
         const weekKeeps = keeps.filter(k => k.ts >= start.getTime() && k.ts < start.getTime() + 7 * 86400000);
-        // 10-20: video keeps count too (they live in keeps/<quest-slug>/, linked from briefs/<quest-slug>/)
-    const keepVid = k => { const m = String(k.videoPath || '').match(/\/keeps\/(.+)$/); return m ? '../../keeps/' + m[1].split('/').map(encodeURIComponent).join('/') : ''; };
-    const keepImgs = (weekKeeps.length ? weekKeeps : keeps).filter(k => k.image || k.thumb || keepVid(k));
-        const touched = closedThisWeek.concat(inFlight);
+        const keepVid = k => { const m = String(k.videoPath || '').match(/\/keeps\/(.+)$/); return m ? '../../keeps/' + m[1].split('/').map(encodeURIComponent).join('/') : ''; };
+        const keepImgs = (weekKeeps.length ? weekKeeps : keeps).filter(k => k.image || k.thumb || keepVid(k));
+        const touched = closedThisWeek.concat(inFlight, (wl.started || []).filter(e => !closedThisWeek.includes(e) && !inFlight.includes(e)));
         const stat = (n, lab, tip, w) => `<div class="card ${w || 'w2'} stat"><div><b>${ESC(n)}</b><span class="lab">${ESC(lab)}</span></div>${tip ? `<div class="tip">${tip}</div>` : ''}</div>`;
         let top = stat(closedThisWeek.length, `finished ${when}`, closedThisWeek.length ? names(closedThisWeek) : '');
         if (Array.isArray(extra.replaced) && extra.replaced.length) {
@@ -11914,24 +12452,63 @@ ${keepsBlock}${emptyBlock}
         function weekCommits(w) {
             return `<div class="card ${w}"><h3>${ESC(quest.name)} commits ${when}</h3><div class="wk-tot">${tot}</div><div class="commits">${vals.map(v => v == null ? '<i class="later"></i>' : `<i class="${v ? '' : 'zero'}" style="height:${v ? v / mx * 100 : 3}%"></i>`).join('')}</div><div class="c-lab">${['M', 'T', 'W', 'T', 'F', 'S', 'S'].map(d => `<span>${d}</span>`).join('')}</div>${tot ? '' : `<div class="c-empty">No commits ${when}.</div>`}</div>`;
         }
-        const usedImg = new Set();
+        const used = new Set();
         const fallbackImg = (e) => {
-            const t0 = Date.parse(e.createdAt) || 0, t1 = Date.parse(e.completedAt) || Date.now();
-            // 10-21 night: only a keep whose caption shares a word with the experiment, never one already shown
-            const et = weekToks(e.name);
-            const k = keeps.find(k => k.image && !usedImg.has(k.image) && k.ts >= t0 && k.ts <= t1 + 86400000 && weekToks((k.text || '') + ' ' + String(k.imagePath || '').split('/').pop()).some(t => et.includes(t)));
-            if (k) usedImg.add(k.image); return k ? k.image : '';
+            const t0 = Date.parse(e.createdAt) || 0, t1 = Date.parse(e.completedAt) || Date.now(), et = weekToks(e.name);
+            const k = keeps.find(k => k.image && !used.has(k.image) && k.ts >= t0 && k.ts <= t1 + 86400000 && weekToks((k.text || '') + ' ' + String(k.imagePath || '').split('/').pop()).some(t => et.includes(t)));
+            if (k)
+                used.add(k.image);
+            return k ? k.image : '';
         };
-        const builds = Array.isArray(extra.builds) && extra.builds.length
+        const expTag = e => e.status === 'complete' ? `Finished ${dayFmt(e.completedAt)}` : e.status === 'paused' ? 'Paused' : 'Started';
+        const groups = (wl.protos || []).slice(), cards = [];
+        touched.slice(0, 8).forEach(e => {
+            const et = weekToks(e.name);
+            let best = groups.findIndex(g => g.forExp === e.name), bs = 0;
+            if (best < 0)
+                groups.forEach((g, i) => { if (g.forExp)
+                    return; const sc = et.filter(t => g.toks.includes(t)).length; if (sc > bs) {
+                    bs = sc;
+                    best = i;
+                } });
+            if (best > -1) {
+                const g = groups.splice(best, 1)[0];
+                if (g.img)
+                    used.add(g.img);
+                cards.push({ t: e.name, tag: expTag(e), img: g.img || '', href: g.href, vers: g.vers });
+            }
+            else
+                cards.push({ t: e.name, tag: expTag(e), img: '', href: '', _e: e });
+        });
+        cards.forEach(c => { if (c._e) {
+            c.img = fallbackImg(c._e);
+            delete c._e;
+        } });
+        groups.forEach(g => {
+            const img = g.img && !used.has(g.img) ? g.img : '';
+            if (img)
+                used.add(img);
+            cards.push({ t: g.t, tag: `${g.isNew ? 'New' : 'Updated'} ${dayFmt(g.mtime)}`, img, href: g.href, vers: g.vers });
+        });
+        const agentBuilds = Array.isArray(extra.builds) && extra.builds.length;
+        const quiet = agentBuilds ? [] : cards.filter(c => !c.img && !c.href);
+        const builds = agentBuilds
             ? extra.builds.map(b => ({ t: b.title, tag: b.tag || '', img: b.img || '', href: b.href || '', vers: b.versions || [] }))
-            : touched.slice(0, 6).map(e => ({ t: e.name, tag: e.status === 'complete' ? `Finished ${dayFmt(e.completedAt)}` : e.status === 'paused' ? 'Paused' : 'Started', img: fallbackImg(e), href: '' }));
+            : cards.filter(c => c.img || c.href).slice(0, 12);
+        const qNames = arr => arr.map(c => ESC(c.t)).join(', ');
+        const qFin = quiet.filter(c => /^Finished/.test(c.tag)), qOpen = quiet.filter(c => !/^Finished/.test(c.tag));
+        const alsoLine = quiet.length ? `<p class="also">${[qFin.length ? `Also finished: ${qNames(qFin)}` : '', qOpen.length ? `Also ${past ? 'open' : 'in motion'}: ${qNames(qOpen)}` : ''].filter(Boolean).join('<br>')}</p>` : '';
         const buildCard = (b) => `<div class="build">${b.href ? `<a href="${ESC(b.href)}" target="_blank" rel="noopener">` : ''}${b.img ? `<img src="${b.img}" alt="${ESC(b.t)}">` : `<span class="ph" aria-hidden="true"></span>`}<b>${ESC(b.t)}${b.tag ? `<small>${ESC(b.tag)}</small>` : ''}</b>${b.href ? '</a>' : ''}
       ${b.vers && b.vers.length > 1 ? `<div class="vers">${b.vers.map((v, j) => {
             const [lab, href] = Array.isArray(v) ? v : ['v' + (j + 1), v];
-            return `<a class="lp${j === b.vers.length - 1 ? ' cur' : ''}" href="${ESC(href)}" target="_blank" rel="noopener">${ESC(lab)}</a>`;
+            const cur = b.href ? href === b.href : j === b.vers.length - 1;
+            return `<a class="lp${cur ? ' cur' : ''}" href="${ESC(href)}" target="_blank" rel="noopener">${ESC(lab)}</a>`;
         }).join('')}</div>` : ''}</div>`;
         const work = `<div class="card w6"><h3>${ESC(extra.buildsWord || 'Experiments')}${extra.share ? `<a href="${ESC(extra.share)}" target="_blank" rel="noopener">Share page →</a>` : ''}</h3>${builds.length
-            ? `<div class="builds${builds.length > 3 ? ' many' : ''}" style="--n:${Math.min(3, builds.length)}">${builds.map(buildCard).join('')}</div>` : `<p class="note">Nothing moved ${when}.</p>`}</div>`;
+            ? `<div class="builds${builds.length > 3 && extra.builds && extra.builds.length ? ' many' : ''}" style="--n:${Math.min(3, builds.length)}">${builds.map(buildCard).join('')}</div>${alsoLine}` : (alsoLine || `<p class="note">Nothing moved ${when}.</p>`)}</div>`;
+        const files = wl.files || [];
+        const fileRow = (f) => `<li><span><b>${ESC(f.name)}</b><small style="display:block;font:400 12px/1.3 'Ubuntu Sans',sans-serif;color:var(--faint)">${ESC(f.tool)}</small></span><span class="v">${ESC(f.verb)} ${ESC(dayFmt(f.ts))}${f.url ? ` · <a href="${ESC(f.url)}" target="_blank" rel="noopener">Open</a>` : ''}</span></li>`;
+        const filesCard = files.length ? `<div class="card w6"><h3>Files<span>${files.length}</span></h3><ul class="list">${files.slice(0, 8).map(fileRow).join('')}</ul></div>` : '';
         const qs = Array.isArray(extra.questions) ? extra.questions : [];
         const todo = Array.isArray(extra.todo) && extra.todo.length ? extra.todo : inFlight.slice(0, 5).map(e => [e.name, e.status === 'starting' ? 'Up next' : '']);
         const still = `<div class="card w4"><div class="two">
@@ -11981,6 +12558,7 @@ ${keepsBlock}${emptyBlock}
   <div class="cards">
     ${top}
     ${work}
+    ${filesCard}
     ${still}
     ${keep}
     ${agents}
@@ -12011,6 +12589,150 @@ ${keepsBlock}${emptyBlock}
                 if (b && b.img && !/^data:/.test(b.img))
                     b.img = await toDataURL(/^(https?:|file:|\/)/.test(b.img) ? b.img : '../' + b.img);
         return x;
+    };
+    const loadWeekLive = async (quest, since, expNames) => {
+        const out = { protos: [], files: [] }, U = window.unicorn;
+        const qSlug = slug(quest.name);
+        const repo = String(quest.repo || (/unicorn/i.test(quest.name || '') ? '~/unicorn' : '')).replace(/\/+$/, '');
+        const local = /^(~\/|\/)/.test(repo);
+        if (U && U.recentFiles) {
+            try {
+                let fl = await U.recentFiles([local ? repo + '/protos' : '', '~/unicorn/protos/' + qSlug].filter(Boolean), since);
+                if (!fl.length && local && repo !== '~/unicorn')
+                    fl = await U.recentFiles([repo], since);
+                const NOISE = /\/(briefs|papers|case-story|keeps|data|preview-site|preview-build|app-backups|node_modules|_superseded[^/]*)\//;
+                const VRE = /[-_. ]?(v|r)(\d+)([a-z]?)$/i, groups = new Map();
+                const nice = t => String(t).replace(/[-_]+/g, ' ').trim().replace(/(^|\s)([a-z])(?=\s|$)/g, (m, a, c) => a + c.toUpperCase()).replace(/^\w/, c => c.toUpperCase());
+                const verOf = t => { const m = String(t).match(VRE); return m ? m[1].toLowerCase() + m[2] + m[3] : ''; };
+                fl.filter(f => !NOISE.test(f.path)).forEach(f => {
+                    const dir = f.path.slice(0, f.path.lastIndexOf('/')), dname = dir.split('/').pop(), stem = f.name.replace(/\.html?$/i, '');
+                    const sbase = stem.replace(VRE, '') || stem, sver = verOf(stem);
+                    let key, title, lab;
+                    if (/^index$/i.test(sbase) && verOf(dname)) {
+                        const parent = dir.slice(0, dir.lastIndexOf('/')), dbase = dname.replace(VRE, '') || dname;
+                        key = parent + '/' + dbase.toLowerCase();
+                        title = nice(dbase);
+                        lab = [verOf(dname), sver].filter(Boolean).join(' ') || 'Main';
+                    }
+                    else if (/^(v|r)?\d+$/i.test(dname) || /\/protos$/.test(dir)) {
+                        key = dir + '/' + sbase.toLowerCase();
+                        title = nice(sbase);
+                        lab = sver || 'v1';
+                    }
+                    else {
+                        key = dir;
+                        title = nice(dname);
+                        lab = /^index$/i.test(sbase) ? (sver ? 'Main ' + sver : 'Main') : /[a-z]{2}/i.test(sbase) ? nice(sbase) + (sver ? ' ' + sver : '') : (sver || stem);
+                    }
+                    const g = groups.get(key) || { t: title, titles: [], vers: [], mtime: 0, isNew: false, href: '', toks: [] };
+                    if (f.mtime >= g.mtime) {
+                        g.mtime = f.mtime;
+                        g.href = 'file://' + f.path;
+                        g.shot = f.path;
+                    }
+                    g.isNew = g.isNew || (f.birthtime >= since);
+                    if (f.title)
+                        g.titles.push(f.title);
+                    const vt = weekToks(title + ' ' + stem + ' ' + (f.title || ''));
+                    g.vers.push([lab, 'file://' + f.path, f.title || '', vt, f.mtime]);
+                    g.toks.push(...vt);
+                    groups.set(key, g);
+                });
+                const common = (ts) => {
+                    if (ts.length < 2)
+                        return '';
+                    let p = ts.reduce((a, t) => { let i = 0; while (i < a.length && i < t.length && a[i].toLowerCase() === t[i].toLowerCase())
+                        i++; return a.slice(0, i); });
+                    if (!ts.every(t => t.length === p.length || /[\s,:·-]/.test(t[p.length])))
+                        p = p.replace(/\S*$/, '');
+                    p = p.replace(/[\s,:·-]+$/, '').replace(/\s+(r|v)\d*$/i, '').trim();
+                    return p.length >= 5 ? p : '';
+                };
+                out.protos = [...groups.values()].map(g => {
+                    g.vers.sort((a, b) => a[0].localeCompare(b[0], 'en', { numeric: true }));
+                    const c = common(g.titles);
+                    if (c && !/^v?\d/i.test(c))
+                        g.t = c;
+                    if (c)
+                        g.vers.forEach(v => { if (v[0] === 'Main' && v[2].toLowerCase().startsWith(c.toLowerCase())) {
+                            const r = v[2].slice(c.length).replace(/^[\s,:·-]+/, '');
+                            if (r && r.length <= 16)
+                                v[0] = r;
+                        } });
+                    g.toks = [...new Set(g.toks)];
+                    return g;
+                }).sort((a, b) => b.mtime - a.mtime).slice(0, 12);
+                const free = out.protos.slice();
+                (expNames || []).forEach(n => {
+                    const et = weekToks(n);
+                    let best = null, bs = 0;
+                    free.forEach(g => { const sc = et.filter(t => g.toks.includes(t)).length; if (sc > bs) {
+                        bs = sc;
+                        best = g;
+                    } });
+                    if (!best)
+                        return;
+                    free.splice(free.indexOf(best), 1);
+                    best.forExp = n;
+                    let bv = null, vs = -1;
+                    best.vers.forEach(v => { const sc = et.filter(t => v[3].includes(t)).length; if (sc > vs || (sc === vs && v[4] > bv[4])) {
+                        vs = sc;
+                        bv = v;
+                    } });
+                    if (bv) {
+                        best.href = bv[1];
+                        best.shot = bv[1].replace(/^file:\/\//, '');
+                    }
+                });
+                out.protos.forEach(g => { g.vers = g.vers.map(v => [v[0], v[1]]); });
+                if (U.protoShot)
+                    for (const g of out.protos) {
+                        try {
+                            const r = await U.protoShot(g.shot);
+                            if (r && r.ok && r.dataUrl)
+                                g.img = r.dataUrl;
+                        }
+                        catch { }
+                    }
+            }
+            catch (e) {
+                console.warn('[unicorn] week protos', e);
+            }
+        }
+        try {
+            const txt = await fetch('../data/agent-events.jsonl', { cache: 'no-store' }).then(r => r.ok ? r.text() : '');
+            const evs = txt.split('\n').map(l => { try {
+                return JSON.parse(l);
+            }
+            catch {
+                return null;
+            } }).filter(Boolean);
+            const names = new Set([String(quest.name || '').toLowerCase()]);
+            for (let pass = 0; pass < 3; pass++)
+                evs.forEach(e => { if (e.action === 'quest-rename' && e.to && names.has(String(e.to).toLowerCase()))
+                    names.add(String(e.quest || '').toLowerCase()); });
+            const TOOL = /^(artifact|file-update|file-created|canvas-created|canvas-updated|quest-figma|figma|rive|spline)/i, seen = new Set();
+            evs.forEach(e => {
+                const ts = Date.parse(e.ts);
+                if (!(ts >= since) || !names.has(String(e.quest || '').toLowerCase()))
+                    return;
+                if (!(TOOL.test(String(e.action || '')) || e.tool))
+                    return;
+                const url = /^https:\/\//.test(e.url || '') ? e.url : '';
+                const tool = e.tool || (/figma\.com/.test(url) ? 'Figma' : /rive\.app/.test(url) ? 'Rive' : /spline\.design/.test(url) ? 'Spline' : /claude\.ai/.test(url) ? 'Artifact' : 'File');
+                const fm = url.match(/figma\.com\/(?:design|file|board|proto|slides)\/[^/]+\/([^/?#]+)/i);
+                const name = e.name || e.title || (fm ? decodeURIComponent(fm[1]).replace(/-/g, ' ') : '') || e.experiment || tool + ' file';
+                const verb = /created|quest-figma/i.test(e.action) ? 'Created' : 'Updated';
+                const k = (url || name) + '|' + verb;
+                if (seen.has(k))
+                    return;
+                seen.add(k);
+                out.files.push({ name, tool, verb, ts, url });
+            });
+            out.files.sort((a, b) => b.ts - a.ts);
+        }
+        catch { }
+        return out;
     };
     const loadAgentsNow = async (quest) => {
         try {
@@ -12119,12 +12841,16 @@ ${keepsBlock}${emptyBlock}
             console.error('[unicorn] directory failed', e);
         }
     };
-    const compose = async () => {
+    const compose = async (opts) => {
+        const silent = !!(opts && opts.silent);
         const quest = getActiveQuest();
         if (!quest) {
-            toast('No active quest to compose.');
+            if (!silent)
+                toast('No active quest to compose.');
             return;
         }
+        if (!silent)
+            btn.classList.add('composing');
         const allKeeps = loadJSON('unicorn.keeps', []);
         const keeps = allKeeps.filter(k => k.questId === quest.id).sort((a, b) => b.ts - a.ts);
         if (window.unicorn && window.unicorn.readFileBase64) {
@@ -12161,12 +12887,55 @@ ${keepsBlock}${emptyBlock}
         const closedThisWeek = exps.filter(e => e.completedAt && Date.parse(e.completedAt) >= weekAgo);
         const inFlight = exps.filter(e => e.status === 'active' || e.status === 'starting');
         const now = new Date();
-        const wn = isoWeek(now);
+        let wn = isoWeek(now);
         const qSlug = slug(quest.name);
+        let [extra, agentsNow] = await Promise.all([loadWeekExtra(quest), loadAgentsNow(quest)]);
+        const wm = typeof extra.week === 'string' && extra.week.match(/^(\d{4})-W(\d{2})$/);
+        let html, pastPage = null;
+        const monNow = new Date(now);
+        monNow.setHours(0, 0, 0, 0);
+        monNow.setDate(monNow.getDate() - ((monNow.getDay() + 6) % 7));
+        const startedNow = exps.filter(e => e.createdAt && Date.parse(e.createdAt) >= monNow.getTime());
+        const weekLive = await loadWeekLive(quest, monNow.getTime(), [...new Set(closedThisWeek.concat(inFlight, startedNow).map(e => e.name))].slice(0, 8));
+        weekLive.started = startedNow;
+        if (wm && extra.week < `${wn.y}-W${String(wn.w).padStart(2, '0')}`) {
+            const pw = { y: +wm[1], w: +wm[2] };
+            const jan4 = new Date(pw.y, 0, 4), mon = new Date(jan4);
+            mon.setDate(jan4.getDate() - ((jan4.getDay() + 6) % 7) + (pw.w - 1) * 7);
+            mon.setHours(0, 0, 0, 0);
+            const end = new Date(mon);
+            end.setDate(mon.getDate() + 6);
+            end.setHours(23, 59, 59, 999);
+            const inWeek = ts => ts >= mon.getTime() && ts <= end.getTime();
+            const closed = exps.filter(e => e.completedAt && inWeek(Date.parse(e.completedAt)));
+            pastPage = { rel: `${qSlug}/${pw.y}-W${String(pw.w).padStart(2, '0')}-${qSlug}.html`,
+                html: buildWeekHTML({ quest, keeps, allCommits, closedThisWeek: closed, inFlight: [], now: end, weekNum: pw, past: true, extra }) };
+            extra = { questions: extra.questions, todo: extra.todo, agents: extra.agents };
+        }
+        html = buildWeekHTML({ quest, keeps, allCommits, closedThisWeek, inFlight, now, weekNum: wn, extra, agentsNow, weekLive });
+        if (pastPage && !silent) {
+            try {
+                await window.unicorn.writeBrief(pastPage.rel, pastPage.html);
+            }
+            catch { }
+        }
         const filename = `${wn.y}-W${String(wn.w).padStart(2, '0')}-${qSlug}.html`;
         const relPath = `${qSlug}/${filename}`;
-        const [extra, agentsNow] = await Promise.all([loadWeekExtra(quest), loadAgentsNow(quest)]);
-        const html = buildWeekHTML({ quest, keeps, allCommits, closedThisWeek, inFlight, now, weekNum: wn, extra, agentsNow });
+        if (silent) {
+            try {
+                await window.unicorn.writeBrief(relPath, html);
+                await writeDirectory(quest);
+                try {
+                    localStorage.setItem('r17.week-written', JSON.stringify({ rel: relPath, ts: Date.now() }));
+                }
+                catch { }
+                window.dispatchEvent(new CustomEvent('unicorn:week-written', { detail: { rel: relPath } }));
+            }
+            catch (e) {
+                console.warn('[unicorn] week refresh', e);
+            }
+            return;
+        }
         btn.classList.add('composing');
         try {
             const res = await window.unicorn.writeBrief(relPath, html);
@@ -12175,6 +12944,11 @@ ${keepsBlock}${emptyBlock}
                     await writeDirectory(quest);
                 }
                 catch { }
+                try {
+                    localStorage.setItem('r17.week-written', JSON.stringify({ rel: relPath, ts: Date.now() }));
+                }
+                catch { }
+                window.dispatchEvent(new CustomEvent('unicorn:week-written', { detail: { rel: relPath } }));
                 window.unicorn.openPath(res.path);
                 renderHistory();
             }
@@ -12192,6 +12966,27 @@ ${keepsBlock}${emptyBlock}
     };
     btn.addEventListener('click', () => { ensureUiAudio().then(() => { if (typeof uiFlourish === 'function')
         uiFlourish(); }); compose(); });
+    if (window.unicorn && window.unicorn.writeBrief) {
+        let weekBusy = false, weekLast = 0, weekT = 0;
+        const refreshWeek = async () => {
+            if (weekBusy)
+                return;
+            weekBusy = true;
+            try {
+                await compose({ silent: true });
+            }
+            catch (e) {
+                console.warn('[unicorn] week refresh', e);
+            }
+            finally {
+                weekBusy = false;
+                weekLast = Date.now();
+            }
+        };
+        setTimeout(refreshWeek, 8000);
+        setInterval(refreshWeek, 10 * 60000);
+        window.addEventListener('unicorn:quests-updated', () => { clearTimeout(weekT); weekT = setTimeout(refreshWeek, Math.max(20000, 60000 - (Date.now() - weekLast))); });
+    }
     renderHistory();
     window.addEventListener('unicorn:quests-updated', renderHistory);
     const openLink = document.getElementById('u-brief-open');
@@ -12768,7 +13563,7 @@ ${keepsBlock}${emptyBlock}
         paused: 'paused', pause: 'paused', starting: 'starting',
         ship: 'complete', finish: 'complete', finished: 'complete', resume: 'active'
     };
-    const QUEST_ACTION = /^quest[-_:]?(start|create|new|active|begin|pause|complete|done|ship|finish|archive|delete|remove|drop|describe|desc|tech|repo|folder|rename|taste|figma)$/;
+    const QUEST_ACTION = /^quest[-_:]?(activate|switch|start|create|new|active|begin|pause|complete|done|ship|finish|archive|delete|remove|drop|describe|desc|tech|repo|folder|rename|taste|figma)$/;
     const applyQuestEvent = (ev, data, action) => {
         const qname = (ev.quest || ev.name || '').trim();
         if (!qname)
@@ -12777,6 +13572,12 @@ ${keepsBlock}${emptyBlock}
         let q = (data.quests || []).find(x => (x.name || '').toLowerCase() === qname.toLowerCase());
         const m = action.match(QUEST_ACTION);
         const verb = m ? m[1] : 'start';
+        if (/^(activate|switch)$/.test(verb)) {
+            if (!q)
+                return null;
+            data.activeQuestIndex = data.quests.indexOf(q);
+            return { name: q.name, status: 'active', kind: 'quest' };
+        }
         const isStart = /start|create|new|active|begin/.test(verb);
         const isPause = /pause/.test(verb);
         const isComplete = /complete|done|ship|finish|archive/.test(verb);
@@ -13012,6 +13813,8 @@ ${keepsBlock}${emptyBlock}
             exp.status = status;
             exp.completedAt = status === 'complete' ? (exp.completedAt || ts) : null;
         }
+        if (explicit && (status === 'active' || status === 'starting') && !q.completed)
+            data.activeQuestIndex = data.quests.indexOf(q);
         localStorage.setItem(DATA_KEY, JSON.stringify(data));
         return { name, status, kind: 'experiment' };
     };
@@ -13033,6 +13836,16 @@ ${keepsBlock}${emptyBlock}
         if (lines.length <= cursor)
             return;
         let applied = null;
+        const activeName = () => {
+            try {
+                const d = JSON.parse(localStorage.getItem(DATA_KEY) || '{}'), qs = d.quests || [];
+                return typeof d.activeQuestIndex === 'number' && qs[d.activeQuestIndex] ? qs[d.activeQuestIndex].name : '';
+            }
+            catch {
+                return '';
+            }
+        };
+        const wasOn = activeName();
         for (let i = cursor; i < lines.length; i++) {
             let ev;
             try {
@@ -13073,7 +13886,8 @@ ${keepsBlock}${emptyBlock}
             const glyph = applied.kind === 'quest' ? '❀'
                 : applied.kind === 'stage' ? '◆'
                     : '✦';
-            t.textContent = glyph + ' ' + applied.name + ' · ' + applied.status;
+            const nowOn = activeName();
+            t.textContent = (nowOn && nowOn !== wasOn) ? 'Now on ' + nowOn : glyph + ' ' + applied.name + ' · ' + applied.status;
             t.style.opacity = '1';
             clearTimeout(t._timer);
             t._timer = setTimeout(() => { t.style.opacity = '0'; }, 3200);
@@ -13169,15 +13983,40 @@ ${keepsBlock}${emptyBlock}
         const m = String(url).match(/figma\.com\/(?:design|file|board|proto|slides)\/[^/]+\/([^/?#]+)/i);
         return m ? decodeURIComponent(m[1]).replace(/-/g, ' ').replace(/\s+/g, ' ').trim() : 'Figma file';
     };
+    const F = window.unicornFigma = window.unicornFigma || {};
+    const UF = () => (U && U.figma) || null;
+    let figmaConnected = true;
+    const readConnected = async () => {
+        try {
+            if (typeof F.connected === 'function')
+                return (await F.connected()) !== false;
+            const uf = UF();
+            if (uf && typeof uf.status === 'function') {
+                const st = await uf.status();
+                return !(st && st.connected === false);
+            }
+        }
+        catch { }
+        return true;
+    };
     function renderCanvas() {
         const q = activeQuest(), url = q && q.figma && /^https:\/\/(www\.)?figma\.com\//i.test(q.figma) ? q.figma : '';
-        // 10-21: Create + "No file yet" until a file exists, then Update + Open (the preview is always connected)
-        const meta = url ? figmaName(url) : 'No file yet', label = url ? 'Update' : 'Create', b = $('st-cv-update');
-        if ($('st-cv-meta').textContent !== meta) $('st-cv-meta').textContent = meta;
-        if (b.textContent !== label) b.textContent = label;
-        b.title = url ? 'Update this quest’s Figma file from the build' : 'Create this quest’s Figma file from the build';
-        if ($('st-cv-open').hidden !== !url) $('st-cv-open').hidden = !url;
+        const meta = url ? figmaName(url) : 'No file yet';
+        const label = !figmaConnected ? 'Connect Figma' : url ? 'Update' : 'Create';
+        const tip = !figmaConnected ? 'Connect Figma to this quest' : url ? 'Update this quest’s Figma file from the build' : 'Create this quest’s Figma file from the build';
+        const m = $('st-cv-meta'), b = $('st-cv-update'), o = $('st-cv-open');
+        if (m.textContent !== meta)
+            m.textContent = meta;
+        if (b.textContent !== label)
+            b.textContent = label;
+        if (b.title !== tip)
+            b.title = tip;
+        b.dataset.mode = !figmaConnected ? 'connect' : url ? 'update' : 'create';
+        const hideOpen = !url || !figmaConnected;
+        if (o.hidden !== hideOpen)
+            o.hidden = hideOpen;
     }
+    F.refresh = async () => { figmaConnected = await readConnected(); renderCanvas(); };
     $('st-cv-open').addEventListener('click', async () => {
         const q = activeQuest();
         if (!q || !q.figma)
@@ -13196,6 +14035,22 @@ ${keepsBlock}${emptyBlock}
         const q = activeQuest();
         if (!q)
             return;
+        const mode = $('st-cv-update').dataset.mode || (q.figma ? 'update' : 'create');
+        const hook = typeof F[mode] === 'function' ? F[mode] : (UF() && typeof UF()[mode] === 'function' ? UF()[mode] : null);
+        if (hook) {
+            try {
+                await hook({ quest: q.name, repo: repoOf(q), figma: q.figma || '' });
+            }
+            catch (e) {
+                console.warn('[unicorn] figma ' + mode, e);
+            }
+            F.refresh();
+            return;
+        }
+        if (mode === 'connect') {
+            toast('Connect Figma in Claude Code: /mcp');
+            return;
+        }
         const prompt = q.figma
             ? `Update the Figma file for the ${q.name} quest (${q.figma}) from its build at ${repoOf(q) || 'its folder'}, using the Figma MCP. Only what changed; never start from an empty file.`
             : `Set up a Figma file for the ${q.name} quest from its build at ${repoOf(q) || 'its folder'}, using the Figma MCP: a template tied to this build, only what it needs. Then log it with a quest-figma event.`;
@@ -13216,21 +14071,26 @@ ${keepsBlock}${emptyBlock}
         const q = activeQuest(), m = $('st-story-meta');
         if (!m)
             return;
-        m.textContent = '';
-        if (!U || !U.listBriefs || !q)
+        const set = t => { if (m.textContent !== t)
+            m.textContent = t; };
+        if (!U || !U.listBriefs || !q) {
+            set('');
             return;
+        }
         let briefs = [];
         try {
             briefs = await U.listBriefs();
         }
         catch { }
-        const mine = briefs.filter(b => b.rel.startsWith(slug(q.name) + '/')).map(b => b.name).sort().reverse();
-        const hit = mine[0] && mine[0].match(/^(\d{4})-W(\d{2})/);
-        if (!hit) {
-            m.textContent = 'Not written yet';
-            return;
+        const mine = briefs.filter(b => b.rel.startsWith(slug(q.name) + '/')).map(b => b.name).filter(n => /^\d{4}-W\d{2}/.test(n)).sort().reverse();
+        let wj = null;
+        try {
+            wj = await fetch(`../briefs/${slug(q.name)}/week.json`, { cache: 'no-store' }).then(r => r.ok ? r.json() : null);
         }
-        m.textContent = +hit[2] === isoWeek(new Date()) ? 'This week' : `Last: Week ${+hit[2]}`;
+        catch { }
+        const written = (wj && typeof wj.week === 'string' && /^\d{4}-W\d{2}$/.test(wj.week)) ? wj.week : (mine[0] || '').slice(0, 8);
+        const hit = written.match(/^(\d{4})-W(\d{2})/);
+        set('This Week');
     }
     $('st-story-week').addEventListener('click', () => {
         const cta = $('u-brief-cta');
@@ -13245,13 +14105,28 @@ ${keepsBlock}${emptyBlock}
     const dt = $('mc-dt');
     if (dt)
         dt.textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
-    const paperPath = async () => { const p = U && U.paths ? await U.paths() : null; const base = p && p.keepsDir ? p.keepsDir.replace(/\/keeps$/, '') : null; return base ? base + '/protos/mirror/paper-e.html' : null; };
-    $('st-paper').addEventListener('click', async (e) => { e.preventDefault(); const f = await paperPath(); if (f)
-        U.openPath(f);
+    const repoBase = async () => { const p = U && U.paths ? await U.paths() : null; return p && p.keepsDir ? p.keepsDir.replace(/\/keeps$/, '') : null; };
+    const paperIndex = async () => { try {
+        return await fetch('../papers/index.json', { cache: 'no-store' }).then(r => r.ok ? r.json() : null);
+    }
+    catch {
+        return null;
+    } };
+    const paperRel = async () => { const x = await paperIndex(); return x && x.latest ? 'papers/' + x.latest : 'protos/mirror/paper-e.html'; };
+    $('st-paper').addEventListener('click', async (e) => { e.preventDefault(); const rel = await paperRel(), base = await repoBase(); if (base)
+        U.openPath(base + '/' + rel);
     else
-        window.open('../protos/mirror/paper-e.html', '_blank'); });
-    $('st-paper-dir').addEventListener('click', async (e) => { e.preventDefault(); const f = await paperPath(); if (f && U.revealPath)
-        U.revealPath(f); });
+        window.open('../' + rel, '_blank'); });
+    $('st-paper-dir').addEventListener('click', async (e) => {
+        e.preventDefault();
+        const x = await paperIndex(), base = await repoBase();
+        if (x && base)
+            U.openPath(base + '/papers/index.html');
+        else if (x)
+            window.open('../papers/index.html', '_blank');
+        else if (base && U.revealPath)
+            U.revealPath(base + '/protos/mirror/paper-e.html');
+    });
     const fit = () => {
         const mh = panel.querySelector('#mirror-call .mh');
         if (!mh)
@@ -13288,7 +14163,7 @@ ${keepsBlock}${emptyBlock}
     new ResizeObserver(refit).observe(panel);
     const renderAll = () => {
         renderWeek();
-        renderCanvas();
+        F.refresh();
         renderStoryMeta();
         try {
             localStorage.setItem('r26.story-head', JSON.stringify({ q: ($('a-attached-quest') || {}).textContent, r: ($('a-attached-repo') || {}).textContent }));
@@ -13301,6 +14176,625 @@ ${keepsBlock}${emptyBlock}
     window.addEventListener('storage', e => { if (e.key === 'unicorn-data')
         renderAll(); });
     renderAll();
+})();
+</script>
+<style>
+  
+  #st-cv-prog { margin-top: 8px; padding: 0 2px; }
+  #st-cv-prog[hidden] { display: none; }
+  #st-cv-prog .ln { position: relative; height: 2px; border-radius: 2px; overflow: hidden; background: rgba(255,255,255,.05); }
+  #st-cv-prog .ln i { position: absolute; inset: 0 auto 0 0; width: 40%; border-radius: 2px;
+    background: linear-gradient(90deg, rgba(255,175,95,0), #FFAF5F 30%, #E094B4 60%, #AF87D7 85%, rgba(175,135,215,0));
+    animation: stCvRun 1.6s cubic-bezier(.45,.05,.55,.95) infinite; }
+  #st-cv-prog:not([data-state="checking"]):not([data-state="figma"]):not([data-state="html"]) .ln { display: none; }
+  @keyframes stCvRun { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
+  @media (prefers-reduced-motion: reduce) { #st-cv-prog .ln i { animation: none; width: 100%; opacity: .5; } }
+  #st-cv-prog .tx { margin-top: 6px; font: 400 11px/1.4 var(--sans); color: var(--text-whisper-2); }
+  #st-cv-prog[data-state="failed"] .tx, #st-cv-prog[data-state="connect"] .tx { color: #FFAF5F; }
+  #st-cv-prog .cl { margin: 4px 0 0; padding: 0; list-style: none; font: 400 11px/1.45 var(--sans); color: var(--text-whisper-2); }
+  #st-cv-prog .cl li { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #st-cv-prog .cl li::before { content: '✷ '; color: #AF87D7; }
+  #st-cv-update[aria-busy="true"] { opacity: .5; pointer-events: none; }
+</style>
+<script>
+(() => {
+    const U = window.unicorn;
+    if (!U || !U.figma || !U.figma.onProgress)
+        return;
+    const box = document.getElementById('st-canvas');
+    if (!box)
+        return;
+    const el = document.createElement('div');
+    el.id = 'st-cv-prog';
+    el.hidden = true;
+    el.setAttribute('aria-live', 'polite');
+    el.innerHTML = '<div class="ln"><i></i></div><div class="tx"></div><ul class="cl"></ul>';
+    box.insertAdjacentElement('afterend', el);
+    const btn = () => document.getElementById('st-cv-update');
+    const activeName = () => {
+        try {
+            const d = JSON.parse(localStorage.getItem('unicorn-data')) || {}, qs = d.quests || [];
+            const q = (typeof d.activeQuestIndex === 'number' && qs[d.activeQuestIndex]) || qs.find(x => !x.completed) || qs[0];
+            return q ? q.name : '';
+        }
+        catch {
+            return '';
+        }
+    };
+    let shownFor = '', hideT = 0;
+    const show = (m) => {
+        if (m.quest && m.quest !== activeName())
+            return;
+        clearTimeout(hideT);
+        shownFor = m.quest || activeName();
+        el.hidden = false;
+        el.dataset.state = m.state;
+        el.querySelector('.tx').textContent = m.text || '';
+        const cl = el.querySelector('.cl');
+        cl.innerHTML = '';
+        (m.state === 'done' ? (m.changelog || []).slice(0, 3) : []).forEach(t => { const li = document.createElement('li'); li.textContent = t; li.title = t; cl.appendChild(li); });
+        const busy = ['checking', 'figma', 'html'].includes(m.state) && m.kind !== 'connect';
+        const b = btn();
+        if (b) {
+            if (busy)
+                b.setAttribute('aria-busy', 'true');
+            else
+                b.removeAttribute('aria-busy');
+        }
+        if (!busy) {
+            if (window.unicornFigma && window.unicornFigma.refresh)
+                window.unicornFigma.refresh();
+            hideT = setTimeout(() => { el.hidden = true; }, m.state === 'done' ? 60000 : 30000);
+        }
+    };
+    U.figma.onProgress(show);
+    const resume = async () => {
+        try {
+            const st = await U.figma.status({ quest: activeName() });
+            if (st && st.running && st.running.quest === activeName())
+                show({ ...st.running, quest: st.running.quest });
+            else if (shownFor && shownFor !== activeName()) {
+                el.hidden = true;
+                const b = btn();
+                if (b)
+                    b.removeAttribute('aria-busy');
+            }
+            if (window.unicornFigma && window.unicornFigma.refresh)
+                window.unicornFigma.refresh();
+        }
+        catch { }
+    };
+    const qEl = document.getElementById('a-attached-quest');
+    if (qEl)
+        new MutationObserver(resume).observe(qEl, { childList: true, characterData: true, subtree: true });
+    resume();
+})();
+</script>
+<script>
+(() => {
+    const root = document.getElementById('r17-story');
+    if (!root)
+        return;
+    const $ = id => document.getElementById(id);
+    const U = window.unicorn;
+    const panel = $('agent');
+    const HP = 22, HG = 66;
+    const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const I = (id, cls = '') => `<svg class="ic ${cls}" aria-hidden="true"><use href="#i-${id}"/></svg>`;
+    const esc = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const load = () => { try {
+        return JSON.parse(localStorage.getItem('unicorn-data')) || {};
+    }
+    catch {
+        return {};
+    } };
+    const activeQuest = () => { const d = load(), qs = d.quests || []; return (typeof d.activeQuestIndex === 'number' && qs[d.activeQuestIndex]) || qs.find(q => !q.completed) || qs[0] || null; };
+    const slug = s => String(s || 'quest').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 32) || 'quest';
+    const getJ = (k, d) => { try {
+        const v = JSON.parse(localStorage.getItem(k));
+        return v == null ? d : v;
+    }
+    catch {
+        return d;
+    } };
+    const setJ = (k, v) => { try {
+        localStorage.setItem(k, JSON.stringify(v));
+    }
+    catch { } };
+    const click = id => { const el = $(id); if (el)
+        el.click(); };
+    let chip = getJ('r17.story-chip', 'design');
+    const showChip = (p) => {
+        chip = p;
+        setJ('r17.story-chip', p);
+        root.querySelectorAll('.chip').forEach(c => { const on = c.dataset.p === p; c.classList.toggle('on', on); c.setAttribute('aria-selected', String(on)); });
+        root.querySelectorAll('.pane').forEach(x => x.classList.toggle('on', x.dataset.pane === p));
+        refit();
+    };
+    root.querySelectorAll('.chip').forEach(c => c.addEventListener('click', (e) => { e.stopPropagation(); if (c.dataset.p !== chip && typeof uiClick === 'function')
+        uiClick('E5'); showChip(c.dataset.p); }));
+    const mc = document.createElement('canvas').getContext('2d');
+    const setFont = el => { const cs = getComputedStyle(el); mc.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`; try {
+        mc.letterSpacing = cs.letterSpacing === 'normal' ? '0px' : cs.letterSpacing;
+    }
+    catch { } };
+    const textNode = (el, last) => { const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT); const a = []; let n; while ((n = w.nextNode()))
+        if (n.textContent.trim())
+            a.push(n); return last ? a[a.length - 1] : a[0]; };
+    const textInk = (el, last) => {
+        const n = textNode(el, last);
+        if (!n)
+            return null;
+        const r = document.createRange();
+        r.selectNodeContents(n);
+        const rs = [...r.getClientRects()];
+        if (!rs.length)
+            return null;
+        const rc = last ? rs[rs.length - 1] : rs[0];
+        setFont(el);
+        const t = n.textContent.replace(/^\s+/, ''), m = mc.measureText(t);
+        return { base: rc.top + m.fontBoundingBoxAscent, left: rs[0].left - m.actualBoundingBoxLeft, right: rc.right };
+    };
+    const inkBox = (c) => {
+        const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data, W = c.width, H = c.height;
+        let L = W, R = -1, T = H, B = -1;
+        for (let y = 0; y < H; y++)
+            for (let x = 0; x < W; x++)
+                if (d[(y * W + x) * 4 + 3] > 8) {
+                    if (x < L)
+                        L = x;
+                    if (x > R)
+                        R = x;
+                    if (y < T)
+                        T = y;
+                    if (y > B)
+                        B = y;
+                }
+        return { L, R: R + 1, T, B: B + 1 };
+    };
+    const lead = $('r17-paper-lead');
+    let paperHead = '';
+    const fitLead = () => {
+        if (!lead || !paperHead || !lead.getClientRects().length)
+            return;
+        const words = paperHead.split(/\s+/), lh = parseFloat(getComputedStyle(lead).lineHeight), max = lh * 2 + 1;
+        for (let n = words.length; n > 0; n--) {
+            lead.textContent = words.slice(0, n).join(' ').replace(/[\s,.;:!?–-]+$/, '') + '…';
+            if (lead.getBoundingClientRect().height <= max)
+                break;
+        }
+    };
+    const paperBaseFromBottom = () => {
+        const h = $('r17-paper-hero');
+        if (!h || !lead || !lead.textContent)
+            return 22;
+        const v = textInk(lead, true), hb = h.getBoundingClientRect();
+        return v && hb.height ? hb.bottom - v.base : 22;
+    };
+    async function renderPaper() {
+        let x = null;
+        try {
+            x = await fetch('../papers/index.json', { cache: 'no-store' }).then(r => r.ok ? r.json() : null);
+        }
+        catch { }
+        const iss = x && Array.isArray(x.issues) && x.issues[0];
+        const d = iss && iss.date ? new Date(iss.date + 'T12:00:00') : new Date();
+        $('r17-paper-date').textContent = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+        $('r17-paper-issue').textContent = iss ? 'Issue ' + x.issues.length : '';
+        paperHead = (iss && iss.title) || 'Today’s paper is on its way';
+        lead.textContent = paperHead;
+        fitLead();
+        refit();
+    }
+    $('r17-paper-hero').addEventListener('click', () => click('st-paper'));
+    $('r17-paper-open').addEventListener('click', () => click('st-paper'));
+    $('r17-paper-dir').addEventListener('click', () => click('st-paper-dir'));
+    const COVERS = [
+        { k: 'cur', cls: 'cv0', frames: 5, name: 'Longer Stride' },
+        { k: 'r1', cls: 'cv1', frames: 5, name: 'Gradient Mark' },
+        { k: 'r2', cls: 'cv2', frames: 6, name: 'Full Run' },
+    ];
+    const coverPick = q => { const m = getJ('r17.cover', {}); const v = m[slug(q && q.name)]; return v === 1 || v === 2 ? v : 0; };
+    const fmtShort = d => d ? MONTHS[d.getMonth()] + ' ' + d.getDate() : '';
+    const coverHTML = (i, q, d) => {
+        const c = COVERS[i], date = d || new Date();
+        const runs = Array.from({ length: c.frames }, (_, j) => `<canvas data-f="${j}"></canvas>`).join('');
+        return `<div class="cv ${c.cls}"><div class="run" data-fit="${c.cls === 'cv2' ? 'LR' : 'R'}">${runs}</div><i class="ground"></i>`
+            + `<span class="wm">${esc((q && q.name) || 'Unicorn')}</span><span class="meta">Design System<br>${MONTHS[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}</span></div>`;
+    };
+    const drawRuns = (scope) => {
+        const u = window.Unicorn7;
+        if (!u)
+            return;
+        const dpr = Math.max(1, Math.round(devicePixelRatio || 1)), s = Math.max(1, Math.round(2.5 * dpr)), k = s / dpr;
+        scope.querySelectorAll('.cv .run canvas').forEach(cv => {
+            cv.width = 21 * s;
+            cv.height = 26 * s;
+            cv.style.width = 21 * k + 'px';
+            cv.style.height = 26 * k + 'px';
+            try {
+                u.render(cv, u.o7, s, u.sustainFrame(+cv.dataset.f * 120, 0));
+            }
+            catch { }
+        });
+    };
+    const fitCovers = () => {
+        const pb = paperBaseFromBottom();
+        root.querySelectorAll('.cv').forEach(cvEl => {
+            const hb = cvEl.getBoundingClientRect();
+            if (!hb.width)
+                return;
+            const run = cvEl.querySelector('.run'), wm = cvEl.querySelector('.wm'), meta = cvEl.querySelector('.meta');
+            if (run) {
+                run.style.translate = '';
+                run.style.left = '';
+                run.style.right = '';
+                const box = () => {
+                    let L = 1e9, R = -1e9, B = -1e9, first = null, last = null;
+                    run.querySelectorAll('canvas').forEach((c, i, all) => {
+                        const k = inkBox(c), r = c.getBoundingClientRect(), sc = r.width / c.width;
+                        const b = { l: r.left + k.L * sc, r: r.left + k.R * sc, b: r.top + k.B * sc };
+                        L = Math.min(L, b.l);
+                        R = Math.max(R, b.r);
+                        B = Math.max(B, b.b);
+                        if (i === 0)
+                            first = b;
+                        if (i === all.length - 1)
+                            last = b;
+                    });
+                    return { l: L, r: R, b: B, first, last };
+                };
+                let k = box();
+                if (run.dataset.fit === 'LR' && k.first) {
+                    const rb = run.getBoundingClientRect();
+                    run.style.left = (HP - (k.first.l - rb.left)) + 'px';
+                    run.style.right = (HP - (rb.right - k.last.r)) + 'px';
+                    k = box();
+                }
+                run.style.translate = `${(hb.right - HP - k.r).toFixed(2)}px ${(hb.top + HG - k.b).toFixed(2)}px`;
+            }
+            if (meta) {
+                meta.style.translate = '';
+                const v = textInk(meta, true), r = meta.getBoundingClientRect();
+                if (v)
+                    meta.style.translate = `${(hb.right - HP - r.right).toFixed(2)}px ${((hb.bottom - pb) - v.base).toFixed(2)}px`;
+            }
+            if (wm) {
+                wm.style.translate = '';
+                wm.style.fontSize = '';
+                const room = hb.width - HP * 2 - (meta ? meta.getBoundingClientRect().width + 10 : 0);
+                const w = wm.getBoundingClientRect().width;
+                if (w > room)
+                    wm.style.fontSize = Math.max(16, 43 * room / w).toFixed(2) + 'px';
+                const v = textInk(wm, false);
+                if (v)
+                    wm.style.translate = `${(hb.left + HP - v.left).toFixed(2)}px ${((hb.bottom - pb) - v.base).toFixed(2)}px`;
+            }
+        });
+    };
+    let ds = 'none', pick = 0, failText = '', failT = 0, figmaDate = null, override = null;
+    const mode = () => ($('st-cv-update') && $('st-cv-update').dataset.mode) || 'create';
+    const baseState = () => { const m = mode(); return m === 'connect' ? 'connect' : m === 'update' ? 'ready' : 'none'; };
+    const capMeta = () => {
+        const lds = document.getElementById('u-taste-lds'), html = lds && !lds.classList.contains('muted') ? ' · <a class="html" data-act="html" title="The same system as an HTML page. Same Update, same code">HTML</a>' : '';
+        const d = fmtShort(figmaDate);
+        return `<span class="cap" title="${d ? 'Figma file, updated ' + d : 'Figma file'}">Figma${d ? ' · ' + d : ''}${html}</span>`;
+    };
+    function renderDesign() {
+        const hero = $('r17-design-hero'), door = $('r17-design-door');
+        if (!hero || !door)
+            return;
+        const q = activeQuest();
+        const state = override || ds;
+        let h = '', dr = '';
+        const cur = coverPick(q);
+        hero.className = 'hero' + ((state === 'creating' || state === 'updating') ? ' tint' : '');
+        if (state === 'choose') {
+            const order = [cur, ...[0, 1, 2].filter(i => i !== cur)];
+            h = `<div class="covers">${order.map((ci, i) => `<div class="${i === pick ? 'on' : ''}" data-ci="${ci}">${coverHTML(ci, q, figmaDate)}</div>`).join('')}</div>`
+                + `<button type="button" class="flip l" data-flip="-1" aria-label="Previous Cover">${I('caret')}</button><button type="button" class="flip r" data-flip="1" aria-label="Next Cover">${I('caret')}</button>`
+                + `<div class="pips">${order.map((_, i) => `<i class="${i === pick ? 'on' : ''}"></i>`).join('')}</div>`;
+            const cap = pick === 0 ? 'Current Cover' : `Refined <b>${pick} of 2</b>`;
+            dr = `<span class="cap">${cap}</span><div class="acts"><button type="button" class="r17-ib danger" data-act="keep" title="Keep the current cover" aria-label="Keep the current cover">${I('close')}</button>`
+                + `<button type="button" class="u-fill" data-act="use" title="${pick === 0 ? 'Keeps the current cover' : 'Makes this the cover in Story'}">${I('check')}Use This</button></div>`;
+        }
+        else if (state === 'creating' || state === 'none' || state === 'connect') {
+            h = `<div class="nofile">One file: system, screens, story</div>`;
+        }
+        else {
+            h = `<div class="covers"><div class="on">${coverHTML(cur, q, figmaDate)}</div></div>`;
+        }
+        if (state === 'creating' || state === 'updating') {
+            dr = `<span class="cap" title="${esc(runText)}"><span class="sweep">${state === 'creating' ? 'Creating' : 'Updating'}</span></span><div class="acts"><button type="button" class="u-quiet" data-act="stop" title="Stops the agent. Nothing in Figma changes">Stop</button></div>`;
+        }
+        else if (state === 'connect') {
+            dr = `<span class="cap${failText ? ' fail' : ''}">${esc(failText || 'Figma isn’t connected')}</span><div class="acts"><button type="button" class="u-fill" data-act="run" title="Connect Figma to this quest">Connect</button></div>`;
+        }
+        else if (state === 'none') {
+            dr = `<span class="cap${failText ? ' fail' : ''}">${esc(failText || 'No Figma file yet')}</span><div class="acts"><button type="button" class="u-fill" data-act="run" title="Creates this quest’s Figma file from the build. Uses your Claude plan">Create</button></div>`;
+        }
+        else if (state === 'ready') {
+            dr = (failText ? `<span class="cap fail">${esc(failText)}</span>` : capMeta())
+                + `<div class="acts"><button type="button" class="u-quiet" data-act="run" title="One pass from the build’s code: refreshes Figma and the HTML page, then offers the current cover and two refinements. Uses your Claude plan">Update</button><button type="button" class="u-fill" data-act="open" title="Opens in Figma">Open</button></div>`;
+        }
+        if (hero.dataset.sig !== state + '|' + pick + '|' + cur + '|' + (q && q.name) + '|' + fmtShort(figmaDate)) {
+            hero.dataset.sig = state + '|' + pick + '|' + cur + '|' + (q && q.name) + '|' + fmtShort(figmaDate);
+            hero.innerHTML = h;
+            drawRuns(hero);
+        }
+        door.innerHTML = dr;
+        refit();
+    }
+    $('r17-design-hero').addEventListener('click', (e) => {
+        const f = e.target.closest('[data-flip]');
+        if (!f)
+            return;
+        e.stopPropagation();
+        pick = (pick + +f.dataset.flip + 3) % 3;
+        if (typeof uiClick === 'function')
+            uiClick('E5');
+        renderDesign();
+    });
+    $('r17-design-door').addEventListener('click', async (e) => {
+        const b = e.target.closest('[data-act]');
+        if (!b)
+            return;
+        e.stopPropagation();
+        const a = b.dataset.act;
+        if (a === 'run') {
+            failText = '';
+            click('st-cv-update');
+        }
+        else if (a === 'open')
+            click('st-cv-open');
+        else if (a === 'html') {
+            const l = document.getElementById('u-taste-lds');
+            if (l)
+                l.click();
+        }
+        else if (a === 'stop') {
+            try {
+                if (U && U.figma && U.figma.cancel)
+                    await U.figma.cancel();
+            }
+            catch { }
+            if (!U && override) {
+                override = null;
+                renderDesign();
+            }
+        }
+        else if (a === 'keep') {
+            override = null;
+            ds = baseState();
+            pick = 0;
+            renderDesign();
+        }
+        else if (a === 'use') {
+            const q = activeQuest(), el = $('r17-design-hero').querySelector('.covers > .on'), ci = el ? +el.dataset.ci : 0;
+            const m = getJ('r17.cover', {});
+            m[slug(q && q.name)] = ci;
+            setJ('r17.cover', m);
+            override = null;
+            ds = baseState();
+            pick = 0;
+            if (typeof uiClick === 'function')
+                uiClick('G5');
+            renderDesign();
+        }
+    });
+    async function readFigmaDate() {
+        const q = activeQuest();
+        figmaDate = null;
+        if (!q)
+            return;
+        let t = 0;
+        try {
+            const txt = await fetch('../data/agent-events.jsonl', { cache: 'no-store' }).then(r => r.ok ? r.text() : '');
+            txt.split('\n').slice(-3000).forEach(l => {
+                if (!/canvas-|quest-figma/.test(l))
+                    return;
+                try {
+                    const e = JSON.parse(l);
+                    if (/^(quest-figma|canvas-created|canvas-updated)$/.test(e.action) && String(e.quest || '').toLowerCase() === String(q.name || '').toLowerCase())
+                        t = Math.max(t, Date.parse(e.ts) || 0);
+                }
+                catch { }
+            });
+        }
+        catch { }
+        try {
+            if (U && U.figma && U.figma.status) {
+                const st = await U.figma.status({ quest: q.name });
+                if (st && st.last && st.last.ok && st.last.ts)
+                    t = Math.max(t, Date.parse(st.last.ts) || 0);
+            }
+        }
+        catch { }
+        figmaDate = t ? new Date(t) : null;
+    }
+    let runText = '', runKind = '';
+    const onProgress = (m) => {
+        const q = activeQuest();
+        if (m.quest && q && m.quest !== q.name)
+            return;
+        clearTimeout(failT);
+        if (['checking', 'figma', 'html'].includes(m.state) && m.kind !== 'connect') {
+            runKind = m.kind;
+            runText = m.text || '';
+            failText = '';
+            override = null;
+            ds = m.kind === 'create' ? 'creating' : 'updating';
+        }
+        else if (m.state === 'done') {
+            if (m.kind === 'update') {
+                ds = 'choose';
+                pick = 0;
+                readFigmaDate().then(renderDesign);
+            }
+            else {
+                ds = baseState();
+                readFigmaDate().then(renderDesign);
+            }
+            failText = m.kind === 'connect' ? '' : failText;
+        }
+        else if (m.state === 'failed' || m.state === 'connect') {
+            ds = m.state === 'connect' ? 'connect' : baseState();
+            failText = m.text || 'Something went wrong';
+            failT = setTimeout(() => { failText = ''; renderDesign(); }, 30000);
+        }
+        renderDesign();
+    };
+    if (U && U.figma && U.figma.onProgress)
+        U.figma.onProgress(onProgress);
+    const upd = $('st-cv-update');
+    if (upd)
+        new MutationObserver(() => { if (ds !== 'creating' && ds !== 'updating' && ds !== 'choose') {
+            ds = baseState();
+            readFigmaDate().then(renderDesign);
+        } })
+            .observe(upd, { attributes: true, attributeFilter: ['data-mode'] });
+    const resumeRun = async () => {
+        try {
+            const q = activeQuest();
+            if (!U || !U.figma || !U.figma.status || !q)
+                return;
+            const st = await U.figma.status({ quest: q.name });
+            if (st && st.running && st.running.quest === q.name)
+                onProgress({ ...st.running, quest: q.name });
+        }
+        catch { }
+    };
+    window.r17Design = (st) => { override = st || null; if (st === 'choose')
+        pick = 0; renderDesign(); };
+    window.r17Story = { refresh: () => { renderPaper(); renderAll(); }, state: () => override || ds };
+    const WK = { vw: 1280, vh: 800, l: 94, r: 1186, t: 79, clipT: 70, clipX: 74 };
+    const isoWeek = d => {
+        const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())), day = t.getUTCDay() || 7;
+        t.setUTCDate(t.getUTCDate() + 4 - day);
+        const y = t.getUTCFullYear();
+        return { y, w: Math.ceil(((t - Date.UTC(y, 0, 1)) / 86400000 + 1) / 7) };
+    };
+    let weekSig = '';
+    async function renderWeek(force) {
+        const hero = $('r17-week-hero'), cap = $('r17-week-cap');
+        if (!hero)
+            return;
+        const q = activeQuest();
+        if (!q) {
+            hero.innerHTML = '';
+            return;
+        }
+        const sl = slug(q.name), wn = isoWeek(new Date()), cur = `${sl}/${wn.y}-W${String(wn.w).padStart(2, '0')}-${sl}.html`;
+        let rel = cur, abs = '';
+        if (typeof window.r17WeekSrc === 'function') {
+            const src = window.r17WeekSrc(q);
+            if (!src) {
+                hero.innerHTML = `<div class="nofile">No week written yet</div>`;
+                cap.textContent = 'Not Written Yet';
+                weekSig = '';
+                return;
+            }
+            cap.textContent = 'This Week';
+            if (src !== weekSig || !hero.firstElementChild) {
+                weekSig = src;
+                hero.innerHTML = `<iframe class="wk" title="This week's page" tabindex="-1" aria-hidden="true" scrolling="no" src="${esc(src)}"></iframe>`;
+            }
+            fitWeek();
+            return;
+        }
+        if (U && U.listBriefs) {
+            let all = [];
+            try {
+                all = await U.listBriefs();
+            }
+            catch { }
+            const mine = all.filter(b => b.rel.startsWith(sl + '/') && /^\d{4}-W\d{2}/.test(b.name)).sort((a, b) => b.name.localeCompare(a.name));
+            const hit = mine.find(b => b.rel === cur) || mine[0];
+            if (!hit) {
+                hero.innerHTML = `<div class="nofile">No week written yet</div>`;
+                cap.textContent = 'This Week';
+                weekSig = '';
+                return;
+            }
+            rel = hit.rel;
+            abs = hit.path;
+        }
+        const written = getJ('r17.week-written', null);
+        const wm = rel.match(/(\d{4})-W(\d{2})/);
+        cap.textContent = written && written.rel === rel && written.ts ? 'Written ' + fmtShort(new Date(written.ts)) : rel === cur ? 'This Week' : 'Week ' + (wm ? +wm[2] : '');
+        const sig = rel + '|' + ((written && written.rel === rel && written.ts) || '');
+        if (!force && sig === weekSig && hero.firstElementChild) {
+            fitWeek();
+            return;
+        }
+        weekSig = sig;
+        if (U && U.protoShot && abs) {
+            let r = null;
+            try {
+                r = await U.protoShot(abs);
+            }
+            catch { }
+            if (r && r.ok && r.dataUrl)
+                hero.innerHTML = `<img class="wk" alt="This week's page" src="${r.dataUrl}">`;
+            else
+                hero.innerHTML = `<div class="nofile">The week's picture is on its way</div>`;
+        }
+        else {
+            hero.innerHTML = `<iframe class="wk" title="This week's page" tabindex="-1" aria-hidden="true" scrolling="no" src="../briefs/${rel}"></iframe>`;
+        }
+        fitWeek();
+    }
+    const fitWeek = () => {
+        const hero = $('r17-week-hero'), el = hero && hero.querySelector('.wk');
+        if (!el)
+            return;
+        const W = hero.clientWidth;
+        if (!W)
+            return;
+        const k = (W - HP * 2) / (WK.r - WK.l);
+        el.style.left = (HP - WK.l * k).toFixed(2) + 'px';
+        el.style.top = (25 - WK.t * k).toFixed(2) + 'px';
+        if (el.tagName === 'IFRAME') {
+            el.style.width = WK.vw + 'px';
+            el.style.height = WK.vh + 'px';
+            el.style.transform = `scale(${k})`;
+            el.style.clipPath = `inset(${WK.clipT}px ${WK.clipX}px 0 ${WK.clipX}px)`;
+        }
+        else {
+            el.style.width = (WK.vw * k).toFixed(2) + 'px';
+            el.style.height = 'auto';
+            el.style.clipPath = `inset(${(WK.clipT * k).toFixed(2)}px ${(WK.clipX * k).toFixed(2)}px 0 ${(WK.clipX * k).toFixed(2)}px)`;
+        }
+    };
+    $('r17-week-hero').addEventListener('click', () => click('st-story-week'));
+    $('r17-week-open').addEventListener('click', () => click('st-story-week'));
+    $('r17-week-dir').addEventListener('click', () => click('st-story-dir'));
+    window.addEventListener('unicorn:week-written', () => renderWeek());
+    let fitRaf = 0;
+    function refit() { cancelAnimationFrame(fitRaf); fitRaf = requestAnimationFrame(() => { fitLead(); fitWeek(); fitCovers(); }); }
+    new ResizeObserver(refit).observe(root);
+    if (document.fonts && document.fonts.ready)
+        document.fonts.ready.then(refit);
+    const renderAll = async () => { await readFigmaDate(); ds = ds === 'creating' || ds === 'updating' || ds === 'choose' ? ds : baseState(); renderDesign(); renderWeek(); };
+    let lastQ = '';
+    const onQuest = () => { const q = activeQuest(), n = q ? q.name : ''; if (n !== lastQ) {
+        lastQ = n;
+        if (ds === 'choose')
+            ds = baseState();
+        override = null;
+        renderAll();
+        resumeRun();
+    } };
+    window.addEventListener('unicorn:quest-attached', () => setTimeout(onQuest, 0));
+    window.addEventListener('unicorn:quests-updated', () => setTimeout(onQuest, 0));
+    window.addEventListener('storage', e => { if (e.key === 'unicorn-data')
+        onQuest(); });
+    setInterval(() => renderWeek(), 10 * 60000);
+    showChip(['paper', 'design', 'week'].includes(chip) ? chip : 'design');
+    renderPaper();
+    lastQ = (activeQuest() || {}).name || '';
+    renderAll();
+    resumeRun();
 })();
 </script>
 <script>
@@ -13319,21 +14813,139 @@ ${keepsBlock}${emptyBlock}
         kick();
     };
     window.addEventListener('unicorn:character', useCharacter);
-    const S = 2, dpr = Math.max(1, Math.round(window.devicePixelRatio || 1)), s = S * dpr;
+    const S = 3, dpr = Math.max(1, Math.round(window.devicePixelRatio || 1)), s = S * dpr;
     cv.width = 21 * s;
     cv.height = 26 * s;
     cv.style.width = 21 * S + 'px';
     cv.style.height = 26 * S + 'px';
+    const inkBox = (c) => {
+        const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data, W = c.width, H = c.height;
+        let L = W, R = -1, T = H, B = -1;
+        for (let y = 0; y < H; y++)
+            for (let x = 0; x < W; x++)
+                if (d[(y * W + x) * 4 + 3] > 8) {
+                    if (x < L)
+                        L = x;
+                    if (x > R)
+                        R = x;
+                    if (y < T)
+                        T = y;
+                    if (y > B)
+                        B = y;
+                }
+        return { L, R: R + 1, T, B: B + 1 };
+    };
+    let GEO = null;
+    const geometry = () => {
+        if (GEO)
+            return GEO;
+        const t = document.createElement('canvas');
+        t.width = 21 * s;
+        t.height = 26 * s;
+        U7.render(t, U7.o7, s, { still: true, label: 'logo' });
+        const st = inkBox(t), g = { ...st };
+        for (let ms = 0; ms < 3000; ms += 16) {
+            U7.render(t, U7.o7, s, U7.sustainFrame(ms, 0));
+            const b = inkBox(t);
+            g.L = Math.min(g.L, b.L);
+            g.R = Math.max(g.R, b.R);
+            g.T = Math.min(g.T, b.T);
+            g.B = Math.max(g.B, b.B);
+        }
+        let lie = st;
+        if (U7.drawRest) {
+            U7.drawRest(t, s, 'swish');
+            const sw = inkBox(t);
+            g.R = Math.max(g.R, sw.R);
+            U7.drawRest(t, s, 'rest');
+            lie = inkBox(t);
+        }
+        return (GEO = { st, g, lie });
+    };
+    const ucWrap = document.getElementById('r17-uc-wrap');
+    let placedLying = null;
+    const place = (lying) => {
+        if (!ucWrap || placedLying === lying)
+            return;
+        placedLying = lying;
+        try {
+            const G = geometry(), px = v => v / dpr, H0 = px(G.st.B - G.st.T);
+            ucWrap.style.width = px(G.g.R - G.g.L) + 'px';
+            ucWrap.style.height = H0 + 'px';
+            cv.style.left = -px(G.g.L) + 'px';
+            cv.style.top = (lying ? H0 - px(G.lie.B) : -px(G.st.T)) + 'px';
+        }
+        catch (e) {
+            console.warn('[unicorn] strip place', e);
+        }
+    };
+    place(true);
     const still = matchMedia('(prefers-reduced-motion: reduce)');
-    const STALE_WORK = 15 * 60, STALE_WAIT = 8 * 3600;
+    const AS = window.UnicornAgentState;
     let target = 'idle', phase = 'still', t0 = 0, p0 = 0, raf = 0, restT = null, restTimer = 0, riseTo = 'still';
     const RUN_IN = U7.T_LOGO + .42 * U7.T_RUN, RUN_OUT = U7.T_LOGO + .58 * U7.T_RUN;
-    const TIP = { working: 'An agent is working', waiting: 'An agent is waiting for you', idle: 'No agent running' };
-  // 10-21: ONE unicorn, two views. The words sit beside him: Working, Waiting for You,
-  // nothing when Resting (he lies down)
-  const wordEl = document.getElementById('st-uc-word');
-  let word = '';
-  const setWord = (w, st) => { if (!wordEl) return; if (w !== word) { word = w; wordEl.textContent = w; } const h = wordEl.parentElement; if (h && h.dataset.state !== st) h.dataset.state = st; };
+    const TIP = AS.TIP;
+    const wordEl = document.getElementById('st-uc-word');
+    let word = '';
+    let slotFit = true;
+    const fitWordSlot = () => {
+        if (!wordEl || !wordEl.offsetParent)
+            return;
+        const keep = wordEl.textContent;
+        let w = 0;
+        Object.values(AS.WORD).forEach(t => { if (t) {
+            wordEl.textContent = t;
+            w = Math.max(w, wordEl.getBoundingClientRect().width);
+        } });
+        wordEl.textContent = keep;
+        if (w) {
+            wordEl.style.minWidth = Math.ceil(w) + 'px';
+            slotFit = true;
+        }
+    };
+    (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(() => { slotFit = false; if (word)
+        fitWordSlot(); });
+    const stripEl = document.getElementById('st-uc-hit'), w2El = document.getElementById('r17-strip-w2'), goEl = document.getElementById('r17-strip-go');
+    const GO_TIP = { idle: "Back to the terminal, in this quest's folder", working: "Jumps to this agent's session", waiting: "Jumps to the session that's waiting for you" };
+    const setWord = (w, st) => {
+        if (!wordEl)
+            return;
+        const txt = w || (st === 'waiting' ? 'Waiting for You' : st === 'working' ? 'Working' : 'No agent running');
+        if (txt !== word) {
+            word = txt;
+            wordEl.textContent = txt;
+        }
+        const h = stripEl || wordEl.parentElement;
+        const key = st === 'working' || st === 'waiting' ? st : 'idle';
+        if (h && h.dataset.state !== key) {
+            h.dataset.state = key;
+            if (goEl)
+                goEl.innerHTML = (key === 'idle' ? 'Open Terminal' : 'Open Session') + ' ›';
+            if (stripEl) {
+                stripEl.setAttribute('data-tip', GO_TIP[key]);
+                stripEl.setAttribute('aria-label', txt + '. ' + (key === 'idle' ? 'Open Terminal' : 'Open Session'));
+                if (window.uTipRefresh)
+                    window.uTipRefresh(stripEl);
+            }
+        }
+    };
+    const LOVE = ['.#.#.', '#####', '.###.', '..#..'];
+    const loveUntil = () => { try {
+        const v = JSON.parse(localStorage.getItem('r26.lilac-visit') || 'null');
+        return v && v.until > Date.now() ? v.until : 0;
+    }
+    catch {
+        return 0;
+    } };
+    let love = 0, loveTimer = 0;
+    const drawLove = (now) => {
+        const c = cv.getContext('2d'), a = still.matches ? 1 : .75 + .25 * Math.sin(now / 260);
+        c.globalAlpha = a;
+        c.fillStyle = '#FF9FC8';
+        LOVE.forEach((r, y) => [...r].forEach((ch, x) => { if (ch === '#')
+            c.fillRect((x) * s, (y) * s, s, s); }));
+        c.globalAlpha = 1;
+    };
     const SPARK = [[-1.6, 1.6, '#FFAF5F'], [-1.4, -0.6, '#FF9A7A'], [0.4, -1.8, '#F28DA6'], [2.6, -1.4, '#D58BC6'], [3.6, 0.6, '#AF87D7']];
     const drawSparkle = (now) => {
         const c = cv.getContext('2d');
@@ -13350,7 +14962,10 @@ ${keepsBlock}${emptyBlock}
         if (document.visibilityState === 'hidden')
             return;
         let f = { still: true, label: 'logo' }, restNext = 0;
-        if (phase === 'rise' && now - t0 >= U7.KNEEL_MS) { phase = riseTo; t0 = now; }   // 10-21: up off the ground, then on
+        if (phase === 'rise' && now - t0 >= U7.KNEEL_MS) {
+            phase = riseTo;
+            t0 = now;
+        }
         if (phase === 'start') {
             const ms = now - t0;
             f = U7.frameAt(U7.T_LOGO + ms);
@@ -13369,33 +14984,49 @@ ${keepsBlock}${emptyBlock}
             else
                 f = U7.frameAt(ms);
         }
-        // 10-21 (Ivy picked A): Resting = he lies down (kneel beat, then down), tail swishes now and then
         const lying = phase === 'still' && target === 'idle' && U7.drawRest;
+        place(phase === 'rise' || !!lying);
         try {
-            if (phase === 'rise') { restT = null; U7.drawRest(cv, s, 'kneel'); }
-            else if (lying) { if (restT == null) restT = now; const r = U7.restAt(now - restT, still.matches); U7.drawRest(cv, s, r.key); restNext = r.next; }
-            else { restT = null; U7.render(cv, U7.o7, s, f); }
+            if (phase === 'rise') {
+                restT = null;
+                U7.drawRest(cv, s, 'kneel');
+            }
+            else if (lying) {
+                if (restT == null)
+                    restT = now;
+                const r = U7.restAt(now - restT, still.matches);
+                U7.drawRest(cv, s, r.key);
+                restNext = r.next;
+            }
+            else {
+                restT = null;
+                U7.render(cv, U7.o7, s, f);
+            }
         }
         catch (e) {
             console.warn('[unicorn] gallop', e);
         }
-        hit.style.cursor = target === 'waiting' && waitingTty() ? 'pointer' : 'default';
-        if (phase === 'still' && target === 'waiting')
+        if (phase === 'still' && AS.stops(target) && !love)
             U7.drawThinking(cv, s, now, still.matches);
-        const moving = phase !== 'still' || (target === 'waiting' && !still.matches);
+        if (love && phase === 'still')
+            drawLove(now);
+        const moving = phase !== 'still' || (AS.stops(target) && !still.matches) || (love && !still.matches);
         clearTimeout(restTimer);
         if (moving)
             raf = requestAnimationFrame(frame);
-        else if (lying && restNext !== Infinity) restTimer = setTimeout(kick, Math.max(16, restNext));   // the swish beats, no 60fps loop
+        else if (lying && restNext !== Infinity)
+            restTimer = setTimeout(kick, Math.max(16, restNext));
     };
     const kick = () => { if (!raf)
         raf = requestAnimationFrame(frame); };
     const setTarget = (st) => {
+        if (love)
+            st = 'idle-love';
         if (st !== target) {
             target = st;
-            const tip = st === 'waiting' && waitingTty() && window.unicorn && (window.unicorn.focusSession || window.unicorn.focusTty) ? 'An agent is waiting for you. Click to go there' : TIP[st];
-            cv.setAttribute('data-tip', tip);
-            cv.setAttribute('aria-label', tip);
+            const tip = TIP[st];
+            if (tip)
+                cv.setAttribute('aria-label', tip);
             cv.dataset.state = st;
         }
         if (still.matches) {
@@ -13404,8 +15035,18 @@ ${keepsBlock}${emptyBlock}
             return;
         }
         const now = performance.now();
-        if (st !== 'idle' && phase === 'still' && restT != null) { phase = 'rise'; riseTo = st === 'working' ? 'start' : 'still'; t0 = now; kick(); return; }   // lying: get up first
-        if (phase === 'rise') { riseTo = st === 'working' ? 'start' : 'still'; kick(); return; }
+        if (st !== 'idle' && phase === 'still' && restT != null) {
+            phase = 'rise';
+            riseTo = st === 'working' ? 'start' : 'still';
+            t0 = now;
+            kick();
+            return;
+        }
+        if (phase === 'rise') {
+            riseTo = st === 'working' ? 'start' : 'still';
+            kick();
+            return;
+        }
         if (st === 'working' && (phase === 'still' || phase === 'stop')) {
             phase = 'start';
             t0 = now;
@@ -13494,17 +15135,39 @@ ${keepsBlock}${emptyBlock}
     const waitingTty = () => { const w = waitingSess(); return w ? (w.tty || w.cwd || 'yes') : ''; };
     const hit = document.getElementById('st-uc-hit') || cv;
     ['pointerdown', 'mousedown'].forEach(t => hit.addEventListener(t, e => e.stopPropagation()));
+    const questRepo = async () => {
+        let d;
+        try {
+            d = JSON.parse(localStorage.getItem('unicorn-data')) || {};
+        }
+        catch {
+            return '';
+        }
+        const qs = d.quests || [], q = (typeof d.activeQuestIndex === 'number' && qs[d.activeQuestIndex]) || qs.find(x => !x.completed) || null;
+        const r = q ? (q.repo || (/unicorn/i.test(q.name || '') ? '~/unicorn' : '')) : '';
+        return expand(r) || '';
+    };
     hit.addEventListener('click', async (e) => {
         e.stopPropagation();
         e.preventDefault();
-        const w = target === 'waiting' ? waitingSess() : null;
-        if (!w || !window.unicorn)
+        const U = window.unicorn;
+        if (!U)
             return;
+        const st = target === 'idle-love' ? 'idle' : target;
+        const w = st === 'waiting' ? waitingSess() : st === 'working' ? (lastLive.filter(x => x.state === 'working').sort((a, b) => b.ts - a.ts)[0] || null) : null;
         try {
-            if (window.unicorn.focusSession)
-                await window.unicorn.focusSession({ tty: w.tty || '', cwd: w.cwd || '' });
-            else if (window.unicorn.focusTty && w.tty)
-                await window.unicorn.focusTty(w.tty);
+            if (w) {
+                if (U.focusSession)
+                    await U.focusSession({ tty: w.tty || '', cwd: w.cwd || '' });
+                else if (U.focusTty && w.tty)
+                    await U.focusTty(w.tty);
+                return;
+            }
+            const dir = await questRepo();
+            if (U.openTerminal)
+                await U.openTerminal(dir);
+            else if (U.focusSession)
+                await U.focusSession({ tty: '', cwd: dir });
         }
         catch { }
     });
@@ -13520,32 +15183,73 @@ ${keepsBlock}${emptyBlock}
     const qList = document.getElementById('q-list');
     if (qList)
         new MutationObserver(paintDots).observe(qList, { childList: true, subtree: true });
-    const poll = async () => {
-        let sessions = [];
-        try {
-            const j = await fetch('../agent-status.json', { cache: 'no-store' }).then(r => r.ok ? r.json() : null);
-            sessions = (j && j.sessions) || [];
-        }
-        catch { }
-        const nowS = Date.now() / 1000;
-        const live = sessions.filter(x => x && (x.state === 'working' ? nowS - x.ts < STALE_WORK : x.state === 'waiting' ? nowS - x.ts < STALE_WAIT : false));
-        const working = live.filter(x => x.state === 'working');
+    let lastRes = null;
+    const apply = async (res) => {
+        if (res)
+            lastRes = res;
+        else
+            res = lastRes;
+        if (!res)
+            return;
+        const { state: st, live, working } = res;
         lastLive = live;
-        const st = working.length ? 'working' : live.some(x => x.state === 'waiting') ? 'waiting' : 'idle';
-    const lastWork = working.reduce((m, x) => Math.max(m, x.ts || 0), 0);
-    setWord(st === 'working' ? 'Working' : st === 'waiting' ? 'Waiting for You' : '', st);   // 10-21: no separate Thinking; quiet sessions still gallop
-    setTarget(st);
+        const wasLove = love;
+        love = loveUntil();
+        if (love && !wasLove) {
+            clearTimeout(loveTimer);
+            loveTimer = setTimeout(() => apply(), Math.max(50, love - Date.now() + 30));
+        }
+        setWord(AS.WORD[st], st);
+        setTarget(st);
         const ids = await nowExpIds(working);
         if ([...ids].join() !== [...nowIds].join()) {
             nowIds = ids;
             paintDots();
         }
+        setLine2();
     };
+    const setLine2 = () => {
+        if (!w2El)
+            return;
+        let d;
+        try {
+            d = JSON.parse(localStorage.getItem('unicorn-data')) || {};
+        }
+        catch {
+            d = {};
+        }
+        const qs = d.quests || [], q = (typeof d.activeQuestIndex === 'number' && qs[d.activeQuestIndex]) || qs.find(x => !x.completed) || null;
+        let name = '';
+        if (nowIds.size) {
+            for (const qq of [q, ...qs]) {
+                const x = qq && (qq.experiments || []).find(e => nowIds.has(e.id));
+                if (x) {
+                    name = x.name;
+                    break;
+                }
+            }
+        }
+        if (!name && q)
+            name = q.name || '';
+        if (w2El.textContent !== name)
+            w2El.textContent = name;
+    };
+    window.addEventListener('unicorn:quests-updated', setLine2);
+    window.addEventListener('unicorn:quest-attached', () => setTimeout(setLine2, 0));
     cv.setAttribute('data-tip', TIP.idle);
     cv.dataset.state = 'idle';
-    kick();
-    poll();
-    setInterval(poll, 1000);
+    const forced = !window.unicorn && new URLSearchParams(location.search).get('agent');
+    if (forced) {
+        const now = Date.now() / 1000, sess = forced === 'idle' ? [] : [{ state: forced, ts: now + 1e6, cwd: '/x', tty: '' }];
+        kick();
+        apply(AS.read(sess, now));
+    }
+    else {
+        kick();
+        AS.poll(apply);
+    }
+    addEventListener('storage', e => { if (e.key === 'r26.lilac-visit')
+        apply(); });
     if (charId() !== 'peach')
         useCharacter();
     const chars = document.getElementById('ap-chars');
@@ -13603,10 +15307,14 @@ ${keepsBlock}${emptyBlock}
         tip.classList.add('on');
     };
     const hide = () => { clearTimeout(t); tip.classList.remove('on'); cur = null; };
+    let clicked = null;
     document.addEventListener('pointerover', e => {
         const el = e.target.closest && e.target.closest('[data-tip],[title]');
         if (el && el.hasAttribute('title'))
             adopt(el);
+        if (el && el === clicked)
+            return;
+        clicked = null;
         if (el === cur)
             return;
         hide();
@@ -13620,7 +15328,7 @@ ${keepsBlock}${emptyBlock}
         show(el);
     } });
     document.addEventListener('focusout', hide);
-    document.addEventListener('pointerdown', hide);
+    document.addEventListener('pointerdown', e => { clicked = (e.target.closest && e.target.closest('[data-tip],[title]')) || null; hide(); });
     window.uTipRefresh = el => { if (cur === el && tip.classList.contains('on'))
         show(el); };
     const unboot = () => requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(() => document.documentElement.classList.remove('r26-boot'), 400)));
@@ -13684,6 +15392,6 @@ ${keepsBlock}${emptyBlock}
 
 <script src="preview/roam.js?v=f484c5a2"></script>
 <script>window.__previewWeeks = {"unicorn":"2026-W43-unicorn.html","tide-clock":"2026-W43-tide-clock.html","moth-garden":"2026-W43-moth-garden.html","paper-synth":"2026-W43-paper-synth.html"};</script>
-<script src="preview/guest-late.js?v=04a467cc"></script>
+<script src="preview/guest-late.js?v=ee101c32"></script>
 </body>
 </html>
