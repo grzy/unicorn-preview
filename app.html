@@ -4785,6 +4785,17 @@ if (window.unicorn && window.unicorn.isDesktop)
   .r17-story .door .cap a.html { color: var(--text-mute); text-decoration: underline; text-decoration-color: rgba(241,236,232,.22); text-underline-offset: 2.5px; cursor: pointer; transition: color var(--t) var(--ease), text-decoration-color var(--t) var(--ease); }
   .r17-story .door .cap a.html:hover { color: var(--cream); text-decoration-color: rgba(241,236,232,.6); }
   .r17-story .acts { display: flex; gap: 8px; align-items: center; flex: none; }
+  /* 2026-10-22: calmer at rest -- the label + the primary action (Open) only. Secondary
+     actions (Directory, Update, HTML) fade in on hover, same positions, nothing shifts.
+     Scoped to an acts row that HAS a primary (.u-fill) so a solo action (e.g. Stop, while
+     a Figma job runs) is never hidden -- it has no fallback to reveal it. */
+  html .r17-story .acts:has(.u-fill) .u-quiet {
+    opacity: 0; pointer-events: none; transition: opacity var(--t) var(--ease);
+  }
+  html .r17-story:hover .acts:has(.u-fill) .u-quiet,
+  html .r17-story .acts:has(.u-fill):focus-within .u-quiet {
+    opacity: 1; pointer-events: auto;
+  }
   html .r17-story .u-fill { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; font: 500 12px/1 var(--sans); }
   html .r17-story .u-fill .ic { width: 12px; height: 12px; }
   html .r17-story .u-quiet { padding: 6px 4px; font: 500 12px/1 var(--sans); }
@@ -4929,9 +4940,9 @@ if (window.unicorn && window.unicorn.isDesktop)
     background: linear-gradient(to top right, transparent 3%, rgba(232,149,106,.28) 28%, rgba(167,139,223,.28) 72%, transparent 97%);
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; transition: opacity var(--t) var(--ease); }
   .panel--keep .k18-field:hover { background: rgba(0,0,0,.26); }
-  .panel--keep .k18-arrow { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 6px; background: rgba(255,255,255,.05); color: var(--text-mute); transition: background var(--t) var(--ease), color var(--t) var(--ease); }
+  /* no filled chip container -- the icon sits plain, same size/stroke as the rest of the icon family */
+  .panel--keep .k18-arrow { width: 16px; height: 16px; display: grid; place-items: center; color: var(--text-mute); transition: color var(--t) var(--ease); }
   .panel--keep .k18-ln { font: 400 12px/1.3 var(--sans); color: var(--text-mute); }
-  .panel--keep .k18-dest { display: none; margin-top: -4px; font: 400 11px/1 var(--mono); letter-spacing: .02em; color: var(--lilac); }
   .panel--keep:not(.k18-has):not(.k18-pending) .k18-field { display: grid; }
   
   html .panel.panel--keep.keep-dragover {
@@ -4942,8 +4953,14 @@ if (window.unicorn && window.unicorn.isDesktop)
   .panel--keep.keep-dragover .k18-field::before { background: var(--grad-fill); opacity: .85; }
   .panel--keep.keep-dragover .k18-ln { font-size: 0; }
   .panel--keep.keep-dragover .k18-ln::after { content: attr(data-hot); font: 500 13px/1.3 var(--sans); color: var(--cream); }
-  .panel--keep.keep-dragover .k18-arrow { background: rgba(255,255,255,.1); color: var(--cream); }
-  .panel--keep.keep-dragover .k18-dest { display: block; }
+  .panel--keep.keep-dragover .k18-arrow { color: var(--cream); }
+  /* 2026-10-22: the "Into Unicorn" text can't transition at all (it's a content swap on
+     ::after) -- so the lilac highlight must land in the exact same frame too, not fade in
+     on its own timer, or the two drift out of sync on both the way in and the way out.
+     Its own direct mouse-hover fade (the "Open in Finder" cream) is unaffected. */
+  html .panel--keep .keep-folder-link { transition: none; }
+  html .panel--keep .keep-folder-link:hover { transition: color var(--t) var(--ease); }
+  html .panel--keep.keep-dragover .keep-folder-link { color: #AF87D7; }
   .panel--keep.keep-dragover .k18-sel, .panel--keep.keep-dragover .k18-strip, .panel--keep.keep-dragover .k18-car, .panel--keep.keep-dragover .k18-compose, .panel--keep.keep-dragover #keep-pending { display: none !important; }
   
   .panel--keep .k18-sel { display: none; }
@@ -4968,7 +4985,28 @@ if (window.unicorn && window.unicorn.isDesktop)
   
   .panel--keep .k18-door { display: flex; align-items: baseline; gap: 12px; margin-top: 8px; min-height: 16px; }
   .panel--keep .k18-cap { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 400 12px/1.3 var(--sans); color: var(--text-mute); }
-  .panel--keep .k18-date { flex: none; margin-left: auto; font: 400 11px/1.3 var(--sans); color: var(--text-whisper-2); white-space: nowrap; }
+  .panel--keep .k18-date { flex: none; margin-left: auto; font: 400 11px/1.3 var(--sans); color: var(--text-whisper-2); white-space: nowrap; transition: color .5s var(--ease); }
+  /* brief, quiet confirmation right after an instant save -- same slot as the date, no layout shift, no toast */
+  .panel--keep .k18-date.saved { color: var(--lilac); }
+  /* 2026-10-22: calmer at rest -- the big preview shows only the media + its date.
+     × (Back to Desktop), play/pause, the variant chips and the caption fade in together
+     on hover, in place (no layout shift, the folder/path line is untouched). */
+  html .panel--keep .k18-sel .k18-x,
+  html .panel--keep .k18-sel .keep-play,
+  html .panel--keep .k18-sel .keep-chips,
+  html .panel--keep .k18-sel .k18-cap {
+    opacity: 0; pointer-events: none; transition: opacity var(--t) var(--ease);
+  }
+  html .panel--keep .k18-sel:hover .k18-x,
+  html .panel--keep .k18-sel:hover .keep-play,
+  html .panel--keep .k18-sel:hover .keep-chips,
+  html .panel--keep .k18-sel:hover .k18-cap,
+  html .panel--keep .k18-sel:focus-within .k18-x,
+  html .panel--keep .k18-sel:focus-within .keep-play,
+  html .panel--keep .k18-sel:focus-within .keep-chips,
+  html .panel--keep .k18-sel:focus-within .k18-cap {
+    opacity: 1; pointer-events: auto;
+  }
   
   .panel--keep .k18-strip { display: none; gap: 6px; margin-top: 12px; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
   .panel--keep .k18-strip::-webkit-scrollbar { display: none; }
@@ -5280,7 +5318,6 @@ if (window.unicorn && window.unicorn.isDesktop)
     <div class="k18-field" id="k18-field" title="or paste from your terminal (⌘V)">
       <span class="k18-arrow"><svg class="ic" aria-hidden="true"><use href="#i-drop"/></svg></span>
       <span class="k18-ln" id="k18-ln">Drop screenshots &amp; videos</span>
-      <span class="k18-dest" id="k18-dest"></span>
     </div>
 
     <div class="keep-pending k18-pv k18-new" id="keep-pending" hidden>
@@ -10154,8 +10191,9 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     const sel = document.getElementById('k18-sel');
     const field = document.getElementById('k18-field');
     const fieldLn = document.getElementById('k18-ln');
-    const fieldDest = document.getElementById('k18-dest');
     let pickId = null, topId = null;
+    // the quiet "Saved" badge that briefly replaces the date after an instant save
+    let justSavedId = null, justSavedTimer = null;
     const fileUrl = (p) => 'file://' + String(p).split('/').map(encodeURIComponent).join('/');
     const kSrc = (k) => k.imagePath ? fileUrl(k.imagePath) : (k.image || '');
     const isAlpha = (p) => /transparent/i.test(p || '');
@@ -10181,8 +10219,11 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         const chips = (!saving && k.variants && k.variants.length)
             ? `<div class="keep-chips">${k.variants.map((v, j) => `<button class="keep-chip${j === 0 ? ' on' : ''}" data-src="${escapeHtml(fileUrl(v[1]))}" data-path="${escapeHtml(v[1])}" data-alpha="${isAlpha(v[1]) ? 1 : 0}">${escapeHtml(v[0])}</button>`).join('')}</div>` : '';
         const cap = isText ? '' : escapeHtml((k.text || '').split('\n')[0]);
+        // the same date slot carries a brief "Saved" confirmation right after an instant save -- no layout shift, no toast
+        const justSaved = !saving && k.id === justSavedId;
+        const dateLabel = saving ? 'Saving' : (justSaved ? 'Saved' : kDate(k.ts));
         return `<div class="k18-pv${isText ? ' is-text' : ''}${k.videoPath && isAlpha(k.videoPath) ? ' alpha' : ''}${saving ? ' is-saving' : ''}${chips ? ' has-chips' : ''}" data-id="${k.id}">${body}${x}${chips}</div>`
-            + `<div class="k18-door"><span class="k18-cap">${cap}</span><span class="k18-date">${saving ? 'Saving' : kDate(k.ts)}</span></div>`;
+            + `<div class="k18-door"><span class="k18-cap">${cap}</span><span class="k18-date${justSaved ? ' saved' : ''}">${dateLabel}</span></div>`;
     };
     const thumbHtml = (k) => {
         let m;
@@ -10348,8 +10389,6 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         }
         if (fieldLn)
             fieldLn.dataset.hot = 'Into ' + (story ? 'Story' : ((active && active.name) || 'Unicorn'));
-        if (fieldDest)
-            fieldDest.textContent = path;
         const sorted = inScope.slice().sort((a, b) => b.ts - a.ts);
         panel.classList.toggle('k18-has', sorted.length > 0);
         panel.classList.toggle('k18-many', sorted.length > 1);
@@ -10559,13 +10598,22 @@ ${keepsBlock}${emptyBlock}
         clearPending();
         panel.classList.remove('k18-typing');
         syncCompose();
-        saveBtn.classList.add('done');
-        const prev = saveBtn.textContent;
-        saveBtn.textContent = 'Kept';
-        if (career && typeof window.r26Toast === 'function')
-            window.r26Toast("Saved to your Builder's Story");
-        setTimeout(() => { saveBtn.classList.remove('done'); saveBtn.textContent = prev; if (career)
-            resetScope(); }, 1400);
+        // A drop/paste never touched the Save button -- no button flash, no toast,
+        // just the quiet "Saved" badge on the card itself (set further down, once
+        // the entry exists). Only a manual Save-button/Enter save (a typed note)
+        // still gets the button's own "Kept" flash.
+        const instant = !!(opts && opts.instant);
+        if (instant) {
+            if (career) setTimeout(resetScope, 1400);
+        } else {
+            saveBtn.classList.add('done');
+            const prevLabel = saveBtn.textContent;
+            saveBtn.textContent = 'Kept';
+            if (career && typeof window.r26Toast === 'function')
+                window.r26Toast("Saved to your Builder's Story");
+            setTimeout(() => { saveBtn.classList.remove('done'); saveBtn.textContent = prevLabel; if (career)
+                resetScope(); }, 1400);
+        }
         if (typeof uiChord === 'function')
             uiChord(['C5', 'E5', 'G5']);
         const savingId = 'saving-' + Date.now().toString(36);
@@ -10669,6 +10717,11 @@ ${keepsBlock}${emptyBlock}
             arr.push(entry);
             savingKeeps = savingKeeps.filter(k => k.id !== savingId);
             save(arr);
+            if (instant) {
+                justSavedId = entry.id;
+                clearTimeout(justSavedTimer);
+                justSavedTimer = setTimeout(() => { if (justSavedId === entry.id) { justSavedId = null; render(); } }, 1500);
+            }
             render();
         }
         finally {
@@ -10679,14 +10732,23 @@ ${keepsBlock}${emptyBlock}
         }
     };
     saveBtn.addEventListener('click', saveCurrent);
+    // Cmd/Ctrl+Enter always saves -- bound at the document level (not just the
+    // caption field) so it still fires when the Keep panel is hovered or holds
+    // focus but the field itself isn't the focused element. It used to live only
+    // on the field's own keydown, so a ⌘Return pressed right after a drop (focus
+    // nowhere in particular) hit no listener and macOS played its error ding
+    // instead of saving (bug reported 2026-10-22).
+    document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter' || !(e.metaKey || e.ctrlKey)) return;
+        if (!(input.value.trim() || pendingImage || pendingVideo)) return;
+        const ae = document.activeElement;
+        if (!(panel.contains(ae) || panel.matches(':hover'))) return;
+        e.preventDefault(); e.stopPropagation();
+        saveCurrent();
+    }, true);
     input.addEventListener('keydown', (e) => {
-        if (e.key !== 'Enter')
+        if (e.key !== 'Enter' || e.metaKey || e.ctrlKey)
             return;
-        if (e.metaKey || e.ctrlKey) {
-            e.preventDefault();
-            saveCurrent();
-            return;
-        }
         if ((pendingImage || pendingVideo) && !e.shiftKey) {
             e.preventDefault();
             saveCurrent();
@@ -10800,7 +10862,7 @@ ${keepsBlock}${emptyBlock}
             return false;
         input.value = t;
         syncSave();
-        saveCurrent();
+        saveCurrent({ instant: true });
         return true;
     };
     document.addEventListener('keydown', (e) => {
@@ -10821,7 +10883,7 @@ ${keepsBlock}${emptyBlock}
                         const ty = it.types.find(x => x.startsWith('image/'));
                         if (ty) {
                             const b = await it.getType(ty);
-                            attachImageFile(new File([b], 'pasted.png', { type: ty }), () => saveCurrent());
+                            attachImageFile(new File([b], 'pasted.png', { type: ty }), () => saveCurrent({ instant: true }));
                             return;
                         }
                     }
@@ -10841,7 +10903,9 @@ ${keepsBlock}${emptyBlock}
         for (let i = 0; i < items.length; i++) {
             if (items[i].type && items[i].type.startsWith('image/')) {
                 e.preventDefault();
-                attachImageFile(items[i].getAsFile(), direct ? () => saveCurrent() : null);
+                // 2026-10-22: a pasted image saves at once (no caption step), whether
+                // the ⌘V came straight into the field or was handed off from a hover.
+                attachImageFile(items[i].getAsFile(), () => saveCurrent({ instant: true }));
                 return;
             }
         }
@@ -10882,7 +10946,7 @@ ${keepsBlock}${emptyBlock}
                 const ok = f.type.startsWith('video/') ? await attachVideoFile(f) : await attachImage(f);
                 if (ok) {
                     try {
-                        await saveCurrent({ scope });
+                        await saveCurrent({ scope, instant: true });
                     }
                     catch { }
                 }
@@ -10894,11 +10958,11 @@ ${keepsBlock}${emptyBlock}
         for (let i = 0; i < files.length; i++) {
             const f = files[i];
             if (f.type && f.type.startsWith('video/')) {
-                if (await attachVideoFile(f))
-                    return;
+                if (await attachVideoFile(f)) { await saveCurrent({ instant: true }); return; } // a video pointer wins, saved at once
             }
-            if (attachImageFile(f))
-                return;
+            if (f.type && f.type.startsWith('image/')) {
+                if (await attachImage(f)) { await saveCurrent({ instant: true }); return; } // first image wins, like paste -- saved at once
+            }
         }
     });
     window.addEventListener('dragover', (e) => e.preventDefault());
@@ -14778,10 +14842,17 @@ ${keepsBlock}${emptyBlock}
   const fileName = (url, re, fb) => { const m = String(url || '').match(re);
     return m ? decodeURIComponent(m[1]).replace(/^\d+-/, '').replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim() || fb : fb; };
   const figmaFile = q => fileName(q && q.figma, /figma\.com\/(?:design|file|board|proto|slides)\/[^/]+\/([^/?#]+)/i, 'Figma file');
+  // 2026-10-22: one row, like Paper/Week -- the cover already shows "FIGMA FILE · OCT 18,
+  // 2026", so the door doesn't repeat it as a second line. The name + date move to the cap's
+  // own tooltip; the HTML link sits quiet in the acts row, before Update, so it adds no height.
   const capMeta = () => {
-    const lds = document.getElementById('u-taste-lds'), html = lds && !lds.classList.contains('muted') ? ' · <a class="html" data-act="html" title="The same system as an HTML page. Same Update, same code">HTML</a>' : '';
     const d = fmtShort(figmaDate), name = figmaFile(activeQuest());
-    return `<span class="cap"><b>Figma File</b></span><span class="fmeta" title="${esc(name)}${d ? ', updated ' + d : ''}">${esc(name)}${d ? ' · Updated ' + d : ''}${html}</span>`;
+    return `<span class="cap" title="${esc(name)}${d ? ', updated ' + d : ''}"><b>Figma</b></span>`;
+  };
+  const htmlAction = () => {
+    const lds = document.getElementById('u-taste-lds');
+    return (lds && !lds.classList.contains('muted'))
+      ? `<button type="button" class="u-quiet" data-act="html" title="HTML mirror of the Figma design system">HTML</button>` : '';
   };
   const riveUrl = q => (q && q.rive && /^https:\/\/([a-z0-9-]+\.)?rive\.app\//i.test(q.rive)) ? q.rive : '';
   function renderRive() {
@@ -14790,7 +14861,7 @@ ${keepsBlock}${emptyBlock}
     door.hidden = !url; if (!url) { door.innerHTML = ''; return; }
     const name = (q.riveName && String(q.riveName)) || fileName(url, /rive\.app\/(?:community\/files|file|s)\/([^/?#]+)/i, 'Rive file');
     const t = q.riveUpdatedAt ? new Date(q.riveUpdatedAt) : null, d = t && !isNaN(t) ? fmtShort(t) : '';
-    door.innerHTML = `<span class="cap"><b>Rive File</b></span><div class="acts"><button type="button" class="u-fill" data-act="rive-open" title="Opens in Rive">Open</button></div>`
+    door.innerHTML = `<span class="cap"><b>Rive</b></span><div class="acts"><button type="button" class="u-fill" data-act="rive-open" title="Opens in Rive">Open</button></div>`
       + `<span class="fmeta" title="${esc(name)}${d ? ', updated ' + d : ''}">${esc(name)}${d ? ' · Updated ' + d : ''}</span>`;
   }
     function renderDesign() {
@@ -14828,7 +14899,7 @@ ${keepsBlock}${emptyBlock}
         }
         else if (state === 'ready') {
             dr = (failText ? `<span class="cap fail">${esc(failText)}</span>` : capMeta())
-                + `<div class="acts"><button type="button" class="u-quiet" data-act="run" title="Sync Figma + HTML from the build">Update</button><button type="button" class="u-fill" data-act="open" title="Opens in Figma">Open</button></div>`;
+                + `<div class="acts">${failText ? '' : htmlAction()}<button type="button" class="u-quiet" data-act="run" title="Sync Figma + HTML from the build">Update</button><button type="button" class="u-fill" data-act="open" title="Opens in Figma">Open</button></div>`;
         }
         if (hero.dataset.sig !== state + '|' + pick + '|' + cur + '|' + (q && q.name) + '|' + fmtShort(figmaDate)) {
             hero.dataset.sig = state + '|' + pick + '|' + cur + '|' + (q && q.name) + '|' + fmtShort(figmaDate);
@@ -14836,7 +14907,6 @@ ${keepsBlock}${emptyBlock}
             drawRuns(hero);
         }
         door.innerHTML = dr;
-        door.classList.toggle('file', state === 'ready' && !failText);
         renderRive();
         refit();
     }
