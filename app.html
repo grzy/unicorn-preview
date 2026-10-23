@@ -4618,9 +4618,6 @@ if (window.unicorn && window.unicorn.isDesktop)
   html .panel:hover .p-mini, html #agent:hover .p-mini, html #activity-panel:hover .p-mini, html .p-mini:focus-visible { opacity: 1; pointer-events: auto; }
   html .panel.minimized:not(:hover) .p-mini, html #agent.minimized:not(:hover) .p-mini, html #activity-panel.minimized:not(:hover) .p-mini { opacity: 0; pointer-events: none; }
   html .p-mini:hover { color: var(--ic-hover); }
-  
-  html .p-head .p-dot { cursor: inherit; }
-  html .p-head .p-dot::before { content: none !important; }
 
   html .panel.panel--quest { padding: 27px 30px 30px; }
   html .panel.panel--quest.minimized { padding: 27px 30px 30px !important; }
@@ -4886,6 +4883,8 @@ if (window.unicorn && window.unicorn.isDesktop)
 
   html .panel--commits .c-month-head { justify-content: center; gap: 4px; margin: 4px 0 12px; }
   html .panel--commits .c-month-title { flex: none; width: 112px; text-align: center; }
+  
+  html .panel--commits:not(.minimized) .c-foot.c-foot--one { margin-bottom: -3px; }
   html .panel--commits .c-nav { width: 22px; height: 22px; border-radius: 6px; padding: 0; background: none; }
   html .panel--commits .c-legend span, html .panel--commits .c-meta { color: var(--text-whisper); }
   html .panel--commits .c-weekdays { margin-bottom: 8px; }
@@ -9821,7 +9820,6 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
             uiClick(next === 0 ? 'C5' : next === 1 ? 'E5' : 'G5');
     };
     const wireFocusDots = () => {
-        return;
         document.querySelectorAll('.panel, #agent, #activity-panel').forEach(panel => {
             const head = panel.querySelector('.p-head, .a-head');
             if (!head)
