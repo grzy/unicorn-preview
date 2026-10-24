@@ -4977,6 +4977,13 @@ if (window.unicorn && window.unicorn.isDesktop)
   html .panel--keep .keep-folder-link { transition: none; }
   html .panel--keep .keep-folder-link:hover { transition: color var(--t) var(--ease); }
   html .panel--keep.keep-dragover .keep-folder-link { color: #AF87D7; }
+  
+  html .panel--keep .k18-bar .keep-folder-link { font: 500 12px/1 var(--sans); color: var(--text-mute); opacity: 0; transition: opacity var(--t) var(--ease), color var(--t) var(--ease); }
+  html .panel--keep:hover .k18-bar .keep-folder-link, html .panel--keep .k18-bar .keep-folder-link:focus-visible, html .panel--keep.keep-dragover .k18-bar .keep-folder-link { opacity: 1; }
+  html .panel--keep .k18-bar .keep-folder-link:hover { color: var(--daikon); }
+  html .panel--keep .keep-folder-link .kf-path { display: none; }
+  html .panel--keep.keep-dragover .keep-folder-link .kf-show { display: none; }
+  html .panel--keep.keep-dragover .keep-folder-link .kf-path { display: inline; color: #AF87D7; }
   .panel--keep.keep-dragover .k18-sel, .panel--keep.keep-dragover .k18-strip, .panel--keep.keep-dragover .k18-car, .panel--keep.keep-dragover .k18-compose, .panel--keep.keep-dragover #keep-pending { display: none !important; }
   
   .panel--keep .k18-sel { display: none; }
@@ -5250,7 +5257,7 @@ if (window.unicorn && window.unicorn.isDesktop)
     <div class="q-pause-row" id="q-pause-row" role="menu">
       <span class="q-act q-act-add" id="q-act-add" role="menuitem">Add Experiment</span>
       <span class="q-act q-act-rename" id="q-act-rename" role="menuitem">Rename Quest</span>
-      <span class="q-act q-act-folder" id="q-act-folder" role="menuitem">Open Folder</span>
+      <span class="q-act q-act-folder" id="q-act-folder" role="menuitem">Show in Finder</span>
       <div class="q-act-sep"></div>
       <span class="q-finish-btn" id="q-finish-btn" hidden>Complete Quest</span>
       <span class="q-pause-btn" id="q-pause-btn" role="menuitem">Pause Quest</span>
@@ -10539,8 +10546,10 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         const path = '~/unicorn/keeps/' + slug + '/';
         const folderEl = document.getElementById('keep-folder');
         if (folderEl) {
-            folderEl.textContent = path;
-            folderEl.dataset.tip = 'Open in Finder';
+            folderEl.hidden = false;
+            folderEl.removeAttribute('data-tip');
+            folderEl.title = '';
+            folderEl.innerHTML = '<span class="kf-show">Show in Finder</span><span class="kf-path">' + path.replace(/[<>&"]/g, '') + '</span>';
         }
         if (fieldLn)
             fieldLn.dataset.hot = 'Into ' + (story ? 'Story' : ((active && active.name) || 'Unicorn'));
