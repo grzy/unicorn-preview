@@ -155,8 +155,10 @@
     }
     // 10-23 (Ivy): the same poses as the app's roaming unicorn, driven by the terminal's scripted agent:
     // working = he roams and gallops, waiting = he stands with the thinking ring, resting = he lies down
-    const gs = window.__guestAgentState || 'idle';
-    if (phase === 'still' && now >= restUntil && !surprise && gs === 'working') { if (!maybeSurprise(now)) { pickSpot(); begin(now); } }
+    // before the terminal's session starts (the gate, the welcome) he just roams the field freely.
+    // On big screens this runs in the shell page, so the state lives in the app iframe.
+    let gs = 'free'; try { const w = HOST === 'shell' ? (document.getElementById('app') || {}).contentWindow : window; gs = (w && w.__guestAgentState) || 'free'; } catch {}
+    if (phase === 'still' && now >= restUntil && !surprise && (gs === 'working' || gs === 'free')) { if (!maybeSurprise(now)) { pickSpot(); begin(now); } }
     if (surprise) { try { surpriseTick(now, dt); } catch (e) { endSurprise(now); } }
     const lying = phase === 'still' && !surprise && gs === 'idle' && U7.drawRest;
     if (lying) { if (restT == null) restT = now; U7.drawRest(cv, s, U7.restAt(now - restT, false).key); }
@@ -201,12 +203,6 @@
   const start = () => { if (started) return; started = true; firstAt = performance.now() + rnd(75000, 90000);
     U7.render(cv, U7.o7, s, { still: true, label: 'logo' }); place(); show(); if (on) { restUntil = performance.now() + 600; kick(); } };
   const pre = document.getElementById('preloader');
-  if (HOST === 'shell') {
-    // the shell starts him once the app window is revealed (after the gate)
-    const go = () => { if (document.documentElement.classList.contains('revealed')) { setTimeout(start, 1400); return true; } };
-    if (!go()) { const mo = new MutationObserver(() => { if (go()) mo.disconnect(); }); mo.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] }); }
-  } else if (pre && !pre.classList.contains('out')) {
-    const mo = new MutationObserver(() => { if (pre.classList.contains('out')) { mo.disconnect(); setTimeout(start, 1400); } });
-    mo.observe(pre, { attributes: true, attributeFilter: ['class'] });
-  } else setTimeout(start, 400);
+  // 10-23 (Ivy): he's already out in the field on the gate and the welcome, and stays the whole visit
+  setTimeout(start, 600);
 })();
