@@ -4879,6 +4879,10 @@ if (window.unicorn && window.unicorn.isDesktop)
   html .panel--commits .c-nav { font-size: 0; color: var(--ic-rest); display: inline-grid; place-items: center; }
   html .panel--commits .c-nav:hover { color: var(--ic-hover); }
   html .panel--commits .c-nav { color: rgba(241,236,232,.32); }   
+  
+  html .panel--commits .c-nav, html .panel--commits .c-nav:hover { color: var(--daikon) !important; }
+  html .panel--commits .c-nav .c-morph { opacity: .32; transition: opacity var(--t) var(--ease); }
+  html .panel--commits .c-nav:hover .c-morph { opacity: .94; }
   html .panel--commits .c-nav:hover { background: none !important; }
   
   html .panel--commits .c-morph .mv { transition: transform .32s cubic-bezier(.4,0,.2,1); }   
