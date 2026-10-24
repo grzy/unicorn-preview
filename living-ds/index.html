@@ -16,7 +16,7 @@
 
   :root {
     /* brand */
-    --peach: #E8956A; --lilac: #A78BDF; --nori: #100F11; --daikon: #F1ECE8;
+    --peach: #E8956A; --lilac: #A78BDF; --nori-dark: #100F11; --daikon: #F1ECE8;
     --tomato: #FF5E71; --watermelon: #FB7185;
     /* logo */
     --logo-peach: #FFAF5F; --logo-peach-dark: #E8954C; --logo-lilac: #AF87D7; --logo-lilac-dark: #9A72C4;
@@ -34,8 +34,8 @@
     --sans: 'Ubuntu Sans', 'Helvetica Neue', sans-serif; --mono: 'Ubuntu Sans Mono', ui-monospace, monospace;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { background: var(--nori); color-scheme: dark; }
-  body { background: var(--nori); color: var(--text); font: 400 15px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+  html { background: var(--nori-dark); color-scheme: dark; }
+  body { background: var(--nori-dark); color: var(--text); font: 400 15px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
   body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
     background: radial-gradient(60vw 50vh at 85% -10%, rgba(167,139,223,.10), transparent 70%), radial-gradient(50vw 40vh at -10% 30%, rgba(232,149,106,.07), transparent 70%); }
   a { color: inherit; }
@@ -71,7 +71,7 @@
 
   /* buttons, as the app ships them */
   .u-fill { position: relative; isolation: isolate; appearance: none; border: 0; border-radius: var(--r-btn); padding: 7px 12px; background: none; cursor: pointer;
-    font: 500 12px/1 var(--sans); color: var(--nori); white-space: nowrap; text-decoration: none; display: inline-block; }
+    font: 500 12px/1 var(--sans); color: var(--nori-dark); white-space: nowrap; text-decoration: none; display: inline-block; }
   .u-fill::after { content: ""; position: absolute; inset: 0; border-radius: inherit; z-index: -1; background: var(--grad-fill); transition: filter var(--t) var(--ease); }
   .u-fill:hover::after, .u-fill:focus-visible::after, .u-fill.hov::after { filter: brightness(1.1) saturate(1.05); }
   .u-fill[disabled] { cursor: default; color: var(--text-whisper-2); } .u-fill[disabled]::after { background: rgba(255,255,255,.06); filter: none; }
@@ -254,11 +254,11 @@
   </section>
 
   <section class="rv">
-    <div class="sh"><h2>Color</h2><p>Peach and lilac on Nori, the near-black; Daikon is the text. Peach is for fills and the thing happening now; lilac is for links and what has started. Tomato is the one red, kept for delete.</p></div>
+    <div class="sh"><h2>Color</h2><p>Peach and lilac on Nori Dark, the near-black; Daikon is the text. Peach is for fills and the thing happening now; lilac is for links and what has started. Tomato is the one red, kept for delete.</p></div>
     <div class="chips">
       <div class="chip"><i style="background:#E8956A"></i><div><b>Peach</b><span>--peach #E8956A</span></div></div>
       <div class="chip"><i style="background:#A78BDF"></i><div><b>Lilac</b><span>--lilac #A78BDF</span></div></div>
-      <div class="chip"><i style="background:#100F11;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)"></i><div><b>Nori</b><span>--nori #100F11</span></div></div>
+      <div class="chip"><i style="background:#100F11;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)"></i><div><b>Nori Dark</b><span>--nori-dark #100F11</span></div></div>
       <div class="chip"><i style="background:#F1ECE8"></i><div><b>Daikon</b><span>--daikon #F1ECE8</span></div></div>
       <div class="chip"><i style="background:#FB7185"></i><div><b>Watermelon</b><span>--watermelon #FB7185</span></div></div>
       <div class="chip"><i style="background:#FF5E71"></i><div><b>Tomato</b><span>--tomato #FF5E71</span></div></div>
