@@ -138,6 +138,7 @@
     cvO.style.transform = `translate(${Math.round(sp.ox * dpr) / dpr}px, ${Math.round(sp.oy * dpr) / dpr}px) scaleX(${oFlip ? -1 : 1})`;
   };
 
+  let restT = null;
   const frame = (now) => {
     raf = 0; if (!on || !started || !active() || narrow.matches || document.visibilityState === 'hidden') { last = 0; return; }
     const dt = last ? Math.min(.05, (now - last) / 1000) : 0; last = now;
@@ -152,9 +153,14 @@
       const c = Math.cos(heading); if (c > .2) faceRight = true; else if (c < -.2) faceRight = false;
       if (Math.hypot(tx - x, ty - y) < 40 && phase !== 'stop') halt(now);
     }
-    if (phase === 'still' && now >= restUntil && !surprise) { if (!maybeSurprise(now)) { pickSpot(); begin(now); } }
+    // 10-23 (Ivy): the same poses as the app's roaming unicorn, driven by the terminal's scripted agent:
+    // working = he roams and gallops, waiting = he stands with the thinking ring, resting = he lies down
+    const gs = window.__guestAgentState || 'idle';
+    if (phase === 'still' && now >= restUntil && !surprise && gs === 'working') { if (!maybeSurprise(now)) { pickSpot(); begin(now); } }
     if (surprise) { try { surpriseTick(now, dt); } catch (e) { endSurprise(now); } }
-    U7.render(cv, U7.o7, s, f);
+    const lying = phase === 'still' && !surprise && gs === 'idle' && U7.drawRest;
+    if (lying) { if (restT == null) restT = now; U7.drawRest(cv, s, U7.restAt(now - restT, false).key); }
+    else { restT = null; U7.render(cv, U7.o7, s, f); if (phase === 'still' && gs === 'waiting' && U7.drawThinking) U7.drawThinking(cv, s, now, false); }
     place();
     raf = requestAnimationFrame(frame);
   };
