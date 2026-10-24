@@ -4790,14 +4790,14 @@ if (window.unicorn && window.unicorn.isDesktop)
     container-type: inline-size; --hw: calc(100cqw - var(--hp) * 2); }
   .r17-story .hero.click { cursor: pointer; }
   
-  .r17-story .hero.sheet { background: #EDE8E2; }
+  .r17-story .hero.sheet { background: #F7F4EE; }   
   .r17-story .hero.sheet img.mast { position: absolute; top: calc(22px - var(--hw) * 10 / 1329); left: calc(var(--hp) - var(--hw) * 10 / 1329); width: calc(var(--hw) * 1362 / 1329); display: block; }   
   .r17-story .hero.sheet .lead { position: absolute; left: calc(var(--hp) - 1.5px); right: calc(var(--hp) + 40px); bottom: 18px; font: 400 17px/1.12 var(--sans); letter-spacing: -.01em; color: #1A1616; }
   .r17-story .hero.sheet::after { content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit; box-shadow: inset 0 1px 0 rgba(255,255,255,.6), inset 0 -16px 20px -14px rgba(16,15,17,.25); }
   .r17-story .hero.sheet .rule { position: absolute; left: var(--hp); right: var(--hp); top: calc(30px + var(--hw) * 184 / 1329); height: 1px; background: rgba(26,22,22,.12); }
   .r17-story .hero.sheet .dek { position: absolute; left: var(--hp); right: var(--hp); top: calc(37px + var(--hw) * 184 / 1329); font: 400 8.5px/1.4 var(--mono); letter-spacing: .04em; color: rgba(26,22,22,.42); display: flex; justify-content: space-between; }
   
-  .r17-story .hero.week { background: #EDE8E2; }
+  .r17-story .hero.week { background: #F7F4EE; }
   .r17-story .hero.week .wk { position: absolute; display: block; border: 0; pointer-events: none; transform-origin: 0 0; }
   .r17-story .nofile { position: absolute; inset: 0; display: grid; place-items: center; font: 400 12px/1 var(--sans); color: var(--text-whisper-2); text-align: center; padding: 0 24px; }
   .r17-story .nofile::before { content: ""; position: absolute; inset: 16px; border-radius: 6px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.07); }
@@ -4845,13 +4845,13 @@ if (window.unicorn && window.unicorn.isDesktop)
   .r17-story .covers > * { position: absolute; inset: 0; opacity: 0; transition: opacity .35s var(--ease); }
   .r17-story .covers > .on { opacity: 1; }
   
-  .r17-story .cv { position: absolute; inset: 0; overflow: hidden; background: #F1ECE8; }
+  .r17-story .cv { position: absolute; inset: 0; overflow: hidden; background: #F7F4EE; }
   .r17-story .cv .run { position: absolute; right: var(--hp); top: 0; display: flex; }
   .r17-story .cv .run canvas { display: block; image-rendering: pixelated; flex: none; }
   .r17-story .cv .run canvas + canvas { margin-left: -6px; }
   .r17-story .cv .ground { position: absolute; left: var(--hp); right: var(--hp); top: var(--hg); height: 1px; background: rgba(26,22,22,.14); }
   .r17-story .cv .wm { position: absolute; left: var(--hp); bottom: 12px; font: 600 43px/.8 var(--mono); letter-spacing: -.055em; color: #1A1616; white-space: nowrap; }
-  .r17-story .cv .meta { position: absolute; right: var(--hp); bottom: 13px; font: 400 7.5px/1.6 var(--mono); letter-spacing: .14em; color: rgba(26,22,22,.5); text-transform: uppercase; text-align: right; white-space: nowrap; }
+  .r17-story .cv .meta { position: absolute; left: var(--hp); top: calc(var(--hg) + 9px); font: 400 7.5px/1.6 var(--mono); letter-spacing: .14em; color: rgba(26,22,22,.5); text-transform: uppercase; text-align: left; white-space: nowrap; }   
   .r17-story .cv1 .wm { background: linear-gradient(100deg, #E8956A 0%, #D49BC2 50%, #A78BDF 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .r17-story .cv1 .ground { background: linear-gradient(90deg, rgba(232,149,106,.6), rgba(212,155,194,.6) 50%, rgba(167,139,223,.6)); }
   .r17-story .cv2 .run { left: var(--hp); justify-content: space-between; }
@@ -4876,6 +4876,10 @@ if (window.unicorn && window.unicorn.isDesktop)
   html #menubar .mb-car { width: 16px; height: 16px; padding: 0; margin: 0 -4px 0 0; display: grid; place-items: center; font-size: 0; background: none !important; color: var(--ic-rest); transform: rotate(90deg); }
   html #menubar .mb-panels-btn:hover .mb-car, html #menubar .mb-panels-btn[aria-expanded="true"] .mb-car { color: var(--ic-hover); }
   html #menubar .mb-panels-btn[aria-expanded="true"] .mb-car { transform: rotate(-90deg); }
+  
+  html.is-desktop #menubar .mb-panels-btn, html #menubar .mb-panels-btn { color: var(--text-mute) !important; transition: color var(--t) var(--ease); }
+  html.is-desktop #menubar .mb-panels-btn:hover, html.is-desktop #menubar .mb-panels-btn[aria-expanded="true"],
+  html #menubar .mb-panels-btn:hover, html #menubar .mb-panels-btn[aria-expanded="true"] { color: var(--daikon) !important; }
   html .panel--commits .c-nav { font-size: 0; color: var(--ic-rest); display: inline-grid; place-items: center; }
   html .panel--commits .c-nav:hover { color: var(--ic-hover); }
   html .panel--commits .c-nav { color: rgba(241,236,232,.32); }   
@@ -12805,6 +12809,9 @@ ${keepsBlock}${emptyBlock}
     .wk-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
     .wk-top>a{font:500 13px/1 'Ubuntu Sans',sans-serif;color:var(--faint);text-decoration:none;margin-top:10px;transition:color var(--t) var(--ease)} .wk-top>a:hover{color:var(--pi)}
     h1.wk-title{font:500 clamp(56px,7.4vw,96px)/.95 'Ubuntu Sans',sans-serif;letter-spacing:-.04em;margin:0}
+    /* 10-24 (Ivy): the same top line as the paper -- date, week, Directory, edition */
+    .ear{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px 18px;font:400 12px/1.2 'Ubuntu Sans Mono',ui-monospace,monospace;color:#8a8079;margin-bottom:14px}
+    .ear a{color:#4a423f;text-decoration:none;background-image:linear-gradient(90deg,#F6B096,#B79CF0);background-size:100% 1px;background-repeat:no-repeat;background-position:0 100%;padding-bottom:1px}
     h1.dir-title{color:#F3EEE6;text-shadow:-1px -1px 0 #fff,-2px -2px 3px rgba(255,255,255,.9),1px 1px 0 rgba(150,130,140,.45),2px 3px 4px rgba(70,50,60,.26),4px 7px 14px rgba(70,50,60,.12);user-select:none;padding:6px 0 2px}
     /* 10-23: the week number wears the paper's OS treatment -- same 3-stop gradient, its own raised shadow, padded so no glyph clips */
     h1.dir-title em{padding:0 .1em;margin:0 -.1em;background:linear-gradient(135deg,#FFAF5F 12%,#EE9C9C 50%,#AF87D7 88%);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(-1px -1px 0 rgba(255,255,255,.95)) drop-shadow(1px 2px 1.5px rgba(106,77,179,.32)) drop-shadow(3px 6px 8px rgba(106,77,179,.14))}
@@ -13052,8 +13059,8 @@ ${keepsBlock}${emptyBlock}
         const head = extra.head ? String(extra.head).replace(/<(?!\/?em>)[^>]*>/g, '') : lastWordEm(quest.name);
         const lede = extra.lede || quest.description || '';
         return weekHead(`${quest.name} · Week ${weekNum.w}`) + `
-  <div class="wk-top"><h1 class="wk-title dir-title">Week <em>${weekNum.w}</em></h1><a href="index.html">Directory</a></div>
-  <p class="wk-sub">${ESC(quest.name)} · ${isoWeekRange(weekNum.y, weekNum.w)}, ${weekNum.y}</p>
+  <div class="ear"><span>${isoWeekRange(weekNum.y, weekNum.w)}, ${weekNum.y}</span><span>Week ${weekNum.w}</span><span><a href="index.html">Directory</a></span><span>${ESC(quest.name)} Edition</span></div>
+  <div class="wk-top"><h1 class="wk-title dir-title">Week <em>${weekNum.w}</em></h1></div>
   ${extra.head ? `<h2 class="wk-head">${head}</h2>` : ''}
   ${lede ? `<p class="lede">${ESC(lede)}</p>` : ''}
   ${listen}
@@ -15037,7 +15044,7 @@ ${keepsBlock}${emptyBlock}
         const c = COVERS[i], date = d || new Date();
         const runs = Array.from({ length: c.frames }, (_, j) => `<canvas data-f="${j}"></canvas>`).join('');
         return `<div class="cv ${c.cls}"><div class="run" data-fit="${c.cls === 'cv2' ? 'LR' : 'R'}">${runs}</div><i class="ground"></i>`
-            + `<span class="wm">${esc((q && q.name) || 'Unicorn')}</span><span class="meta">Figma File<br>${MONTHS[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}</span></div>`;
+            + `<span class="wm">${esc((q && q.name) || 'Unicorn')}</span><span class="meta">Figma File · ${MONTHS[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}</span></div>`;
     };
     const drawRuns = (scope) => {
         const u = window.Unicorn7;
