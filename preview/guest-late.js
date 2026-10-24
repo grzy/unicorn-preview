@@ -68,8 +68,9 @@
   const qList = $('q-list');
   const paintNow = () => {
     if (!qList) return;
-    const working = D.agentState && D.agentState() === 'working';
-    const q = active(), now = working && q ? (q.experiments || []).find(x => x.status === 'active') : null;
+    // 10-23: only while the terminal's agent works, and only on the experiment it's working on
+    const working = D.agentState && D.agentState() === 'working', name = (window.__guestExpName || '').toLowerCase();
+    const q = active(), now = working && q && name ? (q.experiments || []).find(x => (x.name || '').toLowerCase() === name) : null;
     qList.querySelectorAll('.q-exp').forEach(row => {
       const st = row.querySelector('.q-status');
       row.classList.toggle('is-now', !!(now && st && st.dataset.id === now.id));

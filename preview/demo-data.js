@@ -78,6 +78,7 @@
   const CYCLE = [['working', 26000], ['waiting', 9000], ['idle', 5000]];
   const T0 = Date.now();
   const agentState = () => {
+    if (typeof window !== 'undefined' && window.__guestAgentState) return window.__guestAgentState;   // 10-23: the terminal's scripted session leads
     const total = CYCLE.reduce((a, c) => a + c[1], 0); let t = (Date.now() - T0) % total;
     for (const [s, ms] of CYCLE) { if (t < ms) return s; t -= ms; }
     return 'idle';
