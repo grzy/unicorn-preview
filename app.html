@@ -4885,7 +4885,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   html .panel--commits .c-morph .shaft { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset .32s cubic-bezier(.4,0,.2,1); }
   html .panel--commits #c-prev .c-morph .head { transform: translateX(2.4px); }
   html .panel--commits #c-next .c-morph .head { transform: translateX(-2.4px); }
-  html .panel--commits .c-nav:hover .c-morph .head { transform: none; }
+  html .panel--commits #c-prev:hover .c-morph .head, html .panel--commits #c-next:hover .c-morph .head { transform: none; }   
   html .panel--commits .c-nav:hover .c-morph .shaft { stroke-dashoffset: 0; }
   @media (prefers-reduced-motion: reduce) { html .panel--commits .c-morph .head, html .panel--commits .c-morph .shaft { transition: none; } }   
   html .panel--commits .c-nav:hover { color: var(--ic-hover); }
