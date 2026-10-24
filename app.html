@@ -10391,15 +10391,28 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         list.querySelectorAll('.k18-fr').forEach(f => f.classList.toggle('on', f.dataset.id === pickId));
         wireSel();
     };
+    const geo = () => {
+        const f = list.querySelector('.k18-fr[data-id]'), tw = f ? f.offsetWidth : 0, cw = list.clientWidth;
+        return { tw, cw, max: Math.max(0, list.scrollWidth - cw), half: cw / 2 - tw / 2, R: Math.max(1, (cw / 2 - tw / 2) * 1.25) };
+    };
     const focusAt = (sl) => {
-        const max = Math.max(1, list.scrollWidth - list.clientWidth), f = list.querySelector('.k18-fr[data-id]'), tw = f ? f.offsetWidth : 0;
-        return sl + tw / 2 + (list.clientWidth - tw) * Math.min(1, Math.max(0, sl / max));
+        const g = geo();
+        const a = Math.min(1, sl / g.R), b = Math.min(1, Math.max(0, g.max - sl) / g.R);
+        return sl + g.cw / 2 - g.half * (1 - a) + g.half * (1 - b);
     };
     const centerOf = (f, smooth) => {
         if (!f)
             return;
-        const max = Math.max(0, list.scrollWidth - list.clientWidth), tw = f.offsetWidth, c = f.offsetLeft + tw / 2;
-        const left = max ? Math.min(max, Math.max(0, (c - tw / 2) / (1 + (list.clientWidth - tw) / max))) : 0;
+        const max = Math.max(0, list.scrollWidth - list.clientWidth), c = f.offsetLeft + f.offsetWidth / 2;
+        let lo = 0, hi = max;
+        for (let i = 0; i < 24; i++) {
+            const m = (lo + hi) / 2;
+            if (focusAt(m) < c)
+                lo = m;
+            else
+                hi = m;
+        }
+        const left = max ? (lo + hi) / 2 : 0;
         if (smooth && !matchMedia('(prefers-reduced-motion: reduce)').matches)
             glide(left);
         else {
