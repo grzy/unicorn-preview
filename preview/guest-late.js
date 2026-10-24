@@ -103,3 +103,9 @@
   if (qEl) new MutationObserver(all).observe(qEl, { childList: true, characterData: true, subtree: true });
   setTimeout(all, 50); setTimeout(all, 800);
 })();
+
+/* 10-23: the gate button is as wide as the subtitle's longest visible line (not its box) */
+(() => { const fitBtn = () => { const lead = document.querySelector('#preloader .pl-gate-lead'), btn = document.getElementById('pl-gate-btn');
+    if (!lead || !btn) return; const r = document.createRange(); r.selectNodeContents(lead);
+    const w = Math.max(0, ...[...r.getClientRects()].map(x => x.width)); if (w) btn.style.width = Math.round(w) + 'px'; };
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(fitBtn); addEventListener('resize', fitBtn); setTimeout(fitBtn, 1200); })();

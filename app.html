@@ -94,7 +94,7 @@ html body #menubar .mb-panels-pop::after { top: -30px; height: 30px; }
 #preloader .pl-gate-subline { color: var(--text-mute); font-weight: 400; text-wrap: balance; max-width: 32ch; }
 #preloader .pl-gate-btn { font-size: 13px; padding: 9px 14px; }
 
-#preloader.gated .pl-stage { width: max-content; max-width: 400px !important; padding: 36px 21px !important; }   /* 10-23 (Ivy): even padding on all four sides, measured to the visible text (balanced lines sit 15px inside their box) */
+#preloader.gated .pl-stage { width: max-content; max-width: 400px !important; padding: 36px 24px !important; }   /* 10-23 (Ivy): even padding on all four sides, measured to the visible text (balanced lines sit 15px inside their box) */
 #preloader.gated .pl-gate { gap: 20px; }
 #preloader .pl-gate-lead { font-size: clamp(17px, 1.15vw, 19px); line-height: 1.3; max-width: 24ch; margin: 0 auto 8px; }
 #preloader .pl-gate-subline { font-size: clamp(13.5px, .9vw, 14.5px); line-height: 1.5; margin: 0 auto; }
@@ -103,6 +103,14 @@ html body #menubar .mb-panels-pop::after { top: -30px; height: 30px; }
 html:not(.framed) #menubar { top: 12px; }
 html:not(.framed) .panel--quest, html:not(.framed) .panel--appearance, html:not(.framed) #agent { top: 66px; }
 html:not(.framed) body #menubar .mb-panels-pop { top: 66px; }
+
+/* 10-23 (Ivy picked C): name first. Unicorn in mono, the line under it, a button as wide as the line's
+   longest row (guest-late.js measures it), Sound On as a quiet note below. */
+#preloader .pl-gate-name { font: 500 30px/1 var(--mono); letter-spacing: -.01em; color: var(--cream); margin: 0 0 12px; text-align: center; }
+#preloader .pl-gate-lead { font-size: 16px; font-weight: 400; color: var(--text-mute); margin: 0 auto; }
+#preloader .pl-gate-btn { justify-content: center; padding: 12px 16px; }
+#preloader .pl-gate-sound { font: 400 11.5px/1 var(--mono); color: rgba(241,236,232,.38); margin-top: -8px; }
+#preloader .pl-gate-sound i { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--peach); margin-right: 7px; vertical-align: 1px; }
 </style>
 <script>
 if (window.unicorn && window.unicorn.isDesktop)
@@ -5115,11 +5123,11 @@ if (window.unicorn && window.unicorn.isDesktop)
     <div class="pl-meta" id="pl-meta"></div>
     
     <div class="pl-gate" id="pl-gate" hidden>
-      <div class="pl-gate-blurb">
+      <div class="pl-gate-blurb"><div class="pl-gate-name">Unicorn</div>
         <div class="pl-gate-lead" data-text="A creative OS for designers who work in the terminal">A creative OS for designers who work in the terminal</div>
-        <div class="pl-gate-subline">Unicorn turns building with agents into something you can see &amp; share</div>
+        
       </div>
-      <button class="pl-gate-btn" id="pl-gate-btn"><span class="pl-gate-label">Click to Begin</span> <span class="pl-gate-sub">· Sound On</span></button>
+      <button class="pl-gate-btn" id="pl-gate-btn"><span class="pl-gate-label">Click to Begin</span></button><div class="pl-gate-sound"><i></i>Sound On</div>
     </div>
   </div>
   <div class="pl-skip">press any key to skip</div>
@@ -14297,6 +14305,44 @@ ${keepsBlock}${emptyBlock}
             t._timer = setTimeout(() => { t.style.opacity = '0'; }, 3200);
         }
     };
+    addEventListener('storage', (e) => {
+        if (e.key !== 'r26.go-quest' || !e.newValue)
+            return;
+        let go;
+        try {
+            go = JSON.parse(e.newValue) || {};
+        }
+        catch {
+            return;
+        }
+        let d;
+        try {
+            d = JSON.parse(localStorage.getItem(DATA_KEY) || '{}');
+        }
+        catch {
+            return;
+        }
+        const qs = (d.quests || []).filter(q => !q.completed), cwd = String(go.cwd || '');
+        let best = null, len = -1;
+        for (const q of qs) {
+            const r = String(q.repo || (/^unicorn$/i.test(q.name || '') ? '~/unicorn' : '')).replace(/^~/, '').replace(/\/+$/, '');
+            if (r && (cwd.endsWith(r) || cwd.includes(r + '/')) && r.length > len) {
+                best = q;
+                len = r.length;
+            }
+        }
+        if (!best && go.quest)
+            best = qs.find(q => (q.name || '').toLowerCase() === String(go.quest).toLowerCase()) || null;
+        if (!best)
+            return;
+        let r = null;
+        try {
+            r = applyEvent({ ts: new Date().toISOString(), action: 'quest-activate', quest: best.name });
+        }
+        catch { }
+        if (r)
+            window.dispatchEvent(new CustomEvent('unicorn:quests-updated'));
+    });
     if (window.unicorn && window.unicorn.onAgentEvents)
         window.unicorn.onAgentEvents(handle);
     else
@@ -15941,6 +15987,6 @@ ${keepsBlock}${emptyBlock}
 
 <script src="preview/roam.js?v=4d709006"></script>
 <script>window.__previewWeeks = {"unicorn":"2026-W43-unicorn.html","tide-clock":"2026-W43-tide-clock.html","moth-garden":"2026-W43-moth-garden.html","paper-synth":"2026-W43-paper-synth.html"};</script>
-<script src="preview/guest-late.js?v=ee101c32"></script>
+<script src="preview/guest-late.js?v=4cc96249"></script>
 </body>
 </html>
