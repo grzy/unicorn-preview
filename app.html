@@ -10416,10 +10416,10 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
             gliding = false;
             return;
         }
-        const t0 = performance.now(), D = Math.min(460, 220 + Math.abs(d) * 1.1);
+        const t0 = performance.now(), D = Math.min(720, 420 + Math.abs(d) * 1.6);
         gliding = true;
         const step = (n) => {
-            const u = Math.min(1, (n - t0) / D), e = 1 - Math.pow(1 - u, 3);
+            const u = Math.min(1, (n - t0) / D), e = -(Math.cos(Math.PI * u) - 1) / 2;
             list.scrollLeft = from + d * e;
             if (u < 1)
                 glideRaf = requestAnimationFrame(step);
@@ -10452,7 +10452,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     };
     list.addEventListener('scrollend', settle);
     list.addEventListener('scroll', () => { if (gliding)
-        return; clearTimeout(settleT); settleT = setTimeout(settle, 160); }, { passive: true });
+        return; clearTimeout(settleT); settleT = setTimeout(settle, 450); }, { passive: true });
     let pickRaf = 0;
     list.addEventListener('scroll', () => {
         if (pickRaf)
