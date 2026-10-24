@@ -33,7 +33,11 @@
   const BW = 15 * cell, BH = 18 * cell, M = 24, SPEED = 58, TURN = 1.5;
   const RUN_IN = U7.T_LOGO + .42 * U7.T_RUN, RUN_OUT = U7.T_LOGO + .58 * U7.T_RUN, OUT_MS = U7.TOTAL - RUN_OUT;
   const rnd = (a, b) => a + Math.random() * (b - a);
-  const clampX = v => Math.max(M, Math.min(innerWidth - M - BW, v)), clampY = v => Math.max(TOP + M, Math.min(innerHeight - M - BH, v));
+  // 10-23 (Ivy): through the gate and the welcome he stays down in the grass (he'd wandered up into the
+  // sky); once the terminal opens, the whole window is his again
+  const inField = () => { try { const d = HOST === 'shell' ? (document.getElementById('app') || {}).contentDocument : document; const pl = d && d.getElementById('preloader'), t = d && d.getElementById('guest-term'); return (pl && !pl.classList.contains('out')) || !t || t.hidden; } catch { return false; } };
+  const clampX = v => Math.max(M, Math.min(innerWidth - M - BW, v)),
+    clampY = v => inField() ? Math.max(innerHeight * .66, Math.min(innerHeight * .9 - BH, v)) : Math.max(TOP + M, Math.min(innerHeight - M - BH, v));
 
 
   // his resting spot: the open field right of the terminal, below the Story panel
