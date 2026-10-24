@@ -4683,6 +4683,13 @@ if (window.unicorn && window.unicorn.isDesktop)
   
   html .panel--quest .q-switcher .q-sw-btn.on::before { content: "" !important; left: 8px !important; top: 50% !important; inset: 50% auto auto 8px !important; width: 16px !important; height: 16px !important; margin-top: -8px;
     border: 0 !important; transform: none !important; background: var(--ic-hover) !important; -webkit-mask: var(--m-check) center / 16px 16px no-repeat !important; mask: var(--m-check) center / 16px 16px no-repeat !important; }
+  
+  html .panel--quest .q-switcher .q-sw-btn.on::before { content: none !important; }
+  html .panel--quest .q-switcher .q-sw-btn.on, html.is-desktop .panel--quest .q-switcher .q-sw-btn.on { background: rgba(255,255,255,.08) !important; color: var(--daikon); }
+  html .panel--quest .q-switcher .q-sw-btn.on:hover { background: rgba(255,255,255,.10) !important; }
+  html .panel--quest .q-switcher .q-sw-btn.completed { position: relative; }
+  html .panel--quest .q-switcher .q-sw-btn.completed::before { content: "" !important; display: block !important; position: absolute; inset: 50% auto auto 8px !important; width: 16px !important; height: 16px !important; margin-top: -8px; border: 0 !important; transform: none !important; padding: 0 !important;
+    background: var(--ic-rest) !important; -webkit-mask: var(--m-check) center / 16px 16px no-repeat !important; mask: var(--m-check) center / 16px 16px no-repeat !important; }
   html .panel--quest .q-pop-foot .q-sw-add .q-plus { width: 16px; height: 16px; font-size: 0; display: block; background: var(--ic-rest); -webkit-mask: var(--m-plus) center / 16px 16px no-repeat; mask: var(--m-plus) center / 16px 16px no-repeat; transition: background var(--t) var(--ease); }
   html .panel--quest .q-pop-foot .q-sw-add:hover .q-plus { background: var(--ic-hover); }
 
