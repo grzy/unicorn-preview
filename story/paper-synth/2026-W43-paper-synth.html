@@ -2,10 +2,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Ubuntu+Sans:wght@400;500&family=Ubuntu+Sans+Mono:wght@400&display=swap" rel="stylesheet"><style>
     *{box-sizing:border-box;margin:0;padding:0}
     :root{--peach:#E8956A;--lilac:#A78BDF;--grad:linear-gradient(135deg,#E8956A,#A78BDF);--pi:#1a1616;--soft:#6c645d;--faint:#776e67;--line:#efe9e2;--ease:cubic-bezier(.4,0,.2,1);--t:.45s}
-    html,body{background:#f1e9db;color:var(--pi);font:400 15px/1.6 'Ubuntu Sans','Helvetica Neue',sans-serif}
+    html,body{background:#0b0a0c;color:var(--pi);font:400 15px/1.6 'Ubuntu Sans','Helvetica Neue',sans-serif}   /* 10-24: the paper's dark desk */
     a{color:inherit}
-    .page{padding:clamp(20px,3.6vw,44px)}
-    .sheet{max-width:1180px;margin:0 auto;background:#ede8e2;border-radius:14px;box-shadow:0 18px 44px rgba(60,40,20,.18);padding:34px clamp(18px,3.2vw,44px) 44px}
+    .page{padding:clamp(20px,3.6vw,44px) clamp(16px,3.6vw,44px) 80px}
+    .sheet{position:relative;overflow:hidden;max-width:1180px;margin:0 auto;background:#F7F4EE;border-radius:14px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.04),0 34px 80px rgba(0,0,0,.55),0 6px 18px rgba(0,0,0,.3);padding:34px clamp(18px,3.2vw,44px) 44px}
+    /* the paper's own stone texture, so flipping between them they read as one sheet */
+    .sheet::before{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55  0 0 0 0 .5  0 0 0 0 .45  0 0 0 .3 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+    .sheet > *{position:relative}
     .eb{display:flex;justify-content:space-between;align-items:center;font:400 13px/1 'Ubuntu Sans',sans-serif;color:var(--faint)}
     .eb a{font-weight:500;text-decoration:none;transition:color var(--t) var(--ease)} .eb a:hover{color:var(--pi)}
     h1{font:500 clamp(30px,3.6vw,44px)/1.04 'Ubuntu Sans',sans-serif;letter-spacing:-.025em;margin:10px 0 0}
@@ -113,9 +117,9 @@
   
   <p class="lede">A synth made of cut paper. Fold a key to bend the pitch.</p>
   <div class="listen" id="listen" hidden><button class="play" id="play" aria-label="Play"><svg viewBox="0 0 12 12"><path id="pp" d="M3 1.5v9l7.5-4.5z"/></svg></button><span class="lt">Hear the Story<small id="ldur"></small></span><span class="bar"><i id="lbar"></i></span></div>
-  <audio id="aud" src="2026-W43-paper-synth.m4a" preload="metadata"></audio><script type="text/plain" id="say">Week 43. Paper Synth. A synth made of cut paper. Fold a key to bend the pitch. 1 experiment finished this week: Fold to bend the pitch. 2 commits this week.</script>
+  <audio id="aud" src="2026-W43-paper-synth.m4a" preload="metadata"></audio><script type="text/plain" id="say">Week 43. Paper Synth. A synth made of cut paper. Fold a key to bend the pitch. 1 experiment finished this week: Fold to bend the pitch. 3 commits this week.</script>
   <div class="cards">
-    <div class="card w2 stat"><div><b>1</b><span class="lab">finished this week</span></div><div class="tip">Fold to bend the pitch</div></div><div class="card w2 stat"><div><b>0</b><span class="lab">kept this week</span></div></div><div class="card w2"><h3>Paper Synth commits this week</h3><div class="wk-tot">2</div><div class="commits"><i class="" style="height:100%"></i><i class="" style="height:100%"></i><i class="zero" style="height:3%"></i><i class="zero" style="height:3%"></i><i class="zero" style="height:3%"></i><i class="later"></i><i class="later"></i></div><div class="c-lab"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div></div>
+    <div class="card w2 stat"><div><b>1</b><span class="lab">finished this week</span></div><div class="tip">Fold to bend the pitch</div></div><div class="card w2 stat"><div><b>0</b><span class="lab">kept this week</span></div></div><div class="card w2"><h3>Paper Synth commits this week</h3><div class="wk-tot">3</div><div class="commits"><i class="" style="height:100%"></i><i class="" style="height:100%"></i><i class="" style="height:100%"></i><i class="zero" style="height:3%"></i><i class="zero" style="height:3%"></i><i class="zero" style="height:3%"></i><i class="later"></i></div><div class="c-lab"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div></div>
     <div class="card w6"><h3>Experiments</h3><p class="also">Also finished: Fold to bend the pitch</p></div>
     
     <div class="card w4"><div class="two">

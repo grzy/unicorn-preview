@@ -2,10 +2,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Ubuntu+Sans:wght@400;500&family=Ubuntu+Sans+Mono:wght@400&display=swap" rel="stylesheet"><style>
     *{box-sizing:border-box;margin:0;padding:0}
     :root{--peach:#E8956A;--lilac:#A78BDF;--grad:linear-gradient(135deg,#E8956A,#A78BDF);--pi:#1a1616;--soft:#6c645d;--faint:#776e67;--line:#efe9e2;--ease:cubic-bezier(.4,0,.2,1);--t:.45s}
-    html,body{background:#f1e9db;color:var(--pi);font:400 15px/1.6 'Ubuntu Sans','Helvetica Neue',sans-serif}
+    html,body{background:#0b0a0c;color:var(--pi);font:400 15px/1.6 'Ubuntu Sans','Helvetica Neue',sans-serif}   /* 10-24: the paper's dark desk */
     a{color:inherit}
-    .page{padding:clamp(20px,3.6vw,44px)}
-    .sheet{max-width:1180px;margin:0 auto;background:#ede8e2;border-radius:14px;box-shadow:0 18px 44px rgba(60,40,20,.18);padding:34px clamp(18px,3.2vw,44px) 44px}
+    .page{padding:clamp(20px,3.6vw,44px) clamp(16px,3.6vw,44px) 80px}
+    .sheet{position:relative;overflow:hidden;max-width:1180px;margin:0 auto;background:#F7F4EE;border-radius:14px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.04),0 34px 80px rgba(0,0,0,.55),0 6px 18px rgba(0,0,0,.3);padding:34px clamp(18px,3.2vw,44px) 44px}
+    /* the paper's own stone texture, so flipping between them they read as one sheet */
+    .sheet::before{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55  0 0 0 0 .5  0 0 0 0 .45  0 0 0 .3 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+    .sheet > *{position:relative}
     .eb{display:flex;justify-content:space-between;align-items:center;font:400 13px/1 'Ubuntu Sans',sans-serif;color:var(--faint)}
     .eb a{font-weight:500;text-decoration:none;transition:color var(--t) var(--ease)} .eb a:hover{color:var(--pi)}
     h1{font:500 clamp(30px,3.6vw,44px)/1.04 'Ubuntu Sans',sans-serif;letter-spacing:-.025em;margin:10px 0 0}
@@ -113,9 +117,9 @@
   <h2 class="wk-head">Keep becomes <em>one drop zone</em></h2>
   <p class="lede">Screenshots, videos and terminal notes all land in one place. The Week page pulls from it.</p>
   <div class="listen" id="listen" hidden><button class="play" id="play" aria-label="Play"><svg viewBox="0 0 12 12"><path id="pp" d="M3 1.5v9l7.5-4.5z"/></svg></button><span class="lt">Hear the Story<small id="ldur"></small></span><span class="bar"><i id="lbar"></i></span></div>
-  <audio id="aud" src="2026-W42-unicorn.m4a" preload="metadata"></audio><script type="text/plain" id="say">Week 42. Unicorn. Screenshots, videos and terminal notes all land in one place. The Week page pulls from it. 2 experiments finished that week: Keep with one drop zone, Quiet tooltips. 16 commits that week.</script>
+  <audio id="aud" src="2026-W42-unicorn.m4a" preload="metadata"></audio><script type="text/plain" id="say">Week 42. Unicorn. Screenshots, videos and terminal notes all land in one place. The Week page pulls from it. 1 experiment finished that week: Quiet tooltips. 9 commits that week.</script>
   <div class="cards">
-    <div class="card w2 stat"><div><b>2</b><span class="lab">finished that week</span></div><div class="tip">Keep with one drop zone, Quiet tooltips</div></div><div class="card w4"><h3>What was replaced, and why</h3><ul class="repl"><li><span class="was">Paste a screenshot</span><span class="now">One drop zone</span><span class="why">Drop or paste; it all goes to this quest.</span></li><li><span class="was">Write a note</span><span class="now">Paste from your terminal</span><span class="why">The words that mattered, kept with the build.</span></li><li><span class="was">Month calendar</span><span class="now">Week strip</span><span class="why">Minimized, Commits shows this week.</span></li></ul></div>
+    <div class="card w2 stat"><div><b>1</b><span class="lab">finished that week</span></div><div class="tip">Quiet tooltips</div></div><div class="card w4"><h3>What was replaced, and why</h3><ul class="repl"><li><span class="was">Paste a screenshot</span><span class="now">One drop zone</span><span class="why">Drop or paste; it all goes to this quest.</span></li><li><span class="was">Write a note</span><span class="now">Paste from your terminal</span><span class="why">The words that mattered, kept with the build.</span></li><li><span class="was">Month calendar</span><span class="now">Week strip</span><span class="why">Minimized, Commits shows this week.</span></li></ul></div>
     <div class="card w6"><h3>Experiments</h3><div class="builds" style="--n:3"><div class="build"><img src="../../demo/keep-week.webp" alt="Keep panel"><b>Keep panel<small>Final</small></b>
       </div><div class="build"><img src="../../demo/build-story.webp" alt="Week strip"><b>Week strip<small>Final</small></b>
       </div><div class="build"><a href="../../living-ds/" target="_blank" rel="noopener"><img src="../../demo/keep-system.webp" alt="Buttons and status"><b>Buttons and status<small>Updated</small></b></a>
@@ -127,7 +131,7 @@
     </div></div>
     <div class="card w2"><h3>Keep</h3><div class="kthumbs"><img src="../../demo/keep-week.webp" alt="Week page, this week"><img src="../../demo/keep-peach.webp" alt="Peach, the still pose"><img src="../../demo/keep-system.webp" alt="Design system: buttons and status"></div><div class="keep-note">The latest from Keep.</div></div>
     <div class="card w4"><h3>Agents right now</h3><div class="agents"><div><b>Keep feeds the Week page</b><p>What you keep is what the story is built from.</p></div><div><b>Commits per quest</b><p>Each quest counts its own commits.</p></div></div></div>
-    <div class="card w2"><h3>Unicorn commits that week</h3><div class="wk-tot">16</div><div class="commits"><i class="" style="height:100%"></i><i class="" style="height:14.285714285714285%"></i><i class="" style="height:28.57142857142857%"></i><i class="" style="height:14.285714285714285%"></i><i class="" style="height:71.42857142857143%"></i><i class="later"></i><i class="later"></i></div><div class="c-lab"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div></div>
+    <div class="card w2"><h3>Unicorn commits that week</h3><div class="wk-tot">9</div><div class="commits"><i class="" style="height:25%"></i><i class="zero" style="height:3%"></i><i class="" style="height:75%"></i><i class="" style="height:100%"></i><i class="" style="height:25%"></i><i class="zero" style="height:3%"></i><i class="later"></i></div><div class="c-lab"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div></div>
   </div><script>(()=>{const a=document.getElementById('aud'),l=document.getElementById('listen'),pp=document.getElementById('pp'),b=document.getElementById('lbar');
   const ready=()=>{l.hidden=false;const s=Math.round(a.duration);document.getElementById('ldur').textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');};
   if(a.readyState>=1)ready();else a.addEventListener('loadedmetadata',ready);
