@@ -156,7 +156,10 @@
       heading += Math.max(-TURN * dt, Math.min(TURN * dt, dA));
       x = clampX(x + Math.cos(heading) * SPEED * k * dt); y = clampY(y + Math.sin(heading) * SPEED * .85 * k * dt);
       const c = Math.cos(heading); if (c > .2) faceRight = true; else if (c < -.2) faceRight = false;
-      if (Math.hypot(tx - x, ty - y) < 40 && phase !== 'stop') halt(now);
+      // 10-23: while the terminal's agent works he gallops on (next spot on arrival), like the app
+      let wk = false; try { const w = HOST === 'shell' ? (document.getElementById('app') || {}).contentWindow : window; wk = !!(w && w.__guestAgentState === 'working'); } catch {}
+      if (Math.hypot(tx - x, ty - y) < 40 && phase === 'run' && wk && !surprise) pickSpot();
+      else if (Math.hypot(tx - x, ty - y) < 40 && phase !== 'stop') halt(now);
     }
     // 10-23 (Ivy): the same poses as the app's roaming unicorn, driven by the terminal's scripted agent:
     // working = he roams and gallops, waiting = he stands with the thinking ring, resting = he lies down
