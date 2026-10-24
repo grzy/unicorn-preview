@@ -4482,7 +4482,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   html .u-toast:has(.u-toast-undo) { padding: 8px 8px 8px 16px; }
   html .u-toast::before { display: block; background: linear-gradient(45deg, transparent 8%, rgba(232,149,106,.45) 35%, rgba(167,139,223,.45) 65%, transparent 92%); }
   html .u-toast .u-toast-text { color: var(--text-mute); }
-  html .u-toast .u-toast-hl { color: var(--text); font-weight: 500; }
+  html .u-toast .u-toast-hl { color: var(--text); font-weight: 500; margin-left: .25em; }   
   html .u-toast .u-toast-undo.u-fill, html .u-toast .u-toast-undo.u-fill:hover {
     font: 500 11.5px/1 var(--sans); letter-spacing: 0; text-transform: none; color: var(--nori-dark);
     padding: 8px 12px; border: 0; background: none;
@@ -5050,7 +5050,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   html .panel--keep .k18-car .k18-strip.at-start { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 22px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 22px), transparent); }
   html .panel--keep .k18-car .k18-strip.at-end { -webkit-mask-image: linear-gradient(90deg, transparent, #000 22px); mask-image: linear-gradient(90deg, transparent, #000 22px); }
   html .panel--keep .k18-car .k18-strip.at-start.at-end { -webkit-mask-image: none; mask-image: none; }
-  html .panel--keep .k18-car .k18-fr.on::after { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px; pointer-events: none; z-index: 2;
+  html .panel--keep .k18-car .k18-fr.on::after { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px; pointer-events: none; z-index: 2; box-shadow: none;   
     background: linear-gradient(to top right, transparent 1%, rgba(232,149,106,.95) 18%, rgba(167,139,223,.95) 82%, transparent 99%);
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
   .panel--keep .k18-car::after { content: none !important; }
@@ -10400,7 +10400,33 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
             return;
         const max = Math.max(0, list.scrollWidth - list.clientWidth), tw = f.offsetWidth, c = f.offsetLeft + tw / 2;
         const left = max ? Math.min(max, Math.max(0, (c - tw / 2) / (1 + (list.clientWidth - tw) / max))) : 0;
-        list.scrollTo({ left, behavior: smooth && !matchMedia('(prefers-reduced-motion: reduce)').matches ? 'smooth' : 'instant' });
+        if (smooth && !matchMedia('(prefers-reduced-motion: reduce)').matches)
+            glide(left);
+        else {
+            cancelAnimationFrame(glideRaf);
+            gliding = false;
+            list.scrollLeft = left;
+        }
+    };
+    let glideRaf = 0, gliding = false;
+    const glide = (to) => {
+        cancelAnimationFrame(glideRaf);
+        const from = list.scrollLeft, d = to - from;
+        if (Math.abs(d) < 1) {
+            gliding = false;
+            return;
+        }
+        const t0 = performance.now(), D = Math.min(460, 220 + Math.abs(d) * 1.1);
+        gliding = true;
+        const step = (n) => {
+            const u = Math.min(1, (n - t0) / D), e = 1 - Math.pow(1 - u, 3);
+            list.scrollLeft = from + d * e;
+            if (u < 1)
+                glideRaf = requestAnimationFrame(step);
+            else
+                gliding = false;
+        };
+        glideRaf = requestAnimationFrame(step);
     };
     const centered = () => {
         const mid = focusAt(list.scrollLeft);
@@ -10411,8 +10437,22 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         } });
         return best;
     };
-    list.addEventListener('scrollend', () => { const f = list.querySelector('.k18-fr.on'); if (f)
-        centerOf(f, true); });
+    let settleT = 0;
+    const settle = () => {
+        if (gliding)
+            return;
+        const f = centered();
+        if (!f)
+            return;
+        if (f.dataset.id !== pickId) {
+            pickId = f.dataset.id;
+            showPick(load().concat(savingKeeps));
+        }
+        centerOf(f, true);
+    };
+    list.addEventListener('scrollend', settle);
+    list.addEventListener('scroll', () => { if (gliding)
+        return; clearTimeout(settleT); settleT = setTimeout(settle, 160); }, { passive: true });
     let pickRaf = 0;
     list.addEventListener('scroll', () => {
         if (pickRaf)
@@ -10459,6 +10499,10 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     };
     list.addEventListener('scroll', syncStripEdges, { passive: true });
     list.addEventListener('wheel', (e) => {
+        if (gliding) {
+            cancelAnimationFrame(glideRaf);
+            gliding = false;
+        }
         if (Math.abs(e.deltaY) > Math.abs(e.deltaX) && list.scrollWidth > list.clientWidth) {
             list.scrollLeft += e.deltaY;
             e.preventDefault();
