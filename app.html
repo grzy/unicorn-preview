@@ -4765,6 +4765,9 @@ if (window.unicorn && window.unicorn.isDesktop)
   .r17-strip .uc-wrap canvas { will-change: transform; transform: translateZ(0); }
   .r17-strip .uc-wrap canvas { position: absolute; display: block; image-rendering: pixelated; margin: 0; top: 0; }
   
+  .panel--quest .q-head-name { display: none; }
+  html .panel--quest.minimized .q-head-label { display: none; }
+  html .panel--quest.minimized .q-head-name { display: inline; }
   html .panel.panel--quest.minimized > .r17-strip { display: flex !important; margin-top: 12px; padding: 0 0 0 16px; background: none !important; }
 
   html #agent .p-head.p-head-agent { padding: 27px 30px 0; margin-bottom: 8px; min-height: 16px; height: auto; font: 500 13px/16px var(--sans); }
@@ -4875,7 +4878,8 @@ if (window.unicorn && window.unicorn.isDesktop)
   html #menubar .mb-panels-btn[aria-expanded="true"] .mb-car { transform: rotate(-90deg); }
   html .panel--commits .c-nav { font-size: 0; color: var(--ic-rest); display: inline-grid; place-items: center; }
   html .panel--commits .c-nav:hover { color: var(--ic-hover); }
-  html .panel--commits #c-prev .ic { transform: rotate(180deg); }
+  html .panel--commits .c-nav { color: rgba(241,236,232,.32); }   
+  html .panel--commits .c-nav:hover { color: var(--ic-hover); }
   html .panel--keep .keep-pending-x { font-size: 0; display: grid; place-items: center; color: var(--ic-rest); }
   html .panel--keep .keep-pending-x:hover { color: var(--ic-danger); }
 </style>
@@ -5097,6 +5101,9 @@ if (window.unicorn && window.unicorn.isDesktop)
   <symbol id="i-check" viewBox="0 0 16 16"><path d="M3.75 8.5 6.6 11.25l5.65-6.5"/></symbol>
   <symbol id="i-check-s" viewBox="0 0 16 16"><path d="M4.75 8.4 6.75 10.25l4.5-5"/></symbol>
   <symbol id="i-caret" viewBox="0 0 16 16"><path d="M6.5 4.25 10.25 8 6.5 11.75"/></symbol>
+  
+  <symbol id="i-arrow-left" viewBox="0 0 16 16"><path d="M12.5 8H3.75M7 4.75 3.75 8 7 11.25"/></symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 16 16"><path d="M3.5 8h8.75M9 4.75 12.25 8 9 11.25"/></symbol>
   <symbol id="i-ext" viewBox="0 0 16 16"><path d="M9.25 3.25h3.5v3.5"/><path d="M12.75 3.25 7.5 8.5"/><path d="M11.25 9.5v2.25a1 1 0 0 1-1 1h-6a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1H6.5"/></symbol>
   <symbol id="i-folder" viewBox="0 0 16 16"><path d="M2.75 4.75a1 1 0 0 1 1-1h2.6l1.4 1.5h4.5a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1h-8.5a1 1 0 0 1-1-1z"/></symbol>
   <symbol id="i-plus" viewBox="0 0 16 16"><path d="M8 3.75v8.5"/><path d="M3.75 8h8.5"/></symbol>
@@ -5246,7 +5253,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   <section class="panel panel--quest">
     
     <div class="p-head">
-      <span><span class="p-dot"></span>Quest</span>
+      <span><span class="p-dot"></span><span class="q-head-label">Quest</span><span class="q-head-name" id="q-head-name"></span></span>
       <span id="q-count"></span>
     </div>
     <div class="p-hair"></div>
@@ -5296,9 +5303,9 @@ if (window.unicorn && window.unicorn.isDesktop)
     
     <div class="c-wk" id="c-wk" aria-hidden="true"><div class="c-wk-bars" id="c-wk-bars"></div><div class="c-wk-days" id="c-wk-days"></div></div>
     <div class="c-month-head">
-      <span class="c-nav" id="c-prev" role="button" title="Previous Month"><svg class="ic"><use href="#i-caret"/></svg></span>
+      <span class="c-nav" id="c-prev" role="button" title="Previous Month"><svg class="ic"><use href="#i-arrow-left"/></svg></span>
       <span class="c-month-title" id="c-month-title"></span>
-      <span class="c-nav" id="c-next" role="button" title="Next Month"><svg class="ic"><use href="#i-caret"/></svg></span>
+      <span class="c-nav" id="c-next" role="button" title="Next Month"><svg class="ic"><use href="#i-arrow-right"/></svg></span>
       <span class="c-month-count" id="c-month-count"></span>
     </div>
     <div class="c-weekdays">
@@ -15886,6 +15893,10 @@ ${keepsBlock}${emptyBlock}
             return true; const q = sessQuest(w, quests, ev); return q && (q.id || q.name) === shownId; }) : [];
         const { state: st, live, working } = AS.read(mine);
         lastLive = live;
+        {
+            const w = live.filter(x => x.state === 'waiting').sort((a, b) => b.ts - a.ts)[0];
+            waitMsg = st === 'waiting' && w ? waitText(w.msg) : '';
+        }
         const wasLove = love;
         love = loveUntil();
         if (love && !wasLove) {
@@ -15901,9 +15912,25 @@ ${keepsBlock}${emptyBlock}
         }
         setLine2();
     };
+    let waitMsg = '';
+    const TOOL_SAY = { Bash: 'Run a command', Write: 'Write a file', Edit: 'Edit a file', MultiEdit: 'Edit a file', Read: 'Read a file', WebFetch: 'Open a web page', WebSearch: 'Search the web', NotebookEdit: 'Edit a notebook' };
+    const waitText = (m) => {
+        m = String(m || '').trim();
+        const perm = m.match(/permission to use ([\w.:-]+)/i);
+        if (perm)
+            return 'Permission: ' + (TOOL_SAY[perm[1]] || perm[1]);
+        if (!m || /waiting for your input/i.test(m))
+            return 'Your reply';
+        return m.replace(/^Claude (is |needs )?/i, '').replace(/^\w/, c => c.toUpperCase()).slice(0, 48);
+    };
     const setLine2 = () => {
         if (!w2El)
             return;
+        if (waitMsg) {
+            if (w2El.textContent !== waitMsg)
+                w2El.textContent = waitMsg;
+            return;
+        }
         let d;
         try {
             d = JSON.parse(localStorage.getItem('unicorn-data')) || {};
@@ -15929,6 +15956,27 @@ ${keepsBlock}${emptyBlock}
         if (w2El.textContent !== name)
             w2El.textContent = name;
     };
+    const setHeadName = () => {
+        const el = document.getElementById('q-head-name');
+        if (!el)
+            return;
+        let d;
+        try {
+            d = JSON.parse(localStorage.getItem('unicorn-data')) || {};
+        }
+        catch {
+            d = {};
+        }
+        const qs = d.quests || [], q = (typeof d.activeQuestIndex === 'number' && qs[d.activeQuestIndex]) || qs.find(x => !x.completed) || null;
+        const n = (q && q.name) || 'Quest';
+        if (el.textContent !== n)
+            el.textContent = n;
+    };
+    setHeadName();
+    window.addEventListener('unicorn:quests-updated', setHeadName);
+    window.addEventListener('unicorn:quest-attached', () => setTimeout(setHeadName, 0));
+    window.addEventListener('storage', e => { if (e.key === 'unicorn-data')
+        setHeadName(); });
     window.addEventListener('unicorn:quests-updated', () => { setLine2(); apply(); });
     window.addEventListener('unicorn:quest-attached', () => setTimeout(() => { setLine2(); apply(); }, 0));
     cv.removeAttribute('data-tip');
