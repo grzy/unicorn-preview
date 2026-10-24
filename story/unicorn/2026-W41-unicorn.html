@@ -1,15 +1,24 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Unicorn · Week 41</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Ubuntu+Sans:wght@400;500&display=swap" rel="stylesheet"><style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Ubuntu+Sans:wght@400;500&family=Ubuntu+Sans+Mono:wght@400&display=swap" rel="stylesheet"><style>
     *{box-sizing:border-box;margin:0;padding:0}
     :root{--peach:#E8956A;--lilac:#A78BDF;--grad:linear-gradient(135deg,#E8956A,#A78BDF);--pi:#1a1616;--soft:#6c645d;--faint:#776e67;--line:#efe9e2;--ease:cubic-bezier(.4,0,.2,1);--t:.45s}
     html,body{background:#f1e9db;color:var(--pi);font:400 15px/1.6 'Ubuntu Sans','Helvetica Neue',sans-serif}
     a{color:inherit}
     .page{padding:clamp(20px,3.6vw,44px)}
-    .sheet{max-width:1180px;margin:0 auto;background:#f7f5f2;border-radius:14px;box-shadow:0 18px 44px rgba(60,40,20,.18);padding:34px clamp(18px,3.2vw,44px) 44px}
+    .sheet{max-width:1180px;margin:0 auto;background:#ede8e2;border-radius:14px;box-shadow:0 18px 44px rgba(60,40,20,.18);padding:34px clamp(18px,3.2vw,44px) 44px}
     .eb{display:flex;justify-content:space-between;align-items:center;font:400 13px/1 'Ubuntu Sans',sans-serif;color:var(--faint)}
     .eb a{font-weight:500;text-decoration:none;transition:color var(--t) var(--ease)} .eb a:hover{color:var(--pi)}
     h1{font:500 clamp(30px,3.6vw,44px)/1.04 'Ubuntu Sans',sans-serif;letter-spacing:-.025em;margin:10px 0 0}
     h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .wk-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+    .wk-top>a{font:500 13px/1 'Ubuntu Sans',sans-serif;color:var(--faint);text-decoration:none;margin-top:10px;transition:color var(--t) var(--ease)} .wk-top>a:hover{color:var(--pi)}
+    h1.wk-title{font:500 clamp(56px,7.4vw,96px)/.95 'Ubuntu Sans',sans-serif;letter-spacing:-.04em;margin:0}
+    h1.dir-title{color:#F3EEE6;text-shadow:-1px -1px 0 #fff,-2px -2px 3px rgba(255,255,255,.9),1px 1px 0 rgba(150,130,140,.45),2px 3px 4px rgba(70,50,60,.26),4px 7px 14px rgba(70,50,60,.12);user-select:none;padding:6px 0 2px}
+    /* 10-23: the week number wears the paper's OS treatment -- same 3-stop gradient, its own raised shadow, padded so no glyph clips */
+    h1.dir-title em{padding:0 .1em;margin:0 -.1em;background:linear-gradient(135deg,#FFAF5F 12%,#EE9C9C 50%,#AF87D7 88%);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(-1px -1px 0 rgba(255,255,255,.95)) drop-shadow(1px 2px 1.5px rgba(106,77,179,.32)) drop-shadow(3px 6px 8px rgba(106,77,179,.14))}
+    .wk-sub{font:400 15px/1.4 'Ubuntu Sans',sans-serif;color:var(--faint);margin-top:12px}
+    h2.wk-head{font:500 clamp(22px,2.4vw,30px)/1.15 'Ubuntu Sans',sans-serif;letter-spacing:-.02em;margin-top:22px}
+    h2.wk-head em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
     .lede{font:400 16px/1.55 'Ubuntu Sans',sans-serif;color:var(--soft);max-width:62ch;margin-top:12px}
     .cards{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px;margin-top:24px}
     .card{background:#fff;border-radius:12px;padding:16px 18px;min-width:0}
@@ -99,11 +108,12 @@
     @media (max-width:760px){.agents{grid-template-columns:1fr}}
     .agents b{display:block;font:500 14px/1.3 'Ubuntu Sans',sans-serif;margin-bottom:4px}
     .agents p{font:400 13px/1.5 'Ubuntu Sans',sans-serif;color:#5f5750}</style></head><body><div class="page"><article class="sheet">
-  <div class="eb">Week 41 · Unicorn<a href="index.html">Directory</a></div>
-  <h1>Quiet tooltips, <em>no stroke</em></h1>
+  <div class="wk-top"><h1 class="wk-title dir-title">Week <em>41</em></h1><a href="index.html">Directory</a></div>
+  <p class="wk-sub">Unicorn · Oct 5-11, 2026</p>
+  <h2 class="wk-head">Quiet tooltips, <em>no stroke</em></h2>
   <p class="lede">Every hover in the app now uses one soft tooltip. Phrases in sentence case, keys in mono.</p>
   <div class="listen" id="listen" hidden><button class="play" id="play" aria-label="Play"><svg viewBox="0 0 12 12"><path id="pp" d="M3 1.5v9l7.5-4.5z"/></svg></button><span class="lt">Hear the Story<small id="ldur"></small></span><span class="bar"><i id="lbar"></i></span></div>
-  <audio id="aud" src="2026-W41-unicorn.m4a" preload="metadata"></audio><script type="text/plain" id="say">Week 41. Unicorn. Every hover in the app now uses one soft tooltip. Phrases in sentence case, keys in mono. Nothing finished that week. 8 commits that week.</script>
+  <audio id="aud" src="2026-W41-unicorn.m4a" preload="metadata"></audio><script type="text/plain" id="say">Week 41. Unicorn. Every hover in the app now uses one soft tooltip. Phrases in sentence case, keys in mono. Nothing finished that week. 14 commits that week.</script>
   <div class="cards">
     <div class="card w2 stat"><div><b>0</b><span class="lab">finished that week</span></div></div><div class="card w4"><h3>What was replaced, and why</h3><ul class="repl"><li><span class="was">Stroked popups</span><span class="now">One quiet tooltip</span><span class="why">Opaque, no stroke, eased in and out.</span></li><li><span class="was">ALL CAPS labels</span><span class="now">Title Case</span><span class="why">Words, not shouting.</span></li></ul></div>
     <div class="card w6"><h3>Experiments</h3><div class="builds" style="--n:3"><div class="build"><img src="../../demo/keep-system.webp" alt="Tooltips"><b>Tooltips<small>Final</small></b>
@@ -117,7 +127,7 @@
     </div></div>
     <div class="card w2"><h3>Keep</h3><div class="kthumbs"><img src="../../demo/keep-week.webp" alt="Week page, this week"><img src="../../demo/keep-peach.webp" alt="Peach, the still pose"><img src="../../demo/keep-system.webp" alt="Design system: buttons and status"></div><div class="keep-note">The latest from Keep.</div></div>
     <div class="card w4"><h3>Agents right now</h3><div class="agents"><div><b>Tooltips everywhere</b><p>One script gives every panel the same hover.</p></div></div></div>
-    <div class="card w2"><h3>Unicorn commits that week</h3><div class="wk-tot">8</div><div class="commits"><i class="" style="height:100%"></i><i class="" style="height:40%"></i><i class="" style="height:20%"></i><i class="zero" style="height:3%"></i><i class="later"></i><i class="later"></i><i class="later"></i></div><div class="c-lab"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div></div>
+    <div class="card w2"><h3>Unicorn commits that week</h3><div class="wk-tot">14</div><div class="commits"><i class="" style="height:80%"></i><i class="" style="height:20%"></i><i class="" style="height:100%"></i><i class="" style="height:60%"></i><i class="" style="height:20%"></i><i class="later"></i><i class="later"></i></div><div class="c-lab"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div></div>
   </div><script>(()=>{const a=document.getElementById('aud'),l=document.getElementById('listen'),pp=document.getElementById('pp'),b=document.getElementById('lbar');
   const ready=()=>{l.hidden=false;const s=Math.round(a.duration);document.getElementById('ldur').textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');};
   if(a.readyState>=1)ready();else a.addEventListener('loadedmetadata',ready);

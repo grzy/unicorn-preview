@@ -59,7 +59,7 @@
   const O_SPEED = 104;
   const HEARTS = { xs: ['#.#', '###', '.#.'], s: ['.#.#.', '#####', '.###.', '..#..'], m: ['.##.##.', '#######', '#######', '.#####.', '..###..', '...#...'] };
   const HEART_COLS = ['#FF9FC8', '#FFB38A', '#C8A2FF', '#F48FC4', '#FFC2D9', '#B98AF0'];
-  const HEART_LIFE = 2200, HEART_N = 6, HEART_X = [-8, 7, -2, 12, -13, 3], HEART_Y = [0, 4, 6, 1, 3, 5], HEART_SIZE = ['m', 's', 'xs', 's', 'm', 'xs'];
+  const HEART_LIFE = 2200, HEART_N = 3, HEART_X = [-8, 7, -2, 12, -13, 3], HEART_Y = [0, 4, 6, 1, 3, 5], HEART_SIZE = ['m', 's', 'xs', 's', 'm', 'xs'];
   const hr = (i, k) => { const v = Math.sin(i * 127.1 + k * 311.7) * 43758.5453; return v - Math.floor(v); };
   const HW = 40, HH = 22, SEAM = 20, HORN = 20;
   hc.width = HW * s; hc.height = HH * s; hc.style.width = (HW * cell) + 'px'; hc.style.height = (HH * cell) + 'px';

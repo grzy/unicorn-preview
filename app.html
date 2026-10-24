@@ -736,6 +736,16 @@ if (window.unicorn && window.unicorn.isDesktop)
   }
 
   .gt-line   { white-space: nowrap; }
+  
+  .gt-body.gt-session { justify-content: flex-end; overflow: hidden; }
+  .gt-body.gt-session .gt-art-wrap { margin-top: 0; flex: none; }
+  .gt-body .gt-line { flex: none; }
+  .gt-ok  { color: #FFAF5F; }
+  .gt-dim { color: rgba(241,236,232,0.45); }
+  .gt-you { color: rgba(241,236,232,0.6); }
+  .gt-add { color: #8FD18F; }
+  .gt-del { color: #F08A7E; }
+  .gt-typed { color: rgba(241,236,232,0.9); margin-right: 1px; white-space: pre; }
   .gt-line > .gt-prompt,
   .gt-line > .gt-path,
   .gt-line > .gt-cmd,
@@ -3817,7 +3827,7 @@ if (window.unicorn && window.unicorn.isDesktop)
     color: var(--text); margin-bottom: 9px; transition: color var(--t) var(--ease);
   }
   #mirror-call .nm-go:hover .mh, #mirror-call .nm-go:focus-visible .mh { color: var(--cream); }
-  #mirror-call .nm-amp { background: linear-gradient(135deg, #FFAF5F 12%, #EE9C9C 50%, #AF87D7 88%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  #mirror-call .nm-amp { padding: 0 .1em; margin: 0 -.1em; background: linear-gradient(135deg, #FFAF5F 12%, #EE9C9C 50%, #AF87D7 88%); -webkit-background-clip: text; background-clip: text; color: transparent; }
   #mirror-call .nm-slot { grid-column: 1; display: inline-grid; white-space: nowrap; align-items: baseline; justify-items: start; }
   #mirror-call .nm-slot > * { grid-area: 1 / 1; transition: opacity var(--t) var(--ease); }
   #mirror-call .nm-slot > .nm-hint { opacity: 0; font: 400 11px/1 var(--sans); color: var(--text-mute); }
@@ -3915,7 +3925,7 @@ if (window.unicorn && window.unicorn.isDesktop)
     background: linear-gradient(45deg, transparent 8%, rgba(232,149,106,.45) 35%, rgba(167,139,223,.45) 65%, transparent 92%);
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
   }
-  .panel--quest .q-switcher { display: grid; gap: 0; margin: 0; }   /* 10-22: 32px pitch, like the status menu */
+  .panel--quest .q-switcher { display: grid; gap: 0; margin: 0; }   
   html .panel--quest .q-sw-btn, html.is-desktop .panel--quest .q-sw-btn {
     display: block; border: 0; background: rgba(255,255,255,0); border-radius: 7px;
     padding: 8px var(--in); margin: 0; cursor: pointer; user-select: none;
@@ -4125,8 +4135,10 @@ if (window.unicorn && window.unicorn.isDesktop)
   
   .panel--commits #c-sound-label { min-width: 0; }
   
-  .panel--commits .c-foot.c-foot--one { display: grid; grid-template-columns: 72px 1fr auto; align-items: center; gap: 8px; margin-top: 12px; }
-  .panel--commits .c-foot--one .c-sound { margin: 0; justify-self: start; white-space: nowrap; }
+  .panel--commits .c-foot.c-foot--one { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; margin-top: 12px; }
+  .panel--commits .c-foot--one .c-sound { margin: 0; justify-self: end; white-space: nowrap; }
+  .panel--commits .c-foot--one .c-legend { justify-self: start; justify-content: flex-start; }
+  .panel--commits .c-foot--one .c-legend span:first-child { margin-left: 0; }   
   .panel--commits .c-foot--one .c-meta { flex: none; min-width: 0; height: 1.5em; text-align: center; white-space: nowrap; font-variant-numeric: tabular-nums; }
   .panel--commits .c-foot--one .c-legend { margin: 0; }
 </style>
@@ -4493,7 +4505,7 @@ if (window.unicorn && window.unicorn.isDesktop)
 
   html .panel--quest .q-pause-row {
     position: absolute; z-index: 40; right: 20px; margin: 0; min-width: 176px;   
-    display: grid; grid-template-columns: 1fr; gap: 0; justify-content: stretch;   /* 10-22: 32px pitch, like the status menu */
+    display: grid; grid-template-columns: 1fr; gap: 0; justify-content: stretch;   
   }
   html .panel--quest .q-pause-row > span {
     display: block; text-align: left; white-space: nowrap; padding: 8px 8px 8px 34px; border-radius: 7px;
@@ -4588,7 +4600,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   .panel--keep .keep-chip.on, .panel--keep .keep-chip.on:hover { color: var(--void); }
   .panel--keep .keep-chip.on { background: rgba(255,255,255,.05); }
   .panel--keep .keep-chip.on::after { opacity: 1; }
-  /* 10-22 r5: video variant chips overlaid inside the bottom edge on a soft scrim (same panel height as an image keep) */
+  
   html .panel--keep .k18-pv.has-chips::before { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 44px; z-index: 1; pointer-events: none; background: linear-gradient(to top, rgba(8,7,9,.62), rgba(8,7,9,.28) 55%, rgba(8,7,9,0)); }
   html .panel--keep .k18-sel .k18-pv .keep-chips { position: absolute; left: 8px; bottom: 8px; z-index: 2; margin: 0; gap: 3px; flex-wrap: nowrap; }
   html .panel--keep .k18-pv .keep-chip { padding: 4px 6px; border-radius: 4px; font-size: 9.5px; color: rgba(241,236,232,.82); background: rgba(16,15,17,.55); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
@@ -4758,23 +4770,22 @@ if (window.unicorn && window.unicorn.isDesktop)
   .r17-story .hero.click { cursor: pointer; }
   
   .r17-story .hero.sheet { background: #EDE8E2; }
-  .r17-story .hero.sheet img.mast { position: absolute; top: 22px; left: calc(var(--hp) - var(--hw) * 13 / 1137); width: calc(var(--hw) * 1162 / 1137); display: block; }
+  .r17-story .hero.sheet img.mast { position: absolute; top: calc(22px - var(--hw) * 10 / 1329); left: calc(var(--hp) - var(--hw) * 10 / 1329); width: calc(var(--hw) * 1362 / 1329); display: block; }   
   .r17-story .hero.sheet .lead { position: absolute; left: calc(var(--hp) - 1.5px); right: calc(var(--hp) + 40px); bottom: 18px; font: 400 17px/1.12 var(--sans); letter-spacing: -.01em; color: #1A1616; }
   .r17-story .hero.sheet::after { content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit; box-shadow: inset 0 1px 0 rgba(255,255,255,.6), inset 0 -16px 20px -14px rgba(16,15,17,.25); }
-  .r17-story .hero.sheet .rule { position: absolute; left: var(--hp); right: var(--hp); top: var(--hg); height: 1px; background: rgba(26,22,22,.12); }
-  .r17-story .hero.sheet .dek { position: absolute; left: var(--hp); right: var(--hp); top: 73px; font: 400 8.5px/1.4 var(--mono); letter-spacing: .04em; color: rgba(26,22,22,.42); display: flex; justify-content: space-between; }
+  .r17-story .hero.sheet .rule { position: absolute; left: var(--hp); right: var(--hp); top: calc(30px + var(--hw) * 184 / 1329); height: 1px; background: rgba(26,22,22,.12); }
+  .r17-story .hero.sheet .dek { position: absolute; left: var(--hp); right: var(--hp); top: calc(37px + var(--hw) * 184 / 1329); font: 400 8.5px/1.4 var(--mono); letter-spacing: .04em; color: rgba(26,22,22,.42); display: flex; justify-content: space-between; }
   
   .r17-story .hero.week { background: #EDE8E2; }
   .r17-story .hero.week .wk { position: absolute; display: block; border: 0; pointer-events: none; transform-origin: 0 0; }
   .r17-story .nofile { position: absolute; inset: 0; display: grid; place-items: center; font: 400 12px/1 var(--sans); color: var(--text-whisper-2); text-align: center; padding: 0 24px; }
   .r17-story .nofile::before { content: ""; position: absolute; inset: 16px; border-radius: 6px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.07); }
   
-  .r17-story .door { display: flex; align-items: center; gap: 12px; min-height: 26px; margin-top: 12px; padding-left: 16px; }
+  .r17-story .door { display: flex; align-items: center; gap: 12px; min-height: 26px; margin-top: 12px; padding-left: 0; }   
   .r17-story .door .cap { flex: 1; min-width: 0; font: 400 12px/1.3 var(--sans); color: var(--text-mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .r17-story .door .cap b { font-weight: 400; color: var(--text); }
   .r17-story .door .cap.fail { color: #FFAF5F; }
-  /* 10-22: a door per design tool (Figma File, Rive File), stacked. Label + buttons on the
-     first line; the file name · Updated date on its own full-width line under them. */
+  
   .r17-story .door.file { flex-wrap: wrap; row-gap: 2px; }
   .r17-story .door.file .cap b { color: var(--text); font-weight: 400; }
   .r17-story .door.file .fmeta { flex: 0 0 100%; order: 3; min-width: 0; font: 400 11px/1.3 var(--sans); color: var(--text-mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -4785,10 +4796,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   .r17-story .door .cap a.html { color: var(--text-mute); text-decoration: underline; text-decoration-color: rgba(241,236,232,.22); text-underline-offset: 2.5px; cursor: pointer; transition: color var(--t) var(--ease), text-decoration-color var(--t) var(--ease); }
   .r17-story .door .cap a.html:hover { color: var(--cream); text-decoration-color: rgba(241,236,232,.6); }
   .r17-story .acts { display: flex; gap: 8px; align-items: center; flex: none; }
-  /* 2026-10-22: calmer at rest -- the label + the primary action (Open) only. Secondary
-     actions (Directory, Update, HTML) fade in on hover, same positions, nothing shifts.
-     Scoped to an acts row that HAS a primary (.u-fill) so a solo action (e.g. Stop, while
-     a Figma job runs) is never hidden -- it has no fallback to reveal it. */
+  
   html .r17-story .acts:has(.u-fill) .u-quiet {
     opacity: 0; pointer-events: none; transition: opacity var(--t) var(--ease);
   }
@@ -4903,10 +4911,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   html .panel--quest .r17-strip { flex: none; }
   
   html #panel-appearance .ap-lead.ap-lead--foot { margin-top: 16px; }
-  /* ── Settings: the old round-2 .ap-lab margin-top:16px pushed the FIRST label down,
-     making the panel sit 16px deeper than Quest/Story/every other panel. That 16px is
-     only for the gap BETWEEN sections (before "Sound") -- the first label should land
-     the same 8px under the header as everywhere else. ── */
+  
   html #panel-appearance .p-hair + .ap-lab { margin-top: 0; }
 
   html #menubar.mb-menu-up { z-index: 100000; }
@@ -4929,18 +4934,14 @@ if (window.unicorn && window.unicorn.isDesktop)
   .panel--keep .k18-seg { display: flex; gap: 4px; flex: none; }
   html .panel--keep .k18-bar .keep-folder-link { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 400 11px/1.3 var(--sans); color: var(--text-3, rgba(241,236,232,.4)); }
   html .panel--keep .k18-bar .keep-folder-link:hover { color: var(--ic-hover); }
-  
-  /* 10-22: the empty field is exactly as tall as the with-keeps stack below the bar (preview 16:10 + caption
-     row 24 + strip 12 + one 16:10 thumb of (W - 18) / 4), so the panel never jumps between quests:
-     W * (10/16 + 10/64) + 36 - 2.81 = W * 25/32 + 33.19. aspect-ratio carries the W part on the
-     content box, the padding carries the constant. */
+
   .panel--keep .k18-field { position: relative; display: none; flex: none; box-sizing: content-box; height: auto; aspect-ratio: 32 / 25; padding: 16.59px 0; margin-top: 12px; place-items: center; align-content: center; gap: 10px;
     border-radius: 10px; background: rgba(0,0,0,.22); text-align: center; cursor: text; transition: background var(--t) var(--ease); }
   .panel--keep .k18-field::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none;
     background: linear-gradient(to top right, transparent 3%, rgba(232,149,106,.28) 28%, rgba(167,139,223,.28) 72%, transparent 97%);
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; transition: opacity var(--t) var(--ease); }
   .panel--keep .k18-field:hover { background: rgba(0,0,0,.26); }
-  /* no filled chip container -- the icon sits plain, same size/stroke as the rest of the icon family */
+  
   .panel--keep .k18-arrow { width: 16px; height: 16px; display: grid; place-items: center; color: var(--text-mute); transition: color var(--t) var(--ease); }
   .panel--keep .k18-ln { font: 400 12px/1.3 var(--sans); color: var(--text-mute); }
   .panel--keep:not(.k18-has):not(.k18-pending) .k18-field { display: grid; }
@@ -4954,10 +4955,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   .panel--keep.keep-dragover .k18-ln { font-size: 0; }
   .panel--keep.keep-dragover .k18-ln::after { content: attr(data-hot); font: 500 13px/1.3 var(--sans); color: var(--cream); }
   .panel--keep.keep-dragover .k18-arrow { color: var(--cream); }
-  /* 2026-10-22: the "Into Unicorn" text can't transition at all (it's a content swap on
-     ::after) -- so the lilac highlight must land in the exact same frame too, not fade in
-     on its own timer, or the two drift out of sync on both the way in and the way out.
-     Its own direct mouse-hover fade (the "Open in Finder" cream) is unaffected. */
+
   html .panel--keep .keep-folder-link { transition: none; }
   html .panel--keep .keep-folder-link:hover { transition: color var(--t) var(--ease); }
   html .panel--keep.keep-dragover .keep-folder-link { color: #AF87D7; }
@@ -4966,8 +4964,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   .panel--keep .k18-sel { display: none; }
   .panel--keep.k18-has:not(.k18-pending) .k18-sel { display: block; }
   .panel--keep .k18-pv { position: relative; margin-top: 12px; aspect-ratio: 16 / 10; border-radius: 10px; overflow: hidden; background: rgba(0,0,0,.22); }
-  /* 10-22: one keep (no strip): the preview grows by the strip's height, so one keep, many keeps and the
-     empty field all stand the same height (padding % = the panel's content width, like the thumbs) */
+  
   .panel--keep.k18-has:not(.k18-many) .k18-sel .k18-pv { box-sizing: content-box; padding-bottom: calc(12px + (100% - 18px) * .15625); }
   .panel--keep .k18-pv.alpha { background: repeating-conic-gradient(rgba(255,255,255,.07) 0 25%, transparent 0 50%) 0 0 / 14px 14px, rgba(0,0,0,.22); }
   .panel--keep .k18-pv .k18-md { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: contain; object-position: center; border-radius: 0; cursor: pointer; }
@@ -4986,11 +4983,9 @@ if (window.unicorn && window.unicorn.isDesktop)
   .panel--keep .k18-door { display: flex; align-items: baseline; gap: 12px; margin-top: 8px; min-height: 16px; }
   .panel--keep .k18-cap { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 400 12px/1.3 var(--sans); color: var(--text-mute); }
   .panel--keep .k18-date { flex: none; margin-left: auto; font: 400 11px/1.3 var(--sans); color: var(--text-whisper-2); white-space: nowrap; transition: color .5s var(--ease); }
-  /* brief, quiet confirmation right after an instant save -- same slot as the date, no layout shift, no toast */
+  
   .panel--keep .k18-date.saved { color: var(--lilac); }
-  /* 2026-10-22: calmer at rest -- the big preview shows only the media + its date.
-     × (Back to Desktop), play/pause, the variant chips and the caption fade in together
-     on hover, in place (no layout shift, the folder/path line is untouched). */
+  
   html .panel--keep .k18-sel .k18-x,
   html .panel--keep .k18-sel .keep-play,
   html .panel--keep .k18-sel .keep-chips,
@@ -5270,11 +5265,12 @@ if (window.unicorn && window.unicorn.isDesktop)
     <div class="c-calendar" id="c-calendar"></div>
     
     <div class="c-foot c-foot--one">
+      
+      <div class="c-legend" aria-hidden="true"><span>Fewer</span><i data-l="1"></i><i data-l="2"></i><i data-l="3"></i><i data-l="4"></i><span>More</span></div>
+      <div class="c-meta" id="c-meta" aria-live="polite"></div>
       <button class="c-sound" id="c-sound" aria-label="Sound on or off">
         <span class="c-dot"></span><span id="c-sound-label">Sound Off</span>
       </button>
-      <div class="c-meta" id="c-meta" aria-live="polite"></div>
-      <div class="c-legend" aria-hidden="true"><span>Fewer</span><i data-l="1"></i><i data-l="2"></i><i data-l="3"></i><i data-l="4"></i><span>More</span></div>
     </div>
   </section>
   <script>
@@ -5414,7 +5410,7 @@ if (window.unicorn && window.unicorn.isDesktop)
         <div class="panes">
           <div class="pane" data-pane="paper">
             <div class="hero sheet click" id="r17-paper-hero" title="Opens today's paper">
-              <img class="mast" src="story/masthead.png" alt="Creative OS &amp; Tech">
+              <img class="mast" src="story/masthead.png" alt="Creative OS">
               <i class="rule"></i>
               <span class="dek"><span id="r17-paper-date"></span><span id="r17-paper-issue"></span></span>
               <span class="lead" id="r17-paper-lead"></span>
@@ -5451,7 +5447,7 @@ if (window.unicorn && window.unicorn.isDesktop)
 
       <div class="a-section" id="mirror-call">
         <div class="nameplate">
-          <a class="nm-go" href="#" id="st-paper" aria-label="Creative OS &amp; Tech, open today's paper"><span class="mh" id="mc-title">Creative OS <span class="nm-amp">&amp;</span> Tech</span><span class="nm-slot"><span class="nm-rest"><span class="nm-dt" id="mc-dt"></span></span><span class="nm-hint">Open Today's Paper</span></span></a>
+          <a class="nm-go" href="#" id="st-paper" aria-label="Creative OS, open today's paper"><span class="mh" id="mc-title">Creative <span class="nm-amp">OS</span></span><span class="nm-slot"><span class="nm-rest"><span class="nm-dt" id="mc-dt"></span></span><span class="nm-hint">Open Today's Paper</span></span></a>
           <a class="dir" href="#" id="st-paper-dir">Directory</a>
         </div>
       </div>
@@ -9652,9 +9648,69 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         const runCmd = () => {
             body.innerHTML = `<span class="gt-line">` + PROMPT + cmdHtml(CMD.length, 'is-entered') + `</span>` + ART;
             term.classList.add('gt-entered');
-            at(restart, 9000);
+            at(session, 1800);
         };
-        const restart = () => { cycle(); };
+        const EXP = 'Masthead fits its edges', Q = 'Unicorn';
+        const ev = (action) => { try {
+            window.__guestEvent && window.__guestEvent({ ts: new Date().toISOString(), action, quest: Q, experiment: EXP });
+        }
+        catch { } };
+        const agent = (st) => { try {
+            window.__guestAgent && window.__guestAgent(st, EXP);
+        }
+        catch { } };
+        const inputEl = term.querySelector('.gt-input'), cur = inputEl && inputEl.querySelector('.gt-cursor');
+        let typed = inputEl && inputEl.querySelector('.gt-typed');
+        if (!typed) {
+            typed = document.createElement('span');
+            typed.className = 'gt-typed';
+            if (cur)
+                cur.before(typed);
+        }
+        const DOT = '<span class="gt-ok">⏺</span> ', SUB = '  <span class="gt-dim">⎿</span> ';
+        const STEPS = [
+            { input: 'fit the paper masthead to its edges' },
+            { line: DOT + 'On it. Logging this to Unicorn.', ev: 'started', agent: 'working' },
+            { line: SUB + '<span class="gt-dim">Unicorn · ' + EXP + '</span>' },
+            { line: DOT + 'Read <span class="gt-dim">story/masthead.png</span>' },
+            { line: DOT + 'Measuring the letters, not the box' },
+            { line: DOT + 'Update <span class="gt-dim">bloom-preview.html</span> <span class="gt-add">+3</span> <span class="gt-del">-2</span>' },
+            { line: DOT + 'Caption on the card edge, or the text edge?', agent: 'waiting', hold: 2800 },
+            { input: 'card edge' },
+            { line: DOT + 'Done. The C and the S sit on the edges.', agent: 'working' },
+            { line: SUB + '<span class="gt-dim">Shipped · ' + EXP + '</span>', ev: 'shipped', agent: 'idle', hold: 7000 },
+        ];
+        const session = () => {
+            body.classList.add('gt-session');
+            let k = 0;
+            const next = () => {
+                const st = STEPS[k++];
+                if (!st) {
+                    restart();
+                    return;
+                }
+                if (st.input) {
+                    let n = 0;
+                    const tick = () => {
+                        typed.textContent = st.input.slice(0, ++n);
+                        if (n < st.input.length)
+                            at(tick, 55 + Math.random() * 60);
+                        else
+                            at(() => { body.insertAdjacentHTML('beforeend', `<span class="gt-line"><span class="gt-you">❯ ${st.input}</span></span>`); typed.textContent = ''; at(next, 700); }, 380);
+                    };
+                    at(tick, 500);
+                    return;
+                }
+                body.insertAdjacentHTML('beforeend', `<span class="gt-line">${st.line}</span>`);
+                if (st.ev)
+                    ev(st.ev);
+                if (st.agent)
+                    agent(st.agent);
+                at(next, st.hold || 900 + Math.random() * 500);
+            };
+            next();
+        };
+        const restart = () => { ev('delete-experiment'); agent('idle'); body.classList.remove('gt-session'); typed.textContent = ''; cycle(); };
     };
     const BAND_REVEAL_DELAY = 800;
     const BAND_GONE_AT = 7200;
@@ -10192,7 +10248,6 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     const field = document.getElementById('k18-field');
     const fieldLn = document.getElementById('k18-ln');
     let pickId = null, topId = null;
-    // the quiet "Saved" badge that briefly replaces the date after an instant save
     let justSavedId = null, justSavedTimer = null;
     const fileUrl = (p) => 'file://' + String(p).split('/').map(encodeURIComponent).join('/');
     const kSrc = (k) => k.imagePath ? fileUrl(k.imagePath) : (k.image || '');
@@ -10219,7 +10274,6 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         const chips = (!saving && k.variants && k.variants.length)
             ? `<div class="keep-chips">${k.variants.map((v, j) => `<button class="keep-chip${j === 0 ? ' on' : ''}" data-src="${escapeHtml(fileUrl(v[1]))}" data-path="${escapeHtml(v[1])}" data-alpha="${isAlpha(v[1]) ? 1 : 0}">${escapeHtml(v[0])}</button>`).join('')}</div>` : '';
         const cap = isText ? '' : escapeHtml((k.text || '').split('\n')[0]);
-        // the same date slot carries a brief "Saved" confirmation right after an instant save -- no layout shift, no toast
         const justSaved = !saving && k.id === justSavedId;
         const dateLabel = saving ? 'Saving' : (justSaved ? 'Saved' : kDate(k.ts));
         return `<div class="k18-pv${isText ? ' is-text' : ''}${k.videoPath && isAlpha(k.videoPath) ? ' alpha' : ''}${saving ? ' is-saving' : ''}${chips ? ' has-chips' : ''}" data-id="${k.id}">${body}${x}${chips}</div>`
@@ -10598,14 +10652,12 @@ ${keepsBlock}${emptyBlock}
         clearPending();
         panel.classList.remove('k18-typing');
         syncCompose();
-        // A drop/paste never touched the Save button -- no button flash, no toast,
-        // just the quiet "Saved" badge on the card itself (set further down, once
-        // the entry exists). Only a manual Save-button/Enter save (a typed note)
-        // still gets the button's own "Kept" flash.
         const instant = !!(opts && opts.instant);
         if (instant) {
-            if (career) setTimeout(resetScope, 1400);
-        } else {
+            if (career)
+                setTimeout(resetScope, 1400);
+        }
+        else {
             saveBtn.classList.add('done');
             const prevLabel = saveBtn.textContent;
             saveBtn.textContent = 'Kept';
@@ -10720,7 +10772,10 @@ ${keepsBlock}${emptyBlock}
             if (instant) {
                 justSavedId = entry.id;
                 clearTimeout(justSavedTimer);
-                justSavedTimer = setTimeout(() => { if (justSavedId === entry.id) { justSavedId = null; render(); } }, 1500);
+                justSavedTimer = setTimeout(() => { if (justSavedId === entry.id) {
+                    justSavedId = null;
+                    render();
+                } }, 1500);
             }
             render();
         }
@@ -10732,18 +10787,16 @@ ${keepsBlock}${emptyBlock}
         }
     };
     saveBtn.addEventListener('click', saveCurrent);
-    // Cmd/Ctrl+Enter always saves -- bound at the document level (not just the
-    // caption field) so it still fires when the Keep panel is hovered or holds
-    // focus but the field itself isn't the focused element. It used to live only
-    // on the field's own keydown, so a ⌘Return pressed right after a drop (focus
-    // nowhere in particular) hit no listener and macOS played its error ding
-    // instead of saving (bug reported 2026-10-22).
     document.addEventListener('keydown', (e) => {
-        if (e.key !== 'Enter' || !(e.metaKey || e.ctrlKey)) return;
-        if (!(input.value.trim() || pendingImage || pendingVideo)) return;
+        if (e.key !== 'Enter' || !(e.metaKey || e.ctrlKey))
+            return;
+        if (!(input.value.trim() || pendingImage || pendingVideo))
+            return;
         const ae = document.activeElement;
-        if (!(panel.contains(ae) || panel.matches(':hover'))) return;
-        e.preventDefault(); e.stopPropagation();
+        if (!(panel.contains(ae) || panel.matches(':hover')))
+            return;
+        e.preventDefault();
+        e.stopPropagation();
         saveCurrent();
     }, true);
     input.addEventListener('keydown', (e) => {
@@ -10903,8 +10956,6 @@ ${keepsBlock}${emptyBlock}
         for (let i = 0; i < items.length; i++) {
             if (items[i].type && items[i].type.startsWith('image/')) {
                 e.preventDefault();
-                // 2026-10-22: a pasted image saves at once (no caption step), whether
-                // the ⌘V came straight into the field or was handed off from a hover.
                 attachImageFile(items[i].getAsFile(), () => saveCurrent({ instant: true }));
                 return;
             }
@@ -10958,10 +11009,16 @@ ${keepsBlock}${emptyBlock}
         for (let i = 0; i < files.length; i++) {
             const f = files[i];
             if (f.type && f.type.startsWith('video/')) {
-                if (await attachVideoFile(f)) { await saveCurrent({ instant: true }); return; } // a video pointer wins, saved at once
+                if (await attachVideoFile(f)) {
+                    await saveCurrent({ instant: true });
+                    return;
+                }
             }
             if (f.type && f.type.startsWith('image/')) {
-                if (await attachImage(f)) { await saveCurrent({ instant: true }); return; } // first image wins, like paste -- saved at once
+                if (await attachImage(f)) {
+                    await saveCurrent({ instant: true });
+                    return;
+                }
             }
         }
     });
@@ -12603,6 +12660,15 @@ ${keepsBlock}${emptyBlock}
     .eb a{font-weight:500;text-decoration:none;transition:color var(--t) var(--ease)} .eb a:hover{color:var(--pi)}
     h1{font:500 clamp(30px,3.6vw,44px)/1.04 'Ubuntu Sans',sans-serif;letter-spacing:-.025em;margin:10px 0 0}
     h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .wk-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+    .wk-top>a{font:500 13px/1 'Ubuntu Sans',sans-serif;color:var(--faint);text-decoration:none;margin-top:10px;transition:color var(--t) var(--ease)} .wk-top>a:hover{color:var(--pi)}
+    h1.wk-title{font:500 clamp(56px,7.4vw,96px)/.95 'Ubuntu Sans',sans-serif;letter-spacing:-.04em;margin:0}
+    h1.dir-title{color:#F3EEE6;text-shadow:-1px -1px 0 #fff,-2px -2px 3px rgba(255,255,255,.9),1px 1px 0 rgba(150,130,140,.45),2px 3px 4px rgba(70,50,60,.26),4px 7px 14px rgba(70,50,60,.12);user-select:none;padding:6px 0 2px}
+    /* 10-23: the week number wears the paper's OS treatment -- same 3-stop gradient, its own raised shadow, padded so no glyph clips */
+    h1.dir-title em{padding:0 .1em;margin:0 -.1em;background:linear-gradient(135deg,#FFAF5F 12%,#EE9C9C 50%,#AF87D7 88%);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(-1px -1px 0 rgba(255,255,255,.95)) drop-shadow(1px 2px 1.5px rgba(106,77,179,.32)) drop-shadow(3px 6px 8px rgba(106,77,179,.14))}
+    .wk-sub{font:400 15px/1.4 'Ubuntu Sans',sans-serif;color:var(--faint);margin-top:12px}
+    h2.wk-head{font:500 clamp(22px,2.4vw,30px)/1.15 'Ubuntu Sans',sans-serif;letter-spacing:-.02em;margin-top:22px}
+    h2.wk-head em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
     .lede{font:400 16px/1.55 'Ubuntu Sans',sans-serif;color:var(--soft);max-width:62ch;margin-top:12px}
     .cards{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px;margin-top:24px}
     .card{background:#fff;border-radius:12px;padding:16px 18px;min-width:0}
@@ -12738,8 +12804,9 @@ ${keepsBlock}${emptyBlock}
             top += extra.stats.slice(0, 2).map(([n, l, t]) => stat(n, l, t ? ESC(t) : '')).join('');
         }
         else {
-            top += stat(inFlight.length, past ? 'still open' : 'in motion', inFlight.length ? names(inFlight) : '');
-            top += base ? weekCommits('w2') : stat(weekKeeps.length, `kept ${when}`, '');
+            const calm = !past && !inFlight.length;
+            top += calm ? stat(weekKeeps.length, `kept ${when}`, '') : stat(inFlight.length, past ? 'still open' : 'in motion', inFlight.length ? names(inFlight) : '');
+            top += base ? weekCommits('w2') : calm ? '' : stat(weekKeeps.length, `kept ${when}`, '');
         }
         function weekCommits(w) {
             return `<div class="card ${w}"><h3>${ESC(quest.name)} commits ${when}</h3><div class="wk-tot">${tot}</div><div class="commits">${vals.map(v => v == null ? '<i class="later"></i>' : `<i class="${v ? '' : 'zero'}" style="height:${v ? v / mx * 100 : 3}%"></i>`).join('')}</div><div class="c-lab">${['M', 'T', 'W', 'T', 'F', 'S', 'S'].map(d => `<span>${d}</span>`).join('')}</div>${tot ? '' : `<div class="c-empty">No commits ${when}.</div>`}</div>`;
@@ -12843,8 +12910,9 @@ ${keepsBlock}${emptyBlock}
         const head = extra.head ? String(extra.head).replace(/<(?!\/?em>)[^>]*>/g, '') : lastWordEm(quest.name);
         const lede = extra.lede || quest.description || '';
         return weekHead(`${quest.name} · Week ${weekNum.w}`) + `
-  <div class="eb">Week ${weekNum.w}${extra.head ? ` · ${ESC(quest.name)}` : ''}<a href="index.html">Directory</a></div>
-  <h1>${head}</h1>
+  <div class="wk-top"><h1 class="wk-title dir-title">Week <em>${weekNum.w}</em></h1><a href="index.html">Directory</a></div>
+  <p class="wk-sub">${ESC(quest.name)} · ${isoWeekRange(weekNum.y, weekNum.w)}, ${weekNum.y}</p>
+  ${extra.head ? `<h2 class="wk-head">${head}</h2>` : ''}
   ${lede ? `<p class="lede">${ESC(lede)}</p>` : ''}
   ${listen}
   <div class="cards">
@@ -12926,10 +12994,11 @@ ${keepsBlock}${emptyBlock}
                     if (f.title)
                         g.titles.push(f.title);
                     const vt = weekToks(title + ' ' + stem + ' ' + (f.title || ''));
-                    g.vers.push([lab, 'file://' + f.path, f.title || '', vt, f.mtime]);
+                    g.vers.push([lab, 'file://' + f.path, f.title || '', vt, f.mtime, dir + '/' + sbase.toLowerCase(), +((stem.match(VRE) || [])[2] || 0), /^index$/i.test(sbase)]);
                     g.toks.push(...vt);
                     groups.set(key, g);
                 });
+                const newer = (v, b) => Math.abs(v[4] - b[4]) > 60000 ? v[4] > b[4] : v[6] !== b[6] ? v[6] > b[6] : v[7] !== b[7] ? !v[7] : v[4] > b[4];
                 const common = (ts) => {
                     if (ts.length < 2)
                         return '';
@@ -12952,6 +13021,13 @@ ${keepsBlock}${emptyBlock}
                                 v[0] = r;
                         } });
                     g.toks = [...new Set(g.toks)];
+                    const live = g.vers.filter(v => !g.vers.some(o => o !== v && o[5] === v[5] && o[6] > v[6]));
+                    const lb = live.reduce((b, v) => !b || newer(v, b) ? v : b, null);
+                    if (lb) {
+                        g.href = lb[1];
+                        g.shot = lb[1].replace(/^file:\/\//, '');
+                        g.live = live;
+                    }
                     return g;
                 }).sort((a, b) => b.mtime - a.mtime).slice(0, 12);
                 const free = out.protos.slice();
@@ -12967,7 +13043,7 @@ ${keepsBlock}${emptyBlock}
                     free.splice(free.indexOf(best), 1);
                     best.forExp = n;
                     let bv = null, vs = -1;
-                    best.vers.forEach(v => { const sc = et.filter(t => v[3].includes(t)).length; if (sc > vs || (sc === vs && v[4] > bv[4])) {
+                    (best.live || best.vers).forEach(v => { const sc = et.filter(t => v[3].includes(t)).length; if (sc > vs || (sc === vs && newer(v, bv))) {
                         vs = sc;
                         bv = v;
                     } });
@@ -13040,10 +13116,7 @@ ${keepsBlock}${emptyBlock}
             return [];
         }
     };
-  // 10-22 r5: the Directory after the paper's (papers/index.html): an embossed title, month
-  // sections, one tinted row per week, and the WHOLE row is the link (number, dates, anywhere)
-  const DIR_CSS = `
-    h1.dir-title{color:#F3EEE6;text-shadow:-1px -1px 0 #fff,-2px -2px 3px rgba(255,255,255,.9),1px 1px 0 rgba(150,130,140,.45),2px 3px 4px rgba(70,50,60,.26),4px 7px 14px rgba(70,50,60,.12);user-select:none;padding:6px 0 2px}
+    const DIR_CSS = `
     .dsec{display:flex;align-items:baseline;gap:14px;margin:36px 0 12px}
     .dsec h2{font:500 clamp(22px,2.2vw,28px)/1 'Ubuntu Sans',sans-serif;letter-spacing:-.02em}
     .dsec span{font:400 12px/1 'Ubuntu Sans Mono',ui-monospace,monospace;color:var(--faint)}
@@ -13057,23 +13130,30 @@ ${keepsBlock}${emptyBlock}
     a.drow i{font:400 12px/1 'Ubuntu Sans Mono',ui-monospace,monospace;font-style:normal;color:var(--faint);transition:color var(--t) var(--ease)}
     a.drow:hover i{color:var(--pi)}
     @media (max-width:560px){a.drow{grid-template-columns:1fr auto}a.drow time{grid-column:1/-1;grid-row:2}}`;
-  const buildDirHTML = (quest, files) => {
-    const months = new Map();
-    files.forEach(f => { const m = f.name.match(/^(\d{4})-W(\d{2})/); if (!m) return;
-      const y = +m[1], w = +m[2], jan4 = new Date(y, 0, 4), mon = new Date(jan4); mon.setDate(jan4.getDate() - ((jan4.getDay() + 6) % 7) + (w - 1) * 7);
-      const thu = new Date(mon); thu.setDate(mon.getDate() + 3);
-      const key = thu.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-      if (!months.has(key)) months.set(key, []); months.get(key).push({ f, y, w }); });
-    const n = files.length;
-    const body = n ? [...months].map(([m, ws]) => `<div class="dsec"><h2>${ESC(m)}</h2><span>${ws.length} ${ws.length === 1 ? 'week' : 'weeks'}</span></div><div class="drows">`
-      + ws.map(({ f, y, w }) => `<a class="drow" href="${ESC(f.name)}"><b>Week <em>${w}</em></b><time>${isoWeekRange(y, w)}, ${y}</time><i>Open \u2192</i></a>`).join('') + '</div>').join('')
-      : '<p class="lede">No weeks yet. Press Week in the Story panel.</p>';
-    return weekHead(`${quest.name} \u00b7 Directory`) + `<style>${DIR_CSS}</style>
+    const buildDirHTML = (quest, files) => {
+        const months = new Map();
+        files.forEach(f => {
+            const m = f.name.match(/^(\d{4})-W(\d{2})/);
+            if (!m)
+                return;
+            const y = +m[1], w = +m[2], jan4 = new Date(y, 0, 4), mon = new Date(jan4);
+            mon.setDate(jan4.getDate() - ((jan4.getDay() + 6) % 7) + (w - 1) * 7);
+            const thu = new Date(mon);
+            thu.setDate(mon.getDate() + 3);
+            const key = thu.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+            if (!months.has(key))
+                months.set(key, []);
+            months.get(key).push({ f, y, w });
+        });
+        const n = files.length;
+        const body = n ? [...months].map(([m, ws]) => `<div class="dsec"><h2>${ESC(m)}</h2><span>${ws.length} ${ws.length === 1 ? 'week' : 'weeks'}</span></div><div class="drows">`
+            + ws.map(({ f, y, w }) => `<a class="drow" href="${ESC(f.name)}"><b>Week <em>${w}</em></b><time>${isoWeekRange(y, w)}, ${y}</time><i>Open \u2192</i></a>`).join('') + '</div>').join('')
+            : '<p class="lede">No weeks yet. Press Week in the Story panel.</p>';
+        return weekHead(`${quest.name} \u00b7 Directory`) + `<style>${DIR_CSS}</style>
   <h1 class="wk-title dir-title">Directory</h1>
   <p class="wk-sub">${ESC(quest.name)} \u00b7 ${n} ${n === 1 ? 'week' : 'weeks'}, newest first</p>
   ${body}` + weekFoot;
-  };
-
+    };
     const writeMissingWeeks = async (quest, existing) => {
         const qSlug = slug(quest.name), have = new Set(existing.map(f => f.name));
         let allCommits = [];
@@ -13873,7 +13953,7 @@ ${keepsBlock}${emptyBlock}
     window.unicorn.setAlwaysOnTop(true);
 })();
 (function () {
-    if (!window.unicorn || !window.unicorn.onAgentEvents)
+    if ((!window.unicorn || !window.unicorn.onAgentEvents) && !window.GUEST_PREVIEW)
         return;
     const DATA_KEY = 'unicorn-data';
     const CURSOR_KEY = 'unicorn.agent-events-cursor';
@@ -14147,11 +14227,11 @@ ${keepsBlock}${emptyBlock}
             const at = lines.lastIndexOf(last);
             if (at >= 0)
                 cursor = at + 1;
-            else if (lines.length < cursor)
-                cursor = 0;
+            else
+                cursor = lines.length;
         }
         else if (lines.length < cursor) {
-            cursor = 0;
+            cursor = lines.length;
         }
         if (lines.length <= cursor)
             return;
@@ -14213,7 +14293,21 @@ ${keepsBlock}${emptyBlock}
             t._timer = setTimeout(() => { t.style.opacity = '0'; }, 3200);
         }
     };
-    window.unicorn.onAgentEvents(handle);
+    if (window.unicorn && window.unicorn.onAgentEvents)
+        window.unicorn.onAgentEvents(handle);
+    else
+        window.__guestEvent = (ev) => {
+            let r = null;
+            try {
+                r = applyEvent(ev);
+            }
+            catch (e) {
+                console.warn('[guest] event', e);
+            }
+            if (r)
+                window.dispatchEvent(new CustomEvent('unicorn:quests-updated'));
+            return r;
+        };
 })();
 (function () {
     const btn = document.getElementById('ap-reset-layout');
@@ -14838,32 +14932,36 @@ ${keepsBlock}${emptyBlock}
     let ds = 'none', pick = 0, failText = '', failT = 0, figmaDate = null, override = null;
     const mode = () => ($('st-cv-update') && $('st-cv-update').dataset.mode) || 'create';
     const baseState = () => { const m = mode(); return m === 'connect' ? 'connect' : m === 'update' ? 'ready' : 'none'; };
-  // 10-22: each design tool gets its own door, labeled by tool + file (Figma File, Rive File)
-  const fileName = (url, re, fb) => { const m = String(url || '').match(re);
-    return m ? decodeURIComponent(m[1]).replace(/^\d+-/, '').replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim() || fb : fb; };
-  const figmaFile = q => fileName(q && q.figma, /figma\.com\/(?:design|file|board|proto|slides)\/[^/]+\/([^/?#]+)/i, 'Figma file');
-  // 2026-10-22: one row, like Paper/Week -- the cover already shows "FIGMA FILE · OCT 18,
-  // 2026", so the door doesn't repeat it as a second line. The name + date move to the cap's
-  // own tooltip; the HTML link sits quiet in the acts row, before Update, so it adds no height.
-  const capMeta = () => {
-    const d = fmtShort(figmaDate), name = figmaFile(activeQuest());
-    return `<span class="cap" title="${esc(name)}${d ? ', updated ' + d : ''}"><b>Figma</b></span>`;
-  };
-  const htmlAction = () => {
-    const lds = document.getElementById('u-taste-lds');
-    return (lds && !lds.classList.contains('muted'))
-      ? `<button type="button" class="u-quiet" data-act="html" title="HTML mirror of the Figma design system">HTML</button>` : '';
-  };
-  const riveUrl = q => (q && q.rive && /^https:\/\/([a-z0-9-]+\.)?rive\.app\//i.test(q.rive)) ? q.rive : '';
-  function renderRive() {
-    const door = $('r17-rive-door'); if (!door) return;
-    const q = activeQuest(), url = riveUrl(q);
-    door.hidden = !url; if (!url) { door.innerHTML = ''; return; }
-    const name = (q.riveName && String(q.riveName)) || fileName(url, /rive\.app\/(?:community\/files|file|s)\/([^/?#]+)/i, 'Rive file');
-    const t = q.riveUpdatedAt ? new Date(q.riveUpdatedAt) : null, d = t && !isNaN(t) ? fmtShort(t) : '';
-    door.innerHTML = `<span class="cap"><b>Rive</b></span><div class="acts"><button type="button" class="u-fill" data-act="rive-open" title="Opens in Rive">Open</button></div>`
-      + `<span class="fmeta" title="${esc(name)}${d ? ', updated ' + d : ''}">${esc(name)}${d ? ' · Updated ' + d : ''}</span>`;
-  }
+    const fileName = (url, re, fb) => {
+        const m = String(url || '').match(re);
+        return m ? decodeURIComponent(m[1]).replace(/^\d+-/, '').replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim() || fb : fb;
+    };
+    const figmaFile = q => fileName(q && q.figma, /figma\.com\/(?:design|file|board|proto|slides)\/[^/]+\/([^/?#]+)/i, 'Figma file');
+    const capMeta = () => {
+        const d = fmtShort(figmaDate), name = figmaFile(activeQuest());
+        return `<span class="cap" title="${esc(name)}${d ? ', updated ' + d : ''}"><b>Figma</b></span>`;
+    };
+    const htmlAction = () => {
+        const lds = document.getElementById('u-taste-lds');
+        return (lds && !lds.classList.contains('muted'))
+            ? `<button type="button" class="u-quiet" data-act="html" title="HTML mirror of the Figma design system">HTML</button>` : '';
+    };
+    const riveUrl = q => (q && q.rive && /^https:\/\/([a-z0-9-]+\.)?rive\.app\//i.test(q.rive)) ? q.rive : '';
+    function renderRive() {
+        const door = $('r17-rive-door');
+        if (!door)
+            return;
+        const q = activeQuest(), url = riveUrl(q);
+        door.hidden = !url;
+        if (!url) {
+            door.innerHTML = '';
+            return;
+        }
+        const name = (q.riveName && String(q.riveName)) || fileName(url, /rive\.app\/(?:community\/files|file|s)\/([^/?#]+)/i, 'Rive file');
+        const t = q.riveUpdatedAt ? new Date(q.riveUpdatedAt) : null, d = t && !isNaN(t) ? fmtShort(t) : '';
+        door.innerHTML = `<span class="cap"><b>Rive</b></span><div class="acts"><button type="button" class="u-fill" data-act="rive-open" title="Opens in Rive">Open</button></div>`
+            + `<span class="fmeta" title="${esc(name)}${d ? ', updated ' + d : ''}">${esc(name)}${d ? ' · Updated ' + d : ''}</span>`;
+    }
     function renderDesign() {
         const hero = $('r17-design-hero'), door = $('r17-design-door');
         if (!hero || !door)
@@ -14911,8 +15009,13 @@ ${keepsBlock}${emptyBlock}
         refit();
     }
     $('r17-rive-door').addEventListener('click', (e) => {
-        const b = e.target.closest('[data-act="rive-open"]'); if (!b) return; e.stopPropagation();
-        const url = riveUrl(activeQuest()); if (!url) return;
+        const b = e.target.closest('[data-act="rive-open"]');
+        if (!b)
+            return;
+        e.stopPropagation();
+        const url = riveUrl(activeQuest());
+        if (!url)
+            return;
         window.open(url, '_blank');
     });
     $('r17-design-hero').addEventListener('click', (e) => {
@@ -15111,7 +15214,7 @@ ${keepsBlock}${emptyBlock}
         }
         const written = getJ('r17.week-written', null);
         const wm = rel.match(/(\d{4})-W(\d{2})/);
-        cap.textContent = written && written.rel === rel && written.ts ? 'Written ' + fmtShort(new Date(written.ts)) : rel === cur ? 'This Week' : 'Week ' + (wm ? +wm[2] : '');
+        cap.textContent = written && written.rel === rel && written.ts ? 'Updated ' + fmtShort(new Date(written.ts)) : rel === cur ? 'This Week' : 'Week ' + (wm ? +wm[2] : '');
         const sig = rel + '|' + ((written && written.rel === rel && written.ts) || '');
         if (!force && sig === weekSig && hero.firstElementChild) {
             fitWeek();
@@ -15182,6 +15285,8 @@ ${keepsBlock}${emptyBlock}
     setInterval(() => renderWeek(), 10 * 60000);
     showChip(['paper', 'design', 'week'].includes(chip) ? chip : 'design');
     renderPaper();
+    window.addEventListener('focus', renderPaper);
+    setInterval(renderPaper, 10 * 60 * 1000);
     lastQ = (activeQuest() || {}).name || '';
     renderAll();
     resumeRun();
@@ -15660,6 +15765,8 @@ ${keepsBlock}${emptyBlock}
                 }
             }
         }
+        if (!name && window.GUEST_PREVIEW && window.__guestExpName)
+            name = window.__guestExpName;
         if (!name && q)
             name = q.name || '';
         if (w2El.textContent !== name)
@@ -15674,6 +15781,11 @@ ${keepsBlock}${emptyBlock}
         const now = Date.now() / 1000, sess = forced === 'idle' ? [] : [{ state: forced, ts: now + 1e6, cwd: '/x', tty: '', any: true }];
         kick();
         apply(AS.read(sess, now));
+    }
+    else if (window.GUEST_PREVIEW) {
+        kick();
+        apply(AS.read([], Date.now() / 1000));
+        window.__guestAgent = async (st, exp) => { const now = Date.now() / 1000; await apply(AS.read(st === 'idle' ? [] : [{ state: st, ts: now + 1e6, cwd: '/x', tty: '', any: true }], now)); window.__guestExpName = st === 'idle' ? '' : (exp || ''); setLine2(); };
     }
     else {
         kick();
@@ -15821,7 +15933,7 @@ ${keepsBlock}${emptyBlock}
 })();
 </script>
 
-<script src="preview/roam.js?v=f484c5a2"></script>
+<script src="preview/roam.js?v=4d709006"></script>
 <script>window.__previewWeeks = {"unicorn":"2026-W43-unicorn.html","tide-clock":"2026-W43-tide-clock.html","moth-garden":"2026-W43-moth-garden.html","paper-synth":"2026-W43-paper-synth.html"};</script>
 <script src="preview/guest-late.js?v=ee101c32"></script>
 </body>
