@@ -15763,13 +15763,13 @@ ${keepsBlock}${emptyBlock}
                 if ((e.quest || '').toLowerCase() !== (best.name || '').toLowerCase())
                     continue;
                 const en = String(e.experiment || '').toLowerCase();
-                if (!/^(started|starting|active|start)$/.test(e.action || '')) {
+                if (!/^(started|active|start)$/.test(e.action || '')) {
                     closedSince.add(en);
                     continue;
                 }
                 if (closedSince.has(en))
                     continue;
-                const x = (best.experiments || []).find(x => (x.name || '').toLowerCase() === en && (x.status === 'active' || x.status === 'starting'));
+                const x = (best.experiments || []).find(x => (x.name || '').toLowerCase() === en && x.status === 'active');
                 if (x && x.statusAt && e.ts && Date.parse(e.ts) < Date.parse(x.statusAt))
                     continue;
                 if (x) {
