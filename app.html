@@ -4939,6 +4939,11 @@ if (window.unicorn && window.unicorn.isDesktop)
   html .panel--commits .c-month-title { flex: none; width: 112px; text-align: center; }
   
   html .panel--commits:not(.minimized) .c-foot.c-foot--one { margin-bottom: -3px; }
+  
+  html .panel--commits .c-foot.c-foot--one { grid-template-columns: auto 1fr auto; gap: 16px; }
+  html .panel--commits .c-foot--one .c-meta, html .panel--commits .c-foot--one .c-meta * { font: 400 11px/1.5 var(--sans) !important; letter-spacing: 0 !important; color: var(--text-whisper-2) !important; }
+  html .panel--commits .c-foot--one .c-legend span { font: 400 11px/1 var(--sans); color: var(--text-whisper-2); }
+  html .panel--commits .c-foot--one .c-sound, html .panel--commits .c-foot--one #c-sound-label { font-size: 11px; font-weight: 500; }
   html .panel--commits .c-nav { width: 22px; height: 22px; border-radius: 6px; padding: 0; background: none; }
   html .panel--commits .c-legend span, html .panel--commits .c-meta { color: var(--text-whisper); }
   html .panel--commits .c-weekdays { margin-bottom: 8px; }
