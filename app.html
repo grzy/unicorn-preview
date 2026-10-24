@@ -15931,7 +15931,8 @@ ${keepsBlock}${emptyBlock}
     };
     window.addEventListener('unicorn:quests-updated', () => { setLine2(); apply(); });
     window.addEventListener('unicorn:quest-attached', () => setTimeout(() => { setLine2(); apply(); }, 0));
-    cv.setAttribute('data-tip', TIP.idle);
+    cv.removeAttribute('data-tip');
+    cv.removeAttribute('title');
     cv.dataset.state = 'idle';
     const forced = !window.unicorn && new URLSearchParams(location.search).get('agent');
     if (forced) {
