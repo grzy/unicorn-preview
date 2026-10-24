@@ -9655,7 +9655,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         const runCmd = () => {
             body.innerHTML = `<span class="gt-line">` + PROMPT + cmdHtml(CMD.length, 'is-entered') + `</span>` + ART;
             term.classList.add('gt-entered');
-            at(session, 1800);
+            at(session, 3000);
         };
         const EXP = 'Masthead fits its edges', Q = 'Unicorn';
         const ev = (action) => { try {
@@ -9677,15 +9677,15 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         const DOT = '<span class="gt-say">⏺</span> ', TOOL = '<span class="gt-tool">⏺</span> ', SUB = '  <span class="gt-dim">⎿</span> ';
         const STEPS = [
             { input: 'fit the paper masthead to its edges' },
-            { line: DOT + 'On it. Logging this to Unicorn.', ev: 'started', agent: 'working' },
+            { line: DOT + 'On it. Logging this to Unicorn.', ev: 'started', agent: 'working', hold: 3200 },
             { line: SUB + '<span class="gt-dim">Unicorn · ' + EXP + '</span>' },
             { line: TOOL + 'Read <span class="gt-dim">story/masthead.png</span>' },
             { line: DOT + 'Measuring the letters, not the box' },
             { line: TOOL + 'Update <span class="gt-dim">bloom-preview.html</span> <span class="gt-add">+3</span> <span class="gt-del">-2</span>' },
-            { line: DOT + 'Caption on the card edge, or the text edge?', agent: 'waiting', hold: 2800 },
+            { line: DOT + 'Caption on the card edge, or the text edge?', agent: 'waiting', hold: 5200 },
             { input: 'card edge' },
             { line: DOT + 'Done. The C and the S sit on the edges.', agent: 'working' },
-            { line: SUB + '<span class="gt-dim">Shipped · ' + EXP + '</span>', ev: 'shipped', agent: 'idle', hold: 7000 },
+            { line: SUB + '<span class="gt-dim">Shipped · ' + EXP + '</span>', ev: 'shipped', agent: 'idle', hold: 11000 },
         ];
         const session = () => {
             body.classList.add('gt-session');
@@ -9701,9 +9701,9 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
                     const tick = () => {
                         typed.textContent = st.input.slice(0, ++n);
                         if (n < st.input.length)
-                            at(tick, 55 + Math.random() * 60);
+                            at(tick, 80 + Math.random() * 70);
                         else
-                            at(() => { body.insertAdjacentHTML('beforeend', `<span class="gt-line"><span class="gt-you">❯ ${st.input}</span></span>`); typed.textContent = ''; at(next, 700); }, 380);
+                            at(() => { body.insertAdjacentHTML('beforeend', `<span class="gt-line"><span class="gt-you">❯ ${st.input}</span></span>`); typed.textContent = ''; at(next, 1300); }, 550);
                     };
                     at(tick, 500);
                     return;
@@ -9713,7 +9713,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
                     ev(st.ev);
                 if (st.agent)
                     agent(st.agent);
-                at(next, st.hold || 900 + Math.random() * 500);
+                at(next, st.hold || 2000 + Math.random() * 700);
             };
             next();
         };
