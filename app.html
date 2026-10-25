@@ -11,8 +11,8 @@ document.documentElement.classList.add('r26-boot');
 window.GUEST_PREVIEW = true;
 </script>
 <script>window.__srcSeedVersion = "6";</script>
-<script src="preview/demo-data.js?v=1a323c68"></script>
-<script src="preview/guest-early.js?v=a79ffb44"></script>
+<script src="preview/demo-data.js?v=f2c21d2e"></script>
+<script src="preview/guest-early.js?v=c1220ca3"></script>
 <style>/* Unicorn public preview: guest-only styles, loaded in the head. */
 
 /* Framed: on big screens the shell shows this page as a window on a real
@@ -4917,6 +4917,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   .r17-story .cv .wm { position: absolute; left: var(--hp); bottom: 12px; font: 600 43px/.8 var(--mono); letter-spacing: -.055em; color: #1A1616; white-space: nowrap; }
   .r17-story .cv .meta { position: absolute; left: var(--hp); top: calc(var(--hg) + 9px); font: 400 7.5px/1.6 var(--mono); letter-spacing: .14em; color: rgba(26,22,22,.5); text-transform: uppercase; text-align: left; white-space: nowrap; }
   .r17-story .cv .meta b, .r17-story .cv .meta span { display: block; font-weight: 400; }
+  .r17-story .door .cap.done-msg { flex: 1; min-width: 0; white-space: normal; color: var(--daikon); text-wrap: balance; }   
   .r17-story .cv .meta b { white-space: normal; width: max-content; max-width: calc(var(--hw) * .6); text-wrap: balance; }      
   .r17-story .cv1 .wm { background: linear-gradient(100deg, #E8956A 0%, #D49BC2 50%, #A78BDF 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .r17-story .cv1 .wm { padding: .14em .04em 0; margin: -.14em -.04em 0; }   
@@ -6148,9 +6149,9 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         ['Hover sounds, off by default', 'paused', 21, null]
     ];
     const SEED_EXPS_PORTFOLIO = [
-        ['Read the tide table', 'complete', 30, 22],
-        ['Moon phase ring', 'active', 10, null],
-        ['Swell sound on the hour', 'active', 4, null],
+        ['Read the forecast', 'complete', 30, 22],
+        ['Sky color by the hour', 'active', 10, null],
+        ['Rain sound when it clouds over', 'active', 4, null],
         ['Desk widget', 'paused', 16, null]
     ];
     const mapExps = (rows) => rows.map(([name, status, made, done]) => ({
@@ -6169,8 +6170,8 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
             : SEED_EXPS)
     });
     const buildSeedQuestPortfolio = () => ({
-        id: 'q-tide',
-        name: 'Tide Clock',
+        id: 'q-color',
+        name: 'Color Weather',
         startedAt: daysAgo(60),
         experiments: mapExps(SEED_EXPS_PORTFOLIO)
     });
@@ -9828,18 +9829,18 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
             { line: TOOL + 'Read <span class="gt-dim">paper/template.html</span>', hold: 700 },
             { line: SUB + '<span class="gt-dim">Read 312 lines</span>', hold: 900 },
             { line: '&nbsp;', hold: 160 },
-            { line: DOT + 'The masthead is fitted by its box, so the C leaves a gap on the left and the S hangs past the edge. Measuring the letters instead.', hold: 2600 },
+            { line: DOT + 'The Creative OS masthead is fitted by its box, so there is a gap before the C and the S hangs past the edge. Measuring the letters instead.', hold: 2600 },
             { line: '&nbsp;', hold: 160 },
             { line: TOOL + 'Update <span class="gt-dim">bloom-preview.html</span> <span class="gt-add">+3</span> <span class="gt-del">-2</span>', hold: 800 },
             { line: TOOL + 'Update <span class="gt-dim">paper/template.html</span> <span class="gt-add">+6</span> <span class="gt-del">-1</span>', hold: 1200 },
             { line: '&nbsp;', hold: 160 },
-            { line: DOT + 'Should the date line up with the card or with the letters?', agent: 'waiting', hold: 4200 },
+            { line: DOT + 'Should the Creative OS date line up with the card or with the letters?', agent: 'waiting', hold: 2200 },
             { input: 'the card' },
             { line: DOT + 'Lining it up with the card.', agent: 'working', hold: 1100 },
             { line: TOOL + 'Bash <span class="gt-dim">python3 bin/paper-render.py</span>', hold: 900 },
             { line: SUB + '<span class="gt-dim">Rendered today’s paper</span>', hold: 1100 },
             { line: '&nbsp;', hold: 160 },
-            { line: DOT + 'Done. The C and the S sit on the edges, and the date lines up with the card.', hold: 1600 },
+            { line: DOT + 'Done. Creative OS sits on its edges now, and the date lines up with the card.', hold: 1600 },
             { line: SUB + '<span class="gt-dim">Shipped · ' + EXP + '</span>', ev: 'shipped', agent: 'idle', hold: 11000 },
         ];
         const session = () => {
@@ -9856,11 +9857,11 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
                     const tick = () => {
                         typed.textContent = st.input.slice(0, ++n);
                         if (n < st.input.length)
-                            at(tick, 20 + Math.random() * 16);
+                            at(tick, 48 + Math.random() * 40);
                         else
                             at(() => { body.insertAdjacentHTML('beforeend', `<span class="gt-line"><span class="gt-you">❯ ${st.input}</span></span>`); body.scrollTop = body.scrollHeight; typed.textContent = ''; at(next, 1300); }, 550);
                     };
-                    at(tick, 180);
+                    at(tick, 260);
                     return;
                 }
                 body.insertAdjacentHTML('beforeend', `<span class="gt-line">${st.line}</span>`);
@@ -15080,7 +15081,7 @@ ${keepsBlock}${emptyBlock}
     catch { } };
     const click = id => { const el = $(id); if (el)
         el.click(); };
-    let chip = getJ('r17.story-chip', 'design');
+    let chip = 'paper';
     const showChip = (p) => {
         chip = p;
         setJ('r17.story-chip', p);
@@ -15270,10 +15271,29 @@ ${keepsBlock}${emptyBlock}
         return m ? decodeURIComponent(m[1]).replace(/^\d+-/, '').replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim() || fb : fb;
     };
     const figmaFile = q => fileName(q && q.figma, /figma\.com\/(?:design|file|board|proto|slides)\/[^/]+\/([^/?#]+)/i, 'Figma file');
+    let syncNote = null;
+    const readSyncNote = async () => {
+        syncNote = null;
+        const q = activeQuest();
+        if (!q || !U || !U.figma || !U.figma.log)
+            return;
+        try {
+            const L = await U.figma.log({ quest: q.name }), e = L && L[0];
+            if (!e)
+                return;
+            const what = (e.build && e.build.length ? e.build : (e.figma || [])).map(x => String(x).replace(/ \(.*\)$/, '').replace(/ (added|changed|removed|restored)$/i, ''));
+            const d = fmtShort(new Date(e.ts)), list = what.slice(0, 2).join(', ') + (what.length > 2 ? ` and ${what.length - 2} more` : '');
+            syncNote = { n: what.length, list, date: d, tip: what.length ? `Last sync ${d}: ${list}. The full list is on the Update Log page in Figma.` : `Last sync ${d}: nothing needed changing.` };
+        }
+        catch { }
+    };
     const capMeta = () => {
         const d = fmtShort(figmaDate), name = figmaFile(activeQuest());
-        return `<span class="cap" title="${esc(name)}${d ? ', updated ' + d : ''}"><b>Figma</b></span>`;
+        return `<span class="cap" title="${esc((syncNote && syncNote.tip) || (name + (d ? ', updated ' + d : '')))}"><b>Figma</b></span>`;
     };
+    let doneMsg = '', doneT = 0;
+    const flashDone = (msg, then) => { doneMsg = msg; clearTimeout(doneT); renderDesign(); doneT = setTimeout(() => { doneMsg = ''; if (then)
+        then(); renderDesign(); }, 4200); };
     const htmlAction = () => {
         const lds = document.getElementById('u-taste-lds');
         return (lds && !lds.classList.contains('muted'))
@@ -15329,6 +15349,9 @@ ${keepsBlock}${emptyBlock}
         }
         else if (state === 'none') {
             dr = `<span class="cap${failText ? ' fail' : ''}">${esc(failText || 'No Figma file yet')}</span><div class="acts"><button type="button" class="u-fill" data-act="run" title="Create this quest’s Figma file from the build">Create</button></div>`;
+        }
+        else if (state === 'ready' && doneMsg) {
+            dr = `<span class="cap done-msg">${esc(doneMsg)}</span>`;
         }
         else if (state === 'ready') {
             dr = (failText ? `<span class="cap fail">${esc(failText)}</span>` : capMeta())
@@ -15414,6 +15437,7 @@ ${keepsBlock}${emptyBlock}
         }
     });
     async function readFigmaDate() {
+        await readSyncNote();
         const q = activeQuest();
         figmaDate = null;
         if (!q)
@@ -15457,10 +15481,16 @@ ${keepsBlock}${emptyBlock}
             ds = m.kind === 'create' ? 'creating' : 'updating';
         }
         else if (m.state === 'done') {
-            if (m.kind === 'update') {
-                ds = 'choose';
-                pick = 0;
-                readFigmaDate().then(renderDesign);
+            if (m.kind === 'update' && m.inSync) {
+                ds = baseState();
+                readSyncNote().then(() => flashDone(`Already in sync. Last synced ${(syncNote && syncNote.date) || ''}.`.replace(' .', '.')));
+            }
+            else if (m.kind === 'update') {
+                ds = baseState();
+                Promise.all([readFigmaDate(), readSyncNote()]).then(() => {
+                    const n = (syncNote && syncNote.n) || 0;
+                    flashDone(n ? `Synced ${n} ${n === 1 ? 'change' : 'changes'}: ${syncNote.list}.` : 'Synced. Nothing needed changing.', () => { ds = 'choose'; pick = 0; });
+                });
             }
             else {
                 ds = baseState();
@@ -15477,6 +15507,7 @@ ${keepsBlock}${emptyBlock}
     };
     if (U && U.figma && U.figma.onProgress)
         U.figma.onProgress(onProgress);
+    readSyncNote().then(() => renderDesign());
     const upd = $('st-cv-update');
     if (upd)
         new MutationObserver(() => { if (ds !== 'creating' && ds !== 'updating' && ds !== 'choose') {
@@ -16388,7 +16419,7 @@ ${keepsBlock}${emptyBlock}
 </script>
 
 <script src="preview/roam.js?v=a9db26d4"></script>
-<script>window.__previewWeeks = {"unicorn":"2026-W43-unicorn.html","tide-clock":"2026-W43-tide-clock.html","moth-garden":"2026-W43-moth-garden.html","paper-synth":"2026-W43-paper-synth.html"};</script>
+<script>window.__previewWeeks = {"unicorn":"2026-W43-unicorn.html","color-weather":"2026-W43-color-weather.html","birdsong-atlas":"2026-W43-birdsong-atlas.html","paper-synth":"2026-W43-paper-synth.html"};</script>
 <script src="preview/guest-late.js?v=b2d617d1"></script>
 </body>
 </html>

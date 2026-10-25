@@ -61,6 +61,9 @@
     }
   } catch (e) {}
 
+  // 10-25 (Ivy): every visit opens Story on Paper (a remembered Design tab from an earlier visit kept winning)
+  try { localStorage.setItem('r17.story-chip', JSON.stringify('paper')); } catch (e) {}
+
   // framed: the shell (index.html) shows this page as a window on big screens
   if (window.parent !== window) {
     try { if (parent.document.documentElement.classList.contains('big')) document.documentElement.classList.add('framed'); } catch (e) {}

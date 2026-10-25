@@ -22,20 +22,20 @@
         ['Quiet tooltips', 'complete', 18, 8],
         ['Hover sounds, off by default', 'paused', 21, null]
       ] },
-    { id: 'q-tide', name: 'Tide Clock', repo: 'projects/tide-clock', startedDays: 34,
-      taste: [['Palette', ['#7FB3C8', '#2E4A5C', '#F1ECE8']], ['Type', 'Fraunces, Ubuntu Sans'], ['Sound', 'A low swell on the hour']],
+    { id: 'q-color', name: 'Color Weather', repo: 'projects/color-weather', startedDays: 34,
+      taste: [['Palette', ['#F2B880', '#7FB3C8', '#3E4A6B']], ['Type', 'Fraunces, Ubuntu Sans'], ['Sound', 'Soft rain when it turns grey']],
       experiments: [
-        ['Read the tide table', 'complete', 30, 22],
-        ['Moon phase ring', 'active', 10, null],
-        ['Swell sound on the hour', 'active', 4, null],
+        ['Read the forecast', 'complete', 30, 22],
+        ['Sky color by the hour', 'active', 10, null],
+        ['Rain sound when it clouds over', 'active', 4, null],
         ['Desk widget', 'paused', 16, null]
       ] },
-    { id: 'q-moth', name: 'Moth Garden', repo: 'projects/moth-garden', startedDays: 20,
-      taste: [['Palette', ['#C9B8E8', '#3B2E4F', '#F4D9A0']], ['Type', 'Instrument Serif, Ubuntu Sans']],
+    { id: 'q-bird', name: 'Birdsong Atlas', repo: 'projects/birdsong-atlas', startedDays: 20,
+      taste: [['Palette', ['#C9D6A8', '#2F3B2C', '#F4D9A0']], ['Type', 'Instrument Serif, Ubuntu Sans'], ['Sound', 'Real field recordings, credited']],
       experiments: [
-        ['Moths drift toward the cursor', 'complete', 18, 11],
-        ['Night palette', 'complete', 14, 9],
-        ['Bloom on click', 'active', 5, null]
+        ['A map of where each song was heard', 'complete', 18, 11],
+        ['Dawn palette', 'complete', 14, 9],
+        ['Play a song on hover', 'active', 5, null]
       ] },
     { id: 'q-paper', name: 'Paper Synth', repo: 'projects/paper-synth', startedDays: 12,
       experiments: [
@@ -48,8 +48,8 @@
     'unicorn': ['✺ Story panel: Taste, Canvas, Story', '❀ week strip under Commits', '◆ quiet tooltips, no stroke', '✷ the status unicorn gallops while an agent works',
       '✢ Keep: one drop zone for screenshots and notes', '❋ Title Case on every panel', 'tighten the Quest spacing', 'peach for Now, lilac for Started',
       '✺ Week page from this week’s keeps', '❁ corners 18 / 10 / 6', 'calm the hover easing', '◆ Directory lists every week', 'sound off by default'],
-    'tide-clock': ['✺ parse the tide table', '❀ moon ring draws the phase', 'swell sound on the hour', '◆ high and low marks', 'desk widget sizing'],
-    'moth-garden': ['✺ moths drift toward the cursor', '❀ night palette', '✷ bloom on click', 'slower wings', 'grain over the garden'],
+    'color-weather': ['✺ read the forecast', '❀ sky color by the hour', 'rain sound when it clouds over', '◆ sunrise and sunset marks', 'desk widget sizing'],
+    'birdsong-atlas': ['✺ map where each song was heard', '❀ dawn palette', '✷ play a song on hover', 'credit every recording', 'grain over the map'],
     'paper-synth': ['✺ cut-paper keys', '❀ fold to bend the pitch', 'paper texture pass', 'a softer attack']
   };
 
@@ -57,7 +57,7 @@
   // earlier than "now" so the week strip never shows the future
   const commits = () => {
     const r = rng(42), out = [], idx = {}, now = Date.now(), base = new Date(); base.setHours(0, 0, 0, 0);
-    const repos = [['unicorn', .62], ['tide-clock', .18], ['moth-garden', .12], ['paper-synth', .08]];
+    const repos = [['unicorn', .62], ['color-weather', .18], ['birdsong-atlas', .12], ['paper-synth', .08]];
     const pick = () => { let x = r(); for (const [n, w] of repos) { if ((x -= w) <= 0) return n; } return 'unicorn'; };
     for (let i = 0; i < 150; i++) {
       const d = new Date(base.getTime() - i * DAY), wk = d.getDay() === 0 || d.getDay() === 6;
@@ -107,12 +107,12 @@
       { id: 'k2', questId: 'q-unicorn', questName: 'Unicorn', ts: now - 1.1 * DAY, text: 'Hooks write the agent status on every prompt and every stop. Peach reads it once a second: gallop, think, rest.' },
       { id: 'k3', questId: 'q-unicorn', questName: 'Unicorn', ts: now - 2.4 * DAY, image: b + 'demo/keep-peach.webp', text: 'Peach, the still pose' },
       { id: 'k4', questId: 'q-unicorn', questName: 'Unicorn', ts: now - 4.3 * DAY, image: b + 'demo/keep-system.webp', text: 'Design system: buttons and status' },
-      { id: 'k5', questId: 'q-tide', questName: 'Tide Clock', ts: now - 1.6 * DAY, text: 'High tide at 6:12. The moon ring should lead with the phase, not the time.' },
-      { id: 'k6', questId: 'q-moth', questName: 'Moth Garden', ts: now - 3.2 * DAY, text: 'Slower wings read calmer. Keep them under 2 beats a second.' }
+      { id: 'k5', questId: 'q-color', questName: 'Color Weather', ts: now - 1.6 * DAY, text: 'Fog until 10, then gold. The sky should change color slowly, over the whole hour.' },
+      { id: 'k6', questId: 'q-bird', questName: 'Birdsong Atlas', ts: now - 3.2 * DAY, text: 'The wren is louder than it looks. Turn every song down to the quietest one.' }
     ];
   };
 
-  const api = { QUESTS, commits, sessions, agentState, appData, keeps, MSGS, SEED: 'p3' };
+  const api = { QUESTS, commits, sessions, agentState, appData, keeps, MSGS, SEED: 'p4' };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.UnicornDemo = api;
 })(typeof window !== 'undefined' ? window : globalThis);
