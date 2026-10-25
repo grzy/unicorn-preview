@@ -36,7 +36,7 @@
     const u = String((input && input.url) || input || '');
     if (/(^|\/)commits\.json(\?|$)/.test(u)) return json({ commits: commits || (commits = D.commits()) });
     if (/agent-status\.json/.test(u)) return json({ sessions: D.sessions() });
-    // the app writes the paper each morning; the preview shows a sample issue
+    // the app writes a paper each morning from her sources; the preview shows a sample issue
     if (/papers\/index\.json/.test(u)) { const d = new Date(), iso = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
       return json({ issues: [{ date: iso, title: 'Gouache Shaders Bring Real Brushwork to the Browser' }, { date: iso, title: '' }, { date: iso, title: '' }] }); }
     if (/agent-events\.jsonl|\.\.\/briefs\/|\.\.\/data\//.test(u)) return none();

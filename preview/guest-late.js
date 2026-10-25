@@ -25,9 +25,9 @@
     const q = active();
     if (q && WEEKS[slug(q.name)]) window.open(`story/${slug(q.name)}/`, '_blank', 'noopener'); else toast('No weeks yet');
   });
-  // 10-25 (Ivy): the app writes the paper each morning; the preview only shows a sample
-  own($('st-paper'), () => toast('Unicorn writes Today’s Paper each morning from what you built'));
-  own($('st-paper-dir'), () => toast('Previous Issues open in the Unicorn app'));
+  // 10-25 (Ivy): the paper is inspiration (news, sources, inbox); monthly it features the build. The preview shows a sample
+  own($('st-paper'), () => toast('Today’s Paper gathers what’s new in design, creative tech and tools from your sources and inbox; once a month it features what you built'));
+  own($('st-paper-dir'), () => toast('In the Unicorn app, the Directory lists every previous issue'));
   // the build folder
   const head = document.querySelector('#agent .a-attached');
   own(head, (e) => { if (e.target.closest('#st-uc-hit')) return; toast('In the Unicorn app, this opens the build’s folder'); });
