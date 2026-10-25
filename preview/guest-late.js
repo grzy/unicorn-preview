@@ -25,12 +25,12 @@
     const q = active();
     if (q && WEEKS[slug(q.name)]) window.open(`story/${slug(q.name)}/`, '_blank', 'noopener'); else toast('No weeks yet');
   });
-  // the daily paper is written on your desktop each morning
-  own($('st-paper'), () => toast('Today’s paper is written on your desktop each morning'));
-  own($('st-paper-dir'), () => toast('Back issues live on your desktop'));
+  // 10-25 (Ivy): the app writes the paper each morning; the preview only shows a sample
+  own($('st-paper'), () => toast('Unicorn writes Today’s Paper each morning from what you built'));
+  own($('st-paper-dir'), () => toast('Previous Issues open in the Unicorn app'));
   // the build folder
   const head = document.querySelector('#agent .a-attached');
-  own(head, (e) => { if (e.target.closest('#st-uc-hit')) return; toast('Opens this build’s folder on your desktop'); });
+  own(head, (e) => { if (e.target.closest('#st-uc-hit')) return; toast('In the Unicorn app, this opens the build’s folder'); });
   const keepFolder = $('keep-folder'); if (keepFolder) keepFolder.hidden = true;
 
   // ---- R17 Story: Week shows the sample page; Update demos the real progress, then the cover options ----
@@ -40,11 +40,16 @@
     if (!window.r17Design) return;
     clearTimeout(demoT);
     if ($('st-cv-update').dataset.mode === 'update') { window.r17Design('updating'); demoT = setTimeout(() => window.r17Design('choose'), 4800); }
-    else { window.r17Design('creating'); demoT = setTimeout(() => { window.r17Design(null); toast('On your desktop, this creates the Figma file from the build'); }, 4800); }
+    else { window.r17Design('creating'); demoT = setTimeout(() => { window.r17Design(null); toast('In the Unicorn app, this creates the Figma file from the build'); }, 4800); }
   });
   const door = $('r17-design-door');
   if (door) door.addEventListener('click', (e) => { if (e.target.closest('[data-act="stop"]')) clearTimeout(demoT); }, true);
   if (window.r17Story) window.r17Story.refresh();
+  // 10-25 (Ivy): the Week card's three pictures come from the sample page, whose paths are relative to it
+  // (../../demo/x.webp); from the app at the site root they broke. Point them at demo/ instead.
+  const fixThumbs = () => document.querySelectorAll('#r17-week-hero .wthumbs img').forEach(im => {
+    const s = im.getAttribute('src') || ''; if (s.startsWith('../../')) im.setAttribute('src', s.slice(6)); });
+  const wh = $('r17-week-hero'); if (wh) new MutationObserver(fixThumbs).observe(wh, { childList: true, subtree: true });
 
   // ---- Story meta: this week's page exists for the sample quests ----
   const meta = () => { const m = $('st-story-meta'), q = active(); if (m) m.textContent = q && WEEKS[slug(q.name)] ? 'This Week' : 'Not Written Yet'; };

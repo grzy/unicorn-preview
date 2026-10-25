@@ -6,7 +6,7 @@
   if (!window.GUEST_PREVIEW || !window.UnicornDemo) return;
   const D = window.UnicornDemo;
   const VKEY = 'unicorn.preview-demo';
-  const VER = D.SEED + 'c-' + (window.__srcSeedVersion || '0');
+  const VER = D.SEED + 'd-' + (window.__srcSeedVersion || '0');
   try {
     if (localStorage.getItem(VKEY) !== VER) {
       // a fresh demo: drop whatever an older preview left behind
@@ -16,6 +16,8 @@
       // the demo opens calm: Taste, Canvas and Story folded (Keep + Commits minimized by the app)
       localStorage.setItem('unicorn.claude-sections', JSON.stringify({ taste: false, canvas: false, story: false }));
       localStorage.setItem('unicorn.guest-seed-version', String(window.__srcSeedVersion || ''));
+      // 10-25 (Ivy): Story opens on Paper (one less unicorn on screen than Design)
+      localStorage.setItem('r17.story-chip', JSON.stringify('paper'));
       localStorage.setItem(VKEY, VER);
     }
   } catch (e) {}
@@ -34,7 +36,7 @@
     const u = String((input && input.url) || input || '');
     if (/(^|\/)commits\.json(\?|$)/.test(u)) return json({ commits: commits || (commits = D.commits()) });
     if (/agent-status\.json/.test(u)) return json({ sessions: D.sessions() });
-    // the daily paper is written on a real desktop each morning; the preview shows a sample issue
+    // the app writes the paper each morning; the preview shows a sample issue
     if (/papers\/index\.json/.test(u)) { const d = new Date(), iso = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
       return json({ issues: [{ date: iso, title: 'Gouache Shaders Bring Real Brushwork to the Browser' }, { date: iso, title: '' }, { date: iso, title: '' }] }); }
     if (/agent-events\.jsonl|\.\.\/briefs\/|\.\.\/data\//.test(u)) return none();

@@ -12,7 +12,7 @@ window.GUEST_PREVIEW = true;
 </script>
 <script>window.__srcSeedVersion = "6";</script>
 <script src="preview/demo-data.js?v=1a323c68"></script>
-<script src="preview/guest-early.js?v=2532abb9"></script>
+<script src="preview/guest-early.js?v=acbc257d"></script>
 <style>/* Unicorn public preview: guest-only styles, loaded in the head. */
 
 /* Framed: on big screens the shell shows this page as a window on a real
@@ -27,7 +27,7 @@ html.framed #workspace, html.framed #glass-edge { transition: opacity .6s var(--
 html.framed #ambient-tint { display: none !important; }
 /* the Panels pill lines up with the tops of Quest and Story */
 html.framed #menubar { top: 52px; background: none; }
-html.framed .mb-lights { position: fixed; left: 14px; top: 12px; }
+html.framed .mb-lights { position: fixed; left: 18px; top: 20px; }   /* 10-25 (Ivy): the real app's spot (they sat too high) */
 html.framed #glass-edge, html.framed #glass-edge::before { border-radius: 12px; }
 html.framed #glass-edge { box-shadow: none !important; }
 html.framed #guest-menuclock { display: none !important; }
@@ -106,6 +106,17 @@ html:not(.framed) body #menubar .mb-panels-pop { top: 66px; }
 #preloader .pl-gate-btn { justify-content: center; padding: 12px 16px; }
 #preloader .pl-gate-sound { font: 400 11.5px/1 var(--mono); color: rgba(241,236,232,.38); margin-top: var(--gate-gap-sound, 1px); }
 #preloader .pl-gate-sound i { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--peach); margin-right: 7px; vertical-align: 1px; }
+
+/* 10-25 (Ivy): the fake terminal's reply wraps like a real one (long agent lines no longer run off the edge);
+   the wrapped lines hang under the text, past the dot */
+#guest-term .gt-body.gt-session .gt-line { white-space: pre-wrap; overflow-wrap: anywhere; padding-left: 1.3em; text-indent: -1.3em; }
+
+/* 10-25 (Ivy): switching Keep between Quest and Story made it jump 3.5px (the empty field ran shorter than
+   the preview + strip it replaces). Keep is a fixed width here, so the empty field takes the difference. */
+.panel--keep .k18-field { margin-bottom: 3.5px; }
+
+/* 10-25 (Ivy): the window edge as gentle as the real app's: one thin gradient hairline, no glow */
+html.framed #glass-edge::before { padding: 1px; }
 </style>
 <script>
 if (window.unicorn && window.unicorn.isDesktop)
@@ -4775,9 +4786,10 @@ if (window.unicorn && window.unicorn.isDesktop)
   
   html .panel--quest .r17-strip, html .panel.panel--quest.minimized > .r17-strip { background: none !important; align-items: center !important; }
   html .panel--quest .r17-strip:hover { background: none !important; }
+  html .panel--quest:not(.minimized) .r17-strip .uc-wrap { zoom: .8333; }   
   html .panel--quest:not(.minimized) .r17-strip { margin-top: 16px !important; padding: 16px 4px 0 16px !important; border-top: 1px solid rgba(255,255,255,.06) !important; border-radius: 0 !important; }
   html .panel.panel--quest:not(.minimized) { padding-bottom: 22px !important; }
-  html .panel.panel--quest.minimized { display: flex !important; flex-direction: row !important; align-items: center !important; justify-content: flex-start !important; gap: 10px; padding: 22px 30px !important; }
+  html .panel.panel--quest.minimized { display: flex !important; flex-direction: row !important; align-items: center !important; justify-content: flex-start !important; gap: 10px; padding: 15px 30px !important; }   
   html .panel.panel--quest.minimized > .p-head { flex: 0 1 auto; min-width: 0; margin: 0 !important; padding: 0 !important; }
   html .panel.panel--quest.minimized > .p-head > span:first-child { display: flex; align-items: center; min-width: 0; }
   html .panel--quest.minimized .q-head-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -4791,7 +4803,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   html .panel--quest.minimized .r17-strip .w2, html .panel--quest.minimized .r17-strip .go { display: none !important; }
   html .panel--quest.minimized .r17-strip .w1 { font-size: 0; min-width: 0 !important; }
   html .panel--quest.minimized .r17-strip .w1::after { content: attr(data-short); font-size: 13px; }
-  html .panel--quest.minimized .r17-strip .uc-wrap { margin-left: auto; zoom: .667; }
+  html .panel--quest.minimized .r17-strip .uc-wrap { margin-left: auto; zoom: .8333; }
   html .panel.panel--quest.minimized .p-head .p-mini { position: absolute; right: 26px; top: 50%; transform: translateY(-50%); }
 
   html #agent .p-head.p-head-agent { padding: 27px 30px 0; margin-bottom: 8px; min-height: 16px; height: auto; font: 500 13px/16px var(--sans); }
@@ -4833,7 +4845,9 @@ if (window.unicorn && window.unicorn.isDesktop)
     filter: drop-shadow(-.5px -.5px 0 #fff) drop-shadow(-1px -1px 1px rgba(255,255,255,.9)) drop-shadow(.5px .5px 0 rgba(150,130,140,.45)) drop-shadow(1px 1.5px 1px rgba(70,50,60,.26)) drop-shadow(2px 3.5px 3.5px rgba(70,50,60,.12)); }
   .r17-story .hero.week .wmast.bs .lig path { fill: #F3EEE6; }
   .r17-story .hero.week .wthumbs { position: absolute; left: var(--hp); right: var(--hp); top: calc(58px + var(--hw) * 184 / 1329); bottom: 18px; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 8px; }
-  .r17-story .hero.week .wthumbs img { width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 6px; display: block; background: #E9E4DC; box-shadow: inset 0 0 0 1px rgba(26,22,22,.06); }
+  .r17-story .hero.week .wthumbs span.th { display: block; overflow: hidden; border-radius: 6px; background: #E9E4DC; min-width: 0; }
+  
+  .r17-story .hero.week .wthumbs img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 35%; display: block; transform: scale(1.14); transform-origin: 50% 75%; }   
   .r17-story .hero.week .wthumbs .none { align-self: end; font: 400 17px/1.12 var(--sans); color: #1A1616; }
   .r17-story .nofile { position: absolute; inset: 0; display: grid; place-items: center; font: 400 12px/1 var(--sans); color: var(--text-whisper-2); text-align: center; padding: 0 24px; }
   .r17-story .nofile::before { content: ""; position: absolute; inset: 16px; border-radius: 6px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.07); }
@@ -4888,7 +4902,8 @@ if (window.unicorn && window.unicorn.isDesktop)
   .r17-story .cv .ground { position: absolute; left: var(--hp); right: var(--hp); top: var(--hg); height: 1px; background: rgba(26,22,22,.14); }
   .r17-story .cv .wm { position: absolute; left: var(--hp); bottom: 12px; font: 600 43px/.8 var(--mono); letter-spacing: -.055em; color: #1A1616; white-space: nowrap; }
   .r17-story .cv .meta { position: absolute; left: var(--hp); top: calc(var(--hg) + 9px); font: 400 7.5px/1.6 var(--mono); letter-spacing: .14em; color: rgba(26,22,22,.5); text-transform: uppercase; text-align: left; white-space: nowrap; }
-  .r17-story .cv .meta b, .r17-story .cv .meta span { display: block; font-weight: 400; }   
+  .r17-story .cv .meta b, .r17-story .cv .meta span { display: block; font-weight: 400; }
+  .r17-story .cv .meta b { white-space: normal; width: max-content; max-width: calc(var(--hw) * .6); text-wrap: balance; }      
   .r17-story .cv1 .wm { background: linear-gradient(100deg, #E8956A 0%, #D49BC2 50%, #A78BDF 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .r17-story .cv1 .ground { background: linear-gradient(90deg, rgba(232,149,106,.6), rgba(212,155,194,.6) 50%, rgba(167,139,223,.6)); }
   .r17-story .cv2 .run { left: var(--hp); justify-content: space-between; }
@@ -4988,6 +5003,8 @@ if (window.unicorn && window.unicorn.isDesktop)
   html .panel--quest .r17-strip { flex: none; }
   
   html #panel-appearance .ap-lead.ap-lead--foot { margin-top: 16px; }
+  
+  html #panel-appearance .ap-lead.ap-lead--foot { background: none; border-radius: 0; padding: 16px 0 0; border-top: 1px solid rgba(255,255,255,.06); }
   
   html #panel-appearance .p-hair + .ap-lab { margin-top: 0; }
 
@@ -9754,7 +9771,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         const runCmd = () => {
             body.innerHTML = `<span class="gt-line">` + PROMPT + cmdHtml(CMD.length, 'is-entered') + `</span>` + ART;
             term.classList.add('gt-entered');
-            at(session, 3000);
+            at(session, 1500);
         };
         const EXP = 'Masthead fits its edges', Q = 'Unicorn';
         const ev = (action) => { try {
@@ -9776,18 +9793,33 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         const DOT = '<span class="gt-say">⏺</span> ', TOOL = '<span class="gt-tool">⏺</span> ', SUB = '  <span class="gt-dim">⎿</span> ';
         const STEPS = [
             { input: 'fit the paper masthead to its edges' },
-            { line: DOT + 'On it. Logging this to Unicorn.', ev: 'started', agent: 'working', hold: 3200 },
-            { line: SUB + '<span class="gt-dim">Unicorn · ' + EXP + '</span>' },
-            { line: TOOL + 'Read <span class="gt-dim">story/masthead.png</span>' },
-            { line: DOT + 'Measuring the letters, not the box' },
-            { line: TOOL + 'Update <span class="gt-dim">bloom-preview.html</span> <span class="gt-add">+3</span> <span class="gt-del">-2</span>' },
-            { line: DOT + 'Caption on the card edge, or the text edge?', agent: 'waiting', hold: 5200 },
+            { line: DOT + 'On it. Logging this to Unicorn.', ev: 'started', agent: 'working', hold: 3000 },
+            { line: SUB + '<span class="gt-dim">Unicorn · ' + EXP + '</span>', hold: 700 },
+            { line: '&nbsp;', hold: 160 },
+            { line: TOOL + 'Read <span class="gt-dim">story/masthead.png</span>', hold: 700 },
+            { line: SUB + '<span class="gt-dim">Read image (1362 × 224)</span>', hold: 600 },
+            { line: TOOL + 'Read <span class="gt-dim">paper/template.html</span>', hold: 700 },
+            { line: SUB + '<span class="gt-dim">Read 312 lines</span>', hold: 900 },
+            { line: '&nbsp;', hold: 160 },
+            { line: DOT + 'The masthead is fitted by its box, so the C leaves a gap on the left and the S hangs past the edge. Measuring the letters instead.', hold: 2600 },
+            { line: '&nbsp;', hold: 160 },
+            { line: TOOL + 'Update <span class="gt-dim">bloom-preview.html</span> <span class="gt-add">+3</span> <span class="gt-del">-2</span>', hold: 800 },
+            { line: TOOL + 'Update <span class="gt-dim">paper/template.html</span> <span class="gt-add">+6</span> <span class="gt-del">-1</span>', hold: 1200 },
+            { line: '&nbsp;', hold: 160 },
+            { line: DOT + 'Caption on the card edge, or the text edge?', agent: 'waiting', hold: 4800 },
             { input: 'card edge' },
-            { line: DOT + 'Done. The C and the S sit on the edges.', agent: 'working' },
+            { line: DOT + 'Card edge it is.', agent: 'working', hold: 1100 },
+            { line: TOOL + 'Bash <span class="gt-dim">python3 bin/paper-render.py</span>', hold: 900 },
+            { line: SUB + '<span class="gt-dim">Rendered today’s paper</span>', hold: 1100 },
+            { line: '&nbsp;', hold: 160 },
+            { line: DOT + 'Done. The C and the S sit on the edges, and the caption lines up with the card.', hold: 1600 },
             { line: SUB + '<span class="gt-dim">Shipped · ' + EXP + '</span>', ev: 'shipped', agent: 'idle', hold: 11000 },
         ];
         const session = () => {
             body.classList.add('gt-session');
+            const aw = body.querySelector('.gt-art-wrap');
+            if (aw)
+                aw.remove();
             let k = 0;
             const next = () => {
                 const st = STEPS[k++];
@@ -9800,11 +9832,11 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
                     const tick = () => {
                         typed.textContent = st.input.slice(0, ++n);
                         if (n < st.input.length)
-                            at(tick, 80 + Math.random() * 70);
+                            at(tick, 34 + Math.random() * 26);
                         else
                             at(() => { body.insertAdjacentHTML('beforeend', `<span class="gt-line"><span class="gt-you">❯ ${st.input}</span></span>`); typed.textContent = ''; at(next, 1300); }, 550);
                     };
-                    at(tick, 500);
+                    at(tick, 300);
                     return;
                 }
                 body.insertAdjacentHTML('beforeend', `<span class="gt-line">${st.line}</span>`);
@@ -9812,7 +9844,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
                     ev(st.ev);
                 if (st.agent)
                     agent(st.agent);
-                at(next, st.hold || 2000 + Math.random() * 700);
+                at(next, st.hold || 1250 + Math.random() * 450);
             };
             next();
         };
@@ -10366,11 +10398,11 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         if (k.videoPath) {
             media = saving
                 ? (k.thumb ? `<img class="k18-md" src="${k.thumb}" alt="" decoding="async" />` : '')
-                : `<video class="k18-md" muted loop playsinline ${still ? '' : 'autoplay'} preload="${still ? 'metadata' : 'auto'}"${k.thumb && !isAlpha(k.videoPath) ? ` poster="${k.thumb}"` : ''} src="${escapeHtml(fileUrl(k.videoPath))}" data-open="${escapeHtml(k.videoPath)}"></video>`
+                : `<video class="k18-md" muted loop playsinline ${still ? '' : 'autoplay'} preload="${still ? 'metadata' : 'auto'}"${k.thumb && !isAlpha(k.videoPath) ? ` poster="${k.thumb}"` : ''} src="${escapeHtml(fileUrl(k.videoPath))}" data-open="${escapeHtml(k.videoPath)}" data-name="${escapeHtml(k.text || '')}"></video>`
                     + `<button class="keep-play" aria-label="${still ? 'Play' : 'Pause'}" title="${still ? 'Play' : 'Pause'}">${still ? KEEP_PLAY : KEEP_PAUSE}</button>`;
         }
         else if (kSrc(k)) {
-            media = `<img class="k18-md" src="${escapeHtml(kSrc(k))}" alt="" decoding="async"${k.imagePath && !saving ? ` data-open="${escapeHtml(k.imagePath)}"` : ''} />`;
+            media = `<img class="k18-md" src="${escapeHtml(kSrc(k))}" alt="" decoding="async"${k.imagePath && !saving ? ` data-open="${escapeHtml(k.imagePath)}" data-name="${escapeHtml(k.text || '')}"` : ''} />`;
         }
         const isText = !media && !k.videoPath;
         const truncated = k.text && k.text.length > TRUNCATE_AT * 4;
@@ -10462,6 +10494,18 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
                 catch { }
             }
         }));
+        sel.querySelectorAll('.k18-md[data-open]').forEach(el => {
+            el.setAttribute('draggable', 'true');
+            el.addEventListener('dragstart', (e) => {
+                if (!(window.unicorn && window.unicorn.dragOut))
+                    return;
+                e.preventDefault();
+                try {
+                    window.unicorn.dragOut({ path: el.dataset.open, name: el.dataset.name || '' });
+                }
+                catch { }
+            });
+        });
     };
     const showPick = (all) => {
         const k = all.find(x => x.id === pickId);
@@ -12849,7 +12893,7 @@ ${keepsBlock}${emptyBlock}
     .wk-top>a{font:500 13px/1 'Ubuntu Sans',sans-serif;color:var(--faint);text-decoration:none;margin-top:10px;transition:color var(--t) var(--ease)} .wk-top>a:hover{color:var(--pi)}
     h1.wk-title{font:500 clamp(56px,7.4vw,96px)/.95 'Ubuntu Sans',sans-serif;letter-spacing:-.04em;margin:0}
     /* 10-24 (Ivy): the week page's masthead is the Builder's Story (the dates + Week N already sit in the top line) */
-    h1.wk-title.bs{font:600 clamp(56px,8.6vw,112px)/.92 'Funnel Display','Ubuntu Sans',sans-serif;letter-spacing:-.045em;white-space:nowrap}
+    h1.wk-title.bs{font:600 clamp(56px,8.6vw,112px)/.92 'Funnel Display','Ubuntu Sans',sans-serif;letter-spacing:-.045em;text-wrap:balance}
     h1.wk-title.bs .lig{display:inline-block;width:calc(684em / 1200);height:calc(900em / 1200);vertical-align:baseline;overflow:visible;filter:drop-shadow(-1px -1px 0 #fff) drop-shadow(-2px -2px 1.5px rgba(255,255,255,.9)) drop-shadow(1px 1px 0 rgba(150,130,140,.45)) drop-shadow(2px 3px 2px rgba(70,50,60,.26)) drop-shadow(4px 7px 7px rgba(70,50,60,.12))}
     h1.wk-title.bs .lig path{fill:#F3EEE6}
     /* 10-24 (Ivy): the same top line as the paper -- date, week, Directory, edition */
@@ -12917,7 +12961,7 @@ ${keepsBlock}${emptyBlock}
     .builds.many > div{scroll-snap-align:start}
     @media (max-width:760px){.builds{grid-template-columns:1fr}}
     .build a{color:inherit;text-decoration:none;display:block}
-    .build img,.build .ph{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top;border-radius:8px;display:block;background:#e9e4de}
+    .build img,.build .ph{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top;border-radius:8px;display:block;background:#e9e4de}.build a{display:block;overflow:hidden;border-radius:8px}.build img{transform:scale(1.06);transform-origin:50% 100%}
     .build .ph{background:linear-gradient(135deg,#f8d3bd,#e7d2ec 55%,#dacdf6)}
     .build b{display:flex;align-items:baseline;gap:8px;font:500 14px/1.25 'Ubuntu Sans',sans-serif;margin:10px 0 0}
     .build b small{font:400 12px/1 'Ubuntu Sans',sans-serif;color:var(--faint)}
@@ -13103,7 +13147,7 @@ ${keepsBlock}${emptyBlock}
         const lede = extra.lede || quest.description || '';
         return weekHead(`${quest.name} · Week ${weekNum.w}`) + `
   <div class="ear"><span>${isoWeekRange(weekNum.y, weekNum.w)}, ${weekNum.y}</span><span>Week ${weekNum.w}</span><span><a href="index.html">Directory</a></span><span>${ESC(quest.name)} Edition</span></div>
-  <div class="wk-top"><h1 class="wk-title dir-title bs" aria-label="Builder’s Story">Builde<svg class="lig" viewBox="0 0 684 900" aria-hidden="true"><g transform="matrix(1 0 0 -1 0 900)"><path d="M118 0V451H44V600H196V484H238Q263 544 315.0 575.0Q367 606 434 606H484V478H427Q346 478 305.5 431.0Q265 384 265 306V0Z"/><path d="M512 850H680V640Q680 478 520 478H440V606H520Q588 606 588 660V686H512Z"/></g></svg>s Story</h1></div>
+  <div class="wk-top"><h1 class="wk-title dir-title bs" aria-label="Builder’s Week">Builde<svg class="lig" viewBox="0 0 684 900" aria-hidden="true"><g transform="matrix(1 0 0 -1 0 900)"><path d="M118 0V451H44V600H196V484H238Q263 544 315.0 575.0Q367 606 434 606H484V478H427Q346 478 305.5 431.0Q265 384 265 306V0Z"/><path d="M512 850H680V640Q680 478 520 478H440V606H520Q588 606 588 660V686H512Z"/></g></svg>s Week</h1></div>
   ${extra.head ? `<h2 class="wk-head">${head}</h2>` : ''}
   ${lede ? `<p class="lede">${ESC(lede)}</p>` : ''}
   ${listen}
@@ -15106,12 +15150,13 @@ ${keepsBlock}${emptyBlock}
     const fmtShort = d => d ? MONTHS[d.getMonth()] + ' ' + d.getDate() : '';
     const LONG_MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     const coverTools = q => {
-        const t = ['Figma'];
+        const t = [];
         if (q && q.rive)
             t.push('Rive');
+        t.push('Figma');
         if (q && q.spline)
             t.push('Spline');
-        return t.length === 1 ? t[0] + ' File' : t.slice(0, -1).join(', ') + ' and ' + t[t.length - 1] + ' Files';
+        return t.length === 1 ? t[0] + ' File' : t.slice(0, -1).join(', ') + ' & ' + t[t.length - 1] + ' Files';
     };
     const coverHTML = (i, q, d) => {
         const c = COVERS[i], date = d || new Date();
@@ -15188,7 +15233,7 @@ ${keepsBlock}${emptyBlock}
                 const mr = meta.getBoundingClientRect(), wr = wm.getBoundingClientRect(), capTop = wr.top + wr.height * .18;
                 mc.font = getComputedStyle(meta).font;
                 const ml = mc.measureText('F').actualBoundingBoxLeft || 0;
-                meta.style.translate = `${(hb.left + HP - (mr.left - ml)).toFixed(2)}px ${(capTop - 12 - mr.bottom).toFixed(2)}px`;
+                meta.style.translate = `${(hb.left + HP - (mr.left - ml)).toFixed(2)}px ${(capTop - 20 - mr.bottom).toFixed(2)}px`;
             }
         });
     };
@@ -15497,7 +15542,7 @@ ${keepsBlock}${emptyBlock}
         const sun = new Date(mon);
         sun.setDate(mon.getDate() + 6);
         const range = MONTHS[mon.getMonth()] + ' ' + mon.getDate() + '–' + (sun.getMonth() !== mon.getMonth() ? MONTHS[sun.getMonth()] + ' ' : '') + sun.getDate() + ', ' + sun.getFullYear();
-        hero.innerHTML = `<h3 class="wmast bs" aria-label="Builder’s Story">Builde<svg class="lig" viewBox="0 0 684 900" aria-hidden="true"><g transform="matrix(1 0 0 -1 0 900)"><path d="M118 0V451H44V600H196V484H238Q263 544 315.0 575.0Q367 606 434 606H484V478H427Q346 478 305.5 431.0Q265 384 265 306V0Z"/><path d="M512 850H680V640Q680 478 520 478H440V606H520Q588 606 588 660V686H512Z"/></g></svg>s Story</h3><i class="rule"></i>`
+        hero.innerHTML = `<h3 class="wmast bs" aria-label="Builder’s Week">Builde<svg class="lig" viewBox="0 0 684 900" aria-hidden="true"><g transform="matrix(1 0 0 -1 0 900)"><path d="M118 0V451H44V600H196V484H238Q263 544 315.0 575.0Q367 606 434 606H484V478H427Q346 478 305.5 431.0Q265 384 265 306V0Z"/><path d="M512 850H680V640Q680 478 520 478H440V606H520Q588 606 588 660V686H512Z"/></g></svg>s Week</h3><i class="rule"></i>`
             + `<span class="dek"><span>${esc(range)}</span><span>${esc((q && q.name) || '')} Edition</span></span><div class="wthumbs"></div>`;
         requestAnimationFrame(fitWeek);
         let imgs = [];
@@ -15510,7 +15555,7 @@ ${keepsBlock}${emptyBlock}
         const box = hero.querySelector('.wthumbs');
         if (!box)
             return;
-        box.innerHTML = imgs.length ? imgs.map(u => `<img alt="" src="${esc(u)}">`).join('') : `<span class="none">No experiment pictures yet this week</span>`;
+        box.innerHTML = imgs.length ? imgs.map(u => `<span class="th"><img alt="" src="${esc(u)}"></span>`).join('') : `<span class="none">No experiment pictures yet this week</span>`;
     };
     const fitWeek = () => {
         const hero = $('r17-week-hero'), t = hero && hero.querySelector('.wmast');
@@ -15526,7 +15571,7 @@ ${keepsBlock}${emptyBlock}
         const F = 40 * hw / w0;
         t.style.fontSize = F.toFixed(2) + 'px';
         mc.font = `600 ${F}px 'Funnel Display'`;
-        const m = mc.measureText('Builds Story');
+        const m = mc.measureText('Builds Week');
         const tb = t.getBoundingClientRect(), hb = hero.getBoundingClientRect(), lh = tb.height, base = (lh - (m.fontBoundingBoxAscent + m.fontBoundingBoxDescent)) / 2 + m.fontBoundingBoxAscent;
         const inkTop = base - m.actualBoundingBoxAscent;
         t.style.top = (22 - inkTop).toFixed(2) + 'px';
@@ -15648,7 +15693,7 @@ ${keepsBlock}${emptyBlock}
             ucWrap.style.width = px(G.g.R - G.g.L) + 'px';
             ucWrap.style.height = H0 + 'px';
             cv.style.left = -px(G.g.L) + 'px';
-            cv.style.top = (lying ? H0 - px(G.lie.B) : -px(G.st.T)) + 'px';
+            cv.style.top = (lying ? (H0 - px(G.lie.B - G.lie.T)) / 2 - px(G.lie.T) : -px(G.st.T)) + 'px';
         }
         catch (e) {
             console.warn('[unicorn] strip place', e);
@@ -15977,7 +16022,7 @@ ${keepsBlock}${emptyBlock}
             }
             const dir = await questRepo();
             if (U.openTerminal)
-                await U.openTerminal(dir);
+                await U.openTerminal(dir, qn);
             else if (U.focusSession)
                 await U.focusSession({ tty: '', cwd: dir });
         }
@@ -16255,6 +16300,16 @@ ${keepsBlock}${emptyBlock}
         window.addEventListener('load', unboot);
 })();
 </script>
+<script>
+(() => {
+    const pin = (el) => { if (el && (el.scrollTop || el.scrollLeft)) {
+        el.scrollTop = 0;
+        el.scrollLeft = 0;
+    } };
+    addEventListener('scroll', (e) => { pin(document.documentElement); pin(document.body); if (e.target && e.target.id === 'panels')
+        pin(e.target); }, true);
+})();
+</script>
 
 <div id="phone-card" aria-label="Unicorn">
   <canvas id="phone-uc" aria-hidden="true"></canvas>
@@ -16309,6 +16364,6 @@ ${keepsBlock}${emptyBlock}
 
 <script src="preview/roam.js?v=a9db26d4"></script>
 <script>window.__previewWeeks = {"unicorn":"2026-W43-unicorn.html","tide-clock":"2026-W43-tide-clock.html","moth-garden":"2026-W43-moth-garden.html","paper-synth":"2026-W43-paper-synth.html"};</script>
-<script src="preview/guest-late.js?v=81b31c46"></script>
+<script src="preview/guest-late.js?v=a8f8c033"></script>
 </body>
 </html>

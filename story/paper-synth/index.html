@@ -18,7 +18,7 @@
     .wk-top>a{font:500 13px/1 'Ubuntu Sans',sans-serif;color:var(--faint);text-decoration:none;margin-top:10px;transition:color var(--t) var(--ease)} .wk-top>a:hover{color:var(--pi)}
     h1.wk-title{font:500 clamp(56px,7.4vw,96px)/.95 'Ubuntu Sans',sans-serif;letter-spacing:-.04em;margin:0}
     /* 10-24 (Ivy): the week page's masthead is the Builder's Story (the dates + Week N already sit in the top line) */
-    h1.wk-title.bs{font:600 clamp(56px,8.6vw,112px)/.92 'Funnel Display','Ubuntu Sans',sans-serif;letter-spacing:-.045em;white-space:nowrap}
+    h1.wk-title.bs{font:600 clamp(56px,8.6vw,112px)/.92 'Funnel Display','Ubuntu Sans',sans-serif;letter-spacing:-.045em;text-wrap:balance}
     h1.wk-title.bs .lig{display:inline-block;width:calc(684em / 1200);height:calc(900em / 1200);vertical-align:baseline;overflow:visible;filter:drop-shadow(-1px -1px 0 #fff) drop-shadow(-2px -2px 1.5px rgba(255,255,255,.9)) drop-shadow(1px 1px 0 rgba(150,130,140,.45)) drop-shadow(2px 3px 2px rgba(70,50,60,.26)) drop-shadow(4px 7px 7px rgba(70,50,60,.12))}
     h1.wk-title.bs .lig path{fill:#F3EEE6}
     /* 10-24 (Ivy): the same top line as the paper -- date, week, Directory, edition */
@@ -86,7 +86,7 @@
     .builds.many > div{scroll-snap-align:start}
     @media (max-width:760px){.builds{grid-template-columns:1fr}}
     .build a{color:inherit;text-decoration:none;display:block}
-    .build img,.build .ph{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top;border-radius:8px;display:block;background:#e9e4de}
+    .build img,.build .ph{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top;border-radius:8px;display:block;background:#e9e4de}.build a{display:block;overflow:hidden;border-radius:8px}.build img{transform:scale(1.06);transform-origin:50% 100%}
     .build .ph{background:linear-gradient(135deg,#f8d3bd,#e7d2ec 55%,#dacdf6)}
     .build b{display:flex;align-items:baseline;gap:8px;font:500 14px/1.25 'Ubuntu Sans',sans-serif;margin:10px 0 0}
     .build b small{font:400 12px/1 'Ubuntu Sans',sans-serif;color:var(--faint)}
@@ -141,7 +141,7 @@
     a.dstory i{grid-column:2;grid-row:2/4;font:400 12px/1 'Ubuntu Sans Mono',ui-monospace,monospace;font-style:normal;color:var(--faint)}
     a.dstory:hover i{color:var(--pi)}
     @media (max-width:560px){a.drow{grid-template-columns:1fr auto}a.drow time{grid-column:1/-1;grid-row:2}}</style>
-  <div class="ear"><span>Saturday, October 24, 2026</span><span>1 Week</span><span>Paper Synth Edition</span></div>
+  <div class="ear"><span>Sunday, October 25, 2026</span><span>1 Week</span><span>Paper Synth Edition</span></div>
   <h1 class="wk-title dir-title">Directory</h1>
   <p class="wk-sub">Paper Synth · 1 week, newest first</p>
   
