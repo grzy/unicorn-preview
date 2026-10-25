@@ -1,11 +1,11 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Paper Synth · Week 43</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Ubuntu+Sans:wght@400;500&family=Ubuntu+Sans+Mono:wght@400&display=swap" rel="stylesheet"><style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@600&family=Ubuntu+Sans:wght@400;500&family=Ubuntu+Sans+Mono:wght@400&display=swap" rel="stylesheet"><style>
     *{box-sizing:border-box;margin:0;padding:0}
     :root{--peach:#E8956A;--lilac:#A78BDF;--grad:linear-gradient(135deg,#E8956A,#A78BDF);--pi:#1a1616;--soft:#6c645d;--faint:#776e67;--line:#efe9e2;--ease:cubic-bezier(.4,0,.2,1);--t:.45s}
     html,body{background:#0b0a0c;color:var(--pi);font:400 15px/1.6 'Ubuntu Sans','Helvetica Neue',sans-serif}   /* 10-24: the paper's dark desk */
     a{color:inherit}
     .page{padding:clamp(20px,3.6vw,44px) clamp(16px,3.6vw,44px) 80px}
-    .sheet{position:relative;overflow:hidden;max-width:1180px;margin:0 auto;background:#F7F4EE;border-radius:14px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.04),0 34px 80px rgba(0,0,0,.55),0 6px 18px rgba(0,0,0,.3);padding:34px clamp(18px,3.2vw,44px) 44px}
+    .sheet{position:relative;overflow:hidden;max-width:1180px;margin:0 auto;background:#F7F4EE;border-radius:14px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.04),0 34px 80px rgba(0,0,0,.55),0 6px 18px rgba(0,0,0,.3);padding:clamp(20px,4.2vw,56px) clamp(16px,4.6vw,60px)}   /* 10-24 (Ivy): the paper's own margins */
     /* the paper's own stone texture, so flipping between them they read as one sheet */
     .sheet::before{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:multiply;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55  0 0 0 0 .5  0 0 0 0 .45  0 0 0 .3 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
@@ -17,6 +17,10 @@
     .wk-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
     .wk-top>a{font:500 13px/1 'Ubuntu Sans',sans-serif;color:var(--faint);text-decoration:none;margin-top:10px;transition:color var(--t) var(--ease)} .wk-top>a:hover{color:var(--pi)}
     h1.wk-title{font:500 clamp(56px,7.4vw,96px)/.95 'Ubuntu Sans',sans-serif;letter-spacing:-.04em;margin:0}
+    /* 10-24 (Ivy): the week page's masthead is the Builder's Story (the dates + Week N already sit in the top line) */
+    h1.wk-title.bs{font:600 clamp(56px,8.6vw,112px)/.92 'Funnel Display','Ubuntu Sans',sans-serif;letter-spacing:-.045em;white-space:nowrap}
+    h1.wk-title.bs .lig{display:inline-block;width:calc(684em / 1200);height:calc(900em / 1200);vertical-align:baseline;overflow:visible;filter:drop-shadow(-1px -1px 0 #fff) drop-shadow(-2px -2px 1.5px rgba(255,255,255,.9)) drop-shadow(1px 1px 0 rgba(150,130,140,.45)) drop-shadow(2px 3px 2px rgba(70,50,60,.26)) drop-shadow(4px 7px 7px rgba(70,50,60,.12))}
+    h1.wk-title.bs .lig path{fill:#F3EEE6}
     /* 10-24 (Ivy): the same top line as the paper -- date, week, Directory, edition */
     .ear{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px 18px;font:400 12px/1.2 'Ubuntu Sans Mono',ui-monospace,monospace;color:#8a8079;margin-bottom:14px}
     .ear a{color:#4a423f;text-decoration:none;background-image:linear-gradient(90deg,#F6B096,#B79CF0);background-size:100% 1px;background-repeat:no-repeat;background-position:0 100%;padding-bottom:1px}
@@ -116,7 +120,7 @@
     .agents b{display:block;font:500 14px/1.3 'Ubuntu Sans',sans-serif;margin-bottom:4px}
     .agents p{font:400 13px/1.5 'Ubuntu Sans',sans-serif;color:#5f5750}</style></head><body><div class="page"><article class="sheet">
   <div class="ear"><span>Oct 19-25, 2026</span><span>Week 43</span><span><a href="index.html">Directory</a></span><span>Paper Synth Edition</span></div>
-  <div class="wk-top"><h1 class="wk-title dir-title">Week <em>43</em></h1></div>
+  <div class="wk-top"><h1 class="wk-title dir-title bs" aria-label="Builder’s Story">Builde<svg class="lig" viewBox="0 0 684 900" aria-hidden="true"><g transform="matrix(1 0 0 -1 0 900)"><path d="M118 0V451H44V600H196V484H238Q263 544 315.0 575.0Q367 606 434 606H484V478H427Q346 478 305.5 431.0Q265 384 265 306V0Z"/><path d="M512 850H680V640Q680 478 520 478H440V606H520Q588 606 588 660V686H512Z"/></g></svg>s Story</h1></div>
   
   <p class="lede">A synth made of cut paper. Fold a key to bend the pitch.</p>
   <div class="listen" id="listen" hidden><button class="play" id="play" aria-label="Play"><svg viewBox="0 0 12 12"><path id="pp" d="M3 1.5v9l7.5-4.5z"/></svg></button><span class="lt">Hear the Story<small id="ldur"></small></span><span class="bar"><i id="lbar"></i></span></div>
