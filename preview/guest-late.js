@@ -6,7 +6,7 @@
   if (!window.GUEST_PREVIEW) return;
   const D = window.UnicornDemo || {};
   const $ = (id) => document.getElementById(id);
-  // 10-25 (Ivy): the app's toast clears at 3.2s; every preview note stays ~1s longer (4.2s) so it can be read
+  // 10-25 (Ivy): the app's toast clears at 3.2s; every preview note stays 4.2s, the same for all
   const toast = (t, ms = 4200) => { const el = document.createElement('div'); el.className = 'u-toast';
     const sp = document.createElement('span'); sp.className = 'u-toast-text'; sp.textContent = t; el.appendChild(sp);
     document.body.appendChild(el); requestAnimationFrame(() => el.classList.add('show'));
@@ -31,7 +31,7 @@
     if (q && WEEKS[slug(q.name)]) window.open(`story/${slug(q.name)}/`, '_blank', 'noopener'); else toast('No weeks yet');
   });
   // 10-25 (Ivy): the paper is inspiration (news, sources, inbox); monthly it features the build. The preview shows a sample
-  own($('st-paper'), () => toast('Today’s Paper gathers what’s new in design and creative tech', 5000));
+  own($('st-paper'), () => toast('Today’s Paper gathers what’s new in design and creative tech'));
   own($('st-paper-dir'), () => toast('In the Unicorn app, the Directory lists every previous issue'));
   // the build folder
   const head = document.querySelector('#agent .a-attached');
@@ -44,7 +44,8 @@
   own($('st-cv-update'), () => {
     if (!window.r17Design) return;
     clearTimeout(demoT);
-    if ($('st-cv-update').dataset.mode === 'update') { window.r17Design('updating'); demoT = setTimeout(() => window.r17Design('choose'), 4800); }
+    // 10-25 (Ivy): Update shows its progress, then the same cover marked Updated today (no cover picker: it blurred what Update does)
+    if ($('st-cv-update').dataset.mode === 'update') { window.r17Design('updating'); demoT = setTimeout(() => { try { sessionStorage.setItem('preview.figma-updated', String(Date.now())); } catch (e) {} window.r17Design(null); if (window.r17Story) window.r17Story.refresh(); toast('Updated today'); }, 4800); }
     else { window.r17Design('creating'); demoT = setTimeout(() => { window.r17Design(null); toast('In the Unicorn app, this creates the Figma file from the build'); }, 4800); }
   });
   const door = $('r17-design-door');

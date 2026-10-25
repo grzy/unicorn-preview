@@ -12,7 +12,7 @@ window.GUEST_PREVIEW = true;
 </script>
 <script>window.__srcSeedVersion = "6";</script>
 <script src="preview/demo-data.js?v=1a323c68"></script>
-<script src="preview/guest-early.js?v=a1bf59ad"></script>
+<script src="preview/guest-early.js?v=a79ffb44"></script>
 <style>/* Unicorn public preview: guest-only styles, loaded in the head. */
 
 /* Framed: on big screens the shell shows this page as a window on a real
@@ -4919,6 +4919,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   .r17-story .cv .meta b, .r17-story .cv .meta span { display: block; font-weight: 400; }
   .r17-story .cv .meta b { white-space: normal; width: max-content; max-width: calc(var(--hw) * .6); text-wrap: balance; }      
   .r17-story .cv1 .wm { background: linear-gradient(100deg, #E8956A 0%, #D49BC2 50%, #A78BDF 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .r17-story .cv1 .wm { padding: .14em .04em 0; margin: -.14em -.04em 0; }   
   .r17-story .cv1 .ground { background: linear-gradient(90deg, rgba(232,149,106,.6), rgba(212,155,194,.6) 50%, rgba(167,139,223,.6)); }
   .r17-story .cv2 .run { left: var(--hp); justify-content: space-between; }
   .r17-story .cv2 .run canvas + canvas { margin-left: -20px; }
@@ -9624,9 +9625,10 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     const textEl = document.getElementById('gb-text');
     if (!band || !textEl)
         return;
-    const PLACE = window.GUEST_PREVIEW ? 'San Francisco' : 'San Francisco';
-    const LAT = window.GUEST_PREVIEW ? 37.7749 : 37.7749;
-    const LON = window.GUEST_PREVIEW ? -122.4194 : -122.4194;
+    const GP = (window.GUEST_PREVIEW && window.GUEST_PLACE && window.GUEST_PLACE.name) ? window.GUEST_PLACE : null;
+    const PLACE = GP ? GP.name : window.GUEST_PREVIEW ? 'San Francisco' : 'San Francisco';
+    const LAT = GP ? GP.lat : window.GUEST_PREVIEW ? 37.7749 : 37.7749;
+    const LON = GP ? GP.lon : window.GUEST_PREVIEW ? -122.4194 : -122.4194;
     const moonPhase = window.__unicornMoonPhase || '';
     const MOON_EMOJI = {
         'New Moon': '🌑', 'Waxing Crescent': '🌒', 'First Quarter': '🌓', 'Waxing Gibbous': '🌔',
@@ -16387,6 +16389,6 @@ ${keepsBlock}${emptyBlock}
 
 <script src="preview/roam.js?v=a9db26d4"></script>
 <script>window.__previewWeeks = {"unicorn":"2026-W43-unicorn.html","tide-clock":"2026-W43-tide-clock.html","moth-garden":"2026-W43-moth-garden.html","paper-synth":"2026-W43-paper-synth.html"};</script>
-<script src="preview/guest-late.js?v=69a26776"></script>
+<script src="preview/guest-late.js?v=b2d617d1"></script>
 </body>
 </html>
