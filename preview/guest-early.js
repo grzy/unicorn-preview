@@ -6,7 +6,7 @@
   if (!window.GUEST_PREVIEW || !window.UnicornDemo) return;
   const D = window.UnicornDemo;
   const VKEY = 'unicorn.preview-demo';
-  const VER = D.SEED + 'd-' + (window.__srcSeedVersion || '0');
+  const VER = D.SEED + 'e-' + (window.__srcSeedVersion || '0');
   try {
     if (localStorage.getItem(VKEY) !== VER) {
       // a fresh demo: drop whatever an older preview left behind
@@ -18,6 +18,8 @@
       localStorage.setItem('unicorn.guest-seed-version', String(window.__srcSeedVersion || ''));
       // 10-25 (Ivy): Story opens on Paper (one less unicorn on screen than Design)
       localStorage.setItem('r17.story-chip', JSON.stringify('paper'));
+      // 10-25 (Ivy): Quest opens expanded so visitors watch the quest log fill in as the terminal works
+      localStorage.setItem('unicorn.minimized', JSON.stringify(['commits', 'panel-keep']));
       localStorage.setItem(VKEY, VER);
     }
   } catch (e) {}

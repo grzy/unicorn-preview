@@ -12,7 +12,7 @@ window.GUEST_PREVIEW = true;
 </script>
 <script>window.__srcSeedVersion = "6";</script>
 <script src="preview/demo-data.js?v=1a323c68"></script>
-<script src="preview/guest-early.js?v=d293bfeb"></script>
+<script src="preview/guest-early.js?v=a1bf59ad"></script>
 <style>/* Unicorn public preview: guest-only styles, loaded in the head. */
 
 /* Framed: on big screens the shell shows this page as a window on a real
@@ -122,6 +122,15 @@ html.framed #glass-edge::before { padding: 1px; }
    typed (the typed run's line box ran taller than the empty caret row); pin the row to its empty height. */
 #guest-term .gt-input { height: 39px; box-sizing: border-box; overflow: hidden; }
 #guest-term .gt-input .gt-typed { line-height: 1; }
+
+/* 10-25 (Ivy, round 3): one clean hook moment. The banner prints at the top where the command was and stays
+   there; the session prints under it, top to bottom, and once the window is full the oldest lines (banner
+   first) scroll off the top. No bottom-anchoring, so nothing jumps between states. */
+#guest-term .gt-body, #guest-term .gt-body.gt-session { justify-content: flex-start; overflow: hidden; }
+#guest-term .gt-art-wrap, #guest-term .gt-body.gt-session .gt-art-wrap { margin: 2px 0 12px; flex: none; }
+/* a little bigger, still one fixed size */
+html body #guest-term { width: 430px; }
+#guest-term .gt-body { height: 286px; }
 </style>
 <script>
 if (window.unicorn && window.unicorn.isDesktop)
@@ -5054,6 +5063,14 @@ if (window.unicorn && window.unicorn.isDesktop)
     background: linear-gradient(rgba(232,149,106,.10), rgba(167,139,223,.08)), var(--panel-bg);
     box-shadow: 0 0 28px rgba(232,149,106,.24), 0 0 46px rgba(167,139,223,.18); }
   html .panel.panel--keep.keep-dragover::before { background: linear-gradient(45deg, rgba(232,149,106,.35) 0%, rgba(232,149,106,.85) 35%, rgba(167,139,223,.85) 65%, rgba(167,139,223,.35) 100%); }
+  
+  html :is(.panel, aside, #agent, #activity-panel).focus-peach { --fc: 255,175,95; --fa: .16; }
+  html :is(.panel, aside, #agent, #activity-panel).focus-lilac { --fc: 194,168,255; --fa: .24; }   
+  html :is(.panel, aside, #agent, #activity-panel):is(.focus-peach, .focus-lilac) {
+    background: linear-gradient(160deg, rgba(var(--fc), var(--fa)), rgba(var(--fc), .05) 60%), var(--panel-bg) !important;
+    box-shadow: 0 0 0 1px rgba(var(--fc), .35), 0 0 16px rgba(var(--fc), .32), 0 0 34px rgba(var(--fc), .2) !important;
+    transition: background .5s var(--ease), box-shadow .5s var(--ease); }
+  html :is(.panel, aside):is(.focus-peach, .focus-lilac)::before { background: linear-gradient(45deg, rgba(var(--fc), .4), rgba(var(--fc), .9) 40%, rgba(var(--fc), .9) 60%, rgba(var(--fc), .4)) !important; }
   .panel--keep.keep-dragover .k18-field { display: grid; flex: 1 1 auto; height: auto; min-height: 148px; background: rgba(232,149,106,.10); }
   .panel--keep.keep-dragover .k18-field::before { background: var(--grad-fill); opacity: .85; }
   .panel--keep.keep-dragover .k18-ln { font-size: 0; }
@@ -9768,13 +9785,13 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
             const state = (i === CMD.length) ? 'is-complete' : '';
             body.innerHTML = `<span class="gt-line">` + PROMPT + cmdHtml(i, state) + CARET + `</span>`;
             if (i < CMD.length)
-                at(typeNext, 120 + Math.random() * 70);
+                at(typeNext, 70 + Math.random() * 40);
             else
-                at(runCmd, 420);
+                at(runCmd, 300);
         };
-        at(typeNext, 700);
+        at(typeNext, 450);
         const runCmd = () => {
-            body.innerHTML = `<span class="gt-line">` + PROMPT + cmdHtml(CMD.length, 'is-entered') + `</span>` + ART;
+            body.innerHTML = ART;
             term.classList.add('gt-entered');
             at(session, 900);
         };
@@ -9814,13 +9831,13 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
             { line: TOOL + 'Update <span class="gt-dim">bloom-preview.html</span> <span class="gt-add">+3</span> <span class="gt-del">-2</span>', hold: 800 },
             { line: TOOL + 'Update <span class="gt-dim">paper/template.html</span> <span class="gt-add">+6</span> <span class="gt-del">-1</span>', hold: 1200 },
             { line: '&nbsp;', hold: 160 },
-            { line: DOT + 'Caption on the card edge, or the text edge?', agent: 'waiting', hold: 4800 },
-            { input: 'card edge' },
-            { line: DOT + 'Card edge it is.', agent: 'working', hold: 1100 },
+            { line: DOT + 'Should the date line up with the card or with the letters?', agent: 'waiting', hold: 4200 },
+            { input: 'the card' },
+            { line: DOT + 'Lining it up with the card.', agent: 'working', hold: 1100 },
             { line: TOOL + 'Bash <span class="gt-dim">python3 bin/paper-render.py</span>', hold: 900 },
             { line: SUB + '<span class="gt-dim">Rendered today’s paper</span>', hold: 1100 },
             { line: '&nbsp;', hold: 160 },
-            { line: DOT + 'Done. The C and the S sit on the edges, and the caption lines up with the card.', hold: 1600 },
+            { line: DOT + 'Done. The C and the S sit on the edges, and the date lines up with the card.', hold: 1600 },
             { line: SUB + '<span class="gt-dim">Shipped · ' + EXP + '</span>', ev: 'shipped', agent: 'idle', hold: 11000 },
         ];
         const session = () => {
@@ -9837,14 +9854,15 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
                     const tick = () => {
                         typed.textContent = st.input.slice(0, ++n);
                         if (n < st.input.length)
-                            at(tick, 34 + Math.random() * 26);
+                            at(tick, 20 + Math.random() * 16);
                         else
-                            at(() => { body.insertAdjacentHTML('beforeend', `<span class="gt-line"><span class="gt-you">❯ ${st.input}</span></span>`); typed.textContent = ''; at(next, 1300); }, 550);
+                            at(() => { body.insertAdjacentHTML('beforeend', `<span class="gt-line"><span class="gt-you">❯ ${st.input}</span></span>`); body.scrollTop = body.scrollHeight; typed.textContent = ''; at(next, 1300); }, 550);
                     };
-                    at(tick, 300);
+                    at(tick, 180);
                     return;
                 }
                 body.insertAdjacentHTML('beforeend', `<span class="gt-line">${st.line}</span>`);
+                body.scrollTop = body.scrollHeight;
                 if (st.ev)
                     ev(st.ev);
                 if (st.agent)
@@ -11203,7 +11221,7 @@ ${keepsBlock}${emptyBlock}
         if (e.dataTransfer)
             e.dataTransfer.dropEffect = 'copy';
         if (!panel.classList.contains('keep-dragover')) {
-            panel.style.height = Math.round(panel.getBoundingClientRect().height) + 'px';
+            panel.style.height = panel.getBoundingClientRect().height.toFixed(2) + 'px';
         }
         panel.classList.add('keep-dragover');
     });
@@ -16369,6 +16387,6 @@ ${keepsBlock}${emptyBlock}
 
 <script src="preview/roam.js?v=a9db26d4"></script>
 <script>window.__previewWeeks = {"unicorn":"2026-W43-unicorn.html","tide-clock":"2026-W43-tide-clock.html","moth-garden":"2026-W43-moth-garden.html","paper-synth":"2026-W43-paper-synth.html"};</script>
-<script src="preview/guest-late.js?v=c68bcc71"></script>
+<script src="preview/guest-late.js?v=77ff39c0"></script>
 </body>
 </html>

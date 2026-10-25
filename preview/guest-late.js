@@ -6,7 +6,11 @@
   if (!window.GUEST_PREVIEW) return;
   const D = window.UnicornDemo || {};
   const $ = (id) => document.getElementById(id);
-  const toast = (t) => { if (typeof window.r26Toast === 'function') window.r26Toast(t); };
+  // 10-25 (Ivy): the app's toast clears at 3.2s; the preview's notes stay ~4.2s so they can be read
+  const toast = (t) => { const el = document.createElement('div'); el.className = 'u-toast';
+    const sp = document.createElement('span'); sp.className = 'u-toast-text'; sp.textContent = t; el.appendChild(sp);
+    document.body.appendChild(el); requestAnimationFrame(() => el.classList.add('show'));
+    setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 300); }, 4200); };
   const load = () => { try { return JSON.parse(localStorage.getItem('unicorn-data')) || {}; } catch { return {}; } };
   const active = () => { const d = load(), qs = d.quests || []; return (typeof d.activeQuestIndex === 'number' && qs[d.activeQuestIndex]) || qs[0] || null; };
   const slug = (s) => String(s || 'quest').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 32) || 'quest';
@@ -26,7 +30,7 @@
     if (q && WEEKS[slug(q.name)]) window.open(`story/${slug(q.name)}/`, '_blank', 'noopener'); else toast('No weeks yet');
   });
   // 10-25 (Ivy): the paper is inspiration (news, sources, inbox); monthly it features the build. The preview shows a sample
-  own($('st-paper'), () => toast('Today’s Paper gathers what’s new in design, creative tech and tools from your sources and inbox; once a month it features what you built'));
+  own($('st-paper'), () => toast('Today’s Paper gathers what’s new in design and creative tech'));
   own($('st-paper-dir'), () => toast('In the Unicorn app, the Directory lists every previous issue'));
   // the build folder
   const head = document.querySelector('#agent .a-attached');
