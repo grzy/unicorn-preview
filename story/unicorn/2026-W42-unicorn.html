@@ -88,7 +88,7 @@
     .builds.many > div{scroll-snap-align:start}
     @media (max-width:760px){.builds{grid-template-columns:1fr}}
     .build a{color:inherit;text-decoration:none;display:block}
-    .build img,.build .ph{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top;border-radius:8px;display:block;background:#e9e4de}.build a{display:block;overflow:hidden;border-radius:8px}.build img{transform:scale(1.06);transform-origin:50% 100%}
+    .build img,.build .ph{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top;border-radius:8px;display:block;background:#e9e4de}.build a{display:block}.build .fr{display:block;position:relative;overflow:hidden;border-radius:8px;aspect-ratio:16/10;background:#e9e4de}.build .fr img{border-radius:0}
     .build .ph{background:linear-gradient(135deg,#f8d3bd,#e7d2ec 55%,#dacdf6)}
     .build b{display:flex;align-items:baseline;gap:8px;font:500 14px/1.25 'Ubuntu Sans',sans-serif;margin:10px 0 0}
     .build b small{font:400 12px/1 'Ubuntu Sans',sans-serif;color:var(--faint)}
@@ -129,9 +129,9 @@
   <audio id="aud" src="2026-W42-unicorn.m4a" preload="metadata"></audio><script type="text/plain" id="say">Week 42. Unicorn. Every hover in the app now uses one soft tooltip. Phrases in sentence case, keys in mono. 1 experiment finished that week: Quiet tooltips. 5 commits that week.</script>
   <div class="cards">
     <div class="card w2 stat"><div><b>1</b><span class="lab">finished that week</span></div><div class="tip">Quiet tooltips</div></div><div class="card w4"><h3>What was replaced, and why</h3><ul class="repl"><li><span class="was">Stroked popups</span><span class="now">One quiet tooltip</span><span class="why">Opaque, no stroke, eased in and out.</span></li><li><span class="was">ALL CAPS labels</span><span class="now">Title Case</span><span class="why">Words, not shouting.</span></li></ul></div>
-    <div class="card w6"><h3>Experiments</h3><div class="builds" style="--n:3"><div class="build"><img src="../../demo/keep-system.webp" alt="Tooltips"><b>Tooltips<small>Final</small></b>
-      </div><div class="build"><img src="../../demo/build-peach.webp" alt="Status unicorn"><b>Status unicorn<small>Started</small></b>
-      </div><div class="build"><a href="../../living-ds/" target="_blank" rel="noopener"><img src="../../demo/build-system.webp" alt="Design system"><b>Design system<small>Updated</small></b></a>
+    <div class="card w6"><h3>Experiments</h3><div class="builds" style="--n:3"><div class="build"><span class="fr"><img src="../../demo/keep-system.webp" alt="Tooltips"></span><b>Tooltips<small>Final</small></b>
+      </div><div class="build"><span class="fr"><img src="../../demo/build-peach.webp" alt="Status unicorn"></span><b>Status unicorn<small>Started</small></b>
+      </div><div class="build"><a href="../../living-ds/" target="_blank" rel="noopener"><span class="fr"><img src="../../demo/build-system.webp" alt="Design system"></span><b>Design system<small>Updated</small></b></a>
       </div></div></div>
     
     <div class="card w4"><div class="two">
@@ -157,4 +157,4 @@
   qsState();
   document.querySelectorAll('.todo li').forEach(li=>{const bx=li.querySelector('.bx'),k=':t'+li.dataset.t,set=d=>{li.classList.toggle('done',d);bx.setAttribute('aria-checked',d);};set(st(k)==='1');
     const flip=()=>{const d=!li.classList.contains('done');set(d);put(k,d?'1':'0');};bx.onclick=flip;bx.onkeydown=e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();flip();}};});
-})();</script></article></div></body></html>
+})();</script><script>(()=>{const go=im=>{try{const fr=im.parentElement,W=im.naturalWidth,H=im.naturalHeight;if(!W||!H)return;const cw=160,ch=Math.max(1,Math.round(160*H/W)),c=document.createElement("canvas");c.width=cw;c.height=ch;const g=c.getContext("2d");g.drawImage(im,0,0,cw,ch);const d=g.getImageData(0,0,cw,ch).data,px=(x,y)=>{const i=(y*cw+x)*4;return[d[i],d[i+1],d[i+2]]};const cs=[px(1,1),px(cw-2,1),px(1,ch-2),px(cw-2,ch-2)],bg=[0,1,2].map(k=>cs.map(p=>p[k]).sort((a,b)=>a-b)[1]);const on=(x,y)=>{const p=px(x,y);return Math.abs(p[0]-bg[0])+Math.abs(p[1]-bg[1])+Math.abs(p[2]-bg[2])>60};const rows=[],cols=new Array(cw).fill(0);for(let y=0;y<ch;y++){let n=0;for(let x=0;x<cw;x++)if(on(x,y)){n++;cols[x]++}rows.push(n)}const mr=cw*.015,mc=ch*.015;const T=rows.findIndex(n=>n>mr),B=ch-1-[...rows].reverse().findIndex(n=>n>mr),L=cols.findIndex(n=>n>mc),R=cw-1-[...cols].reverse().findIndex(n=>n>mc);if(T<0||L<0||(R-L)*(B-T)>cw*ch*.7)return;const A=fr.clientWidth/fr.clientHeight;if(!A)return;let w=(R-L)*1.16,h=(B-T)*1.16;if(w/h>A)w=h*A;else h=w/A;if(w<cw/4){w=cw/4;h=w/A}const x=(L+R)/2-w/2,y=(T+B)/2-h/2;Object.assign(im.style,{position:"absolute",maxWidth:"none",objectFit:"fill",aspectRatio:"auto",width:cw/w*100+"%",height:ch/h*100+"%",left:-x/w*100+"%",top:-y/h*100+"%"});fr.style.background="rgb("+bg.join(",")+")"}catch(e){}};document.querySelectorAll(".build .fr img").forEach(im=>im.complete?go(im):im.addEventListener("load",()=>go(im),{once:true}))})();</script></article></div></body></html>

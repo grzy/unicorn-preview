@@ -26,7 +26,7 @@ html.framed:not(.revealed) #workspace, html.framed:not(.revealed) #glass-edge, h
 html.framed #workspace, html.framed #glass-edge { transition: opacity .6s var(--ease), visibility 0s; }
 html.framed #ambient-tint { display: none !important; }
 /* the Panels pill lines up with the tops of Quest and Story */
-html.framed #menubar { top: 52px; background: none; }
+html.framed #menubar { top: 18px; background: none; }   /* 10-26 (Ivy): up on the traffic lights' row, like the app -- it sat on top of the panels */
 html.framed .mb-lights { position: fixed; left: 18px; top: 20px; }   /* 10-25 (Ivy): the real app's spot (they sat too high) */
 html.framed #glass-edge, html.framed #glass-edge::before { border-radius: 12px; }
 html.framed #glass-edge { box-shadow: none !important; }
@@ -62,7 +62,7 @@ html:not(.is-desktop) {
 }
 
 /* Panels menu: opens below the pill with a small gap; the hover bridge spans the gap */
-html.framed body #menubar .mb-panels-pop { top: 90px; }
+html.framed body #menubar .mb-panels-pop { top: 56px; }
 html body #menubar .mb-panels-pop::after { top: -30px; height: 30px; }
 
 /* The gate's Click to Begin: the app's filled button (.u-fill), filled by default.
@@ -137,6 +137,9 @@ html body #guest-term { width: 430px; }
 #r17-design-door.is-private .cap::after { content: attr(data-private); margin-left: 8px; font-weight: 400; color: var(--text-mute); }
 #r17-design-hero.no-open, #r17-design-hero.no-open .cv { cursor: default !important; }
 
+
+/* 10-26 (Ivy): Settings (and every summoned panel) floats above the fake terminal, like Activity */
+#panel-appearance { z-index: 30; }
 </style>
 <script>
 if (window.unicorn && window.unicorn.isDesktop)
@@ -4860,8 +4863,10 @@ if (window.unicorn && window.unicorn.isDesktop)
   
   .r17-story .hero.sheet .lead .hl { background: linear-gradient(100deg, rgba(255,175,95,.42), rgba(238,156,156,.36) 50%, rgba(175,135,215,.42)) 0 88% / 0% 62% no-repeat;
     -webkit-box-decoration-break: clone; box-decoration-break: clone; transition: background-size .9s cubic-bezier(.2,.8,.2,1); }
-  #agent:hover #r17-paper-hero .lead .hl { background-size: 100% 62%; }   
-  .r17-story .hero.sheet .lead .ell { margin-left: -.06em; }
+  #r17-paper-hero:hover .lead .hl { background-size: 100% 62%; }   
+  .r17-story .hero.sheet .lead .ell { margin-left: .22em; }   
+  
+  .r17-story .hero.sheet .rule, .r17-story .cv .ground { display: none; }
   .r17-story .hero.sheet::after { content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit; box-shadow: inset 0 1px 0 rgba(255,255,255,.6), inset 0 -16px 20px -14px rgba(16,15,17,.25); }
   .r17-story .hero.sheet .rule { position: absolute; left: var(--hp); right: var(--hp); top: calc(30px + var(--mw) * 184 / 1329); height: 1px; background: rgba(26,22,22,.12); }
   .r17-story .hero.sheet .dek { position: absolute; left: var(--hp); right: var(--hp); top: calc(37px + var(--mw) * 184 / 1329); font: 400 8.5px/1.4 var(--mono); letter-spacing: .04em; color: rgba(26,22,22,.42); display: flex; justify-content: space-between; }
@@ -13050,7 +13055,7 @@ ${keepsBlock}${emptyBlock}
     .builds.many > div{scroll-snap-align:start}
     @media (max-width:760px){.builds{grid-template-columns:1fr}}
     .build a{color:inherit;text-decoration:none;display:block}
-    .build img,.build .ph{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top;border-radius:8px;display:block;background:#e9e4de}.build a{display:block;overflow:hidden;border-radius:8px}.build img{transform:scale(1.06);transform-origin:50% 100%}
+    .build img,.build .ph{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top;border-radius:8px;display:block;background:#e9e4de}.build a{display:block}.build .fr{display:block;position:relative;overflow:hidden;border-radius:8px;aspect-ratio:16/10;background:#e9e4de}.build .fr img{border-radius:0}
     .build .ph{background:linear-gradient(135deg,#f8d3bd,#e7d2ec 55%,#dacdf6)}
     .build b{display:flex;align-items:baseline;gap:8px;font:500 14px/1.25 'Ubuntu Sans',sans-serif;margin:10px 0 0}
     .build b small{font:400 12px/1 'Ubuntu Sans',sans-serif;color:var(--faint)}
@@ -13183,7 +13188,7 @@ ${keepsBlock}${emptyBlock}
         const qNames = arr => arr.map(c => ESC(c.t)).join(', ');
         const qFin = quiet.filter(c => /^Finished/.test(c.tag)), qOpen = quiet.filter(c => !/^Finished/.test(c.tag));
         const alsoLine = quiet.length ? `<p class="also">${[qFin.length ? `Also finished: ${qNames(qFin)}` : '', qOpen.length ? `Also ${past ? 'open' : 'in motion'}: ${qNames(qOpen)}` : ''].filter(Boolean).join('<br>')}</p>` : '';
-        const buildCard = (b) => `<div class="build">${b.href ? `<a href="${ESC(b.href)}" target="_blank" rel="noopener">` : ''}${b.img ? `<img src="${b.img}" alt="${ESC(b.t)}">` : `<span class="ph" aria-hidden="true"></span>`}<b>${ESC(b.t)}${b.tag ? `<small>${ESC(b.tag)}</small>` : ''}</b>${b.href ? '</a>' : ''}
+        const buildCard = (b) => `<div class="build">${b.href ? `<a href="${ESC(b.href)}" target="_blank" rel="noopener">` : ''}${b.img ? `<span class="fr"><img src="${b.img}" alt="${ESC(b.t)}"></span>` : `<span class="ph" aria-hidden="true"></span>`}<b>${ESC(b.t)}${b.tag ? `<small>${ESC(b.tag)}</small>` : ''}</b>${b.href ? '</a>' : ''}
       ${b.vers && b.vers.length > 1 ? `<div class="vers">${b.vers.map((v, j) => {
             const [lab, href] = Array.isArray(v) ? v : ['v' + (j + 1), v];
             const cur = b.href ? href === b.href : j === b.vers.length - 1;
@@ -13216,6 +13221,7 @@ ${keepsBlock}${emptyBlock}
         const audioName = `${weekNum.y}-W${String(weekNum.w).padStart(2, '0')}-${slug(quest.name)}.m4a`;
         const listen = `<div class="listen" id="listen" hidden><button class="play" id="play" aria-label="Play"><svg viewBox="0 0 12 12"><path id="pp" d="M3 1.5v9l7.5-4.5z"/></svg></button><span class="lt">Hear the Story<small id="ldur"></small></span><span class="bar"><i id="lbar"></i></span></div>
   <audio id="aud" src="${ESC(audioName)}" preload="metadata"></audio><script type="text/plain" id="say">${ESC(sayText)}<\/script>`;
+        const frameJS = '<script>(()=>{const go=im=>{try{const fr=im.parentElement,W=im.naturalWidth,H=im.naturalHeight;if(!W||!H)return;const cw=160,ch=Math.max(1,Math.round(160*H/W)),c=document.createElement("canvas");c.width=cw;c.height=ch;const g=c.getContext("2d");g.drawImage(im,0,0,cw,ch);const d=g.getImageData(0,0,cw,ch).data,px=(x,y)=>{const i=(y*cw+x)*4;return[d[i],d[i+1],d[i+2]]};const cs=[px(1,1),px(cw-2,1),px(1,ch-2),px(cw-2,ch-2)],bg=[0,1,2].map(k=>cs.map(p=>p[k]).sort((a,b)=>a-b)[1]);const on=(x,y)=>{const p=px(x,y);return Math.abs(p[0]-bg[0])+Math.abs(p[1]-bg[1])+Math.abs(p[2]-bg[2])>60};const rows=[],cols=new Array(cw).fill(0);for(let y=0;y<ch;y++){let n=0;for(let x=0;x<cw;x++)if(on(x,y)){n++;cols[x]++}rows.push(n)}const mr=cw*.015,mc=ch*.015;const T=rows.findIndex(n=>n>mr),B=ch-1-[...rows].reverse().findIndex(n=>n>mr),L=cols.findIndex(n=>n>mc),R=cw-1-[...cols].reverse().findIndex(n=>n>mc);if(T<0||L<0||(R-L)*(B-T)>cw*ch*.7)return;const A=fr.clientWidth/fr.clientHeight;if(!A)return;let w=(R-L)*1.16,h=(B-T)*1.16;if(w/h>A)w=h*A;else h=w/A;if(w<cw/4){w=cw/4;h=w/A}const x=(L+R)/2-w/2,y=(T+B)/2-h/2;Object.assign(im.style,{position:"absolute",maxWidth:"none",objectFit:"fill",aspectRatio:"auto",width:cw/w*100+"%",height:ch/h*100+"%",left:-x/w*100+"%",top:-y/h*100+"%"});fr.style.background="rgb("+bg.join(",")+")"}catch(e){}};document.querySelectorAll(".build .fr img").forEach(im=>im.complete?go(im):im.addEventListener("load",()=>go(im),{once:true}))})();<\/script>';
         const pageJS = `<script>(()=>{const a=document.getElementById('aud'),l=document.getElementById('listen'),pp=document.getElementById('pp'),b=document.getElementById('lbar');
   const ready=()=>{l.hidden=false;const s=Math.round(a.duration);document.getElementById('ldur').textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');};
   if(a.readyState>=1)ready();else a.addEventListener('loadedmetadata',ready);
@@ -13249,7 +13255,7 @@ ${keepsBlock}${emptyBlock}
     ${keep}
     ${agents}
     ${commitsLate}
-  </div>${pageJS}` + weekFoot;
+  </div>${pageJS}${frameJS}` + weekFoot;
     };
     const toDataURL = async (url) => {
         try {
@@ -14503,6 +14509,29 @@ ${keepsBlock}${emptyBlock}
             parent.experiments.splice(idx, 1);
             localStorage.setItem(DATA_KEY, JSON.stringify(data));
             return { name: expName, status: 'deleted', kind: 'experiment' };
+        }
+        if (action === 'keep-text' || action === 'keep') {
+            const text = String(ev.text || '').trim();
+            if (!text)
+                return null;
+            const qn = (ev.quest || '').trim();
+            const q = (qn && data.quests.find(x => (x.name || '').toLowerCase() === qn.toLowerCase())) || data.quests[data.activeQuestIndex] || null;
+            let keeps = [];
+            try {
+                keeps = JSON.parse(localStorage.getItem('unicorn.keeps') || '[]');
+            }
+            catch { }
+            if (keeps.some(k => (k.text || '').trim() === text && Date.now() - (k.ts || 0) < 60000))
+                return null;
+            const entry = { id: 'k-term-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), ts: Date.now(),
+                questId: q ? q.id : null, questName: q ? q.name : null, text, source: 'terminal' };
+            keeps.push(entry);
+            if (window.__unicornSafeStore)
+                window.__unicornSafeStore('unicorn.keeps', JSON.stringify(keeps));
+            else
+                localStorage.setItem('unicorn.keeps', JSON.stringify(keeps));
+            window.dispatchEvent(new CustomEvent('unicorn:keeps-updated', { detail: { id: entry.id, source: 'terminal' } }));
+            return { name: text.length > 40 ? text.slice(0, 38) + '…' : text, status: 'kept', kind: 'keep' };
         }
         if (action === 'experiment-rename' || action === 'exp-rename') {
             const expName = (ev.experiment || ev.name || '').trim(), to = (ev.to || '').trim();
@@ -15870,8 +15899,6 @@ ${keepsBlock}${emptyBlock}
                 w = h * A;
             }
             let x = (L + R) / 2 - w / 2, y = (T + B) / 2 - h / 2;
-            x = Math.max(0, Math.min(cw - w, x));
-            y = Math.max(0, Math.min(ch - h, y));
             Object.assign(im.style, { position: 'absolute', maxWidth: 'none', objectFit: 'fill', transform: 'none',
                 width: (cw / w * 100) + '%', height: (ch / h * 100) + '%', left: (-x / w * 100) + '%', top: (-y / h * 100) + '%' });
             th.style.position = 'relative';
