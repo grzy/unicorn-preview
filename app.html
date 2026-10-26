@@ -5043,6 +5043,19 @@ if (window.unicorn && window.unicorn.isDesktop)
   html .panel--quest .p-head + .q-top, html .panel--quest .q-top { margin-top: 8px !important; }
   html .r17-story .chips { margin-top: 8px; }
   html .panel.panel--commits.minimized > .c-wk { margin-top: 0 !important; padding-top: 4px !important; }
+  html .panel--keep .p-hair + .keep-tag-row ~ .k18-bar, html .panel--keep .k18-bar { margin-top: 8px; }
+  
+  html .panel.panel--commits:not(.minimized) > .c-month-head { margin-top: 0 !important; padding-top: 2px; margin-bottom: 16px !important; }   
+  html .panel.panel--commits:not(.minimized) > .c-foot { margin-top: 16px !important; }
+  
+  html .panel.panel--commits:not(.minimized) .c-month-head { display: grid !important; grid-template-columns: repeat(7, 1fr); column-gap: 4px; justify-items: center; align-items: center; }
+  html .panel.panel--commits .c-month-head #c-prev { grid-column: 2; }
+  html .panel.panel--commits .c-month-head .c-month-title { grid-column: 3 / span 3; width: auto; }
+  html .panel.panel--commits .c-month-head #c-next { grid-column: 6; }
+  html .panel.panel--commits .c-month-head .c-month-count { display: none; }
+  
+  html .panel--commits .c-calendar:has(> :nth-child(36)) { aspect-ratio: 276 / 196; grid-auto-rows: 1fr; }
+  html .panel--commits .c-calendar:has(> :nth-child(36)) > .c-cell { aspect-ratio: auto; }
   
   html #panel-appearance .ap-lead.ap-lead--foot { position: relative; }
   html #panel-appearance .ap-lead.ap-lead--foot::after { content: ""; position: absolute; left: -10px; right: -10px; top: 9px; bottom: -9px; border-radius: 8px; background: rgba(255,255,255,.04); opacity: 0; transition: opacity var(--t) var(--ease); pointer-events: none; z-index: -1; }
