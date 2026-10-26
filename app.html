@@ -4944,6 +4944,8 @@ if (window.unicorn && window.unicorn.isDesktop)
   .r17-story .cv .run { position: absolute; right: var(--hp); top: 0; display: flex; }
   .r17-story .cv .run canvas { display: block; image-rendering: pixelated; flex: none; }
   .r17-story .cv .run canvas + canvas { margin-left: -6px; }
+  .r17-story .cv .sw { position: absolute; left: var(--hp); top: calc(var(--hg) - 12px); display: flex; gap: 5px; }
+  .r17-story .cv .sw i { width: 12px; height: 12px; border-radius: 3px; box-shadow: inset 0 0 0 1px rgba(26,22,22,.08); }
   .r17-story .cv .ground { position: absolute; left: var(--hp); right: var(--hp); top: var(--hg); height: 1px; background: rgba(26,22,22,.14); }
   .r17-story .cv .wm { position: absolute; left: var(--hp); bottom: 12px; font: 600 43px/.8 var(--mono); letter-spacing: -.055em; color: #1A1616; white-space: nowrap; }
   .r17-story .cv .meta { position: absolute; left: var(--hp); top: calc(var(--hg) + 9px); font: 400 7.5px/1.6 var(--mono); letter-spacing: .14em; color: rgba(26,22,22,.5); text-transform: uppercase; text-align: left; white-space: nowrap; }
@@ -9995,9 +9997,11 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
                 return;
             term.classList.remove('gt-grow', 'in');
             const r = term.getBoundingClientRect();
+            const sc = term.offsetWidth ? r.width / term.offsetWidth : 1;
             term.style.left = r.left + 'px';
             term.style.top = r.top + 'px';
-            term.style.transform = 'none';
+            term.style.transformOrigin = '0 0';
+            term.style.transform = sc && Math.abs(sc - 1) > .01 ? `scale(${sc.toFixed(4)})` : 'none';
             term.style.opacity = '1';
             startLeft = r.left;
             startTop = r.top;
@@ -13221,7 +13225,7 @@ ${keepsBlock}${emptyBlock}
         const audioName = `${weekNum.y}-W${String(weekNum.w).padStart(2, '0')}-${slug(quest.name)}.m4a`;
         const listen = `<div class="listen" id="listen" hidden><button class="play" id="play" aria-label="Play"><svg viewBox="0 0 12 12"><path id="pp" d="M3 1.5v9l7.5-4.5z"/></svg></button><span class="lt">Hear the Story<small id="ldur"></small></span><span class="bar"><i id="lbar"></i></span></div>
   <audio id="aud" src="${ESC(audioName)}" preload="metadata"></audio><script type="text/plain" id="say">${ESC(sayText)}<\/script>`;
-        const frameJS = '<script>(()=>{const go=im=>{try{const fr=im.parentElement,W=im.naturalWidth,H=im.naturalHeight;if(!W||!H)return;const cw=160,ch=Math.max(1,Math.round(160*H/W)),c=document.createElement("canvas");c.width=cw;c.height=ch;const g=c.getContext("2d");g.drawImage(im,0,0,cw,ch);const d=g.getImageData(0,0,cw,ch).data,px=(x,y)=>{const i=(y*cw+x)*4;return[d[i],d[i+1],d[i+2]]};const cs=[px(1,1),px(cw-2,1),px(1,ch-2),px(cw-2,ch-2)],bg=[0,1,2].map(k=>cs.map(p=>p[k]).sort((a,b)=>a-b)[1]);const on=(x,y)=>{const p=px(x,y);return Math.abs(p[0]-bg[0])+Math.abs(p[1]-bg[1])+Math.abs(p[2]-bg[2])>60};const rows=[],cols=new Array(cw).fill(0);for(let y=0;y<ch;y++){let n=0;for(let x=0;x<cw;x++)if(on(x,y)){n++;cols[x]++}rows.push(n)}const mr=cw*.015,mc=ch*.015;const T=rows.findIndex(n=>n>mr),B=ch-1-[...rows].reverse().findIndex(n=>n>mr),L=cols.findIndex(n=>n>mc),R=cw-1-[...cols].reverse().findIndex(n=>n>mc);if(T<0||L<0||(R-L)*(B-T)>cw*ch*.7)return;const A=fr.clientWidth/fr.clientHeight;if(!A)return;let w=(R-L)*1.16,h=(B-T)*1.16;if(w/h>A)w=h*A;else h=w/A;if(w<cw/4){w=cw/4;h=w/A}const x=(L+R)/2-w/2,y=(T+B)/2-h/2;Object.assign(im.style,{position:"absolute",maxWidth:"none",objectFit:"fill",aspectRatio:"auto",width:cw/w*100+"%",height:ch/h*100+"%",left:-x/w*100+"%",top:-y/h*100+"%"});fr.style.background="rgb("+bg.join(",")+")"}catch(e){}};document.querySelectorAll(".build .fr img").forEach(im=>im.complete?go(im):im.addEventListener("load",()=>go(im),{once:true}))})();<\/script>';
+        const frameJS = '<script>(()=>{const go=im=>{try{const fr=im.parentElement,W=im.naturalWidth,H=im.naturalHeight;if(!W||!H)return;const cw=160,ch=Math.max(1,Math.round(160*H/W)),c=document.createElement("canvas");c.width=cw;c.height=ch;const g=c.getContext("2d");g.drawImage(im,0,0,cw,ch);const d=g.getImageData(0,0,cw,ch).data,px=(x,y)=>{const i=(y*cw+x)*4;return[d[i],d[i+1],d[i+2]]};const cs=[px(1,1),px(cw-2,1),px(1,ch-2),px(cw-2,ch-2)],bg=[0,1,2].map(k=>cs.map(p=>p[k]).sort((a,b)=>a-b)[1]);const on=(x,y)=>{const p=px(x,y);return Math.abs(p[0]-bg[0])+Math.abs(p[1]-bg[1])+Math.abs(p[2]-bg[2])>60};const rows=[],cols=new Array(cw).fill(0);for(let y=0;y<ch;y++){let n=0;for(let x=0;x<cw;x++)if(on(x,y)){n++;cols[x]++}rows.push(n)}const mr=cw*.015,mc=ch*.015;const T=rows.findIndex(n=>n>mr),B=ch-1-[...rows].reverse().findIndex(n=>n>mr),L=cols.findIndex(n=>n>mc),R=cw-1-[...cols].reverse().findIndex(n=>n>mc);if(T<0||L<0||(R-L)*(B-T)>cw*ch*.7)return;const A=fr.clientWidth/fr.clientHeight;if(!A)return;let w=(R-L)*1.16,h=(B-T)*1.16;if(w/h>A)w=h*A;else h=w/A;if(w<cw/2.2){w=cw/2.2;h=w/A}const x=(L+R)/2-w/2,y=(T+B)/2-h/2;Object.assign(im.style,{position:"absolute",maxWidth:"none",objectFit:"fill",aspectRatio:"auto",width:cw/w*100+"%",height:ch/h*100+"%",left:-x/w*100+"%",top:-y/h*100+"%"});fr.style.background="rgb("+bg.join(",")+")"}catch(e){}};document.querySelectorAll(".build .fr img").forEach(im=>im.complete?go(im):im.addEventListener("load",()=>go(im),{once:true}))})();<\/script>';
         const pageJS = `<script>(()=>{const a=document.getElementById('aud'),l=document.getElementById('listen'),pp=document.getElementById('pp'),b=document.getElementById('lbar');
   const ready=()=>{l.hidden=false;const s=Math.round(a.duration);document.getElementById('ldur').textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');};
   if(a.readyState>=1)ready();else a.addEventListener('loadedmetadata',ready);
@@ -15374,7 +15378,8 @@ ${keepsBlock}${emptyBlock}
     const coverHTML = (i, q, d, label, noDate, mark) => {
         const c = COVERS[i], date = d || new Date();
         const runs = mark ? '<canvas data-still="1"></canvas>' : Array.from({ length: noDate ? 4 : c.frames }, (_, j) => `<canvas data-f="${j}"></canvas>`).join('');
-        return `<div class="cv ${c.cls}"><div class="run" data-fit="${c.cls === 'cv2' && !noDate ? 'LR' : 'R'}">${runs}</div><i class="ground"></i>`
+        const sw = mark && /^unicorn$/i.test((q && q.name) || '') ? `<span class="sw" aria-hidden="true">${['#FFAF5F', '#AF87D7', '#FB7185', '#1A1616', '#F1ECE8'].map(h => `<i style="background:${h}"></i>`).join('')}</span>` : '';
+        return `<div class="cv ${c.cls}"><div class="run" data-fit="${c.cls === 'cv2' && !noDate ? 'LR' : 'R'}">${runs}</div><i class="ground"></i>${sw}`
             + `<span class="wm">${esc((q && q.name) || 'Unicorn')}</span><span class="meta"><b>${esc(label || coverTools(q))}</b><span>${noDate ? 'Private' : `${LONG_MONTHS[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`}</span></span></div>`;
     };
     const drawRuns = (scope) => {
@@ -15426,7 +15431,8 @@ ${keepsBlock}${emptyBlock}
                     run.style.right = (HP - (rb.right - k.last.r)) + 'px';
                     k = box();
                 }
-                run.style.translate = `${(hb.right - HP - k.r).toFixed(2)}px ${(hb.top + HG - k.b).toFixed(2)}px`;
+                const tail = run.querySelector('canvas[data-still]') ? 5 : 0;
+                run.style.translate = `${(hb.right - HP - k.r - tail).toFixed(2)}px ${(hb.top + HG - k.b).toFixed(2)}px`;
             }
             if (wm) {
                 wm.style.translate = '';
