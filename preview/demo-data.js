@@ -13,6 +13,8 @@
   const QUESTS = [
     { id: 'q-unicorn', name: 'Unicorn', repo: 'projects/unicorn', startedDays: 140,
       figma: 'https://www.figma.com/design/m9JRahV6Do3uHFYJycqby7/Unicorn-design-system',
+      // 10-25 (Ivy): the build's second file is private; '#private' is a marker (never a real link), the guest layer keeps it shut
+      figmaFiles: [{ url: '#private', name: 'Unicorn Story', private: true }],
       experiments: [
         ['Weekly Story page', 'active', 6, null],
         ['Title Case sweep', 'active', 3, null],
@@ -93,7 +95,7 @@
     let n = 0;
     return {
       quests: QUESTS.map(q => ({
-        id: q.id, name: q.name, repo: q.repo, figma: q.figma, startedAt: iso(q.startedDays),
+        id: q.id, name: q.name, repo: q.repo, figma: q.figma, figmaFiles: q.figmaFiles, startedAt: iso(q.startedDays),
         experiments: q.experiments.map(([name, status, made, done]) => ({ id: 'x-' + (++n), name, status, createdAt: iso(made), completedAt: done != null ? iso(done) : null }))
       })),
       activeQuestIndex: 0
@@ -112,7 +114,7 @@
     ];
   };
 
-  const api = { QUESTS, commits, sessions, agentState, appData, keeps, MSGS, SEED: 'p4' };
+  const api = { QUESTS, commits, sessions, agentState, appData, keeps, MSGS, SEED: 'p5' };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.UnicornDemo = api;
 })(typeof window !== 'undefined' ? window : globalThis);

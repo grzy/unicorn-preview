@@ -11,7 +11,7 @@ document.documentElement.classList.add('r26-boot');
 window.GUEST_PREVIEW = true;
 </script>
 <script>window.__srcSeedVersion = "6";</script>
-<script src="preview/demo-data.js?v=f2c21d2e"></script>
+<script src="preview/demo-data.js?v=10c66e70"></script>
 <script src="preview/guest-early.js?v=c1220ca3"></script>
 <style>/* Unicorn public preview: guest-only styles, loaded in the head. */
 
@@ -131,6 +131,12 @@ html.framed #glass-edge::before { padding: 1px; }
 /* a little bigger, still one fixed size */
 html body #guest-term { width: 430px; }
 #guest-term .gt-body { height: 286px; }
+
+/* 10-25 (Ivy): the private Figma file -- the door names it, no Open, and the cover isn't a link */
+#r17-design-door.is-private [data-act="open-file"] { display: none !important; }
+#r17-design-door.is-private .cap::after { content: attr(data-private); margin-left: 8px; font-weight: 400; color: var(--text-mute); }
+#r17-design-hero.no-open, #r17-design-hero.no-open .cv { cursor: default !important; }
+
 </style>
 <script>
 if (window.unicorn && window.unicorn.isDesktop)
@@ -4395,8 +4401,8 @@ if (window.unicorn && window.unicorn.isDesktop)
   }
   #menubar .mb-float-row:hover + .mb-float-note { max-height: 40px; opacity: 1; padding-bottom: 6px; }
 
-  #panel-appearance .ap-row { padding: 9px 16px; }
-  #panel-appearance .ap-lab { margin: 16px 16px 6px; }
+  #panel-appearance .ap-row { padding: 9px 10px; margin: 0 -10px; }   
+  #panel-appearance .ap-lab { margin: 16px 0 6px; }
   
   html #menubar .mb-float-row, html #menubar .mb-float-row .mb-tog-name, html.is-desktop #menubar .mb-float-row { font-weight: 500; color: var(--text); }
   html #menubar .mb-panels-pop .mb-tog-name { font-weight: 500; }
@@ -4803,7 +4809,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   html .panel--quest:not(.minimized) .r17-strip .uc-wrap { zoom: .8333; }   
   html .panel--quest:not(.minimized) .r17-strip { margin-top: 16px !important; padding: 16px 4px 0 16px !important; border-top: 1px solid rgba(255,255,255,.06) !important; border-radius: 0 !important; }
   html .panel.panel--quest:not(.minimized) { padding-bottom: 22px !important; }
-  html .panel.panel--quest.minimized { display: flex !important; flex-direction: row !important; align-items: center !important; justify-content: flex-start !important; gap: 10px; padding: 17px 30px !important; }   
+  html .panel.panel--quest.minimized { display: flex !important; flex-direction: row !important; align-items: center !important; justify-content: flex-start !important; gap: 10px; padding: 17px 30px 20px !important; }   
   html .panel.panel--quest.minimized > .p-head { flex: 0 1 auto; min-width: 0; margin: 0 !important; padding: 0 !important; }
   html .panel.panel--quest.minimized > .p-head > span:first-child { display: flex; align-items: center; min-width: 0; }
   html .panel--quest.minimized .q-head-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -4901,6 +4907,12 @@ if (window.unicorn && window.unicorn.isDesktop)
     background: none; color: rgba(26,22,22,.38); transition: color var(--t) var(--ease); }   
   .r17-story .flip:hover { background: none; color: rgba(26,22,22,.85); }
   .r17-story .flip.l { left: 8px; } .r17-story .flip.r { right: 8px; }
+  
+  .r17-story .flip[data-file] { top: 0; transform: none; width: 56px; height: 58%; border-radius: 0; opacity: 0; transition: opacity var(--t) var(--ease), color var(--t) var(--ease); }
+  .r17-story .flip[data-file].l { left: 0; place-items: start; padding: 14px 0 0 10px; }
+  .r17-story .flip[data-file].r { right: 0; place-items: start end; padding: 14px 10px 0 0; }
+  .r17-story:hover .flip[data-file], aside:hover .r17-story .flip[data-file], .r17-story .flip[data-file]:focus-visible { opacity: 1; }   
+  .r17-story .flip[data-file] .ic { width: 16px; height: 16px; }
   .r17-story .flip.l .ic { transform: rotate(180deg); }
   .r17-story .pips { position: absolute; left: 50%; top: 6px; transform: translateX(-50%); z-index: 5; display: flex; gap: 5px; padding: 4px 6px; border-radius: 6px; background: rgba(16,15,17,.55); }
   .r17-story .pips i { width: 5px; height: 5px; border-radius: 50%; background: rgba(241,236,232,.35); }
@@ -4923,6 +4935,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   .r17-story .cv1 .wm { padding: .14em .04em 0; margin: -.14em -.04em 0; }   
   .r17-story .cv1 .ground { background: linear-gradient(90deg, rgba(232,149,106,.6), rgba(212,155,194,.6) 50%, rgba(167,139,223,.6)); }
   .r17-story .cv2 .run { left: var(--hp); justify-content: space-between; }
+  .r17-story .cv2 .run[data-fit="R"] { left: auto; justify-content: flex-end; }   
   .r17-story .cv2 .run canvas + canvas { margin-left: -20px; }
 
   .r17-story .hero.tint .covers, .r17-story .hero.tint .nofile { filter: grayscale(.9) brightness(.92); }
@@ -5020,9 +5033,25 @@ if (window.unicorn && window.unicorn.isDesktop)
   
   html #panel-appearance .ap-lead.ap-lead--foot { margin-top: 16px; }
   
-  html #panel-appearance .ap-lead.ap-lead--foot { background: none; border-radius: 0; padding: 16px 0 0; border-top: 1px solid rgba(255,255,255,.06); }
+  html #panel-appearance .ap-lead.ap-lead--foot { background: none; border-radius: 0; padding: 16px 16px 0; margin-left: 0; margin-right: 0; padding-left: 0; padding-right: 0; border-top: 1px solid rgba(255,255,255,.06); }   
   
   html #panel-appearance .p-hair + .ap-lab { margin-top: 0; }
+  
+  html #panel-appearance .ap-lab { display: none !important; }
+  html #panel-appearance .p-hair + .ap-lab + .ap-row { margin-top: 5px; }
+  
+  html .panel--quest .p-head + .q-top, html .panel--quest .q-top { margin-top: 8px !important; }
+  html .r17-story .chips { margin-top: 8px; }
+  html .panel.panel--commits.minimized > .c-wk { margin-top: 0 !important; padding-top: 4px !important; }
+  
+  html #panel-appearance .ap-lead.ap-lead--foot { position: relative; }
+  html #panel-appearance .ap-lead.ap-lead--foot::after { content: ""; position: absolute; left: -10px; right: -10px; top: 9px; bottom: -9px; border-radius: 8px; background: rgba(255,255,255,.04); opacity: 0; transition: opacity var(--t) var(--ease); pointer-events: none; z-index: -1; }
+  html #panel-appearance .ap-lead.ap-lead--foot:hover::after { opacity: 1; }
+  html #panel-appearance .ap-lead.ap-lead--foot { margin-top: 9px !important; padding-top: 9px !important; border-top: 1px solid rgba(255,255,255,.06); }
+  html #panel-appearance .ap-row + .ap-lab + .ap-row { margin-top: 9px !important; position: relative; }
+  html #panel-appearance .ap-row + .ap-lab + .ap-row::before { content: ""; position: absolute; left: 10px; right: 10px; top: -10px; height: 1px; background: rgba(255,255,255,.06); }   
+  html #panel-appearance .ap-row + .ap-lab + .ap-row { margin-top: 19px !important; }
+  html #panel-appearance .ap-lead.ap-lead--foot { padding-top: 18px !important; }   
 
   html #menubar.mb-menu-up { z-index: 100000; }
   html #menubar .mb-panels-pop.r18-quick { transition: opacity .14s ease-out, visibility 0s linear .14s !important; transform: translate(-50%, 0) !important; }
@@ -15191,10 +15220,10 @@ ${keepsBlock}${emptyBlock}
             t.push('Spline');
         return t.length === 1 ? t[0] + ' File' : t.slice(0, -1).join(', ') + ' & ' + t[t.length - 1] + ' Files';
     };
-    const coverHTML = (i, q, d, label, noDate) => {
+    const coverHTML = (i, q, d, label, noDate, mark) => {
         const c = COVERS[i], date = d || new Date();
-        const runs = Array.from({ length: c.frames }, (_, j) => `<canvas data-f="${j}"></canvas>`).join('');
-        return `<div class="cv ${c.cls}"><div class="run" data-fit="${c.cls === 'cv2' ? 'LR' : 'R'}">${runs}</div><i class="ground"></i>`
+        const runs = mark ? '<canvas data-still="1"></canvas>' : Array.from({ length: noDate ? 4 : c.frames }, (_, j) => `<canvas data-f="${j}"></canvas>`).join('');
+        return `<div class="cv ${c.cls}"><div class="run" data-fit="${c.cls === 'cv2' && !noDate ? 'LR' : 'R'}">${runs}</div><i class="ground"></i>`
             + `<span class="wm">${esc((q && q.name) || 'Unicorn')}</span><span class="meta"><b>${esc(label || coverTools(q))}</b><span>${noDate ? 'Private' : `${LONG_MONTHS[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`}</span></span></div>`;
     };
     const drawRuns = (scope) => {
@@ -15208,7 +15237,7 @@ ${keepsBlock}${emptyBlock}
             cv.style.width = 21 * k + 'px';
             cv.style.height = 26 * k + 'px';
             try {
-                u.render(cv, u.o7, s, u.sustainFrame(+cv.dataset.f * 120, 0));
+                u.render(cv, u.o7, s, cv.dataset.still ? { still: true, label: 'logo' } : u.sustainFrame(+cv.dataset.f * 120, 0));
             }
             catch { }
         });
@@ -15352,7 +15381,7 @@ ${keepsBlock}${emptyBlock}
             h = `<div class="nofile">One file: system, screens, story</div>`;
         }
         else {
-            h = `<div class="covers"><div class="on">${coverHTML(many && curFile && !curFile.main ? 2 : cur, q, figmaDate, many && curFile ? curFile.name : '', many && curFile && !curFile.main)}</div></div>`
+            h = `<div class="covers"><div class="on">${coverHTML(many && curFile && !curFile.main ? 2 : cur, q, figmaDate, many && curFile ? curFile.name : '', many && curFile && !curFile.main, many && curFile && curFile.main)}</div></div>`
                 + (state === 'ready' && many ? `<button type="button" class="flip l" data-file="-1" aria-label="Previous File">${I('caret')}</button><button type="button" class="flip r" data-file="1" aria-label="Next File">${I('caret')}</button>` : '');
         }
         if (state === 'creating' || state === 'updating') {
@@ -16138,7 +16167,9 @@ ${keepsBlock}${emptyBlock}
             const st = row.querySelector('.q-status');
             const now = !!(st && nowIds.has(st.dataset.id));
             row.classList.toggle('is-now', now);
-            const ord = now ? '-2147483000' : (st && st.dataset.s === 'active') ? String(-Math.floor((at.get(String(st.dataset.id)) || 0) / 1000)) : '';
+            const sec = Math.floor((at.get(String(st && st.dataset.id)) || 0) / 1000);
+            const ord = now ? '-2147483000' : (st && st.dataset.s === 'active') ? String(-sec)
+                : (st && st.dataset.s === 'paused') ? String(2000000000 - sec) : row.matches('.r17-fin') ? '2147483000' : (row.matches('.r17-showall') || (st && st.dataset.s === 'complete')) ? '2147483001' : '';
             if (row.style.order !== ord)
                 row.style.order = ord;
             if (st && st.dataset.s !== 'complete' && st.dataset.s !== 'paused') {
@@ -16459,6 +16490,6 @@ ${keepsBlock}${emptyBlock}
 
 <script src="preview/roam.js?v=a9db26d4"></script>
 <script>window.__previewWeeks = {"unicorn":"2026-W43-unicorn.html","color-weather":"2026-W43-color-weather.html","birdsong-atlas":"2026-W43-birdsong-atlas.html","paper-synth":"2026-W43-paper-synth.html"};</script>
-<script src="preview/guest-late.js?v=b2d617d1"></script>
+<script src="preview/guest-late.js?v=193ae991"></script>
 </body>
 </html>

@@ -48,8 +48,15 @@
     if ($('st-cv-update').dataset.mode === 'update') { window.r17Design('updating'); demoT = setTimeout(() => { try { sessionStorage.setItem('preview.figma-updated', String(Date.now())); } catch (e) {} window.r17Design(null); if (window.r17Story) window.r17Story.refresh(); toast('Updated today'); }, 4800); }
     else { window.r17Design('creating'); demoT = setTimeout(() => { window.r17Design(null); toast('In the Unicorn app, this creates the Figma file from the build'); }, 4800); }
   });
+  // 10-25 (Ivy): a private Figma file never opens from the preview (cover click and Open both stay shut)
+  const privateShowing = () => { const h = $('r17-design-hero'), m = h && h.querySelector('.cv .meta span'); return !!(m && m.textContent === 'Private'); };
+  const hero = $('r17-design-hero');
+  if (hero) hero.addEventListener('click', (e) => { if (e.target.closest('[data-file]')) return; if (privateShowing()) { e.preventDefault(); e.stopImmediatePropagation(); } }, true);
+  const markPrivate = () => { const d = $('r17-design-door'), on = privateShowing(); if (d) { d.classList.toggle('is-private', on); const c = d.querySelector('.cap'); if (c && on) c.setAttribute('data-private', (c.getAttribute('title') || 'Private file') + ' · Private'); } if (hero) hero.classList.toggle('no-open', privateShowing()); };
+  if (hero) new MutationObserver(markPrivate).observe(hero, { childList: true, subtree: true });
   const door = $('r17-design-door');
-  if (door) door.addEventListener('click', (e) => { if (e.target.closest('[data-act="stop"]')) clearTimeout(demoT); }, true);
+  if (door) door.addEventListener('click', (e) => { if (e.target.closest('[data-act="open-file"]') && privateShowing()) { e.preventDefault(); e.stopImmediatePropagation(); return; } if (e.target.closest('[data-act="stop"]')) clearTimeout(demoT); }, true);
+  if (door) new MutationObserver(markPrivate).observe(door, { childList: true });
   if (window.r17Story) window.r17Story.refresh();
   // 10-25 (Ivy): the Week card's three pictures come from the sample page, whose paths are relative to it
   // (../../demo/x.webp); from the app at the site root they broke. Point them at demo/ instead.
