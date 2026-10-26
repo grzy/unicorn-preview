@@ -4851,7 +4851,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   .r17-story .pane { grid-area: 1 / 1; min-width: 0; visibility: hidden; opacity: 0; transition: opacity .3s var(--ease), visibility 0s .3s; }
   .r17-story .pane.on { visibility: visible; opacity: 1; transition: opacity .3s var(--ease), visibility 0s; }
   .r17-story .hero { position: relative; aspect-ratio: 16 / 10; border-radius: 10px; overflow: hidden; background: var(--nori-dark); box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
-    container-type: inline-size; --hw: calc(100cqw - var(--hp) * 2); --mi: 18px; --mw: calc(var(--hw) - var(--mi) * 2); }
+    container-type: inline-size; --hw: calc(100cqw - var(--hp) * 2); --mi: 0px; --mw: calc(var(--hw) - var(--mi) * 2); }
   .r17-story .hero.click { cursor: pointer; }
   
   .r17-story .hero.sheet { background: #F7F4EE; }   
@@ -4860,7 +4860,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   
   .r17-story .hero.sheet .lead .hl { background: linear-gradient(100deg, rgba(255,175,95,.42), rgba(238,156,156,.36) 50%, rgba(175,135,215,.42)) 0 88% / 0% 62% no-repeat;
     -webkit-box-decoration-break: clone; box-decoration-break: clone; transition: background-size .9s cubic-bezier(.2,.8,.2,1); }
-  #r17-paper-hero:hover .lead .hl { background-size: 100% 62%; }
+  #agent:hover #r17-paper-hero .lead .hl { background-size: 100% 62%; }   
   .r17-story .hero.sheet .lead .ell { margin-left: -.06em; }
   .r17-story .hero.sheet::after { content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit; box-shadow: inset 0 1px 0 rgba(255,255,255,.6), inset 0 -16px 20px -14px rgba(16,15,17,.25); }
   .r17-story .hero.sheet .rule { position: absolute; left: var(--hp); right: var(--hp); top: calc(30px + var(--mw) * 184 / 1329); height: 1px; background: rgba(26,22,22,.12); }
@@ -6301,7 +6301,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         switcherEl.innerHTML = '';
         const recency = (q, i) => i === activeQ ? Infinity : (q.lastOpenedAt || 0);
         data.quests.map((q, i) => ({ q, i }))
-            .sort((a, b) => (recency(b.q, b.i) - recency(a.q, a.i)) || (a.i - b.i))
+            .sort((a, b) => ((a.q.paused ? 1 : 0) - (b.q.paused ? 1 : 0)) || (recency(b.q, b.i) - recency(a.q, a.i)) || (a.i - b.i))
             .forEach(({ q, i }) => {
             if (q.completed)
                 return;
@@ -13022,6 +13022,8 @@ ${keepsBlock}${emptyBlock}
     .slots{display:grid;gap:8px;grid-template-columns:1fr 1fr 1fr}
     .slot{background:#f3eee8;border-radius:10px;aspect-ratio:16/9}
     .keep-note{font:400 12px/1.45 'Ubuntu Sans',sans-serif;color:var(--faint);margin-top:10px}
+    .kquotes{display:grid;gap:10px;margin:12px 0 0;padding:0;list-style:none}
+    .kquotes li{font:400 14px/1.45 'Ubuntu Sans',sans-serif;color:var(--ink);padding-left:12px;border-left:2px solid #E0B7C0;text-wrap:pretty;overflow-wrap:anywhere}
     .note{font:400 13px/1.5 'Ubuntu Sans',sans-serif;color:var(--soft)}
     .also{margin:14px 0 0;font:400 12px/1.5 'Ubuntu Sans',sans-serif;color:var(--faint)}
     /* Hear the Story (round 5): the app's soft rect, a squircle play button, no pill, no stroke */
@@ -13117,6 +13119,7 @@ ${keepsBlock}${emptyBlock}
         const weekKeeps = keeps.filter(k => k.ts >= start.getTime() && k.ts < start.getTime() + 7 * 86400000);
         const keepVid = k => { const m = String(k.videoPath || '').match(/\/keeps\/(.+)$/); return m ? '../../keeps/' + m[1].split('/').map(encodeURIComponent).join('/') : ''; };
         const keepImgs = (weekKeeps.length ? weekKeeps : keeps).filter(k => k.image || k.thumb || keepVid(k));
+        const keepTexts = weekKeeps.filter(k => !(k.image || k.thumb || keepVid(k) || k.imagePath || k.videoPath) && (k.text || '').trim()).slice(0, 3);
         const touched = closedThisWeek.concat(inFlight, (wl.started || []).filter(e => !closedThisWeek.includes(e) && !inFlight.includes(e)));
         const stat = (n, lab, tip, w) => `<div class="card ${w || 'w2'} stat"><div><b>${ESC(n)}</b><span class="lab">${ESC(lab)}</span></div>${tip ? `<div class="tip">${tip}</div>` : ''}</div>`;
         let top = stat(closedThisWeek.length, `finished ${when}`, closedThisWeek.length ? names(closedThisWeek) : '');
@@ -13199,7 +13202,7 @@ ${keepsBlock}${emptyBlock}
     </div></div>`;
         const keep = `<div class="card w2"><h3>Keep${weekKeeps.length ? `<span>${weekKeeps.length}</span>` : ''}</h3>${keepImgs.length
             ? `<div class="kthumbs">${keepImgs.slice(0, 4).map(k => (k.image || k.thumb) ? `<img src="${k.image || k.thumb}" alt="${ESC((k.text || 'Kept').split('\n')[0])}">` : `<video src="${ESC(keepVid(k))}" muted loop autoplay playsinline preload="metadata" aria-label="${ESC((k.text || 'Kept').split('\n')[0])}"></video>`).join('')}</div>`
-            : `<div class="slots"><div class="slot"></div><div class="slot"></div></div>`}<div class="keep-note">${keepImgs.length ? (weekKeeps.length ? `Kept ${when}.` : 'The latest from Keep.') : (past ? 'Nothing kept that week.' : 'Nothing kept yet. Add to Keep in the app; it shows up here.')}</div></div>`;
+            : (keepTexts.length ? '' : `<div class="slots"><div class="slot"></div><div class="slot"></div></div>`)}${keepTexts.length ? `<ul class="kquotes">${keepTexts.map(k => { const t = k.text.trim(); return `<li>${ESC(t.length > 220 ? t.slice(0, 220).replace(/\s+\S*$/, '') + '…' : t)}</li>`; }).join('')}</ul>` : ''}<div class="keep-note">${keepImgs.length || keepTexts.length ? (weekKeeps.length ? `Kept ${when}.` : 'The latest from Keep.') : (past ? 'Nothing kept that week.' : 'Nothing kept yet. Add to Keep in the app; it shows up here.')}</div></div>`;
         const live = past ? [] : agentsNow.map(a => [a.state === 'working' ? 'An agent is working' : 'An agent is waiting for you', a.exp ? a.exp : (a.state === 'working' ? 'In this quest’s folder.' : 'Open the terminal to answer.')]);
         const ag = (Array.isArray(extra.agents) ? extra.agents : []).concat(live);
         const agents = ag.length ? `<div class="card ${base && tot && !(top.indexOf('commits ' + when) > -1) ? 'w4' : 'w6'}"><h3>Agents right now</h3><div class="agents">${ag.slice(0, 3).map(([t, d]) => `<div><b>${ESC(t)}</b><p>${ESC(d)}</p></div>`).join('')}</div></div>` : '';
@@ -15231,7 +15234,7 @@ ${keepsBlock}${emptyBlock}
         if (!lead || !paperHead || !lead.getClientRects().length)
             return;
         const words = paperHead.split(/\s+/), lh = parseFloat(getComputedStyle(lead).lineHeight), max = lh * 2 + 1;
-        setLead(paperHead, false);
+        setLead(paperHead.replace(/[\s,.;:!?–-]+$/, ''), true);
         if (lead.getBoundingClientRect().height <= max)
             return;
         for (let n = words.length - 1; n > 0; n--) {
@@ -15314,7 +15317,7 @@ ${keepsBlock}${emptyBlock}
             h.appendChild(b);
             return b;
         };
-        if (h) {
+        if (h && false) {
             mk('l', 'r17-paper-prev', 'Previous issue', 1);
             mk('r', 'r17-paper-next', 'Next issue', -1).hidden = true;
         }
@@ -15813,6 +15816,68 @@ ${keepsBlock}${emptyBlock}
         if (!box)
             return;
         box.innerHTML = imgs.length ? imgs.map(u => `<span class="th"><img alt="" src="${esc(u)}"></span>`).join('') : `<span class="none">No experiment pictures yet this week</span>`;
+        box.querySelectorAll('img').forEach(im => im.complete ? frameThumb(im) : im.addEventListener('load', () => frameThumb(im), { once: true }));
+    };
+    const frameThumb = (im) => {
+        try {
+            const th = im.parentElement, W = im.naturalWidth, H = im.naturalHeight;
+            if (!th || !W || !H)
+                return;
+            const cw = 160, ch = Math.max(1, Math.round(160 * H / W)), c = document.createElement('canvas');
+            c.width = cw;
+            c.height = ch;
+            const g = c.getContext('2d', { willReadFrequently: true });
+            g.drawImage(im, 0, 0, cw, ch);
+            const d = g.getImageData(0, 0, cw, ch).data, px = (x, y) => { const i = (y * cw + x) * 4; return [d[i], d[i + 1], d[i + 2]]; };
+            const corners = [px(1, 1), px(cw - 2, 1), px(1, ch - 2), px(cw - 2, ch - 2)];
+            const bg = [0, 1, 2].map(k => corners.map(p => p[k]).sort((a, b) => a - b)[1]);
+            const on = (x, y) => { const p = px(x, y); return Math.abs(p[0] - bg[0]) + Math.abs(p[1] - bg[1]) + Math.abs(p[2] - bg[2]) > 60; };
+            const rows = [], cols = new Array(cw).fill(0);
+            for (let y = 0; y < ch; y++) {
+                let n = 0;
+                for (let x = 0; x < cw; x++)
+                    if (on(x, y)) {
+                        n++;
+                        cols[x]++;
+                    }
+                rows.push(n);
+            }
+            const minR = cw * .015, minC = ch * .015;
+            let T = rows.findIndex(n => n > minR), B = ch - 1 - [...rows].reverse().findIndex(n => n > minR);
+            let L = cols.findIndex(n => n > minC), R = cw - 1 - [...cols].reverse().findIndex(n => n > minC);
+            if (T < 0 || L < 0)
+                return;
+            if ((R - L) * (B - T) > cw * ch * .7)
+                return;
+            const A = th.clientWidth / th.clientHeight;
+            if (!A)
+                return;
+            let w = (R - L) * 1.16, h = (B - T) * 1.16;
+            if (w / h > A)
+                w = h * A;
+            else
+                h = w / A;
+            if (w < cw / 4) {
+                w = cw / 4;
+                h = w / A;
+            }
+            if (w > cw) {
+                w = cw;
+                h = w / A;
+            }
+            if (h > ch) {
+                h = ch;
+                w = h * A;
+            }
+            let x = (L + R) / 2 - w / 2, y = (T + B) / 2 - h / 2;
+            x = Math.max(0, Math.min(cw - w, x));
+            y = Math.max(0, Math.min(ch - h, y));
+            Object.assign(im.style, { position: 'absolute', maxWidth: 'none', objectFit: 'fill', transform: 'none',
+                width: (cw / w * 100) + '%', height: (ch / h * 100) + '%', left: (-x / w * 100) + '%', top: (-y / h * 100) + '%' });
+            th.style.position = 'relative';
+            th.style.background = `rgb(${bg.join(',')})`;
+        }
+        catch { }
     };
     const fitWeek = () => {
         const hero = $('r17-week-hero'), t = hero && hero.querySelector('.wmast');
@@ -15865,6 +15930,7 @@ ${keepsBlock}${emptyBlock}
             h.appendChild(b);
             return b;
         };
+        return;
         if (!L)
             L = mk('l', 'r17-week-prev', 'Previous week', 1);
         if (!R)

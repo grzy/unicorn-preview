@@ -60,6 +60,8 @@
     .slots{display:grid;gap:8px;grid-template-columns:1fr 1fr 1fr}
     .slot{background:#f3eee8;border-radius:10px;aspect-ratio:16/9}
     .keep-note{font:400 12px/1.45 'Ubuntu Sans',sans-serif;color:var(--faint);margin-top:10px}
+    .kquotes{display:grid;gap:10px;margin:12px 0 0;padding:0;list-style:none}
+    .kquotes li{font:400 14px/1.45 'Ubuntu Sans',sans-serif;color:var(--ink);padding-left:12px;border-left:2px solid #E0B7C0;text-wrap:pretty;overflow-wrap:anywhere}
     .note{font:400 13px/1.5 'Ubuntu Sans',sans-serif;color:var(--soft)}
     .also{margin:14px 0 0;font:400 12px/1.5 'Ubuntu Sans',sans-serif;color:var(--faint)}
     /* Hear the Week (round 5): the app's soft rect, a squircle play button, no pill, no stroke */
@@ -136,7 +138,7 @@
       <div><h3 class="lefth">Still true?<span id="qs-state"></span></h3><ul class="qs"><li data-i="0" data-ch="null" data-ans=""><div class="q">Keep one Story page per build?</div><div class="acts"></div></li><li data-i="1" data-ch="null" data-ans="Yes"><div class="q">Show the week strip when Commits is minimized?</div><div class="acts"></div></li></ul></div>
       <div><h3>To-do</h3><ul class="todo"><li data-t="0"><span class="bx" role="checkbox" aria-checked="false" aria-label="Weekly Story page" tabindex="0"></span><span class="tx">Weekly Story page<small>In motion</small></span></li><li data-t="1"><span class="bx" role="checkbox" aria-checked="false" aria-label="Title Case sweep" tabindex="0"></span><span class="tx">Title Case sweep<small>In motion</small></span></li><li data-t="2"><span class="bx" role="checkbox" aria-checked="false" aria-label="Showcase screenshots" tabindex="0"></span><span class="tx">Showcase screenshots</span></li></ul></div>
     </div></div>
-    <div class="card w2"><h3>Keep<span>2</span></h3><div class="kthumbs"><img src="../../demo/keep-week.webp" alt="Week page, this week"></div><div class="keep-note">Kept this week.</div></div>
+    <div class="card w2"><h3>Keep<span>2</span></h3><div class="kthumbs"><img src="../../demo/keep-week.webp" alt="Week page, this week"></div><ul class="kquotes"><li>Hooks write the agent status on every prompt and every stop. Peach reads it once a second: gallop, think, rest.</li></ul><div class="keep-note">Kept this week.</div></div>
     <div class="card w4"><h3>Agents right now</h3><div class="agents"><div><b>Figma MCP both ways</b><p>Canvas reads the build and writes back to the design system file.</p></div><div><b>Week pages on their own</b><p>A new build or a new keep refreshes this page.</p></div></div></div>
     <div class="card w2"><h3>Unicorn commits this week</h3><div class="wk-tot">11</div><div class="commits"><i class="" style="height:57.14285714285714%"></i><i class="" style="height:100%"></i><i class="later"></i><i class="later"></i><i class="later"></i><i class="later"></i><i class="later"></i></div><div class="c-lab"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div></div>
   </div><script>(()=>{const a=document.getElementById('aud'),l=document.getElementById('listen'),pp=document.getElementById('pp'),b=document.getElementById('lbar');
