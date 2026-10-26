@@ -411,9 +411,17 @@ if (window.unicorn && window.unicorn.isDesktop)
     transition: opacity 0.7s ease 0.35s;
   }
   #preloader.out { opacity: 0; pointer-events: none; }
-  
-  .pl-stage { transition: opacity 0.35s ease; }
-  #preloader.out .pl-stage { opacity: 0; }
+
+  .pl-stage {
+    animation: plStageIn 0.7s cubic-bezier(.2,.8,.2,1) both;
+    transition: opacity 0.7s cubic-bezier(.4,0,.2,1), transform 0.7s cubic-bezier(.4,0,.2,1);
+  }
+  #preloader.out .pl-stage { opacity: 0; transform: scale(.975); }
+  @keyframes plStageIn { from { opacity: 0; transform: scale(.965); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .pl-stage { animation: none; transition: opacity 0.4s ease; }
+    #preloader.out .pl-stage { transform: none; }
+  }
 
   .pl-stage {
     display: flex;
@@ -4843,15 +4851,20 @@ if (window.unicorn && window.unicorn.isDesktop)
   .r17-story .pane { grid-area: 1 / 1; min-width: 0; visibility: hidden; opacity: 0; transition: opacity .3s var(--ease), visibility 0s .3s; }
   .r17-story .pane.on { visibility: visible; opacity: 1; transition: opacity .3s var(--ease), visibility 0s; }
   .r17-story .hero { position: relative; aspect-ratio: 16 / 10; border-radius: 10px; overflow: hidden; background: var(--nori-dark); box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
-    container-type: inline-size; --hw: calc(100cqw - var(--hp) * 2); }
+    container-type: inline-size; --hw: calc(100cqw - var(--hp) * 2); --mi: 18px; --mw: calc(var(--hw) - var(--mi) * 2); }
   .r17-story .hero.click { cursor: pointer; }
   
   .r17-story .hero.sheet { background: #F7F4EE; }   
-  .r17-story .hero.sheet img.mast { position: absolute; top: calc(22px - var(--hw) * 10 / 1329); left: calc(var(--hp) - var(--hw) * 10 / 1329); width: calc(var(--hw) * 1362 / 1329); display: block; }   
+  .r17-story .hero.sheet img.mast { position: absolute; top: calc(22px - var(--mw) * 10 / 1329); left: calc(var(--hp) + var(--mi) - var(--mw) * 10 / 1329); width: calc(var(--mw) * 1362 / 1329); display: block; }      
   .r17-story .hero.sheet .lead { position: absolute; left: calc(var(--hp) - 1.5px); right: calc(var(--hp) + 40px); bottom: 18px; font: 400 17px/1.12 var(--sans); letter-spacing: -.01em; color: #1A1616; }
+  
+  .r17-story .hero.sheet .lead .hl { background: linear-gradient(100deg, rgba(255,175,95,.42), rgba(238,156,156,.36) 50%, rgba(175,135,215,.42)) 0 88% / 0% 62% no-repeat;
+    -webkit-box-decoration-break: clone; box-decoration-break: clone; transition: background-size .9s cubic-bezier(.2,.8,.2,1); }
+  #r17-paper-hero:hover .lead .hl { background-size: 100% 62%; }
+  .r17-story .hero.sheet .lead .ell { margin-left: -.06em; }
   .r17-story .hero.sheet::after { content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit; box-shadow: inset 0 1px 0 rgba(255,255,255,.6), inset 0 -16px 20px -14px rgba(16,15,17,.25); }
-  .r17-story .hero.sheet .rule { position: absolute; left: var(--hp); right: var(--hp); top: calc(30px + var(--hw) * 184 / 1329); height: 1px; background: rgba(26,22,22,.12); }
-  .r17-story .hero.sheet .dek { position: absolute; left: var(--hp); right: var(--hp); top: calc(37px + var(--hw) * 184 / 1329); font: 400 8.5px/1.4 var(--mono); letter-spacing: .04em; color: rgba(26,22,22,.42); display: flex; justify-content: space-between; }
+  .r17-story .hero.sheet .rule { position: absolute; left: var(--hp); right: var(--hp); top: calc(30px + var(--mw) * 184 / 1329); height: 1px; background: rgba(26,22,22,.12); }
+  .r17-story .hero.sheet .dek { position: absolute; left: var(--hp); right: var(--hp); top: calc(37px + var(--mw) * 184 / 1329); font: 400 8.5px/1.4 var(--mono); letter-spacing: .04em; color: rgba(26,22,22,.42); display: flex; justify-content: space-between; }
   
   .r17-story .hero.week { background: #F7F4EE; }
   
@@ -4913,6 +4926,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   .r17-story .flip[data-file].r { right: 0; place-items: start end; padding: 14px 10px 0 0; }
   .r17-story:hover .flip[data-file], aside:hover .r17-story .flip[data-file], .r17-story .flip[data-file]:focus-visible { opacity: 1; }   
   .r17-story .flip[data-file] .ic { width: 16px; height: 16px; }
+  .r17-story .flip[hidden] { display: none; }
   .r17-story .flip.l .ic { transform: rotate(180deg); }
   .r17-story .pips { position: absolute; left: 50%; top: 6px; transform: translateX(-50%); z-index: 5; display: flex; gap: 5px; padding: 4px 6px; border-radius: 6px; background: rgba(16,15,17,.55); }
   .r17-story .pips i { width: 5px; height: 5px; border-radius: 50%; background: rgba(241,236,232,.35); }
@@ -6245,6 +6259,8 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     const setActiveQ = (i) => {
         activeQ = i;
         data.activeQuestIndex = i;
+        if (data.quests[i])
+            data.quests[i].lastOpenedAt = Date.now();
         saveApp(data);
     };
     let showArchived = false;
@@ -6283,7 +6299,10 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
     };
     const renderSwitcher = () => {
         switcherEl.innerHTML = '';
-        data.quests.forEach((q, i) => {
+        const recency = (q, i) => i === activeQ ? Infinity : (q.lastOpenedAt || 0);
+        data.quests.map((q, i) => ({ q, i }))
+            .sort((a, b) => (recency(b.q, b.i) - recency(a.q, a.i)) || (a.i - b.i))
+            .forEach(({ q, i }) => {
             if (q.completed)
                 return;
             const b = document.createElement('div');
@@ -12054,7 +12073,7 @@ ${keepsBlock}${emptyBlock}
     const slug = s => String(s || 'quest').toLowerCase()
         .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 32) || 'quest';
     const isoWeek = (d) => {
-        const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+        const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate() + 1));
         const day = t.getUTCDay() || 7;
         t.setUTCDate(t.getUTCDate() + 4 - day);
         const yearStart = new Date(Date.UTC(t.getUTCFullYear(), 0, 1));
@@ -13071,7 +13090,7 @@ ${keepsBlock}${emptyBlock}
     const weekToks = (s) => String(s || '').toLowerCase().replace(/['’]s\b/g, '').split(/[^a-z]+/).map(w => w.replace(/s$/, '')).filter(w => w.length > 2 && !WEEK_STOP.has(w) && !WEEK_STOP.has(w + 's'));
     const isoWeekRange = (y, w) => {
         const jan4 = new Date(y, 0, 4), mon = new Date(jan4);
-        mon.setDate(jan4.getDate() - ((jan4.getDay() + 6) % 7) + (w - 1) * 7);
+        mon.setDate(jan4.getDate() - ((jan4.getDay() + 6) % 7) + (w - 1) * 7 - 1);
         const sun = new Date(mon);
         sun.setDate(mon.getDate() + 6);
         const M = d => d.toLocaleDateString('en-US', { month: 'short' });
@@ -13085,7 +13104,7 @@ ${keepsBlock}${emptyBlock}
         const today = new Date(now);
         today.setHours(0, 0, 0, 0);
         const start = new Date(today);
-        start.setDate(today.getDate() - ((today.getDay() + 6) % 7));
+        start.setDate(today.getDate() - today.getDay());
         const key = d => d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate();
         const per = new Map();
         (allCommits || []).forEach(c => { if (!base || c.repo !== base)
@@ -13481,7 +13500,7 @@ ${keepsBlock}${emptyBlock}
         const base = String(quest.repo || (/unicorn/i.test(quest.name || '') ? '~/unicorn' : '')).replace(/\/+$/, '').split('/').pop();
         const keepsAll = loadJSON('unicorn.keeps', []).filter(k => k.questId === quest.id);
         const exps = quest.experiments || [];
-        const satOf = ts => { const d = new Date(ts); d.setHours(12, 0, 0, 0); d.setDate(d.getDate() + ((7 - d.getDay()) % 7)); return d; };
+        const satOf = ts => { const d = new Date(ts); d.setHours(12, 0, 0, 0); d.setDate(d.getDate() + (6 - d.getDay())); return d; };
         const weeks = new Map();
         const add = ts => { if (!ts || isNaN(ts))
             return; const sat = satOf(ts); weeks.set(sat.toDateString(), sat); };
@@ -13608,7 +13627,7 @@ ${keepsBlock}${emptyBlock}
         }
         catch (e) { }
         const exps = quest.experiments || [];
-        const weekAgo = (() => { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return d.getTime(); })();
+        const weekAgo = (() => { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - d.getDay()); return d.getTime(); })();
         const closedThisWeek = exps.filter(e => e.completedAt && Date.parse(e.completedAt) >= weekAgo);
         const inFlight = exps.filter(e => e.status === 'active' || e.status === 'starting');
         const now = new Date();
@@ -13619,14 +13638,14 @@ ${keepsBlock}${emptyBlock}
         let html, pastPage = null;
         const monNow = new Date(now);
         monNow.setHours(0, 0, 0, 0);
-        monNow.setDate(monNow.getDate() - ((monNow.getDay() + 6) % 7));
+        monNow.setDate(monNow.getDate() - monNow.getDay());
         const startedNow = exps.filter(e => e.createdAt && Date.parse(e.createdAt) >= monNow.getTime());
         const weekLive = await loadWeekLive(quest, monNow.getTime(), [...new Set(closedThisWeek.concat(inFlight, startedNow).map(e => e.name))].slice(0, 8));
         weekLive.started = startedNow;
         if (wm && extra.week < `${wn.y}-W${String(wn.w).padStart(2, '0')}`) {
             const pw = { y: +wm[1], w: +wm[2] };
             const jan4 = new Date(pw.y, 0, 4), mon = new Date(jan4);
-            mon.setDate(jan4.getDate() - ((jan4.getDay() + 6) % 7) + (pw.w - 1) * 7);
+            mon.setDate(jan4.getDate() - ((jan4.getDay() + 6) % 7) + (pw.w - 1) * 7 - 1);
             mon.setHours(0, 0, 0, 0);
             const end = new Date(mon);
             end.setDate(mon.getDate() + 6);
@@ -14482,6 +14501,19 @@ ${keepsBlock}${emptyBlock}
             localStorage.setItem(DATA_KEY, JSON.stringify(data));
             return { name: expName, status: 'deleted', kind: 'experiment' };
         }
+        if (action === 'experiment-rename' || action === 'exp-rename') {
+            const expName = (ev.experiment || ev.name || '').trim(), to = (ev.to || '').trim();
+            const explicit = (ev.quest || '').trim();
+            if (!expName || !to || !explicit)
+                return null;
+            const q = data.quests.find(x => (x.name || '').toLowerCase() === explicit.toLowerCase());
+            const e = q && (q.experiments || []).find(x => (x.name || '').toLowerCase() === expName.toLowerCase());
+            if (!e)
+                return null;
+            e.name = to;
+            localStorage.setItem(DATA_KEY, JSON.stringify(data));
+            return { name: to, status: e.status || 'renamed', kind: 'experiment' };
+        }
         if (action === 'stage-done' || action === 'stage-complete' || action === 'stage-shipped') {
             const expName = (ev.experiment || ev.name || '').trim();
             if (!expName || ev.stage === undefined)
@@ -14890,7 +14922,7 @@ ${keepsBlock}${emptyBlock}
         }
     });
     const isoWeek = d => {
-        const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())), day = t.getUTCDay() || 7;
+        const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate() + 1)), day = t.getUTCDay() || 7;
         t.setUTCDate(t.getUTCDate() + 4 - day);
         return Math.ceil(((t - Date.UTC(t.getUTCFullYear(), 0, 1)) / 86400000 + 1) / 7);
     };
@@ -14939,7 +14971,8 @@ ${keepsBlock}${emptyBlock}
     catch {
         return null;
     } };
-    const paperRel = async () => { const x = await paperIndex(); return x && x.latest ? 'papers/' + x.latest : 'protos/mirror/paper-e.html'; };
+    const paperRel = async () => { if (window.__r17PaperPick)
+        return 'papers/' + window.__r17PaperPick; const x = await paperIndex(); return x && x.latest ? 'papers/' + x.latest : 'protos/mirror/paper-e.html'; };
     $('st-paper').addEventListener('click', async (e) => { e.preventDefault(); const rel = await paperRel(), base = await repoBase(); if (base)
         U.openPath(base + '/' + rel);
     else
@@ -15181,12 +15214,28 @@ ${keepsBlock}${emptyBlock}
     };
     const lead = $('r17-paper-lead');
     let paperHead = '';
+    const setLead = (t, cut) => {
+        lead.innerHTML = '';
+        const s = document.createElement('span');
+        s.className = 'hl';
+        s.textContent = t;
+        if (cut) {
+            const e = document.createElement('span');
+            e.className = 'ell';
+            e.textContent = '…';
+            s.appendChild(e);
+        }
+        lead.appendChild(s);
+    };
     const fitLead = () => {
         if (!lead || !paperHead || !lead.getClientRects().length)
             return;
         const words = paperHead.split(/\s+/), lh = parseFloat(getComputedStyle(lead).lineHeight), max = lh * 2 + 1;
-        for (let n = words.length; n > 0; n--) {
-            lead.textContent = words.slice(0, n).join(' ').replace(/[\s,.;:!?–-]+$/, '') + '…';
+        setLead(paperHead, false);
+        if (lead.getBoundingClientRect().height <= max)
+            return;
+        for (let n = words.length - 1; n > 0; n--) {
+            setLead(words.slice(0, n).join(' ').replace(/[\s,.;:!?–-]+$/, ''), true);
             if (lead.getBoundingClientRect().height <= max)
                 break;
         }
@@ -15198,20 +15247,77 @@ ${keepsBlock}${emptyBlock}
         const v = textInk(lead, true), hb = h.getBoundingClientRect();
         return v && hb.height ? hb.bottom - v.base : 22;
     };
+    let pIdx = 0, pIssues = [], pNewest = '';
+    const dayCap = (ds) => {
+        const d = new Date(ds + 'T12:00:00'), t = new Date();
+        t.setHours(12, 0, 0, 0);
+        const n = Math.round((t - d) / 864e5);
+        if (n <= 0)
+            return 'Today’s Paper';
+        if (n === 1)
+            return 'Yesterday’s Paper';
+        if (n < 7)
+            return d.toLocaleDateString('en-US', { weekday: 'long' }) + '’s Paper';
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' Paper';
+    };
+    function paintPaper() {
+        const iss = pIssues[pIdx];
+        const d = iss && iss.date ? new Date(iss.date + 'T12:00:00') : new Date();
+        $('r17-paper-date').textContent = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+        $('r17-paper-issue').textContent = iss ? 'Issue ' + (pIssues.length - pIdx) : '';
+        paperHead = (iss && iss.title) || 'Today’s paper is on its way';
+        setLead(paperHead, false);
+        fitLead();
+        refit();
+        const cap = document.querySelector('#r17-story [data-pane="paper"] .door .cap');
+        if (cap)
+            cap.textContent = iss ? dayCap(iss.date) : 'Today’s Paper';
+        window.__r17PaperPick = pIdx > 0 && iss ? iss.path : null;
+        const L = $('r17-paper-prev'), R = $('r17-paper-next');
+        if (L)
+            L.hidden = pIdx >= pIssues.length - 1;
+        if (R)
+            R.hidden = pIdx <= 0;
+        const h = $('r17-paper-hero');
+        if (h)
+            h.title = pIdx > 0 ? 'Opens this issue' : 'Opens today’s paper';
+    }
     async function renderPaper() {
         let x = null;
         try {
             x = await fetch('../papers/index.json', { cache: 'no-store' }).then(r => r.ok ? r.json() : null);
         }
         catch { }
-        const iss = x && Array.isArray(x.issues) && x.issues[0];
-        const d = iss && iss.date ? new Date(iss.date + 'T12:00:00') : new Date();
-        $('r17-paper-date').textContent = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
-        $('r17-paper-issue').textContent = iss ? 'Issue ' + x.issues.length : '';
-        paperHead = (iss && iss.title) || 'Today’s paper is on its way';
-        lead.textContent = paperHead;
-        fitLead();
-        refit();
+        pIssues = x && Array.isArray(x.issues) ? x.issues : [];
+        const newest = pIssues[0] ? pIssues[0].date : '';
+        if (newest !== pNewest) {
+            pNewest = newest;
+            pIdx = 0;
+        }
+        pIdx = Math.min(pIdx, Math.max(0, pIssues.length - 1));
+        paintPaper();
+    }
+    const flipPaper = (dir) => (e) => { e.stopPropagation(); const n = pIdx + dir; if (n < 0 || n >= pIssues.length)
+        return; pIdx = n; paintPaper(); if (typeof uiClick === 'function')
+        uiClick('D5'); };
+    {
+        const h = $('r17-paper-hero');
+        const mk = (cls, id, label, dir) => {
+            const b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'flip ' + cls;
+            b.id = id;
+            b.dataset.file = '';
+            b.setAttribute('aria-label', label);
+            b.innerHTML = '<svg class="ic" aria-hidden="true"><use href="#i-caret"/></svg>';
+            b.addEventListener('click', flipPaper(dir));
+            h.appendChild(b);
+            return b;
+        };
+        if (h) {
+            mk('l', 'r17-paper-prev', 'Previous issue', 1);
+            mk('r', 'r17-paper-next', 'Next issue', -1).hidden = true;
+        }
     }
     $('r17-paper-hero').addEventListener('click', () => click('st-paper'));
     $('r17-paper-open').addEventListener('click', () => click('st-paper'));
@@ -15611,12 +15717,13 @@ ${keepsBlock}${emptyBlock}
         pick = 0; renderDesign(); };
     window.r17Story = { refresh: () => { renderPaper(); renderAll(); }, state: () => override || ds };
     const isoWeek = d => {
-        const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())), day = t.getUTCDay() || 7;
+        const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate() + 1)), day = t.getUTCDay() || 7;
         t.setUTCDate(t.getUTCDate() + 4 - day);
         const y = t.getUTCFullYear();
         return { y, w: Math.ceil(((t - Date.UTC(y, 0, 1)) / 86400000 + 1) / 7) };
     };
     let weekSig = '';
+    let wIdx = 0, wQuest = '';
     async function renderWeek(force) {
         const hero = $('r17-week-hero'), cap = $('r17-week-cap');
         if (!hero)
@@ -15626,6 +15733,12 @@ ${keepsBlock}${emptyBlock}
             hero.innerHTML = '';
             return;
         }
+        if (q.name !== wQuest) {
+            wQuest = q.name;
+            wIdx = 0;
+        }
+        window.__r17WeekPick = null;
+        weekCarets(false, false);
         const sl = slug(q.name), wn = isoWeek(new Date()), cur = `${sl}/${wn.y}-W${String(wn.w).padStart(2, '0')}-${sl}.html`;
         let rel = cur, abs = '';
         if (typeof window.r17WeekSrc === 'function') {
@@ -15652,7 +15765,9 @@ ${keepsBlock}${emptyBlock}
             }
             catch { }
             const mine = all.filter(b => b.rel.startsWith(sl + '/') && /^\d{4}-W\d{2}/.test(b.name)).sort((a, b) => b.name.localeCompare(a.name));
-            const hit = mine.find(b => b.rel === cur) || mine[0];
+            const base = Math.max(0, mine.findIndex(b => b.rel === cur));
+            wIdx = Math.min(wIdx, Math.max(0, mine.length - 1 - base));
+            const hit = mine[base + wIdx];
             if (!hit) {
                 hero.innerHTML = `<div class="nofile">No week written yet</div>`;
                 cap.textContent = 'This Week';
@@ -15661,12 +15776,16 @@ ${keepsBlock}${emptyBlock}
             }
             rel = hit.rel;
             abs = hit.path;
+            if (wIdx > 0)
+                window.__r17WeekPick = abs;
+            weekCarets(base + wIdx < mine.length - 1, wIdx > 0);
         }
         const written = getJ('r17.week-written', null);
         const wm = rel.match(/(\d{4})-W(\d{2})/);
-        cap.textContent = written && written.rel === rel && written.ts ? 'Updated ' + fmtShort(new Date(written.ts)) : rel === cur ? 'This Week' : 'Week ' + (wm ? +wm[2] : '');
+        cap.textContent = wIdx > 0 ? (wIdx === 1 && rel !== cur ? 'Last Week' : 'Week ' + (wm ? +wm[2] : ''))
+            : written && written.rel === rel && written.ts ? 'Updated ' + fmtShort(new Date(written.ts)) : rel === cur ? 'This Week' : 'Week ' + (wm ? +wm[2] : '');
         const sig = rel + '|' + ((written && written.rel === rel && written.ts) || '');
-        if (!force && sig === weekSig && hero.firstElementChild) {
+        if (!force && sig === weekSig && hero.querySelector('.wmast')) {
             fitWeek();
             return;
         }
@@ -15675,12 +15794,13 @@ ${keepsBlock}${emptyBlock}
     }
     const weekSheet = async (hero, q, y, w, src) => {
         const jan4 = new Date(y, 0, 4), mon = new Date(jan4);
-        mon.setDate(jan4.getDate() - ((jan4.getDay() + 6) % 7) + (w - 1) * 7);
+        mon.setDate(jan4.getDate() - ((jan4.getDay() + 6) % 7) + (w - 1) * 7 - 1);
         const sun = new Date(mon);
         sun.setDate(mon.getDate() + 6);
         const range = MONTHS[mon.getMonth()] + ' ' + mon.getDate() + '–' + (sun.getMonth() !== mon.getMonth() ? MONTHS[sun.getMonth()] + ' ' : '') + sun.getDate() + ', ' + sun.getFullYear();
-        hero.innerHTML = `<h3 class="wmast bs" aria-label="Builder’s Week">Builde<svg class="lig" viewBox="0 0 684 900" aria-hidden="true"><g transform="matrix(1 0 0 -1 0 900)"><path d="M118 0V451H44V600H196V484H238Q263 544 315.0 575.0Q367 606 434 606H484V478H427Q346 478 305.5 431.0Q265 384 265 306V0Z"/><path d="M512 850H680V640Q680 478 520 478H440V606H520Q588 606 588 660V686H512Z"/></g></svg>s Week</h3><i class="rule"></i>`
-            + `<span class="dek"><span>${esc(range)}</span><span>${esc((q && q.name) || '')} Edition</span></span><div class="wthumbs"></div>`;
+        hero.querySelectorAll(':scope > :not(.flip)').forEach(n => n.remove());
+        hero.insertAdjacentHTML('afterbegin', `<h3 class="wmast bs" aria-label="Builder’s Week">Builde<svg class="lig" viewBox="0 0 684 900" aria-hidden="true"><g transform="matrix(1 0 0 -1 0 900)"><path d="M118 0V451H44V600H196V484H238Q263 544 315.0 575.0Q367 606 434 606H484V478H427Q346 478 305.5 431.0Q265 384 265 306V0Z"/><path d="M512 850H680V640Q680 478 520 478H440V606H520Q588 606 588 660V686H512Z"/></g></svg>s Week</h3><i class="rule"></i>`
+            + `<span class="dek"><span>${esc(range)}</span><span>${esc((q && q.name) || '')} Edition</span></span><div class="wthumbs"></div>`);
         requestAnimationFrame(fitWeek);
         let imgs = [];
         try {
@@ -15698,9 +15818,9 @@ ${keepsBlock}${emptyBlock}
         const hero = $('r17-week-hero'), t = hero && hero.querySelector('.wmast');
         if (!t || !hero.clientWidth)
             return;
-        const cs = getComputedStyle(hero), hp = parseFloat(cs.getPropertyValue('--hp')) || 22, hw = hero.clientWidth - hp * 2;
+        const cs = getComputedStyle(hero), hp = parseFloat(cs.getPropertyValue('--hp')) || 22, mi = parseFloat(cs.getPropertyValue('--mi')) || 0, hw = hero.clientWidth - hp * 2 - mi * 2;
         t.style.fontSize = '40px';
-        t.style.left = hp + 'px';
+        t.style.left = (hp + mi) + 'px';
         t.style.top = '0px';
         const w0 = t.getBoundingClientRect().width;
         if (!w0)
@@ -15721,8 +15841,37 @@ ${keepsBlock}${emptyBlock}
         if (th)
             th.style.top = (inkBottom + 36).toFixed(2) + 'px';
     };
-    $('r17-week-hero').addEventListener('click', () => click('st-story-week'));
-    $('r17-week-open').addEventListener('click', () => click('st-story-week'));
+    const openWeek = () => { if (window.__r17WeekPick && U && U.openPath)
+        U.openPath(window.__r17WeekPick);
+    else
+        click('st-story-week'); };
+    $('r17-week-hero').addEventListener('click', openWeek);
+    $('r17-week-open').addEventListener('click', openWeek);
+    function weekCarets(older, newer) {
+        const h = $('r17-week-hero');
+        if (!h)
+            return;
+        let L = $('r17-week-prev'), R = $('r17-week-next');
+        const mk = (cls, id, label, dir) => {
+            const b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'flip ' + cls;
+            b.id = id;
+            b.dataset.file = '';
+            b.setAttribute('aria-label', label);
+            b.innerHTML = '<svg class="ic" aria-hidden="true"><use href="#i-caret"/></svg>';
+            b.addEventListener('click', e => { e.stopPropagation(); wIdx = Math.max(0, wIdx + dir); renderWeek(); if (typeof uiClick === 'function')
+                uiClick('D5'); });
+            h.appendChild(b);
+            return b;
+        };
+        if (!L)
+            L = mk('l', 'r17-week-prev', 'Previous week', 1);
+        if (!R)
+            R = mk('r', 'r17-week-next', 'Next week', -1);
+        L.hidden = !older;
+        R.hidden = !newer;
+    }
     $('r17-week-dir').addEventListener('click', () => click('st-story-dir'));
     window.addEventListener('unicorn:week-written', () => renderWeek());
     let fitRaf = 0;
@@ -16502,7 +16651,7 @@ ${keepsBlock}${emptyBlock}
 </script>
 
 <script src="preview/roam.js?v=a9db26d4"></script>
-<script>window.__previewWeeks = {"unicorn":"2026-W43-unicorn.html","color-weather":"2026-W43-color-weather.html","birdsong-atlas":"2026-W43-birdsong-atlas.html","paper-synth":"2026-W43-paper-synth.html"};</script>
+<script>window.__previewWeeks = {"unicorn":"2026-W44-unicorn.html","color-weather":"2026-W44-color-weather.html","birdsong-atlas":"2026-W44-birdsong-atlas.html","paper-synth":"2026-W44-paper-synth.html"};</script>
 <script src="preview/guest-late.js?v=193ae991"></script>
 </body>
 </html>

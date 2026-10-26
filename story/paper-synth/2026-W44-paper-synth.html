@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Unicorn · Week 41</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Paper Synth · Week 44</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@600&family=Ubuntu+Sans:wght@400;500&family=Ubuntu+Sans+Mono:wght@400&display=swap" rel="stylesheet"><style>
     *{box-sizing:border-box;margin:0;padding:0}
     :root{--peach:#E8956A;--lilac:#A78BDF;--grad:linear-gradient(135deg,#E8956A,#A78BDF);--pi:#1a1616;--soft:#6c645d;--faint:#776e67;--line:#efe9e2;--ease:cubic-bezier(.4,0,.2,1);--t:.45s}
@@ -119,26 +119,23 @@
     @media (max-width:760px){.agents{grid-template-columns:1fr}}
     .agents b{display:block;font:500 14px/1.3 'Ubuntu Sans',sans-serif;margin-bottom:4px}
     .agents p{font:400 13px/1.5 'Ubuntu Sans',sans-serif;color:#5f5750}.builds>.build{min-width:0}.build img,.build .ph{width:100%;max-width:100%;object-fit:cover}.build>img{transform:none}</style></head><body><div class="page"><article class="sheet">
-  <div class="ear"><span>Oct 5-11, 2026</span><span>Week 41</span><span><a href="index.html">Directory</a></span><span>Unicorn Edition</span></div>
+  <div class="ear"><span>Oct 25-31, 2026</span><span>Week 44</span><span><a href="index.html">Directory</a></span><span>Paper Synth Edition</span></div>
   <div class="wk-top"><h1 class="wk-title dir-title bs" aria-label="Builder’s Week">Builde<svg class="lig" viewBox="0 0 684 900" aria-hidden="true"><g transform="matrix(1 0 0 -1 0 900)"><path d="M118 0V451H44V600H196V484H238Q263 544 315.0 575.0Q367 606 434 606H484V478H427Q346 478 305.5 431.0Q265 384 265 306V0Z"/><path d="M512 850H680V640Q680 478 520 478H440V606H520Q588 606 588 660V686H512Z"/></g></svg>s Week</h1></div>
-  <h2 class="wk-head">Quiet tooltips, <em>no stroke</em></h2>
-  <p class="lede">Every hover in the app now uses one soft tooltip. Phrases in sentence case, keys in mono.</p>
+  
+  <p class="lede">A synth made of cut paper. Fold a key to bend the pitch.</p>
   <div class="listen" id="listen" hidden><button class="play" id="play" aria-label="Play"><svg viewBox="0 0 12 12"><path id="pp" d="M3 1.5v9l7.5-4.5z"/></svg></button><span class="lt">Hear the Week<small id="ldur"></small></span><span class="bar"><i id="lbar"></i></span></div>
-  <audio id="aud" src="2026-W41-unicorn.m4a" preload="metadata"></audio><script type="text/plain" id="say">Week 41. Unicorn. Every hover in the app now uses one soft tooltip. Phrases in sentence case, keys in mono. Nothing finished that week. 15 commits that week.</script>
+  <audio id="aud" src="2026-W44-paper-synth.m4a" preload="metadata"></audio><script type="text/plain" id="say">Week 44. Paper Synth. A synth made of cut paper. Fold a key to bend the pitch. Nothing finished this week.</script>
   <div class="cards">
-    <div class="card w2 stat"><div><b>0</b><span class="lab">finished that week</span></div></div><div class="card w4"><h3>What was replaced, and why</h3><ul class="repl"><li><span class="was">Stroked popups</span><span class="now">One quiet tooltip</span><span class="why">Opaque, no stroke, eased in and out.</span></li><li><span class="was">ALL CAPS labels</span><span class="now">Title Case</span><span class="why">Words, not shouting.</span></li></ul></div>
-    <div class="card w6"><h3>Experiments</h3><div class="builds" style="--n:3"><div class="build"><img src="../../demo/keep-system.webp" alt="Tooltips"><b>Tooltips<small>Final</small></b>
-      </div><div class="build"><img src="../../demo/build-peach.webp" alt="Status unicorn"><b>Status unicorn<small>Started</small></b>
-      </div><div class="build"><a href="../../living-ds/" target="_blank" rel="noopener"><img src="../../demo/build-system.webp" alt="Design system"><b>Design system<small>Updated</small></b></a>
-      </div></div></div>
+    <div class="card w2 stat"><div><b>0</b><span class="lab">finished this week</span></div></div><div class="card w2 stat"><div><b>0</b><span class="lab">kept this week</span></div></div><div class="card w2"><h3>Paper Synth commits this week</h3><div class="wk-tot">0</div><div class="commits"><i class="zero" style="height:3%"></i><i class="zero" style="height:3%"></i><i class="later"></i><i class="later"></i><i class="later"></i><i class="later"></i><i class="later"></i></div><div class="c-lab"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div><div class="c-empty">No commits this week.</div></div>
+    <div class="card w6"><h3>Experiments</h3><p class="note">Nothing moved this week.</p></div>
     
     <div class="card w4"><div class="two">
-      <div><h3 class="lefth">Still true?<span id="qs-state"></span></h3><ul class="qs"><li data-i="0" data-ch="null" data-ans="No"><div class="q">Keep the hover sound on Panels?</div><div class="acts"></div></li></ul></div>
-      <div><h3>To-do</h3><ul class="todo"><li data-t="0"><span class="bx" role="checkbox" aria-checked="false" aria-label="Status unicorn" tabindex="0"></span><span class="tx">Status unicorn<small>In motion</small></span></li><li data-t="1"><span class="bx" role="checkbox" aria-checked="false" aria-label="Keep with one drop zone" tabindex="0"></span><span class="tx">Keep with one drop zone<small>Next</small></span></li></ul></div>
+      <div><h3 class="lefth">Still true?<span id="qs-state"></span></h3><p class="note">Nothing open. No questions for you.</p></div>
+      <div><h3>To-do</h3><p class="note">Nothing open.</p></div>
     </div></div>
-    <div class="card w2"><h3>Keep</h3><div class="kthumbs"><img src="../../demo/keep-week.webp" alt="Week page, this week"><img src="../../demo/keep-peach.webp" alt="Peach, the still pose"><img src="../../demo/keep-system.webp" alt="Design system: buttons and status"></div><div class="keep-note">The latest from Keep.</div></div>
-    <div class="card w4"><h3>Agents right now</h3><div class="agents"><div><b>Tooltips everywhere</b><p>One script gives every panel the same hover.</p></div></div></div>
-    <div class="card w2"><h3>Unicorn commits that week</h3><div class="wk-tot">15</div><div class="commits"><i class="" style="height:100%"></i><i class="zero" style="height:3%"></i><i class="" style="height:33.33333333333333%"></i><i class="" style="height:33.33333333333333%"></i><i class="zero" style="height:3%"></i><i class="zero" style="height:3%"></i><i class="" style="height:83.33333333333334%"></i></div><div class="c-lab"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div></div>
+    <div class="card w2"><h3>Keep</h3><div class="slots"><div class="slot"></div><div class="slot"></div></div><div class="keep-note">Nothing kept yet. Add to Keep in the app; it shows up here.</div></div>
+    
+    
   </div><script>(()=>{const a=document.getElementById('aud'),l=document.getElementById('listen'),pp=document.getElementById('pp'),b=document.getElementById('lbar');
   const ready=()=>{l.hidden=false;const s=Math.round(a.duration);document.getElementById('ldur').textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');};
   if(a.readyState>=1)ready();else a.addEventListener('loadedmetadata',ready);
