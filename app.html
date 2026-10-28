@@ -4483,6 +4483,11 @@ if (window.unicorn && window.unicorn.isDesktop)
   }
   #menubar .mb-car { margin: -5px -8px -5px -4px; color: var(--text-whisper-2); }
   html #menubar .mb-panels-btn:hover .mb-car, html #menubar .mb-panels-btn[aria-expanded="true"] .mb-car { color: var(--daikon); background: rgba(255,255,255,.05); }
+  
+  html #menubar .mb-panels-btn { transition: background var(--t) var(--ease), color var(--t) var(--ease) !important; }
+  html #menubar .mb-panels-btn:hover, html #menubar .mb-panels-btn[aria-expanded="true"] { color: var(--daikon) !important; }
+  html #menubar .mb-panels-btn:hover .mb-car, html #menubar .mb-panels-btn[aria-expanded="true"] .mb-car { color: var(--daikon); }   
+  html #menubar .mb-panels-btn .mb-car { color: rgba(241,236,232,.62); transition: transform var(--t) var(--ease), color var(--t) var(--ease), background var(--t) var(--ease); }
   #menubar .mb-panels-btn[aria-expanded="true"] .mb-car { transform: rotate(-90deg); }
   
   .panel--quest .q-car { margin: 0 -8px 0 -4px; color: var(--nori-dark); }
@@ -4776,6 +4781,8 @@ if (window.unicorn && window.unicorn.isDesktop)
   html .panel--quest .r17-fin .r17-car { transition: transform var(--t) var(--ease), color var(--t) var(--ease), opacity var(--t) var(--ease); }
   html .panel--quest.r17-fin-open .r17-fin .r17-car { transform: rotate(90deg); }
   html .panel--quest .q-exp.r17-showall { min-height: 28px; }
+  
+  html .panel--quest #q-list > .q-archive-box { order: 2147483001; }
   html .panel--quest .r17-showall .q-name { color: var(--text-whisper-2); font-size: 12px; cursor: pointer; transition: color var(--t) var(--ease); }
   html .panel--quest .r17-showall:hover .q-name { color: var(--text); }
   
@@ -4974,6 +4981,8 @@ if (window.unicorn && window.unicorn.isDesktop)
   html .q-st-opt.q-st-del .q-st-ck::before { content: ""; width: 16px; height: 16px; background: var(--ic-rest); -webkit-mask: var(--m-close) center / 16px 16px no-repeat; mask: var(--m-close) center / 16px 16px no-repeat; }
   html .q-st-opt.q-st-del:hover .q-st-ck::before { background: var(--ic-danger); }
   html .q-st-opt.q-st-del:hover { color: var(--ic-danger); }
+  
+  html .q-st-opt.q-st-del, html .q-st-opt.q-st-del .q-st-ck::before { transition: none; }
   
   html #menubar .mb-car { width: 16px; height: 16px; padding: 0; margin: 0 -4px 0 0; display: grid; place-items: center; font-size: 0; background: none !important; color: var(--ic-rest); transform: rotate(90deg); }
   html #menubar .mb-panels-btn:hover .mb-car, html #menubar .mb-panels-btn[aria-expanded="true"] .mb-car { color: var(--ic-hover); }
@@ -14320,7 +14329,7 @@ ${keepsBlock}${emptyBlock}
         paused: 'paused', pause: 'paused', starting: 'starting',
         ship: 'complete', finish: 'complete', finished: 'complete', resume: 'active'
     };
-    const QUEST_ACTION = /^quest[-_:]?(activate|switch|start|create|new|active|begin|pause|complete|done|ship|finish|archive|delete|remove|drop|describe|desc|tech|repo|folder|rename|taste|figma-add|figma)$/;
+    const QUEST_ACTION = /^quest[-_:]?(activate|switch|start|create|new|active|begin|pause|complete|done|ship|finish|archive|delete|remove|drop|describe|desc|tech|repo|folder|rename|taste|figma-add|figma-unlink|figma)$/;
     const applyQuestEvent = (ev, data, action) => {
         const qname = (ev.quest || ev.name || '').trim();
         if (!qname)
@@ -14409,6 +14418,13 @@ ${keepsBlock}${emptyBlock}
             q.taste = tastePath;
         if (isTaste)
             return { name: qname, status: 'taste linked', kind: 'quest' };
+        if (verb === 'figma-unlink') {
+            if (!figmaUrl || q.figma === figmaUrl)
+                q.figma = '';
+            if (q.figmaFiles)
+                q.figmaFiles = figmaUrl ? q.figmaFiles.filter(f => f.url !== figmaUrl) : q.figmaFiles;
+            return { name: qname, status: 'figma unlinked', kind: 'quest' };
+        }
         if (verb === 'figma-add') {
             if (/^https:\/\/(www\.)?figma\.com\//i.test(figmaUrl)) {
                 q.figmaFiles = (q.figmaFiles || []).filter(f => f.url !== figmaUrl);
@@ -15535,7 +15551,7 @@ ${keepsBlock}${emptyBlock}
                 + `<button type="button" class="u-fill" data-act="use" title="${pick === 0 ? 'Keeps the current cover' : 'Makes this the cover in Story'}">${I('check')}Use This</button></div>`;
         }
         else if (state === 'creating' || state === 'none' || state === 'connect') {
-            h = `<div class="nofile">One file: system, screens, story</div>`;
+            h = `<div class="nofile">MCP canvas: system, screens, story</div>`;
         }
         else {
             h = `<div class="covers"><div class="on">${coverHTML(many && curFile && !curFile.main ? 2 : cur, q, figmaDate, many && curFile ? curFile.name : '', many && curFile && !curFile.main, many && curFile && curFile.main)}</div></div>`
@@ -16312,7 +16328,7 @@ ${keepsBlock}${emptyBlock}
         for (const w of working) {
             if (!w.cwd)
                 continue;
-            let best = null, len = -1;
+            let best = w.quest ? quests.find(q => (q.name || '').toLowerCase() === String(w.quest).toLowerCase()) || null : null, len = best ? 1e9 : -1;
             for (const q of quests) {
                 const r = expand(q.repo || (/^unicorn$/i.test(q.name || '') ? '~/unicorn' : ''));
                 if (!r || !r.startsWith('/'))
@@ -16369,7 +16385,18 @@ ${keepsBlock}${emptyBlock}
         if (!all.length)
             return null;
         const inside = (cwd, r) => !!(cwd && r && (cwd === r || cwd.startsWith(r + '/')));
-        const mine = await questRepo(), hit1 = all.find(x => inside(x.cwd, mine));
+        let dq;
+        try {
+            dq = JSON.parse(localStorage.getItem('unicorn-data')) || {};
+        }
+        catch {
+            dq = {};
+        }
+        const curQ = (typeof dq.activeQuestIndex === 'number' && (dq.quests || [])[dq.activeQuestIndex]) || null;
+        const hit0 = curQ && all.find(x => x.quest && String(x.quest).toLowerCase() === (curQ.name || '').toLowerCase());
+        if (hit0)
+            return hit0;
+        const mine = await questRepo(), hit1 = all.find(x => inside(x.cwd, mine) && !(x.quest && curQ && String(x.quest).toLowerCase() !== (curQ.name || '').toLowerCase()));
         if (hit1)
             return hit1;
         let d;
@@ -16452,6 +16479,11 @@ ${keepsBlock}${emptyBlock}
         return cwd === r || cwd.startsWith(r + '/') || cwd.endsWith('/' + r) || cwd.includes('/' + r + '/') ? r.length : -1;
     };
     const sessQuest = (w, quests, ev) => {
+        if (w.quest) {
+            const q = quests.find(x => (x.name || '').toLowerCase() === String(w.quest).toLowerCase());
+            if (q)
+                return q;
+        }
         let best = null, len = -1;
         for (const q of quests) {
             const l = repoLen(w.cwd, q.repo || (/^unicorn$/i.test(q.name || '') ? '~/unicorn' : ''));
@@ -16462,14 +16494,6 @@ ${keepsBlock}${emptyBlock}
         }
         if (best)
             return best;
-        for (let i = ev.length - 1; i >= 0; i--) {
-            const n = String(ev[i].quest || '').toLowerCase();
-            if (!n)
-                continue;
-            const q = quests.find(x => (x.name || '').toLowerCase() === n);
-            if (q)
-                return q;
-        }
         return null;
     };
     let lastRes = null;
