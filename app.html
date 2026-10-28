@@ -3784,16 +3784,18 @@ if (window.unicorn && window.unicorn.isDesktop)
 
   .u-tip {
     position: fixed; z-index: 99999; pointer-events: none;
-    display: flex; gap: 8px; align-items: center; white-space: nowrap;
-    padding: 6px 9px; border-radius: 8px;
-    background: rgba(24,22,28,.99); color: rgba(241,236,232,.9);
-    box-shadow: 0 8px 22px rgba(0,0,0,.3);
-    font: 400 11px/1.2 var(--sans);
-    opacity: 0; transform: translateY(2px);
-    transition: opacity .3s var(--ease), transform .3s var(--ease);
+    display: flex; gap: 8px; align-items: center; white-space: normal; max-width: 220px;
+    padding: 6px 9px; border-radius: 8px; border: 1px solid transparent;
+    background: linear-gradient(rgba(255,255,255,.06), rgba(255,255,255,.06)) padding-box, linear-gradient(#18171C, #18171C) padding-box, linear-gradient(120deg, #E8956A 0%, #d38fa8 50%, #A78BDF 100%) border-box;   
+    color: rgba(241,236,232,.88); box-shadow: 0 8px 22px rgba(0,0,0,.4); text-wrap: balance;   
+    font: 400 11px/1.25 var(--sans); -webkit-font-smoothing: antialiased;
+    
+    opacity: 0; transform: translateY(3px) scale(.97); filter: blur(2px); transform-origin: 50% 100%;
+    transition: opacity .11s ease, transform .11s ease, filter .11s ease;
   }
-  .u-tip.on { opacity: 1; transform: none; }
-  .u-tip kbd { font: 400 10.5px/1 var(--mono); color: rgba(241,236,232,.45); }
+  .u-tip.on { opacity: 1; transform: none; filter: none; transition: opacity .18s cubic-bezier(.2,.8,.2,1), transform .18s cubic-bezier(.2,.8,.2,1), filter .18s cubic-bezier(.2,.8,.2,1); }
+  @media (prefers-reduced-motion: reduce) { .u-tip, .u-tip.on { transform: none; filter: none; } }
+  .u-tip kbd { font: 400 10.5px/1 var(--mono); padding: 2px 4px; border-radius: 4px; color: rgba(241,236,232,.55); background: rgba(241,236,232,.07); }
 
   @media (prefers-reduced-motion: reduce) {
     .p-head .p-dot.hello::before, .p-head .p-dot.pulse-now::before { animation: none; }
@@ -4673,7 +4675,7 @@ if (window.unicorn && window.unicorn.isDesktop)
     --m-plus: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M8 3.75v8.5'/><path d='M3.75 8h8.5'/></svg>");
     --m-pen: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M10.25 3.5 12.5 5.75 6 12.25l-2.75.5.5-2.75z'/></svg>");
     --m-folder: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M2.75 4.75a1 1 0 0 1 1-1h2.6l1.4 1.5h4.5a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1h-8.5a1 1 0 0 1-1-1z'/></svg>");
-    --m-caret: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M6.5 4.25 10.25 8 6.5 11.75'/></svg>");
+    --m-caret: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M6.5 4.25 9.35 7.1Q10.25 8 9.35 8.9L6.5 11.75'/></svg>");
   }
   .ic { width: 16px; height: 16px; flex: none; display: block; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; overflow: visible; pointer-events: none; }
   
@@ -4780,6 +4782,46 @@ if (window.unicorn && window.unicorn.isDesktop)
   html .panel--quest:not(:hover):not(.r17-fin-open) .r17-fin .r17-car { opacity: 0; }   
   html .panel--quest .r17-fin .r17-car { transition: transform var(--t) var(--ease), color var(--t) var(--ease), opacity var(--t) var(--ease); }
   html .panel--quest.r17-fin-open .r17-fin .r17-car { transform: rotate(90deg); }
+  
+  html .p-head .p-dot, html .panel .p-head .p-dot, html #agent .p-head .p-dot {
+    width: 8px !important; height: 8px !important; border-radius: 0 !important; box-shadow: none !important;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'><rect x='2' y='0' width='2' height='2' fill='%23d69690'/><rect x='4' y='0' width='2' height='2' fill='%23d69690'/><rect x='0' y='2' width='2' height='2' fill='%23d69690'/><rect x='6' y='2' width='2' height='2' fill='%23b791c7'/><rect x='0' y='4' width='2' height='2' fill='%23d69690'/><rect x='6' y='4' width='2' height='2' fill='%23b791c7'/><rect x='2' y='6' width='2' height='2' fill='%23b791c7'/><rect x='4' y='6' width='2' height='2' fill='%23b791c7'/></svg>") 0 0 / 8px 8px no-repeat !important; image-rendering: pixelated;
+    transition: none !important;
+  }
+  html .p-head .p-dot:hover { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'><rect x='2' y='0' width='2' height='2' fill='%23dca9a3'/><rect x='4' y='0' width='2' height='2' fill='%23dca9a3'/><rect x='0' y='2' width='2' height='2' fill='%23dca9a3'/><rect x='6' y='2' width='2' height='2' fill='%23c4a5ce'/><rect x='0' y='4' width='2' height='2' fill='%23dca9a3'/><rect x='6' y='4' width='2' height='2' fill='%23c4a5ce'/><rect x='2' y='6' width='2' height='2' fill='%23c4a5ce'/><rect x='4' y='6' width='2' height='2' fill='%23c4a5ce'/><rect x='2' y='2' width='4' height='4' fill='%23c797af' fill-opacity='0.3'/></svg>") !important; }
+  html .focus-peach .p-head .p-dot { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'><rect x='2' y='0' width='2' height='2' fill='%23FFAF5F'/><rect x='4' y='0' width='2' height='2' fill='%23FFAF5F'/><rect x='0' y='2' width='2' height='2' fill='%23FFAF5F'/><rect x='6' y='2' width='2' height='2' fill='%23FFAF5F'/><rect x='0' y='4' width='2' height='2' fill='%23FFAF5F'/><rect x='6' y='4' width='2' height='2' fill='%23FFAF5F'/><rect x='2' y='6' width='2' height='2' fill='%23FFAF5F'/><rect x='4' y='6' width='2' height='2' fill='%23FFAF5F'/><rect x='2' y='2' width='4' height='4' fill='%23FFAF5F' fill-opacity='1'/></svg>") !important; }
+  html .focus-lilac .p-head .p-dot { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'><rect x='2' y='0' width='2' height='2' fill='%23c2a8ff'/><rect x='4' y='0' width='2' height='2' fill='%23c2a8ff'/><rect x='0' y='2' width='2' height='2' fill='%23c2a8ff'/><rect x='6' y='2' width='2' height='2' fill='%23c2a8ff'/><rect x='0' y='4' width='2' height='2' fill='%23c2a8ff'/><rect x='6' y='4' width='2' height='2' fill='%23c2a8ff'/><rect x='2' y='6' width='2' height='2' fill='%23c2a8ff'/><rect x='4' y='6' width='2' height='2' fill='%23c2a8ff'/><rect x='2' y='2' width='4' height='4' fill='%23c2a8ff' fill-opacity='1'/></svg>") !important; }
+  html .p-head .p-dot::before {
+    content: ""; position: absolute; inset: auto; left: 0; top: 0; width: 2px; height: 2px; padding: 0; border-radius: 0;
+    background: #F1ECE8 !important; -webkit-mask: none; mask: none; opacity: 0; transform: none;
+  }
+  @keyframes dotChase {
+    0%     { opacity: 1; transform: translate(2px, 0); }
+    12.5%  { transform: translate(4px, 0); }
+    25%    { transform: translate(6px, 2px); }
+    37.5%  { transform: translate(6px, 4px); }
+    50%    { transform: translate(4px, 6px); }
+    62.5%  { transform: translate(2px, 6px); }
+    75%    { transform: translate(0, 4px); }
+    87.5%  { transform: translate(0, 2px); opacity: 1; }
+    100%   { transform: translate(0, 2px); opacity: 0; }
+  }
+  html .p-head .p-dot.hello::before { animation: dotChase 480ms steps(1, end) .6s 1; }
+  html .p-head .p-dot.pulse-now::before { animation: dotChase 480ms steps(1, end) 0s 1; }
+  @media (prefers-reduced-motion: reduce) { html .p-head .p-dot.hello::before, html .p-head .p-dot.pulse-now::before { animation: none; } }
+  
+  html .panel--quest .q-exp .q-status[data-s="active"]::before,
+  html .panel--quest .q-exp .q-status[data-s="starting"]::before {
+    width: 6px !important; height: 6px !important; border-radius: 0 !important;
+    -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 4' shape-rendering='crispEdges'><path d='M1 0h2v1h1v2h-1v1h-2v-1h-1v-2h1z'/></svg>") center / 6px 6px no-repeat; mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 4' shape-rendering='crispEdges'><path d='M1 0h2v1h1v2h-1v1h-2v-1h-1v-2h1z'/></svg>") center / 6px 6px no-repeat;
+  }
+  
+  .pxc { position: relative; display: block; width: 10px; height: 10px; flex: none; }
+  .pxc i { position: absolute; left: 0; top: 0; width: 2px; height: 2px; background: currentColor; }
+  html #menubar .mb-car, html #menubar .mb-panels-btn[aria-expanded="true"] .mb-car,
+  html .panel--quest .q-car, html .panel--quest .q-top.open .q-car,
+  html .panel--quest .r17-car, html .panel--quest.r17-fin-open .r17-fin .r17-car { transform: none !important; }
+  html .p-mini .pxc { margin: auto; }
   html .panel--quest .q-exp.r17-showall { min-height: 28px; }
   
   html .panel--quest #q-list > .q-archive-box { order: 2147483001; }
@@ -5263,14 +5305,14 @@ if (window.unicorn && window.unicorn.isDesktop)
 <body>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="i-chev-up" viewBox="0 0 16 16"><path d="M4.25 10.25 8 6.5l3.75 3.75"/></symbol>
-  <symbol id="i-chev-down" viewBox="0 0 16 16"><path d="M4.25 6.25 8 10l3.75-3.75"/></symbol>
+  <symbol id="i-chev-up" viewBox="0 0 16 16"><path d="M4.25 10.25 7.1 7.4Q8 6.5 8.9 7.4L11.75 10.25"/></symbol>
+  <symbol id="i-chev-down" viewBox="0 0 16 16"><path d="M4.25 6.25 7.1 9.1Q8 10 8.9 9.1L11.75 6.25"/></symbol>
   <symbol id="i-close" viewBox="0 0 16 16"><path d="M4.75 4.75l6.5 6.5"/><path d="M11.25 4.75l-6.5 6.5"/></symbol>
   <symbol id="i-pause" viewBox="0 0 16 16"><path d="M6.25 4.75v6.5"/><path d="M9.75 4.75v6.5"/></symbol>
   <symbol id="i-play" viewBox="0 0 16 16"><path d="M5.5 4.6v6.8a.6.6 0 0 0 .92.5l5.2-3.4a.6.6 0 0 0 0-1l-5.2-3.4a.6.6 0 0 0-.92.5z"/></symbol>
   <symbol id="i-check" viewBox="0 0 16 16"><path d="M3.75 8.5 6.6 11.25l5.65-6.5"/></symbol>
   <symbol id="i-check-s" viewBox="0 0 16 16"><path d="M4.75 8.4 6.75 10.25l4.5-5"/></symbol>
-  <symbol id="i-caret" viewBox="0 0 16 16"><path d="M6.5 4.25 10.25 8 6.5 11.75"/></symbol>
+  <symbol id="i-caret" viewBox="0 0 16 16"><path d="M6.5 4.25 9.35 7.1Q10.25 8 9.35 8.9L6.5 11.75"/></symbol>
   
   <symbol id="i-arrow-left" viewBox="0 0 16 16"><path d="M12.5 8H3.75M7 4.75 3.75 8 7 11.25"/></symbol>
   <symbol id="i-arrow-right" viewBox="0 0 16 16"><path d="M3.5 8h8.75M9 4.75 12.25 8 9 11.25"/></symbol>
@@ -5628,13 +5670,13 @@ if (window.unicorn && window.unicorn.isDesktop)
         </div>
         <div class="panes">
           <div class="pane" data-pane="paper">
-            <div class="hero sheet click" id="r17-paper-hero" title="Opens today's paper">
+            <div class="hero sheet click" id="r17-paper-hero">
               <img class="mast" src="story/masthead.png" alt="Creative OS">
               <i class="rule"></i>
               <span class="dek"><span id="r17-paper-date"></span><span id="r17-paper-issue"></span></span>
               <span class="lead" id="r17-paper-lead"></span>
             </div>
-            <div class="door"><span class="cap">Today's Paper</span><div class="acts"><button type="button" class="u-quiet" id="r17-paper-dir" title="Previous Issues and the Builder's Story">Directory</button><button type="button" class="u-fill" id="r17-paper-open">Open</button></div></div>
+            <div class="door"><span class="cap">Today's Paper</span><div class="acts"><button type="button" class="u-quiet" id="r17-paper-dir" title="Previous Issues">Directory</button><button type="button" class="u-fill" id="r17-paper-open">Open</button></div></div>
           </div>
           <div class="pane" data-pane="design">
             <div class="hero" id="r17-design-hero"></div>
@@ -5642,7 +5684,7 @@ if (window.unicorn && window.unicorn.isDesktop)
             <div class="door file" id="r17-rive-door" hidden></div>
           </div>
           <div class="pane" data-pane="week">
-            <div class="hero sheet week click" id="r17-week-hero" title="Opens this week's page"></div>
+            <div class="hero sheet week click" id="r17-week-hero"></div>
             <div class="door"><span class="cap" id="r17-week-cap">This Week</span><div class="acts"><button type="button" class="u-quiet" id="r17-week-dir" title="Every week of this quest">Directory</button><button type="button" class="u-fill" id="r17-week-open">Open</button></div></div>
           </div>
         </div>
@@ -6414,7 +6456,22 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
             if (typeof uiClick === 'function')
                 uiClick('E5');
         };
-        menuBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleMenu(); });
+        menuBtn.addEventListener('click', (e) => { e.stopPropagation(); clearQIntent(); toggleMenu(); });
+        let qIntent = null, qx = 0, qy = 0;
+        const clearQIntent = () => { if (qIntent) {
+            clearTimeout(qIntent);
+            qIntent = null;
+        } };
+        const armQIntent = () => { clearQIntent(); qIntent = setTimeout(() => { qIntent = null; if (menuBtn.matches(':hover') && !qTop.classList.contains('open'))
+            toggleMenu(); }, 180); };
+        menuBtn.addEventListener('mouseenter', (e) => { qx = e.clientX; qy = e.clientY; armQIntent(); });
+        menuBtn.addEventListener('mousemove', (e) => { if (qTop.classList.contains('open'))
+            return; if (Math.abs(e.clientX - qx) + Math.abs(e.clientY - qy) > 3) {
+            qx = e.clientX;
+            qy = e.clientY;
+            armQIntent();
+        } });
+        menuBtn.addEventListener('mouseleave', clearQIntent);
         menuBtn.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             toggleMenu();
@@ -10513,7 +10570,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
         const truncated = k.text && k.text.length > TRUNCATE_AT * 4;
         const body = isText ? `<div class="k18-txt">${escapeHtml(truncated ? k.text.slice(0, TRUNCATE_AT * 4) + '…' : (k.text || ''))}</div>` : media;
         const files = k.imagePath || k.videoPath;
-        const x = saving ? '' : `<span class="keep-item-delete k18-x" data-id="${k.id}" role="button" aria-label="${files ? 'Back to Desktop' : 'Remove'}" title="${files ? 'Back to Desktop' : 'Remove'}">${KEEP_CLOSE}</span>`;
+        const x = saving ? '' : `<span class="keep-item-delete k18-x" data-id="${k.id}" role="button" data-tip-pos="left" aria-label="${files ? 'Back to Desktop' : 'Remove'}" title="${files ? 'Back to Desktop' : 'Remove'}">${KEEP_CLOSE}</span>`;
         const chips = (!saving && k.variants && k.variants.length)
             ? `<div class="keep-chips">${k.variants.map((v, j) => `<button class="keep-chip${j === 0 ? ' on' : ''}" data-src="${escapeHtml(fileUrl(v[1]))}" data-path="${escapeHtml(v[1])}" data-alpha="${isAlpha(v[1]) ? 1 : 0}">${escapeHtml(v[0])}</button>`).join('')}</div>` : '';
         const cap = isText ? '' : escapeHtml((k.text || '').split('\n')[0]);
@@ -15330,9 +15387,6 @@ ${keepsBlock}${emptyBlock}
             L.hidden = pIdx >= pIssues.length - 1;
         if (R)
             R.hidden = pIdx <= 0;
-        const h = $('r17-paper-hero');
-        if (h)
-            h.title = pIdx > 0 ? 'Opens this issue' : 'Opens today’s paper';
     }
     async function renderPaper() {
         let x = null;
@@ -15540,7 +15594,8 @@ ${keepsBlock}${emptyBlock}
         const cur = coverPick(q);
         const oneFile = state === 'ready' && !(q && (q.rive || q.spline));
         hero.className = 'hero' + ((state === 'creating' || state === 'updating') ? ' tint' : '') + (oneFile ? ' click' : '');
-        hero.title = oneFile ? 'Opens in Figma' : '';
+        hero.removeAttribute('title');
+        hero.removeAttribute('data-tip');
         if (state === 'choose') {
             const order = [cur, ...[0, 1, 2].filter(i => i !== cur)];
             h = `<div class="covers">${order.map((ci, i) => `<div class="${i === pick ? 'on' : ''}" data-ci="${ci}">${coverHTML(ci, q, figmaDate)}</div>`).join('')}</div>`
@@ -16129,7 +16184,7 @@ ${keepsBlock}${emptyBlock}
     setInterval(() => { const h = document.getElementById('st-uc-hit'); if (h && h.dataset.state === 'waiting')
         setWord('', 'waiting'); }, 1000);
     const stripEl = document.getElementById('st-uc-hit'), w2El = document.getElementById('r17-strip-w2'), goEl = document.getElementById('r17-strip-go');
-    const GO_TIP = { idle: "Back to the terminal, in this quest's folder", working: "Jumps to this agent's session", waiting: "Jumps to the session that's waiting for you" };
+    const GO_TIP = { idle: "Opens a terminal here", working: "Jumps to this session", waiting: "Jumps to the waiting session" };
     const waitWord = () => (Math.floor(Date.now() / 1000) % 20) >= 15 ? 'Thinking About You' : 'Waiting';
     const setWord = (w, st) => {
         if (!wordEl)
@@ -16670,16 +16725,33 @@ ${keepsBlock}${emptyBlock}
             k.textContent = key;
             tip.append(k);
         }
-        const r = el.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight, below = el.getAttribute('data-tip-pos') === 'below';
-        let x = r.left + r.width / 2 - w / 2, y = below ? r.bottom + 8 : r.top - h - 8;
-        if (y < 4)
-            y = r.bottom + 8;
+        const r = el.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight, pos = el.getAttribute('data-tip-pos'), G = 6;
+        const box = (el.closest('.panel, #agent, #activity-panel, #menubar') || document.documentElement).getBoundingClientRect();
+        let x = r.left + r.width / 2 - w / 2, y = pos === 'below' ? r.bottom + G : r.top - h - G;
+        if (pos === 'left') {
+            x = r.left - w - G;
+            y = r.top + r.height / 2 - h / 2;
+        }
+        else {
+            if (y < 4)
+                y = r.bottom + G;
+            if (el.id === 'q-menu-btn' && /^unicorn$/i.test((el.textContent || '').trim()))
+                x -= 4;
+            const lo = Math.max(6, box.left + 8), hi = Math.min(innerWidth - 6, box.right - 8) - w;
+            if (x < lo)
+                x = Math.min(lo, r.left);
+            else if (x > hi)
+                x = Math.max(hi, r.right - w);
+        }
         x = Math.max(6, Math.min(innerWidth - w - 6, x));
+        y = Math.max(4, Math.min(innerHeight - h - 4, y));
         tip.style.left = x + 'px';
         tip.style.top = y + 'px';
         tip.classList.add('on');
     };
-    const hide = () => { clearTimeout(t); tip.classList.remove('on'); cur = null; };
+    let lastShown = -1e9;
+    const hide = () => { clearTimeout(t); if (tip.classList.contains('on'))
+        lastShown = performance.now(); tip.classList.remove('on'); cur = null; };
     let clicked = null;
     document.addEventListener('pointerover', e => {
         const el = e.target.closest && e.target.closest('[data-tip],[title]');
@@ -16694,7 +16766,7 @@ ${keepsBlock}${emptyBlock}
         if (!el)
             return;
         cur = el;
-        t = setTimeout(() => show(el), 380);
+        t = setTimeout(() => show(el), performance.now() - lastShown < 600 ? 0 : 500);
     });
     document.addEventListener('focusin', e => { const el = e.target.closest && e.target.closest('[data-tip],[title]'); if (el && el.matches(':focus-visible')) {
         cur = el;
@@ -16719,6 +16791,52 @@ ${keepsBlock}${emptyBlock}
     } };
     addEventListener('scroll', (e) => { pin(document.documentElement); pin(document.body); if (e.target && e.target.id === 'panels')
         pin(e.target); }, true);
+})();
+</script>
+<script>
+(() => {
+    const vy = ys => ys.map((y, i) => [i * 2, y]), mirror = f => f.map(([x, y]) => [x, 8 - y]);
+    const SHAPE = { down: vy([2, 4, 6, 4, 2]), up: vy([6, 4, 2, 4, 6]), right: [[2, 0], [4, 2], [6, 4], [4, 6], [2, 8]], fdown: [[0, 2], [2, 4], [4, 6], [6, 4], [8, 2]] };
+    const UP = [vy([2, 4, 6, 4, 2]), vy([2, 4, 5, 4, 2]), vy([2, 3, 4, 3, 2]), vy([3, 3, 3, 3, 3]), vy([4, 3, 2, 3, 4]), vy([5, 4, 2, 4, 5]), vy([6, 4, 2, 4, 6])];
+    const FOLD = [SHAPE.right, [[2, 0], [4, 2], [6, 4], [6, 6], [6, 8]], [[0, 0], [2, 2], [4, 4], [6, 6], [8, 8]], [[0, 2], [2, 4], [4, 6], [6, 6], [8, 6]], SHAPE.fdown];
+    const path = (a, b) => a === 'down' && b === 'up' ? UP : a === 'up' && b === 'down' ? UP.map(mirror)
+        : a === 'right' && b === 'fdown' ? FOLD : a === 'fdown' && b === 'right' ? FOLD.slice().reverse() : [SHAPE[b]];
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+    const draw = (el, f) => el._sq.forEach((q, n) => { q.style.transform = `translate(${f[n][0]}px,${f[n][1]}px)`; });
+    const mount = el => {
+        if (el._sq)
+            return;
+        el.innerHTML = '<span class="pxc" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>';
+        el._sq = [...el.querySelectorAll('i')];
+    };
+    const set = (el, shape) => {
+        mount(el);
+        if (el._shape === shape)
+            return;
+        const from = el._shape;
+        el._shape = shape;
+        clearTimeout(el._t);
+        const frames = from && !reduced.matches ? path(from, shape) : [SHAPE[shape]];
+        let i = 0;
+        const ms = frames.length > 5 ? 46 : 64;
+        const step = () => { draw(el, frames[i]); if (++i < frames.length)
+            el._t = setTimeout(step, ms); };
+        step();
+    };
+    const sync = () => {
+        document.querySelectorAll('#menubar .mb-car').forEach(el => set(el, el.closest('.mb-panels-btn')?.getAttribute('aria-expanded') === 'true' ? 'up' : 'down'));
+        document.querySelectorAll('.panel--quest .q-car').forEach(el => set(el, el.closest('.q-top')?.classList.contains('open') ? 'up' : 'down'));
+        document.querySelectorAll('.panel--quest .r17-fin .r17-car').forEach(el => set(el, el.closest('.panel--quest')?.classList.contains('r17-fin-open') ? 'fdown' : 'right'));
+        document.querySelectorAll('.p-mini').forEach(el => set(el, el.closest('.panel, #agent, #activity-panel')?.classList.contains('minimized') ? 'down' : 'up'));
+    };
+    let raf = 0;
+    const kick = () => { if (!raf)
+        raf = requestAnimationFrame(() => { raf = 0; sync(); }); };
+    const go = () => { sync(); new MutationObserver(kick).observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ['class', 'aria-expanded'] }); };
+    if (document.readyState === 'loading')
+        document.addEventListener('DOMContentLoaded', go);
+    else
+        go();
 })();
 </script>
 
