@@ -4842,6 +4842,10 @@ if (window.unicorn && window.unicorn.isDesktop)
     -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 4' shape-rendering='crispEdges'><path d='M1 0h2v1h1v2h-1v1h-2v-1h-1v-2h1z'/></svg>") center / 6px 6px no-repeat; mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 4' shape-rendering='crispEdges'><path d='M1 0h2v1h1v2h-1v1h-2v-1h-1v-2h1z'/></svg>") center / 6px 6px no-repeat;
   }
   html .c-sound.on .c-dot { background: var(--peach); }
+  
+  .pxm { display: flex; gap: 2px; align-items: center; }
+  .pxm i { width: 2px; height: 2px; background: currentColor; }
+  html .panel--quest .p-head .q-manage { color: var(--text-mute); }
   html .panel--quest .q-exp.r17-showall { min-height: 28px; }
   
   html .panel--quest #q-list > .q-archive-box { order: 2147483001; }
@@ -5014,7 +5018,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   .r17-story .cv .run canvas { display: block; image-rendering: pixelated; flex: none; }
   .r17-story .cv .run canvas + canvas { margin-left: -6px; }
   .r17-story .cv .sw { position: absolute; left: var(--hp); top: calc(var(--hg) - 12px); display: flex; gap: 5px; }
-  .r17-story .cv .sw i { width: 12px; height: 12px; border-radius: 3px; box-shadow: inset 0 0 0 1px rgba(26,22,22,.08); }
+  .r17-story .cv .sw i { width: 12px; height: 12px; border-radius: 3px; }   
   .r17-story .cv .ground { position: absolute; left: var(--hp); right: var(--hp); top: var(--hg); height: 1px; background: rgba(26,22,22,.14); }
   .r17-story .cv .wm { position: absolute; left: var(--hp); bottom: 12px; font: 600 43px/.8 var(--mono); letter-spacing: -.055em; color: #1A1616; white-space: nowrap; }
   .r17-story .cv .meta { position: absolute; left: var(--hp); top: calc(var(--hg) + 9px); font: 400 7.5px/1.6 var(--mono); letter-spacing: .14em; color: rgba(26,22,22,.5); text-transform: uppercase; text-align: left; white-space: nowrap; }
@@ -5493,7 +5497,7 @@ if (window.unicorn && window.unicorn.isDesktop)
     <div class="q-top">
       <div class="q-menu-btn u-fill" id="q-menu-btn" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false"><span class="p-title" id="q-title"></span><span class="q-car" aria-hidden="true"><svg class="ic" aria-hidden="true"><use href="#i-caret"/></svg></span></div>
       
-      <span class="q-manage" id="q-manage" role="button" tabindex="0" title="Quest Actions" aria-haspopup="menu"><svg class="ic" aria-hidden="true"><use href="#i-more"/></svg></span>
+      <span class="q-manage" id="q-manage" role="button" tabindex="0" title="Quest Actions" data-tip-gap="10" aria-haspopup="menu"><span class="pxm" aria-hidden="true"><i></i><i></i><i></i></span></span>
       <div class="q-pop" id="q-pop" role="menu"><div class="q-switcher" id="q-switcher"></div></div>
     </div>
     <div class="q-sub-row">
@@ -16748,7 +16752,7 @@ ${keepsBlock}${emptyBlock}
             k.textContent = key;
             tip.append(k);
         }
-        const r = el.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight, pos = el.getAttribute('data-tip-pos'), G = 6;
+        const r = el.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight, pos = el.getAttribute('data-tip-pos'), G = +el.getAttribute('data-tip-gap') || 6;
         const box = (el.closest('.panel, #agent, #activity-panel, #menubar') || document.documentElement).getBoundingClientRect();
         let x = r.left + r.width / 2 - w / 2, y = pos === 'below' ? r.bottom + G : r.top - h - G;
         if (pos === 'left') {
