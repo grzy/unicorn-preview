@@ -88,7 +88,7 @@
     .builds.many > div{scroll-snap-align:start}
     @media (max-width:760px){.builds{grid-template-columns:1fr}}
     .build a{color:inherit;text-decoration:none;display:block}
-    .build img,.build .ph{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top;border-radius:8px;display:block;background:#e9e4de}.build a{display:block}.build .fr{display:block;position:relative;overflow:hidden;border-radius:8px;aspect-ratio:16/10;background:#e9e4de}.build .fr img{border-radius:0}
+    .build img,.build .ph{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:center;border-radius:8px;display:block;background:#e9e4de}.build a{display:block}.build .fr{display:block;position:relative;overflow:hidden;border-radius:8px;aspect-ratio:16/10;background:#e9e4de}.build .fr img{border-radius:0}
     .build .ph{background:linear-gradient(135deg,#f8d3bd,#e7d2ec 55%,#dacdf6)}
     .build b{display:flex;align-items:baseline;gap:8px;font:500 14px/1.25 'Ubuntu Sans',sans-serif;margin:10px 0 0}
     .build b small{font:400 12px/1 'Ubuntu Sans',sans-serif;color:var(--faint)}
@@ -128,7 +128,7 @@
   <div class="listen" id="listen" hidden><button class="play" id="play" aria-label="Play"><svg viewBox="0 0 12 12"><path id="pp" d="M3 1.5v9l7.5-4.5z"/></svg></button><span class="lt">Hear the Week<small id="ldur"></small></span><span class="bar"><i id="lbar"></i></span></div>
   <audio id="aud" src="2026-W44-birdsong-atlas.m4a" preload="metadata"></audio><script type="text/plain" id="say">Week 44. Birdsong Atlas. A map of birdsong: hover a place to hear what sings there at dawn. Nothing finished this week. 1 in motion: Play a song on hover. 1 commit this week.</script>
   <div class="cards">
-    <div class="card w2 stat"><div><b>0</b><span class="lab">finished this week</span></div></div><div class="card w2 stat"><div><b>1</b><span class="lab">in motion</span></div><div class="tip">Play a song on hover</div></div><div class="card w2"><h3>Birdsong Atlas commits this week</h3><div class="wk-tot">1</div><div class="commits"><i class="zero" style="height:3%"></i><i class="" style="height:100%"></i><i class="zero" style="height:3%"></i><i class="zero" style="height:3%"></i><i class="later"></i><i class="later"></i><i class="later"></i></div><div class="c-lab"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div></div>
+    <div class="card w2 stat"><div><b>0</b><span class="lab">finished this week</span></div></div><div class="card w2 stat"><div><b>1</b><span class="lab">in motion</span></div><div class="tip">Play a song on hover</div></div><div class="card w2"><h3>Birdsong Atlas commits this week</h3><div class="wk-tot">1</div><div class="commits"><i class="zero" style="height:3%"></i><i class="zero" style="height:3%"></i><i class="" style="height:100%"></i><i class="zero" style="height:3%"></i><i class="zero" style="height:3%"></i><i class="later"></i><i class="later"></i></div><div class="c-lab"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div></div>
     <div class="card w6"><h3>Experiments</h3><p class="also">Also in motion: Play a song on hover</p></div>
     
     <div class="card w4"><div class="two">
@@ -154,4 +154,64 @@
   qsState();
   document.querySelectorAll('.todo li').forEach(li=>{const bx=li.querySelector('.bx'),k=':t'+li.dataset.t,set=d=>{li.classList.toggle('done',d);bx.setAttribute('aria-checked',d);};set(st(k)==='1');
     const flip=()=>{const d=!li.classList.contains('done');set(d);put(k,d?'1':'0');};bx.onclick=flip;bx.onkeydown=e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();flip();}};});
-})();</script><script>(()=>{const go=im=>{try{const fr=im.parentElement,W=im.naturalWidth,H=im.naturalHeight;if(!W||!H)return;const cw=160,ch=Math.max(1,Math.round(160*H/W)),c=document.createElement("canvas");c.width=cw;c.height=ch;const g=c.getContext("2d");g.drawImage(im,0,0,cw,ch);const d=g.getImageData(0,0,cw,ch).data,px=(x,y)=>{const i=(y*cw+x)*4;return[d[i],d[i+1],d[i+2]]};const cs=[px(1,1),px(cw-2,1),px(1,ch-2),px(cw-2,ch-2)],bg=[0,1,2].map(k=>cs.map(p=>p[k]).sort((a,b)=>a-b)[1]);const on=(x,y)=>{const p=px(x,y);return Math.abs(p[0]-bg[0])+Math.abs(p[1]-bg[1])+Math.abs(p[2]-bg[2])>60};const rows=[],cols=new Array(cw).fill(0);for(let y=0;y<ch;y++){let n=0;for(let x=0;x<cw;x++)if(on(x,y)){n++;cols[x]++}rows.push(n)}const mr=cw*.015,mc=ch*.015;const T=rows.findIndex(n=>n>mr),B=ch-1-[...rows].reverse().findIndex(n=>n>mr),L=cols.findIndex(n=>n>mc),R=cw-1-[...cols].reverse().findIndex(n=>n>mc);if(T<0||L<0||(R-L)*(B-T)>cw*ch*.7)return;const A=fr.clientWidth/fr.clientHeight;if(!A)return;let w=(R-L)*1.16,h=(B-T)*1.16;if(w/h>A)w=h*A;else h=w/A;if(w<cw/2.2){w=cw/2.2;h=w/A}const x=(L+R)/2-w/2,y=(T+B)/2-h/2;Object.assign(im.style,{position:"absolute",maxWidth:"none",objectFit:"fill",aspectRatio:"auto",width:cw/w*100+"%",height:ch/h*100+"%",left:-x/w*100+"%",top:-y/h*100+"%"});fr.style.background="rgb("+bg.join(",")+")"}catch(e){}};document.querySelectorAll(".build .fr img").forEach(im=>im.complete?go(im):im.addEventListener("load",()=>go(im),{once:true}))})();</script></article></div></body></html>
+})();</script><script>(()=>{const go=function inkFrame(im, fr) {
+  try {
+    var W = im.naturalWidth, H = im.naturalHeight; if (!fr || !W || !H) return false;
+    var fw = fr.clientWidth, fh = fr.clientHeight; if (!fw || !fh) return false;
+    var A = fw / fh, cw = 160, ch = Math.max(8, Math.round(cw * H / W));
+    var c = document.createElement("canvas"); c.width = cw; c.height = ch;
+    var g = c.getContext("2d", { willReadFrequently: true }); g.drawImage(im, 0, 0, cw, ch);
+    var d = g.getImageData(0, 0, cw, ch).data, N = cw * ch, i, x, y;
+    var px = function (x, y) { var k = (y * cw + x) * 4; return [d[k], d[k + 1], d[k + 2]]; };
+    var cs = [px(1, 1), px(cw - 2, 1), px(1, ch - 2), px(cw - 2, ch - 2)];
+    var bg = [0, 1, 2].map(function (k) { return cs.map(function (p) { return p[k]; }).sort(function (a, b) { return a - b; })[1]; });
+    var m = new Uint8Array(N);
+    for (i = 0; i < N; i++) m[i] = Math.abs(d[i * 4] - bg[0]) + Math.abs(d[i * 4 + 1] - bg[1]) + Math.abs(d[i * 4 + 2] - bg[2]) > 60 ? 1 : 0;
+    // the largest object: connected components on the mask, grown by a pixel so one subject's parts join
+    var md = new Uint8Array(N);
+    for (y = 0; y < ch; y++) for (x = 0; x < cw; x++) if (m[y * cw + x]) for (var dy = -1; dy <= 1; dy++) for (var dx = -1; dx <= 1; dx++) { var X = x + dx, Y = y + dy; if (X >= 0 && Y >= 0 && X < cw && Y < ch) md[Y * cw + X] = 1; }
+    var lab = new Int32Array(N), best = 0, bestN = 0, n = 0, st = [];
+    for (i = 0; i < N; i++) if (md[i] && !lab[i]) {
+      n++; var cnt = 0; st.push(i); lab[i] = n;
+      while (st.length) { var p = st.pop(); cnt += m[p]; var py = (p / cw) | 0, pxx = p - py * cw;
+        for (var yy = py - 1; yy <= py + 1; yy++) for (var xx = pxx - 1; xx <= pxx + 1; xx++) { if (xx < 0 || yy < 0 || xx >= cw || yy >= ch) continue; var q = yy * cw + xx; if (md[q] && !lab[q]) { lab[q] = n; st.push(q); } } }
+      if (cnt > bestN) { bestN = cnt; best = n; }
+    }
+    // summed-area tables: all ink, the object's ink; prefix sums down each column and along each row (for cut lines)
+    var W1 = cw + 1, S = new Float64Array(W1 * (ch + 1)), SC = new Float64Array(W1 * (ch + 1)), col = new Float64Array(W1 * (ch + 1)), row = new Float64Array(W1 * (ch + 1));
+    for (y = 1; y <= ch; y++) for (x = 1; x <= cw; x++) { var k = (y - 1) * cw + (x - 1), v = m[k], vc = v && lab[k] === best ? 1 : 0, o = y * W1 + x;
+      S[o] = v + S[o - 1] + S[o - W1] - S[o - W1 - 1]; SC[o] = vc + SC[o - 1] + SC[o - W1] - SC[o - W1 - 1];
+      col[o] = v + col[o - W1]; row[o] = v + row[o - 1]; }
+    var rect = function (T, x0, y0, x1, y1) { return T[y1 * W1 + x1] - T[y0 * W1 + x1] - T[y1 * W1 + x0] + T[y0 * W1 + x0]; };
+    var colAt = function (x, y0, y1) { x = Math.min(cw - 1, Math.max(0, x)); return col[y1 * W1 + x + 1] - col[y0 * W1 + x + 1]; };
+    var rowAt = function (y, x0, x1) { y = Math.min(ch - 1, Math.max(0, y)); return row[(y + 1) * W1 + x1] - row[(y + 1) * W1 + x0]; };
+    var CT = Math.max(1, bestN);
+    // the biggest window of the frame's shape, then closer; never past the zoom where it goes soft
+    var w0 = cw / ch > A ? ch * A : cw, h0 = w0 / A;
+    var zmax = Math.max(1, Math.min(2.6, W / (fw * 1.1)));
+    // a build that fills its picture shows whole (edge to edge); only a subject on open background gets a close-up
+    var rs = 0, cnt0 = 0, L = cw, R = -1, T = ch, Bt = -1;
+    for (x = 0; x < cw; x++) { var cx = colAt(x, 0, ch); if (cx > ch * 0.015) { if (x < L) L = x; R = x; } }
+    for (y = 0; y < ch; y++) { var ry = rowAt(y, 0, cw); if (ry > cw * 0.015) { if (y < T) T = y; Bt = y; } }
+    var full = R >= 0 && (R - L + 1) >= cw * 0.8 && (Bt - T + 1) >= ch * 0.8;
+    var steps = full ? 0 : 14, B = null;
+    for (var s = 0; s <= steps; s++) {
+      var z = steps ? 1 + (zmax - 1) * s / steps : 1, w = Math.round(w0 / z), h = Math.round(h0 / z); if (w < 4 || h < 4) continue;
+      for (y = 0; y <= ch - h; y += 2) for (x = 0; x <= cw - w; x += 2) {
+        var cover = rect(SC, x, y, x + w, y + h) / CT, fill = rect(S, x, y, x + w, y + h) / (w * h);
+        var cut = colAt(x, y, y + h) + colAt(x + w - 1, y, y + h) + rowAt(y, x, x + w) + rowAt(y + h - 1, x, x + w);   // ink on the window's edges = something sliced (the picture's own edge counts too)
+        var sc = cover + 0.8 * Math.min(fill / 0.35, 1) - 3 * cut / (2 * w + 2 * h) + 0.06 / z;
+        if (!B || sc > B.sc) B = { sc: sc, x: x, y: y, w: w, h: h };
+      }
+    }
+    if (!B) return false;
+    // the window's exact shape (rounding), centered where it was found
+    var bw = B.w, bh = bw / A; if (bh > ch) { bh = ch; bw = bh * A; }
+    var bx = Math.min(cw - bw, Math.max(0, B.x + (B.w - bw) / 2)), by = Math.min(ch - bh, Math.max(0, B.y + (B.h - bh) / 2));
+    Object.assign(im.style, { position: "absolute", maxWidth: "none", objectFit: "fill", aspectRatio: "auto", transform: "none",
+      width: cw / bw * 100 + "%", height: ch / bh * 100 + "%", left: -bx / bw * 100 + "%", top: -by / bh * 100 + "%" });
+    if (getComputedStyle(fr).position === "static") fr.style.position = "relative";
+    fr.style.background = "rgb(" + bg.join(",") + ")";
+    return true;
+  } catch (e) { return false; }
+};document.querySelectorAll(".build .fr img").forEach(im=>{const f=()=>go(im,im.parentElement);im.complete?f():im.addEventListener("load",f,{once:true})})})();</script></article></div></body></html>

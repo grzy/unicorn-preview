@@ -4846,6 +4846,17 @@ if (window.unicorn && window.unicorn.isDesktop)
   .pxm { display: flex; gap: 2px; align-items: center; }
   .pxm i { width: 2px; height: 2px; background: currentColor; }
   html .panel--quest .p-head .q-manage { color: var(--text-mute); }
+  
+  .pxa { position: relative; display: block; width: 12px; height: 10px; zoom: .75; }
+  .pxa i { position: absolute; width: 2px; height: 2px; background: currentColor; }
+  .pxa .hd { position: absolute; inset: 0; transition: transform .16s steps(1, end); }
+  .pxa-l .hd { transform: translateX(2px); } .pxa-r .hd { transform: translateX(-2px); }
+  .pxa .s { opacity: 0; transition: opacity 0s linear calc((4 - var(--k)) * 35ms); }
+  html .panel--commits:hover .pxa .hd { transform: none; }
+  html .panel--commits:hover .pxa .s { opacity: 1; transition-delay: calc(var(--k) * 35ms); }
+  html .panel--commits .c-nav .pxa { opacity: .32; transition: opacity var(--t) var(--ease); }   
+  html .panel--commits .c-nav:hover .pxa { opacity: .94; }
+  @media (prefers-reduced-motion: reduce) { .pxa .hd, .pxa .s { transition: none !important; } }
   html .panel--quest .q-exp.r17-showall { min-height: 28px; }
   
   html .panel--quest #q-list > .q-archive-box { order: 2147483001; }
@@ -4891,7 +4902,12 @@ if (window.unicorn && window.unicorn.isDesktop)
   html .panel--quest .r17-strip, html .panel.panel--quest.minimized > .r17-strip { background: none !important; align-items: center !important; }
   html .panel--quest .r17-strip:hover { background: none !important; }
   html .panel--quest:not(.minimized) .r17-strip .uc-wrap { zoom: .8333; }   
-  html .panel--quest:not(.minimized) .r17-strip { margin-top: 16px !important; padding: 16px 4px 0 16px !important; border-top: 1px solid rgba(255,255,255,.06) !important; border-radius: 0 !important; }
+  html .panel--quest:not(.minimized) .r17-strip { margin-top: 16px !important; padding: 16px 4px 0 16px !important; border-top: 0 !important; border-radius: 0 !important; position: relative; }
+  
+  html .panel--quest:not(.minimized) .r17-strip::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; pointer-events: none;
+    background: linear-gradient(90deg, #E8956A, #c797af 50%, #A78BDF); opacity: .5;
+    -webkit-mask: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent), repeating-linear-gradient(90deg, #000 0 2px, transparent 2px 6px);
+    -webkit-mask-composite: source-in; mask-composite: intersect; }
   html .panel.panel--quest:not(.minimized) { padding-bottom: 22px !important; }
   html .panel.panel--quest.minimized { display: flex !important; flex-direction: row !important; align-items: center !important; justify-content: flex-start !important; gap: 10px; padding: 17px 30px 20px !important; }   
   html .panel.panel--quest.minimized > .p-head { flex: 0 1 auto; min-width: 0; margin: 0 !important; padding: 0 !important; }
@@ -4905,6 +4921,8 @@ if (window.unicorn && window.unicorn.isDesktop)
   html .panel.panel--quest.minimized:not(:hover) .p-head .p-mini { transition: opacity .12s ease-out !important; }
   html .panel--quest.minimized .r17-strip .t { flex: 0 1 auto; }
   html .panel--quest.minimized .r17-strip .w2, html .panel--quest.minimized .r17-strip .go { display: none !important; }
+  
+  html .panel--quest .r17-strip .w2 { margin-top: 6px; font-weight: 400; color: var(--text-whisper-2); }
   html .panel--quest.minimized .r17-strip .w1 { font-size: 0; min-width: 0 !important; }
   html .panel--quest.minimized .r17-strip .w1::after { content: attr(data-short); font-size: 13px; }
   html .panel--quest.minimized .r17-strip .uc-wrap { margin-left: auto; zoom: .75; }   
@@ -4956,9 +4974,9 @@ if (window.unicorn && window.unicorn.isDesktop)
     filter: drop-shadow(-.5px -.5px 0 #fff) drop-shadow(-1px -1px 1px rgba(255,255,255,.9)) drop-shadow(.5px .5px 0 rgba(150,130,140,.45)) drop-shadow(1px 1.5px 1px rgba(70,50,60,.26)) drop-shadow(2px 3.5px 3.5px rgba(70,50,60,.12)); }
   .r17-story .hero.week .wmast.bs .lig path { fill: #F3EEE6; }
   .r17-story .hero.week .wthumbs { position: absolute; left: var(--hp); right: var(--hp); top: calc(58px + var(--hw) * 184 / 1329); bottom: 18px; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 8px; }
-  .r17-story .hero.week .wthumbs span.th { display: block; overflow: hidden; border-radius: 6px; background: #E9E4DC; min-width: 0; }
+  .r17-story .hero.week .wthumbs span.th { display: block; position: relative; overflow: hidden; border-radius: 6px; background: #E9E4DC; min-width: 0; }
   
-  .r17-story .hero.week .wthumbs img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 35%; display: block; transform: scale(1.14); transform-origin: 50% 75%; }   
+  .r17-story .hero.week .wthumbs img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; display: block; }   
   .r17-story .hero.week .wthumbs .none { align-self: end; font: 400 17px/1.12 var(--sans); color: #1A1616; }
   .r17-story .nofile { position: absolute; inset: 0; display: grid; place-items: center; font: 400 12px/1 var(--sans); color: var(--text-whisper-2); text-align: center; padding: 0 24px; }
   .r17-story .nofile::before { content: ""; position: absolute; inset: 16px; border-radius: 6px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.07); }
@@ -5539,9 +5557,9 @@ if (window.unicorn && window.unicorn.isDesktop)
     
     <div class="c-wk" id="c-wk" aria-hidden="true"><div class="c-wk-bars" id="c-wk-bars"></div><div class="c-wk-days" id="c-wk-days"></div></div>
     <div class="c-month-head">
-      <span class="c-nav" id="c-prev" role="button" title="Previous Month"><svg class="ic c-morph" viewBox="0 0 16 16"><g class="mv"><path class="shaft" pathLength="1" d="M4.6 8H12.5"/><path class="head" d="M7 4.75 3.75 8 7 11.25"/></g></svg></span>
+      <span class="c-nav" id="c-prev" role="button" title="Previous Month"><span class="pxa pxa-l" aria-hidden="true"><span class="hd"><i class="h" style="left:4px;top:0px"></i><i class="h" style="left:2px;top:2px"></i><i class="h" style="left:0px;top:4px"></i><i class="h" style="left:2px;top:6px"></i><i class="h" style="left:4px;top:8px"></i></span><i class="s" style="left:2px;top:4px;--k:0"></i><i class="s" style="left:4px;top:4px;--k:1"></i><i class="s" style="left:6px;top:4px;--k:2"></i><i class="s" style="left:8px;top:4px;--k:3"></i><i class="s" style="left:10px;top:4px;--k:4"></i></span></span>
       <span class="c-month-title" id="c-month-title"></span>
-      <span class="c-nav" id="c-next" role="button" title="Next Month"><svg class="ic c-morph" viewBox="0 0 16 16"><g class="mv"><path class="shaft" pathLength="1" d="M11.4 8H3.5"/><path class="head" d="M9 4.75 12.25 8 9 11.25"/></g></svg></span>
+      <span class="c-nav" id="c-next" role="button" title="Next Month"><span class="pxa pxa-r" aria-hidden="true"><span class="hd"><i class="h" style="left:6px;top:0px"></i><i class="h" style="left:8px;top:2px"></i><i class="h" style="left:10px;top:4px"></i><i class="h" style="left:8px;top:6px"></i><i class="h" style="left:6px;top:8px"></i></span><i class="s" style="left:8px;top:4px;--k:0"></i><i class="s" style="left:6px;top:4px;--k:1"></i><i class="s" style="left:4px;top:4px;--k:2"></i><i class="s" style="left:2px;top:4px;--k:3"></i><i class="s" style="left:0px;top:4px;--k:4"></i></span></span>
       <span class="c-month-count" id="c-month-count"></span>
     </div>
     <div class="c-weekdays">
@@ -13152,7 +13170,7 @@ ${keepsBlock}${emptyBlock}
     .builds.many > div{scroll-snap-align:start}
     @media (max-width:760px){.builds{grid-template-columns:1fr}}
     .build a{color:inherit;text-decoration:none;display:block}
-    .build img,.build .ph{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top;border-radius:8px;display:block;background:#e9e4de}.build a{display:block}.build .fr{display:block;position:relative;overflow:hidden;border-radius:8px;aspect-ratio:16/10;background:#e9e4de}.build .fr img{border-radius:0}
+    .build img,.build .ph{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:center;border-radius:8px;display:block;background:#e9e4de}.build a{display:block}.build .fr{display:block;position:relative;overflow:hidden;border-radius:8px;aspect-ratio:16/10;background:#e9e4de}.build .fr img{border-radius:0}
     .build .ph{background:linear-gradient(135deg,#f8d3bd,#e7d2ec 55%,#dacdf6)}
     .build b{display:flex;align-items:baseline;gap:8px;font:500 14px/1.25 'Ubuntu Sans',sans-serif;margin:10px 0 0}
     .build b small{font:400 12px/1 'Ubuntu Sans',sans-serif;color:var(--faint)}
@@ -13200,6 +13218,166 @@ ${keepsBlock}${emptyBlock}
         const M = d => d.toLocaleDateString('en-US', { month: 'short' });
         return M(mon) === M(sun) ? `${M(mon)} ${mon.getDate()}-${sun.getDate()}` : `${M(mon)} ${mon.getDate()}-${M(sun)} ${sun.getDate()}`;
     };
+    const WEEK_GENERIC = new Set(['story', 'figma', 'file', 'week', 'panel', 'pixel', 'test', 'update', 'polish', 'more', 'fix', 'tweak', 'style']);
+    const weekDistinct = (s, quest) => { const q = new Set(weekToks(quest && quest.name)); return weekToks(s).filter(t => !q.has(t) && !WEEK_GENERIC.has(t)); };
+    const weekPort = (href, srv, quest) => {
+        const m = String(href || '').match(/^http:\/\/(?:127\.0\.0\.1|localhost):(\d+)(\/.*)?$/);
+        if (!m || !srv || !srv.roots)
+            return href || '';
+        if (Object.values(srv.roots).map(String).includes(m[1]))
+            return href;
+        const repo = String(quest.repo || '').replace(/^~/, '').replace(/\/+$/, ''), R = repo && Object.keys(srv.roots).find(r => r.endsWith(repo));
+        return R ? 'http://127.0.0.1:' + srv.roots[R] + (m[2] || '/') : href;
+    };
+    const weekShotBlank = (url) => new Promise(res => {
+        const im = new Image();
+        im.onerror = () => res(true);
+        im.onload = () => {
+            try {
+                const c = document.createElement('canvas');
+                c.width = 64;
+                c.height = 40;
+                const g = c.getContext('2d');
+                g.drawImage(im, 0, 0, 64, 40);
+                const d = g.getImageData(0, 0, 64, 40).data;
+                let n = 0;
+                for (let i = 0; i < d.length; i += 4)
+                    if (Math.abs(d[i] - d[0]) + Math.abs(d[i + 1] - d[1]) + Math.abs(d[i + 2] - d[2]) > 40)
+                        n++;
+                res(n < 64 * 40 * 0.01);
+            }
+            catch {
+                res(false);
+            }
+        };
+        im.src = url;
+    });
+    const inkFrame = function inkFrame(im, fr) {
+        try {
+            var W = im.naturalWidth, H = im.naturalHeight;
+            if (!fr || !W || !H)
+                return false;
+            var fw = fr.clientWidth, fh = fr.clientHeight;
+            if (!fw || !fh)
+                return false;
+            var A = fw / fh, cw = 160, ch = Math.max(8, Math.round(cw * H / W));
+            var c = document.createElement("canvas");
+            c.width = cw;
+            c.height = ch;
+            var g = c.getContext("2d", { willReadFrequently: true });
+            g.drawImage(im, 0, 0, cw, ch);
+            var d = g.getImageData(0, 0, cw, ch).data, N = cw * ch, i, x, y;
+            var px = function (x, y) { var k = (y * cw + x) * 4; return [d[k], d[k + 1], d[k + 2]]; };
+            var cs = [px(1, 1), px(cw - 2, 1), px(1, ch - 2), px(cw - 2, ch - 2)];
+            var bg = [0, 1, 2].map(function (k) { return cs.map(function (p) { return p[k]; }).sort(function (a, b) { return a - b; })[1]; });
+            var m = new Uint8Array(N);
+            for (i = 0; i < N; i++)
+                m[i] = Math.abs(d[i * 4] - bg[0]) + Math.abs(d[i * 4 + 1] - bg[1]) + Math.abs(d[i * 4 + 2] - bg[2]) > 60 ? 1 : 0;
+            var md = new Uint8Array(N);
+            for (y = 0; y < ch; y++)
+                for (x = 0; x < cw; x++)
+                    if (m[y * cw + x])
+                        for (var dy = -1; dy <= 1; dy++)
+                            for (var dx = -1; dx <= 1; dx++) {
+                                var X = x + dx, Y = y + dy;
+                                if (X >= 0 && Y >= 0 && X < cw && Y < ch)
+                                    md[Y * cw + X] = 1;
+                            }
+            var lab = new Int32Array(N), best = 0, bestN = 0, n = 0, st = [];
+            for (i = 0; i < N; i++)
+                if (md[i] && !lab[i]) {
+                    n++;
+                    var cnt = 0;
+                    st.push(i);
+                    lab[i] = n;
+                    while (st.length) {
+                        var p = st.pop();
+                        cnt += m[p];
+                        var py = (p / cw) | 0, pxx = p - py * cw;
+                        for (var yy = py - 1; yy <= py + 1; yy++)
+                            for (var xx = pxx - 1; xx <= pxx + 1; xx++) {
+                                if (xx < 0 || yy < 0 || xx >= cw || yy >= ch)
+                                    continue;
+                                var q = yy * cw + xx;
+                                if (md[q] && !lab[q]) {
+                                    lab[q] = n;
+                                    st.push(q);
+                                }
+                            }
+                    }
+                    if (cnt > bestN) {
+                        bestN = cnt;
+                        best = n;
+                    }
+                }
+            var W1 = cw + 1, S = new Float64Array(W1 * (ch + 1)), SC = new Float64Array(W1 * (ch + 1)), col = new Float64Array(W1 * (ch + 1)), row = new Float64Array(W1 * (ch + 1));
+            for (y = 1; y <= ch; y++)
+                for (x = 1; x <= cw; x++) {
+                    var k = (y - 1) * cw + (x - 1), v = m[k], vc = v && lab[k] === best ? 1 : 0, o = y * W1 + x;
+                    S[o] = v + S[o - 1] + S[o - W1] - S[o - W1 - 1];
+                    SC[o] = vc + SC[o - 1] + SC[o - W1] - SC[o - W1 - 1];
+                    col[o] = v + col[o - W1];
+                    row[o] = v + row[o - 1];
+                }
+            var rect = function (T, x0, y0, x1, y1) { return T[y1 * W1 + x1] - T[y0 * W1 + x1] - T[y1 * W1 + x0] + T[y0 * W1 + x0]; };
+            var colAt = function (x, y0, y1) { x = Math.min(cw - 1, Math.max(0, x)); return col[y1 * W1 + x + 1] - col[y0 * W1 + x + 1]; };
+            var rowAt = function (y, x0, x1) { y = Math.min(ch - 1, Math.max(0, y)); return row[(y + 1) * W1 + x1] - row[(y + 1) * W1 + x0]; };
+            var CT = Math.max(1, bestN);
+            var w0 = cw / ch > A ? ch * A : cw, h0 = w0 / A;
+            var zmax = Math.max(1, Math.min(2.6, W / (fw * 1.1)));
+            var rs = 0, cnt0 = 0, L = cw, R = -1, T = ch, Bt = -1;
+            for (x = 0; x < cw; x++) {
+                var cx = colAt(x, 0, ch);
+                if (cx > ch * 0.015) {
+                    if (x < L)
+                        L = x;
+                    R = x;
+                }
+            }
+            for (y = 0; y < ch; y++) {
+                var ry = rowAt(y, 0, cw);
+                if (ry > cw * 0.015) {
+                    if (y < T)
+                        T = y;
+                    Bt = y;
+                }
+            }
+            var full = R >= 0 && (R - L + 1) >= cw * 0.8 && (Bt - T + 1) >= ch * 0.8;
+            var steps = full ? 0 : 14, B = null;
+            for (var s = 0; s <= steps; s++) {
+                var z = steps ? 1 + (zmax - 1) * s / steps : 1, w = Math.round(w0 / z), h = Math.round(h0 / z);
+                if (w < 4 || h < 4)
+                    continue;
+                for (y = 0; y <= ch - h; y += 2)
+                    for (x = 0; x <= cw - w; x += 2) {
+                        var cover = rect(SC, x, y, x + w, y + h) / CT, fill = rect(S, x, y, x + w, y + h) / (w * h);
+                        var cut = colAt(x, y, y + h) + colAt(x + w - 1, y, y + h) + rowAt(y, x, x + w) + rowAt(y + h - 1, x, x + w);
+                        var sc = cover + 0.8 * Math.min(fill / 0.35, 1) - 3 * cut / (2 * w + 2 * h) + 0.06 / z;
+                        if (!B || sc > B.sc)
+                            B = { sc: sc, x: x, y: y, w: w, h: h };
+                    }
+            }
+            if (!B)
+                return false;
+            var bw = B.w, bh = bw / A;
+            if (bh > ch) {
+                bh = ch;
+                bw = bh * A;
+            }
+            var bx = Math.min(cw - bw, Math.max(0, B.x + (B.w - bw) / 2)), by = Math.min(ch - bh, Math.max(0, B.y + (B.h - bh) / 2));
+            Object.assign(im.style, { position: "absolute", maxWidth: "none", objectFit: "fill", aspectRatio: "auto", transform: "none",
+                width: cw / bw * 100 + "%", height: ch / bh * 100 + "%", left: -bx / bw * 100 + "%", top: -by / bh * 100 + "%" });
+            if (getComputedStyle(fr).position === "static")
+                fr.style.position = "relative";
+            fr.style.background = "rgb(" + bg.join(",") + ")";
+            return true;
+        }
+        catch (e) {
+            return false;
+        }
+    };
+    if (typeof window !== 'undefined')
+        window.__inkFrame = inkFrame;
     const buildWeekHTML = ({ quest, keeps, allCommits, closedThisWeek, inFlight, now, weekNum, past, extra, agentsNow, weekLive }) => {
         extra = extra || {};
         agentsNow = agentsNow || [];
@@ -13241,28 +13419,31 @@ ${keepsBlock}${emptyBlock}
         }
         const used = new Set();
         const fallbackImg = (e) => {
-            const t0 = Date.parse(e.createdAt) || 0, t1 = Date.parse(e.completedAt) || Date.now(), et = weekToks(e.name);
-            const k = keeps.find(k => k.image && !used.has(k.image) && k.ts >= t0 && k.ts <= t1 + 86400000 && weekToks((k.text || '') + ' ' + String(k.imagePath || '').split('/').pop()).some(t => et.includes(t)));
+            const t0 = Date.parse(e.createdAt) || 0, t1 = Date.parse(e.completedAt) || Date.now(), et = weekDistinct(e.name, quest);
+            const k = et.length && keeps.find(k => k.image && !used.has(k.image) && k.ts >= t0 && k.ts <= t1 + 86400000 && weekToks((k.text || '') + ' ' + String(k.imagePath || '').split('/').pop()).some(t => et.includes(t)));
             if (k)
                 used.add(k.image);
             return k ? k.image : '';
         };
         const expTag = e => e.status === 'complete' ? `Finished ${dayFmt(e.completedAt)}` : e.status === 'paused' ? 'Paused' : 'Started';
-        const groups = (wl.protos || []).slice(), cards = [];
-        touched.slice(0, 8).forEach(e => {
-            const et = weekToks(e.name);
+        const groups = (wl.protos || []).slice(), cards = [], claimed = new Map();
+        touched.slice(0, 40).forEach(e => {
+            const et = weekDistinct(e.name, quest);
             let best = groups.findIndex(g => g.forExp === e.name), bs = 0;
             if (best < 0)
-                groups.forEach((g, i) => { if (g.forExp)
-                    return; const sc = et.filter(t => g.toks.includes(t)).length; if (sc > bs) {
+                groups.forEach((g, i) => { const sc = et.filter(t => (g.dtoks || []).includes(t)).length; if (sc > bs) {
                     bs = sc;
                     best = i;
                 } });
             if (best > -1) {
-                const g = groups.splice(best, 1)[0];
+                const g = groups[best];
+                if (claimed.has(g))
+                    return;
                 if (g.img)
                     used.add(g.img);
-                cards.push({ t: e.name, tag: expTag(e), img: g.img || '', href: g.href, vers: g.vers });
+                const c = { t: e.name, tag: expTag(e), img: g.img || '', href: g.href, vers: g.vers };
+                claimed.set(g, c);
+                cards.push(c);
             }
             else
                 cards.push({ t: e.name, tag: expTag(e), img: '', href: '', _e: e });
@@ -13272,17 +13453,19 @@ ${keepsBlock}${emptyBlock}
             delete c._e;
         } });
         groups.forEach(g => {
+            if (claimed.has(g))
+                return;
             const img = g.img && !used.has(g.img) ? g.img : '';
             if (img)
                 used.add(img);
             cards.push({ t: g.t, tag: `${g.isNew ? 'New' : 'Updated'} ${dayFmt(g.mtime)}`, img, href: g.href, vers: g.vers });
         });
         const agentBuilds = Array.isArray(extra.builds) && extra.builds.length;
-        const quiet = agentBuilds ? [] : cards.filter(c => !c.img && !c.href);
+        const quiet = agentBuilds ? [] : cards.filter(c => !c.img);
         const builds = agentBuilds
-            ? extra.builds.map(b => ({ t: b.title, tag: b.tag || '', img: b.img || '', href: b.href || '', vers: b.versions || [] }))
-            : cards.filter(c => c.img || c.href).slice(0, 12);
-        const qNames = arr => arr.map(c => ESC(c.t)).join(', ');
+            ? extra.builds.map(b => ({ t: b.title, tag: b.tag || '', img: b.img || '', href: weekPort(b.href, wl.servers, quest), vers: b.versions || [] }))
+            : cards.filter(c => c.img).slice(0, 12);
+        const qNames = arr => arr.slice(0, 8).map(c => ESC(c.t)).join(', ') + (arr.length > 8 ? ` and ${arr.length - 8} more` : '');
         const qFin = quiet.filter(c => /^Finished/.test(c.tag)), qOpen = quiet.filter(c => !/^Finished/.test(c.tag));
         const alsoLine = quiet.length ? `<p class="also">${[qFin.length ? `Also finished: ${qNames(qFin)}` : '', qOpen.length ? `Also ${past ? 'open' : 'in motion'}: ${qNames(qOpen)}` : ''].filter(Boolean).join('<br>')}</p>` : '';
         const buildCard = (b) => `<div class="build">${b.href ? `<a href="${ESC(b.href)}" target="_blank" rel="noopener">` : ''}${b.img ? `<span class="fr"><img src="${b.img}" alt="${ESC(b.t)}"></span>` : `<span class="ph" aria-hidden="true"></span>`}<b>${ESC(b.t)}${b.tag ? `<small>${ESC(b.tag)}</small>` : ''}</b>${b.href ? '</a>' : ''}
@@ -13318,7 +13501,7 @@ ${keepsBlock}${emptyBlock}
         const audioName = `${weekNum.y}-W${String(weekNum.w).padStart(2, '0')}-${slug(quest.name)}.m4a`;
         const listen = `<div class="listen" id="listen" hidden><button class="play" id="play" aria-label="Play"><svg viewBox="0 0 12 12"><path id="pp" d="M3 1.5v9l7.5-4.5z"/></svg></button><span class="lt">Hear the Story<small id="ldur"></small></span><span class="bar"><i id="lbar"></i></span></div>
   <audio id="aud" src="${ESC(audioName)}" preload="metadata"></audio><script type="text/plain" id="say">${ESC(sayText)}<\/script>`;
-        const frameJS = '<script>(()=>{const go=im=>{try{const fr=im.parentElement,W=im.naturalWidth,H=im.naturalHeight;if(!W||!H)return;const cw=160,ch=Math.max(1,Math.round(160*H/W)),c=document.createElement("canvas");c.width=cw;c.height=ch;const g=c.getContext("2d");g.drawImage(im,0,0,cw,ch);const d=g.getImageData(0,0,cw,ch).data,px=(x,y)=>{const i=(y*cw+x)*4;return[d[i],d[i+1],d[i+2]]};const cs=[px(1,1),px(cw-2,1),px(1,ch-2),px(cw-2,ch-2)],bg=[0,1,2].map(k=>cs.map(p=>p[k]).sort((a,b)=>a-b)[1]);const on=(x,y)=>{const p=px(x,y);return Math.abs(p[0]-bg[0])+Math.abs(p[1]-bg[1])+Math.abs(p[2]-bg[2])>60};const rows=[],cols=new Array(cw).fill(0);for(let y=0;y<ch;y++){let n=0;for(let x=0;x<cw;x++)if(on(x,y)){n++;cols[x]++}rows.push(n)}const mr=cw*.015,mc=ch*.015;const T=rows.findIndex(n=>n>mr),B=ch-1-[...rows].reverse().findIndex(n=>n>mr),L=cols.findIndex(n=>n>mc),R=cw-1-[...cols].reverse().findIndex(n=>n>mc);if(T<0||L<0||(R-L)*(B-T)>cw*ch*.7)return;const A=fr.clientWidth/fr.clientHeight;if(!A)return;let w=(R-L)*1.16,h=(B-T)*1.16;if(w/h>A)w=h*A;else h=w/A;if(w<cw/2.2){w=cw/2.2;h=w/A}const x=(L+R)/2-w/2,y=(T+B)/2-h/2;Object.assign(im.style,{position:"absolute",maxWidth:"none",objectFit:"fill",aspectRatio:"auto",width:cw/w*100+"%",height:ch/h*100+"%",left:-x/w*100+"%",top:-y/h*100+"%"});fr.style.background="rgb("+bg.join(",")+")"}catch(e){}};document.querySelectorAll(".build .fr img").forEach(im=>im.complete?go(im):im.addEventListener("load",()=>go(im),{once:true}))})();<\/script>';
+        const frameJS = '<script>(()=>{const go=' + inkFrame.toString() + ';document.querySelectorAll(".build .fr img").forEach(im=>{const f=()=>go(im,im.parentElement);im.complete?f():im.addEventListener("load",f,{once:true})})})();<\/script>';
         const pageJS = `<script>(()=>{const a=document.getElementById('aud'),l=document.getElementById('listen'),pp=document.getElementById('pp'),b=document.getElementById('lbar');
   const ready=()=>{l.hidden=false;const s=Math.round(a.duration);document.getElementById('ldur').textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');};
   if(a.readyState>=1)ready();else a.addEventListener('loadedmetadata',ready);
@@ -13381,6 +13564,12 @@ ${keepsBlock}${emptyBlock}
     };
     const loadWeekLive = async (quest, since, expNames) => {
         const out = { protos: [], files: [] }, U = window.unicorn;
+        let srv = null;
+        try {
+            srv = await fetch('../briefs/.servers.json', { cache: 'no-store' }).then(r => r.ok ? r.json() : null);
+        }
+        catch { }
+        out.servers = srv;
         const qSlug = slug(quest.name);
         const repo = String(quest.repo || (/unicorn/i.test(quest.name || '') ? '~/unicorn' : '')).replace(/\/+$/, '');
         const local = /^(~\/|\/)/.test(repo);
@@ -13389,7 +13578,12 @@ ${keepsBlock}${emptyBlock}
                 let fl = await U.recentFiles([local ? repo + '/protos' : '', '~/unicorn/protos/' + qSlug].filter(Boolean), since);
                 if (!fl.length && local && repo !== '~/unicorn')
                     fl = await U.recentFiles([repo], since);
-                const NOISE = /\/(briefs|papers|case-story|keeps|data|preview-site|preview-build|app-backups|node_modules|_superseded[^/]*)\//;
+                const NOISE = /\/(briefs|papers|case-story|keeps|data|preview-site|preview-build|app-backups|node_modules|_superseded[^/]*|_build|_rejected[^/]*|_sr|_archive|[^/]*-take-[^/]*|[^/]*-prefilm-[^/]*)\//;
+                const mods = new Set((srv && srv.modules) || []), roots = (srv && srv.roots) || {};
+                const served = p => {
+                    const R = mods.has(p) && Object.keys(roots).sort((a, b) => b.length - a.length).find(r => p.startsWith(r + '/'));
+                    return R ? 'http://127.0.0.1:' + roots[R] + p.slice(R.length).split('/').map(encodeURIComponent).join('/').replace(/\/index\.html$/, '/') : 'file://' + p;
+                };
                 const VRE = /[-_. ]?(v|r)(\d+)([a-z]?)$/i, groups = new Map();
                 const nice = t => String(t).replace(/[-_]+/g, ' ').trim().replace(/(^|\s)([a-z])(?=\s|$)/g, (m, a, c) => a + c.toUpperCase()).replace(/^\w/, c => c.toUpperCase());
                 const verOf = t => { const m = String(t).match(VRE); return m ? m[1].toLowerCase() + m[2] + m[3] : ''; };
@@ -13416,14 +13610,15 @@ ${keepsBlock}${emptyBlock}
                     const g = groups.get(key) || { t: title, titles: [], vers: [], mtime: 0, isNew: false, href: '', toks: [] };
                     if (f.mtime >= g.mtime) {
                         g.mtime = f.mtime;
-                        g.href = 'file://' + f.path;
+                        g.href = served(f.path);
                         g.shot = f.path;
+                        g.tt = f.title || g.tt;
                     }
                     g.isNew = g.isNew || (f.birthtime >= since);
                     if (f.title)
                         g.titles.push(f.title);
                     const vt = weekToks(title + ' ' + stem + ' ' + (f.title || ''));
-                    g.vers.push([lab, 'file://' + f.path, f.title || '', vt, f.mtime, dir + '/' + sbase.toLowerCase(), +((stem.match(VRE) || [])[2] || 0), /^index$/i.test(sbase)]);
+                    g.vers.push([lab, served(f.path), f.title || '', vt, f.mtime, dir + '/' + sbase.toLowerCase(), +((stem.match(VRE) || [])[2] || 0), /^index$/i.test(sbase), f.path]);
                     g.toks.push(...vt);
                     groups.set(key, g);
                 });
@@ -13443,6 +13638,15 @@ ${keepsBlock}${emptyBlock}
                     const c = common(g.titles);
                     if (c && !/^v?\d/i.test(c))
                         g.t = c;
+                    else if (g.tt) {
+                        const qn = String(quest.name || '').toLowerCase();
+                        let t0 = g.tt.trim();
+                        const rest = qn && t0.toLowerCase().startsWith(qn + ' ') ? t0.slice(qn.length).replace(/^[\s:·-–-]+/, '') : '';
+                        if (rest.split(/\s+/).length >= 2)
+                            t0 = rest;
+                        if (t0 && t0.length <= 48)
+                            g.t = t0;
+                    }
                     if (c)
                         g.vers.forEach(v => { if (v[0] === 'Main' && v[2].toLowerCase().startsWith(c.toLowerCase())) {
                             const r = v[2].slice(c.length).replace(/^[\s,:·-]+/, '');
@@ -13450,26 +13654,48 @@ ${keepsBlock}${emptyBlock}
                                 v[0] = r;
                         } });
                     g.toks = [...new Set(g.toks)];
+                    g.dtoks = [...new Set(weekDistinct(g.t + ' ' + g.toks.join(' '), quest))];
                     const live = g.vers.filter(v => !g.vers.some(o => o !== v && o[5] === v[5] && o[6] > v[6]));
                     const lb = live.reduce((b, v) => !b || newer(v, b) ? v : b, null);
                     if (lb) {
                         g.href = lb[1];
-                        g.shot = lb[1].replace(/^file:\/\//, '');
+                        g.shot = lb[8];
                         g.live = live;
                     }
                     return g;
                 }).sort((a, b) => b.mtime - a.mtime).slice(0, 12);
-                const free = out.protos.slice();
+                const dirToks = g => weekDistinct(String(g.shot || '').split('/').slice(-2, -1)[0] || '', quest);
+                out.protos.slice().forEach(a => {
+                    if (!out.protos.includes(a))
+                        return;
+                    const ta = dirToks(a);
+                    if (!ta.length)
+                        return;
+                    out.protos.slice().forEach(b => {
+                        if (a === b || !out.protos.includes(a) || !out.protos.includes(b))
+                            return;
+                        const tb = dirToks(b);
+                        if (!tb.length || !ta.every(t => tb.includes(t)))
+                            return;
+                        const [keep, drop] = a.mtime >= b.mtime ? [a, b] : [b, a], lab = (g, v) => /^(Main|v1)$/.test(v[0]) ? g.t : v[0];
+                        keep.vers = keep.vers.map(v => [lab(keep, v)].concat(v.slice(1))).concat(drop.vers.map(v => [lab(drop, v)].concat(v.slice(1))));
+                        if (keep.live)
+                            keep.live = keep.live.map(v => keep.vers.find(w => w[8] === v[8]) || v);
+                        keep.toks = [...new Set(keep.toks.concat(drop.toks))];
+                        keep.dtoks = [...new Set(keep.dtoks.concat(drop.dtoks))];
+                        keep.isNew = keep.isNew || drop.isNew;
+                        out.protos.splice(out.protos.indexOf(drop), 1);
+                    });
+                });
                 (expNames || []).forEach(n => {
-                    const et = weekToks(n);
+                    const et = weekDistinct(n, quest);
                     let best = null, bs = 0;
-                    free.forEach(g => { const sc = et.filter(t => g.toks.includes(t)).length; if (sc > bs) {
+                    out.protos.forEach(g => { const sc = et.filter(t => g.dtoks.includes(t)).length; if (sc > bs) {
                         bs = sc;
                         best = g;
                     } });
-                    if (!best)
+                    if (!best || best.forExp)
                         return;
-                    free.splice(free.indexOf(best), 1);
                     best.forExp = n;
                     let bv = null, vs = -1;
                     (best.live || best.vers).forEach(v => { const sc = et.filter(t => v[3].includes(t)).length; if (sc > vs || (sc === vs && newer(v, bv))) {
@@ -13478,7 +13704,7 @@ ${keepsBlock}${emptyBlock}
                     } });
                     if (bv) {
                         best.href = bv[1];
-                        best.shot = bv[1].replace(/^file:\/\//, '');
+                        best.shot = bv[8];
                     }
                 });
                 out.protos.forEach(g => { g.vers = g.vers.map(v => [v[0], v[1]]); });
@@ -13486,7 +13712,7 @@ ${keepsBlock}${emptyBlock}
                     for (const g of out.protos) {
                         try {
                             const r = await U.protoShot(g.shot);
-                            if (r && r.ok && r.dataUrl)
+                            if (r && r.ok && r.dataUrl && !(await weekShotBlank(r.dataUrl)))
                                 g.img = r.dataUrl;
                         }
                         catch { }
@@ -13746,7 +13972,7 @@ ${keepsBlock}${emptyBlock}
         monNow.setHours(0, 0, 0, 0);
         monNow.setDate(monNow.getDate() - monNow.getDay());
         const startedNow = exps.filter(e => e.createdAt && Date.parse(e.createdAt) >= monNow.getTime());
-        const weekLive = await loadWeekLive(quest, monNow.getTime(), [...new Set(closedThisWeek.concat(inFlight, startedNow).map(e => e.name))].slice(0, 8));
+        const weekLive = await loadWeekLive(quest, monNow.getTime(), [...new Set(closedThisWeek.concat(inFlight, startedNow).map(e => e.name))].slice(0, 40));
         weekLive.started = startedNow;
         if (wm && extra.week < `${wn.y}-W${String(wn.w).padStart(2, '0')}`) {
             const pw = { y: +wm[1], w: +wm[2] };
@@ -15952,63 +16178,18 @@ ${keepsBlock}${emptyBlock}
         box.querySelectorAll('img').forEach(im => im.complete ? frameThumb(im) : im.addEventListener('load', () => frameThumb(im), { once: true }));
     };
     const frameThumb = (im) => {
-        try {
-            const th = im.parentElement, W = im.naturalWidth, H = im.naturalHeight;
-            if (!th || !W || !H)
-                return;
-            const cw = 160, ch = Math.max(1, Math.round(160 * H / W)), c = document.createElement('canvas');
-            c.width = cw;
-            c.height = ch;
-            const g = c.getContext('2d', { willReadFrequently: true });
-            g.drawImage(im, 0, 0, cw, ch);
-            const d = g.getImageData(0, 0, cw, ch).data, px = (x, y) => { const i = (y * cw + x) * 4; return [d[i], d[i + 1], d[i + 2]]; };
-            const corners = [px(1, 1), px(cw - 2, 1), px(1, ch - 2), px(cw - 2, ch - 2)];
-            const bg = [0, 1, 2].map(k => corners.map(p => p[k]).sort((a, b) => a - b)[1]);
-            const on = (x, y) => { const p = px(x, y); return Math.abs(p[0] - bg[0]) + Math.abs(p[1] - bg[1]) + Math.abs(p[2] - bg[2]) > 60; };
-            const rows = [], cols = new Array(cw).fill(0);
-            for (let y = 0; y < ch; y++) {
-                let n = 0;
-                for (let x = 0; x < cw; x++)
-                    if (on(x, y)) {
-                        n++;
-                        cols[x]++;
-                    }
-                rows.push(n);
-            }
-            const minR = cw * .015, minC = ch * .015;
-            let T = rows.findIndex(n => n > minR), B = ch - 1 - [...rows].reverse().findIndex(n => n > minR);
-            let L = cols.findIndex(n => n > minC), R = cw - 1 - [...cols].reverse().findIndex(n => n > minC);
-            if (T < 0 || L < 0)
-                return;
-            if ((R - L) * (B - T) > cw * ch * .7)
-                return;
-            const A = th.clientWidth / th.clientHeight;
-            if (!A)
-                return;
-            let w = (R - L) * 1.16, h = (B - T) * 1.16;
-            if (w / h > A)
-                w = h * A;
-            else
-                h = w / A;
-            if (w < cw / 4) {
-                w = cw / 4;
-                h = w / A;
-            }
-            if (w > cw) {
-                w = cw;
-                h = w / A;
-            }
-            if (h > ch) {
-                h = ch;
-                w = h * A;
-            }
-            let x = (L + R) / 2 - w / 2, y = (T + B) / 2 - h / 2;
-            Object.assign(im.style, { position: 'absolute', maxWidth: 'none', objectFit: 'fill', transform: 'none',
-                width: (cw / w * 100) + '%', height: (ch / h * 100) + '%', left: (-x / w * 100) + '%', top: (-y / h * 100) + '%' });
-            th.style.position = 'relative';
-            th.style.background = `rgb(${bg.join(',')})`;
+        const th = im.parentElement;
+        if (!th || !window.__inkFrame)
+            return;
+        if (th.clientWidth && th.clientHeight) {
+            window.__inkFrame(im, th);
+            return;
         }
-        catch { }
+        const ro = new ResizeObserver(() => { if (th.clientWidth && th.clientHeight) {
+            ro.disconnect();
+            window.__inkFrame(im, th);
+        } });
+        ro.observe(th);
     };
     const fitWeek = () => {
         const hero = $('r17-week-hero'), t = hero && hero.querySelector('.wmast');
@@ -16752,7 +16933,8 @@ ${keepsBlock}${emptyBlock}
             k.textContent = key;
             tip.append(k);
         }
-        const r = el.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight, pos = el.getAttribute('data-tip-pos'), G = +el.getAttribute('data-tip-gap') || 6;
+        const at = el.getAttribute('data-tip-at'), anchor = (at && el.querySelector(at)) || el;
+        const r = anchor.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight, pos = el.getAttribute('data-tip-pos'), G = +el.getAttribute('data-tip-gap') || 6;
         const box = (el.closest('.panel, #agent, #activity-panel, #menubar') || document.documentElement).getBoundingClientRect();
         let x = r.left + r.width / 2 - w / 2, y = pos === 'below' ? r.bottom + G : r.top - h - G;
         if (pos === 'left') {
