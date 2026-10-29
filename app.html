@@ -4823,6 +4823,9 @@ if (window.unicorn && window.unicorn.isDesktop)
   html .panel--quest .r17-car, html .panel--quest.r17-fin-open .r17-fin .r17-car { transform: none !important; }
   html .p-mini .pxc { margin: auto; }
   
+  html .panel--quest .q-car .pxc { zoom: 1.25; }
+  html .r17-story .flip[data-file] .pxc { transform: none; }
+  
   html #menubar .mb-d::before {
     width: 6px !important; height: 6px !important; border: 0 !important; border-radius: 0 !important; box-shadow: none !important;
     background: var(--text-whisper-2) !important;
@@ -16809,7 +16812,7 @@ ${keepsBlock}${emptyBlock}
 <script>
 (() => {
     const vy = ys => ys.map((y, i) => [i * 2, y]), mirror = f => f.map(([x, y]) => [x, 8 - y]);
-    const SHAPE = { down: vy([2, 4, 6, 4, 2]), up: vy([6, 4, 2, 4, 6]), right: [[2, 0], [4, 2], [6, 4], [4, 6], [2, 8]], fdown: [[0, 2], [2, 4], [4, 6], [6, 4], [8, 2]] };
+    const SHAPE = { down: vy([2, 4, 6, 4, 2]), up: vy([6, 4, 2, 4, 6]), right: [[2, 0], [4, 2], [6, 4], [4, 6], [2, 8]], left: [[6, 0], [4, 2], [2, 4], [4, 6], [6, 8]], fdown: [[0, 2], [2, 4], [4, 6], [6, 4], [8, 2]] };
     const UP = [vy([2, 4, 6, 4, 2]), vy([2, 4, 5, 4, 2]), vy([2, 3, 4, 3, 2]), vy([3, 3, 3, 3, 3]), vy([4, 3, 2, 3, 4]), vy([5, 4, 2, 4, 5]), vy([6, 4, 2, 4, 6])];
     const FOLD = [SHAPE.right, [[2, 0], [4, 2], [6, 4], [6, 6], [6, 8]], [[0, 0], [2, 2], [4, 4], [6, 6], [8, 8]], [[0, 2], [2, 4], [4, 6], [6, 6], [8, 6]], SHAPE.fdown];
     const path = (a, b) => a === 'down' && b === 'up' ? UP : a === 'up' && b === 'down' ? UP.map(mirror)
@@ -16841,6 +16844,7 @@ ${keepsBlock}${emptyBlock}
         document.querySelectorAll('.panel--quest .q-car').forEach(el => set(el, el.closest('.q-top')?.classList.contains('open') ? 'up' : 'down'));
         document.querySelectorAll('.panel--quest .r17-fin .r17-car').forEach(el => set(el, el.closest('.panel--quest')?.classList.contains('r17-fin-open') ? 'fdown' : 'right'));
         document.querySelectorAll('.p-mini').forEach(el => set(el, el.closest('.panel, #agent, #activity-panel')?.classList.contains('minimized') ? 'down' : 'up'));
+        document.querySelectorAll('.r17-story .flip[data-file]').forEach(el => set(el, el.classList.contains('l') ? 'left' : 'right'));
     };
     let raf = 0;
     const kick = () => { if (!raf)
