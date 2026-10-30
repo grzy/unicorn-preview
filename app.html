@@ -5652,7 +5652,7 @@ if (window.unicorn && window.unicorn.isDesktop)
         <div class="ap-row-label">Restore a Backup</div>
         <div class="ap-row-sub">Saves a backup of now first</div>
       </div>
-      <button class="ap-btn" id="ap-restore-journey" title="Nothing changes until you pick a file">Upload</button>
+      <button class="ap-btn" id="ap-restore-journey" title="Nothing changes until you pick one">Upload</button>
       <input type="file" id="ap-restore-file" accept=".json" style="display:none" />
     </div>
     <div class="ap-row">
@@ -5660,7 +5660,7 @@ if (window.unicorn && window.unicorn.isDesktop)
         <div class="ap-row-label">Copy Context</div>
         <div class="ap-row-sub">For another agent or tool</div>
       </div>
-      <button class="ap-btn" id="a-capsule" title="Paste it into a tool without the Unicorn skill">Copy</button>
+      <button class="ap-btn" id="a-capsule" title="For tools without the Unicorn skill">Copy</button>
     </div>
     <div class="ap-lab">Sound</div>
     <div class="ap-row">
@@ -5765,7 +5765,7 @@ if (window.unicorn && window.unicorn.isDesktop)
         <div class="a-section-body">
           <div class="st-box" id="st-canvas">
             <div class="st-t"><b class="st-tool">Figma</b><span class="st-m" id="st-cv-meta">No file yet</span></div>
-            <div class="st-row"><button class="u-quiet" id="st-cv-update" title="Create this quest’s Figma file from the build">Create</button><button class="u-fill" id="st-cv-open" title="Open in Figma" hidden>Open</button></div>
+            <div class="st-row"><button class="u-quiet" id="st-cv-update" title="Make a Figma file from this build">Create</button><button class="u-fill" id="st-cv-open" title="Open in Figma" hidden>Open</button></div>
           </div>
         </div>
       </div>
@@ -6707,7 +6707,7 @@ document.addEventListener('pointerdown', ensureUiAudio, { once: true });
                     addStages.className = 'q-add-stages';
                     addStages.dataset.id = exp.id;
                     addStages.textContent = '+ stages';
-                    addStages.title = 'Add a 3- or 5-stage path to a shareable artifact';
+                    addStages.title = 'Add a 3- or 5-stage path';
                     addStages.setAttribute('onclick', `event.stopPropagation(); window.__unicornPromptTemplate('${exp.id}');`);
                     const addStagesRow = document.createElement('div');
                     addStagesRow.className = 'q-substage-row';
@@ -15222,7 +15222,7 @@ ${keepsBlock}${emptyBlock}
         const q = activeQuest(), url = q && q.figma && /^https:\/\/(www\.)?figma\.com\//i.test(q.figma) ? q.figma : '';
         const meta = url ? figmaName(url) : 'No file yet';
         const label = !figmaConnected ? 'Connect Figma' : url ? 'Update' : 'Create';
-        const tip = !figmaConnected ? 'Connect Figma to this quest' : url ? 'Update this quest’s Figma file from the build' : 'Create this quest’s Figma file from the build';
+        const tip = !figmaConnected ? 'Connect Figma to this quest' : url ? 'Sync the Figma file with this build' : 'Make a Figma file from this build';
         const m = $('st-cv-meta'), b = $('st-cv-update'), o = $('st-cv-open');
         if (m.textContent !== meta)
             m.textContent = meta;
@@ -15811,7 +15811,7 @@ ${keepsBlock}${emptyBlock}
     const htmlAction = () => {
         const lds = document.getElementById('u-taste-lds');
         return (lds && !lds.classList.contains('muted'))
-            ? `<button type="button" class="u-quiet" data-act="html" title="HTML mirror of the Figma design system">HTML</button>` : '';
+            ? `<button type="button" class="u-quiet" data-act="html" title="The design system, in HTML">HTML</button>` : '';
     };
     const riveUrl = q => (q && q.rive && /^https:\/\/([a-z0-9-]+\.)?rive\.app\//i.test(q.rive)) ? q.rive : '';
     function renderRive() {
@@ -15864,13 +15864,13 @@ ${keepsBlock}${emptyBlock}
                 + (state === 'ready' && many ? `<button type="button" class="flip l" data-file="-1" aria-label="Previous File">${I('caret')}</button><button type="button" class="flip r" data-file="1" aria-label="Next File">${I('caret')}</button>` : '');
         }
         if (state === 'creating' || state === 'updating') {
-            dr = `<span class="cap" title="${esc(runText)}"><span class="sweep">${state === 'creating' ? 'Creating' : 'Updating'}</span></span><div class="acts"><button type="button" class="u-quiet" data-act="stop" title="Stops the agent. Nothing in Figma changes">Stop</button></div>`;
+            dr = `<span class="cap" title="${esc(runText)}"><span class="sweep">${state === 'creating' ? 'Creating' : 'Updating'}</span></span><div class="acts"><button type="button" class="u-quiet" data-act="stop" title="Stops the agent; Figma stays as is">Stop</button></div>`;
         }
         else if (state === 'connect') {
             dr = `<span class="cap${failText ? ' fail' : ''}">${esc(failText || 'Figma isn’t connected')}</span><div class="acts"><button type="button" class="u-fill" data-act="run" title="Connect Figma to this quest">Connect</button></div>`;
         }
         else if (state === 'none') {
-            dr = `<span class="cap${failText ? ' fail' : ''}">${esc(failText || 'No Figma file yet')}</span><div class="acts"><button type="button" class="u-fill" data-act="run" title="Create this quest’s Figma file from the build">Create</button></div>`;
+            dr = `<span class="cap${failText ? ' fail' : ''}">${esc(failText || 'No Figma file yet')}</span><div class="acts"><button type="button" class="u-fill" data-act="run" title="Make a Figma file from this build">Create</button></div>`;
         }
         else if (state === 'ready' && doneMsg) {
             dr = `<span class="cap done-msg">${esc(doneMsg)}</span>`;
