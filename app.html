@@ -274,7 +274,7 @@ if (window.unicorn && window.unicorn.isDesktop)
 
   #wallpaper {
     position: fixed; inset: 0; z-index: 0;
-    background: #191919 url('field-painting.jpg?v=2') center / cover no-repeat;
+    background: #191919 url('field-painting.jpg') center / cover no-repeat;
   }
   
   #ambient-tint {
@@ -292,7 +292,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   html.is-desktop #preloader { background: transparent; }
   
   html:not(.is-desktop) #preloader {
-    background: #191919 url('field-painting.jpg?v=2') center / cover no-repeat;
+    background: #191919 url('field-painting.jpg') center / cover no-repeat;
   }
   
   #glass-edge { display: none; }
@@ -3793,6 +3793,7 @@ if (window.unicorn && window.unicorn.isDesktop)
     opacity: 0; transform: translateY(3px) scale(.97); filter: blur(2px); transform-origin: 50% 100%;
     transition: opacity .11s ease, transform .11s ease, filter .11s ease;
   }
+  .u-tip.u-tip--dot { box-shadow: 0 0 10px rgba(0,0,0,.18); }   
   .u-tip.on { opacity: 1; transform: none; filter: none; transition: opacity .18s cubic-bezier(.2,.8,.2,1), transform .18s cubic-bezier(.2,.8,.2,1), filter .18s cubic-bezier(.2,.8,.2,1); }
   @media (prefers-reduced-motion: reduce) { .u-tip, .u-tip.on { transform: none; filter: none; } }
   .u-tip kbd { font: 400 10.5px/1 var(--mono); padding: 2px 4px; border-radius: 4px; color: rgba(241,236,232,.55); background: rgba(241,236,232,.07); }
@@ -4788,7 +4789,7 @@ if (window.unicorn && window.unicorn.isDesktop)
     background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'><rect x='2' y='0' width='2' height='2' fill='%23d69690'/><rect x='4' y='0' width='2' height='2' fill='%23d69690'/><rect x='0' y='2' width='2' height='2' fill='%23d69690'/><rect x='6' y='2' width='2' height='2' fill='%23b791c7'/><rect x='0' y='4' width='2' height='2' fill='%23d69690'/><rect x='6' y='4' width='2' height='2' fill='%23b791c7'/><rect x='2' y='6' width='2' height='2' fill='%23b791c7'/><rect x='4' y='6' width='2' height='2' fill='%23b791c7'/></svg>") 0 0 / 8px 8px no-repeat !important; image-rendering: pixelated;
     transition: none !important;
   }
-  html .p-head .p-dot:hover { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'><rect x='2' y='0' width='2' height='2' fill='%23dca9a3'/><rect x='4' y='0' width='2' height='2' fill='%23dca9a3'/><rect x='0' y='2' width='2' height='2' fill='%23dca9a3'/><rect x='6' y='2' width='2' height='2' fill='%23c4a5ce'/><rect x='0' y='4' width='2' height='2' fill='%23dca9a3'/><rect x='6' y='4' width='2' height='2' fill='%23c4a5ce'/><rect x='2' y='6' width='2' height='2' fill='%23c4a5ce'/><rect x='4' y='6' width='2' height='2' fill='%23c4a5ce'/><rect x='2' y='2' width='4' height='4' fill='%23c797af' fill-opacity='0.3'/></svg>") !important; }
+  html .p-head .p-dot:hover { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'><rect x='2' y='0' width='2' height='2' fill='%23dca9a3'/><rect x='4' y='0' width='2' height='2' fill='%23dca9a3'/><rect x='0' y='2' width='2' height='2' fill='%23dca9a3'/><rect x='6' y='2' width='2' height='2' fill='%23c4a5ce'/><rect x='0' y='4' width='2' height='2' fill='%23dca9a3'/><rect x='6' y='4' width='2' height='2' fill='%23c4a5ce'/><rect x='2' y='6' width='2' height='2' fill='%23c4a5ce'/><rect x='4' y='6' width='2' height='2' fill='%23c4a5ce'/></svg>") !important; }   
   html .focus-peach .p-head .p-dot { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'><rect x='2' y='0' width='2' height='2' fill='%23FFAF5F'/><rect x='4' y='0' width='2' height='2' fill='%23FFAF5F'/><rect x='0' y='2' width='2' height='2' fill='%23FFAF5F'/><rect x='6' y='2' width='2' height='2' fill='%23FFAF5F'/><rect x='0' y='4' width='2' height='2' fill='%23FFAF5F'/><rect x='6' y='4' width='2' height='2' fill='%23FFAF5F'/><rect x='2' y='6' width='2' height='2' fill='%23FFAF5F'/><rect x='4' y='6' width='2' height='2' fill='%23FFAF5F'/><rect x='2' y='2' width='4' height='4' fill='%23FFAF5F' fill-opacity='1'/></svg>") !important; }
   html .focus-lilac .p-head .p-dot { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'><rect x='2' y='0' width='2' height='2' fill='%23c2a8ff'/><rect x='4' y='0' width='2' height='2' fill='%23c2a8ff'/><rect x='0' y='2' width='2' height='2' fill='%23c2a8ff'/><rect x='6' y='2' width='2' height='2' fill='%23c2a8ff'/><rect x='0' y='4' width='2' height='2' fill='%23c2a8ff'/><rect x='6' y='4' width='2' height='2' fill='%23c2a8ff'/><rect x='2' y='6' width='2' height='2' fill='%23c2a8ff'/><rect x='4' y='6' width='2' height='2' fill='%23c2a8ff'/><rect x='2' y='2' width='4' height='4' fill='%23c2a8ff' fill-opacity='1'/></svg>") !important; }
   html .p-head .p-dot::before {
@@ -16950,6 +16951,7 @@ ${keepsBlock}${emptyBlock}
         }
         x = Math.max(6, Math.min(innerWidth - w - 6, x));
         y = Math.max(4, Math.min(innerHeight - h - 4, y));
+        tip.classList.toggle('u-tip--dot', !!el.closest('.p-dot'));
         tip.style.left = x + 'px';
         tip.style.top = y + 'px';
         tip.classList.add('on');
