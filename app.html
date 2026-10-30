@@ -4889,6 +4889,7 @@ if (window.unicorn && window.unicorn.isDesktop)
   .r17-strip:hover .go { opacity: 1; }
   .r17-strip:not([data-state="idle"]):hover .w2 { opacity: 0; }
   .r17-strip[data-state="idle"]:hover .w1 { opacity: 0; }
+  .r17-strip[data-state="idle"] .go { top: 0; bottom: auto; font-size: 13px; line-height: 1.25; }   
   .r17-strip .uc-wrap { position: relative; flex: none; width: 48px; height: 48px; }
   
   .r17-strip .uc-wrap { contain: layout; isolation: isolate; }   
@@ -16408,10 +16409,13 @@ ${keepsBlock}${emptyBlock}
         wordEl.dataset.short = st === 'waiting' ? 'Waiting' : st === 'working' ? 'Working' : '';
         const h = stripEl || wordEl.parentElement;
         const key = st === 'working' || st === 'waiting' ? st : 'idle';
+        if (goEl) {
+            const g = (key === 'idle' ? 'Open Terminal' : 'Open Session') + ' ›';
+            if (goEl.textContent !== g)
+                goEl.innerHTML = g;
+        }
         if (h && h.dataset.state !== key) {
             h.dataset.state = key;
-            if (goEl)
-                goEl.innerHTML = (key === 'idle' ? 'Open Terminal' : 'Open Session') + ' ›';
             if (stripEl) {
                 stripEl.setAttribute('data-tip', GO_TIP[key]);
                 stripEl.setAttribute('aria-label', txt + '. ' + (key === 'idle' ? 'Open Terminal' : 'Open Session'));
